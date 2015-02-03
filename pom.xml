@@ -50,7 +50,6 @@
         </dependency>
     </dependencies>
     <build>
-        <pluginManagement>
         <plugins>
             <!-- Compiler -->
             <plugin>
@@ -100,6 +99,5 @@
                 </executions>
             </plugin>
         </plugins>
-        </pluginManagement>
     </build>
 </project>
