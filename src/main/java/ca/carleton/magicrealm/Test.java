@@ -1,6 +1,5 @@
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+package ca.carleton.magicrealm;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,14 +14,5 @@ public class Test {
 
     public static void main(String[] args) {
         LOG.info("Logged something.");
-
-        try {
-            Display.setDisplayMode(new DisplayMode(500, 500));
-            Display.create();
-        } catch (LWJGLException e) {
-            LOG.error("Error with game library", e);
-        }
-
-
     }
 }
