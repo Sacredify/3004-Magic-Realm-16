@@ -21,22 +21,7 @@ public abstract class Entity {
      */
     private Vulnerability weight;
 
-    /**
-     * The relationships this entity has with other entities.
-     */
-    public Map<Entity, Relationship> relationships;
-
     public abstract EntityType getEntityType();
-
-    /**
-     * Find the relationship with another entity.
-     *
-     * @param entity The given entity to find the relationship with.
-     * @return The relationship.
-     */
-    public Relationship getRelationshipWith(final Entity entity) {
-        return this.relationships.get(entity);
-    }
 
     public Vulnerability getVulnerability() {
         return this.vulnerability;
@@ -52,9 +37,5 @@ public abstract class Entity {
 
     public void setWeight(final Vulnerability weight) {
         this.weight = weight;
-    }
-
-    public void addRelationship(final Entity entity, final Relationship relationship) {
-        this.relationships.putIfAbsent(entity, relationship);
     }
 }
