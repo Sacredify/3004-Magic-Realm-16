@@ -20,11 +20,6 @@ public abstract class Entity {
     protected Vulnerability vulnerability;
 
     /**
-     * The weight of an entity is the same as their vulnerability. Maybe we can move this out later.
-     */
-    protected Vulnerability weight;
-
-    /**
      * The list of items the entity is currently holding.
      * TODO Is this relevant for all entities? Or only characters?
      */
@@ -34,10 +29,6 @@ public abstract class Entity {
 
     public Vulnerability getVulnerability() {
         return this.vulnerability;
-    }
-
-    public Vulnerability getWeight() {
-        return this.weight;
     }
 
     public void addItem(final Item item) {
