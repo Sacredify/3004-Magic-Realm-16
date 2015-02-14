@@ -10,24 +10,13 @@ import ca.carleton.magicrealm.entity.EntityType;
  * Date: 10/02/15
  * Time: 8:42 AM
  */
-public class Natives extends Entity {
+public abstract class AbstractNative extends Entity {
 
-    public static EntityType entitytype = EntityType.NATIVE;
-
-    private NativeType nativeType;
-
-    public NativeType getNativeType() {
-        return this.nativeType;
-    }
+    public abstract NativeType getNativeType();
 
     @Override
     public EntityType getEntityType() {
-        return entitytype;
-    }
-
-
-    public void setNativeType(final NativeType nativeType) {
-        this.nativeType = nativeType;
+        return EntityType.NATIVE;
     }
 
 }

@@ -12,18 +12,17 @@ import java.util.List;
  * Date: 09/02/15
  * Time: 5:45 PM
  */
-@SuppressWarnings("unused")
 public abstract class Entity {
 
     /**
      * The vulnerability of an entity is their health. Determined by their character.
      */
-    private Vulnerability vulnerability;
+    protected Vulnerability vulnerability;
 
     /**
      * The weight of an entity is the same as their vulnerability. Maybe we can move this out later.
      */
-    private Vulnerability weight;
+    protected Vulnerability weight;
 
     /**
      * The list of items the entity is currently holding.
@@ -33,20 +32,14 @@ public abstract class Entity {
 
     public abstract EntityType getEntityType();
 
+    public abstract EntityInformation getEntityInformation();
+
     public Vulnerability getVulnerability() {
         return this.vulnerability;
     }
 
-    public void setVulnerability(final Vulnerability vulnerability) {
-        this.vulnerability = vulnerability;
-    }
-
     public Vulnerability getWeight() {
         return this.weight;
-    }
-
-    public void setWeight(final Vulnerability weight) {
-        this.weight = weight;
     }
 
     public void addItem(final Item item) {

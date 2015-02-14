@@ -15,14 +15,12 @@ import java.util.Map;
  * Date: 10/02/15
  * Time: 8:25 AM
  */
-public abstract class Character extends Entity {
-
-    public static final EntityType entityType = EntityType.CHARACTER;
+public abstract class AbstractCharacter extends Entity {
 
     /**
      * The relationships this entity has with other entities.
      */
-    public Map<Entity, Relationship> relationships;
+    protected Map<Entity, Relationship> relationships;
 
     /**
      * Find the relationship with another entity.
@@ -40,6 +38,6 @@ public abstract class Character extends Entity {
 
     @Override
     public EntityType getEntityType() {
-        return entityType;
+        return EntityType.CHARACTER;
     }
 }
