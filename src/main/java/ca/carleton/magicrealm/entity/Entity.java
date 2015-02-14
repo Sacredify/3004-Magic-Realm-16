@@ -30,8 +30,6 @@ public abstract class Entity {
      */
     private List<Item> items = new ArrayList<Item>();
 
-    public abstract EntityType getEntityType();
-
     public abstract EntityInformation getEntityInformation();
 
     public Vulnerability getVulnerability() {

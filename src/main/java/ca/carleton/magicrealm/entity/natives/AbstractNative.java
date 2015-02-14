@@ -1,7 +1,6 @@
 package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.Entity;
-import ca.carleton.magicrealm.entity.EntityType;
 
 /**
  * Represents one of the many natives within the magic Realm.
@@ -13,10 +12,5 @@ import ca.carleton.magicrealm.entity.EntityType;
 public abstract class AbstractNative extends Entity {
 
     public abstract NativeType getNativeType();
-
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.NATIVE;
-    }
 
 }
