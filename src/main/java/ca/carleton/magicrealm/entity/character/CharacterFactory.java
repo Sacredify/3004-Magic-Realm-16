@@ -9,10 +9,21 @@ public class CharacterFactory {
 
     public static AbstractCharacter createCharacter(final CharacterType characterType) {
 
-        if (characterType == CharacterType.AMAZON) {
-            return Amazon.createAmazon();
+        switch (characterType) {
+            case AMAZON:
+                return new Amazon();
+            case BLACK_KNIGHT:
+                return new BlackKnight();
+            case CAPTAIN:
+                return new Captain();
+            case DWARF:
+                return new Dwarf();
+            case ELF:
+                return new Elf();
+            case SWORDSMAN:
+                return new Swordsman();
+            default:
+                throw new IllegalArgumentException("Couldn't create character of type " + characterType + ".");
         }
-
-        throw new IllegalArgumentException("Let's try to not fail when using this...");
     }
 }
