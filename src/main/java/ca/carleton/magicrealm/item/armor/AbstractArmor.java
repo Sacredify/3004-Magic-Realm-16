@@ -11,13 +11,13 @@ public abstract class AbstractArmor extends Item {
 
     protected boolean damaged = false;
 
-    protected ProtectionType[] protectsAgainst;
+    protected ProtectionType protectsAgainst;
 
     public boolean isDamaged() {
         return this.damaged;
     }
 
-    public ProtectionType[] getProtectsAgainst() {
+    public ProtectionType getProtectsAgainst() {
         return this.protectsAgainst;
     }
 }

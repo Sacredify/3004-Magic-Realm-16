@@ -7,8 +7,7 @@ package ca.carleton.magicrealm.item.armor;
  */
 public enum ProtectionType {
     ALL_DIRECTIONS,
-    THURST,
-    SWING,
+    THURST_AND_SWING,
     SMASH,
     ONE_DIRECTION
 }

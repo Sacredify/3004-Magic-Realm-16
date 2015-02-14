@@ -11,7 +11,7 @@ public class SuitOfArmor extends AbstractArmor {
 
     public SuitOfArmor() {
         this.goldValue = 17;
-        this.protectsAgainst = new ProtectionType[]{ProtectionType.ALL_DIRECTIONS};
+        this.protectsAgainst = ProtectionType.ALL_DIRECTIONS;
     }
 
     public ItemInformation getItemInformation() {
