@@ -1,7 +1,7 @@
 package ca.carleton.magicrealm.item;
 
 /**
- * File names mapping to the images in the image package items.
+ * File names mapping to the image in the image package items.
  * <p/>
  * Created with IntelliJ IDEA.
  * Date: 14/02/15
