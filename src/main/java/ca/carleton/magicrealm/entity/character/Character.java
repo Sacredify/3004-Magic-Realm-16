@@ -19,8 +19,6 @@ public abstract class Character extends Entity {
 
     public static final EntityType entityType = EntityType.CHARACTER;
 
-    private List<Item> items;
-
     /**
      * The relationships this entity has with other entities.
      */
