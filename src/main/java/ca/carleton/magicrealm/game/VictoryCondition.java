@@ -9,4 +9,34 @@ package ca.carleton.magicrealm.game;
  */
 public class VictoryCondition {
 
+    private int gold;
+
+    private int notoriety;
+
+    private int fame;
+
+    private int spellsCount;
+
+    private int greatTreasuresCount;
+
+    public void addGold(final int gold) {
+        this.gold += gold;
+    }
+
+    public void addNotoriety(final int notoriety) {
+        this.notoriety += notoriety;
+    }
+
+    public void addFame(final int fame) {
+        this.fame += fame;
+    }
+
+    public void increaseSpellCount() {
+        this.spellsCount++;
+    }
+
+    public void increaseGreatTreasuresCount() {
+        this.greatTreasuresCount++;
+    }
+
 }

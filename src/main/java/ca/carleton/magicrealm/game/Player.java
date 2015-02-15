@@ -13,4 +13,8 @@ public class Player {
 
     private VictoryCondition victoryCondition;
 
+    public VictoryCondition getVictoryCondition() {
+        return this.victoryCondition;
+    }
+
 }
