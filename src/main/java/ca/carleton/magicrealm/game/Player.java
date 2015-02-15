@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.game;
 
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+
 /**
  * Represents the player and their attributes.
  * <p/>
@@ -9,7 +11,7 @@ package ca.carleton.magicrealm.game;
  */
 public class Player {
 
-    private Character character;
+    private AbstractCharacter character;
 
     private VictoryCondition victoryCondition;
 
