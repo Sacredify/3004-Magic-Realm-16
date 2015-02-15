@@ -18,7 +18,7 @@ public class ResourceLoaderTest {
 
     @Test
     public void canFindResourceTest() throws Exception {
-        final URL url = this.getClass().getClassLoader().getResource("image/breastplate.gif");
+        final URL url = this.getClass().getClassLoader().getResource("image/armor/breastplate.gif");
         assertThat(url, is(not(nullValue())));
         assertThat(url.toString().contains("breastplate"), is(true));
     }
