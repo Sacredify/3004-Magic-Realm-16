@@ -19,6 +19,6 @@ public class Swordsman extends AbstractCharacter {
 
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.SWORDSMAN;
+        return EntityInformation.CHARACTER_SWORDSMAN;
     }
 }

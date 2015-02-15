@@ -25,6 +25,6 @@ public class Captain extends AbstractCharacter {
 
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.CAPTAIN;
+        return EntityInformation.CHARACTER_CAPTAIN;
     }
 }

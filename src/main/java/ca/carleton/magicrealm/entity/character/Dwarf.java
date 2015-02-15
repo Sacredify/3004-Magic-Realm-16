@@ -21,6 +21,6 @@ public class Dwarf extends AbstractCharacter {
 
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.DWARF;
+        return EntityInformation.CHARACTER_DWARF;
     }
 }

@@ -24,6 +24,6 @@ public class BlackKnight extends AbstractCharacter {
 
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.BLACK_KNIGHT;
+        return EntityInformation.CHARACTER_BLACK_KNIGHT;
     }
 }

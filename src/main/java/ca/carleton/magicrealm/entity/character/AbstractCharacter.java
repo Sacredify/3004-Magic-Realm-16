@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.entity.character;
 
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public abstract class AbstractCharacter extends Entity {
     /**
      * The relationships this entity has with other entities.
      */
-    protected Map<Entity, Relationship> relationships = new HashMap<Entity, Relationship>();
+    protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
 
     /**
      * Find the relationship with another entity.
@@ -30,7 +31,7 @@ public abstract class AbstractCharacter extends Entity {
         return this.relationships.get(entity);
     }
 
-    public void addRelationship(final Entity entity, final Relationship relationship) {
+    public void addRelationship(final Interactable entity, final Relationship relationship) {
         this.relationships.putIfAbsent(entity, relationship);
     }
 

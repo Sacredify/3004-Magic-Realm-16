@@ -19,6 +19,6 @@ public class Elf extends AbstractCharacter {
 
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.ELF;
+        return EntityInformation.CHARACTER_ELF;
     }
 }

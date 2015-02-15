@@ -10,22 +10,25 @@ package ca.carleton.magicrealm.entity;
 public enum EntityInformation {
 
     // Characters
-    AMAZON(null),
-    BLACK_KNIGHT(null),
-    CAPTAIN(null),
-    DWARF(null),
-    ELF(null),
-    SWORDSMAN(null),
+    CHARACTER_AMAZON(null),
+    CHARACTER_BLACK_KNIGHT(null),
+    CHARACTER_CAPTAIN(null),
+    CHARACTER_DWARF(null),
+    CHARACTER_ELF(null),
+    CHARACTER_SWORDSMAN(null),
 
-    // Natives
-    COMPANY(null),
-    BASHKARS(null),
-    ROGUES(null),
-    GUARD(null),
-    LANCERS(null),
-    WOODFOLK(null),
-    PATROL(null),
-    SOLDIERS(null);
+    // Native types
+    NATIVE_KNIGHT(null),
+    NATIVE_GREAT_SWORDSMAN(null),
+    NATIVE_GREAT_AXEMAN(null),
+    NATIVE_PIKEMAN(null),
+    NATIVE_SHORT_SWORDSMAN(null),
+    NATIVE_CROSSBOW_MAN(null),
+    NATIVE_LANCER(null),
+    NATIVE_RAIDER(null),
+    NATIVE_ARCHER(null),
+    NATIVE_SWORDSMAN(null),
+    NATIVE_ASSASSIN(null);
 
     private final String imageFilePath;
 

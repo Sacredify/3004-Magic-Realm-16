@@ -28,6 +28,6 @@ public class Amazon extends AbstractCharacter {
 
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.AMAZON;
+        return EntityInformation.CHARACTER_AMAZON;
     }
 }
