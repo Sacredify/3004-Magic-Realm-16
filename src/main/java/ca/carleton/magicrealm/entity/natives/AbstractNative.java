@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.entity.natives;
 
+import ca.carleton.magicrealm.entity.BountyCarrier;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.item.Item;
@@ -12,7 +13,7 @@ import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
  * Date: 10/02/15
  * Time: 8:42 AM
  */
-public abstract class AbstractNative extends Entity {
+public abstract class AbstractNative extends Entity implements BountyCarrier {
 
     protected NativeType faction;
 
@@ -46,12 +47,5 @@ public abstract class AbstractNative extends Entity {
     public AbstractWeapon getWeapon() {
         return this.weapon;
     }
-
-    /**
-     * Adds the native's bounty value to the player's total.
-     *
-     * @param player the player who defeated the native.
-     */
-    public abstract void addBountyToPlayer(final Player player);
 
 }
