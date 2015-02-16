@@ -29,14 +29,14 @@ public enum ItemInformation {
     MACE(null, null),
 
     // Armor
-    SUIT_OF_ARMOR(null, null),
-    BREASTPLATE(null, null),
-    HELMET(null, null),
-    SHIELD(null, null),
-    TREMENDOUS_ARMOR(null, null),
-    SILVER_BREASTPLATE(null, null),
-    GOLD_HELMET(null, null),
-    JADE_SHIELD(null, null),
+    SUIT_OF_ARMOR("image/armor/suitofarmor.gif", null),
+    BREASTPLATE("image/armor/breastplate.gif", null),
+    HELMET("image/armor/cap.gif", null),
+    SHIELD("image/armor/buckler.gif", null),
+    TREMENDOUS_ARMOR("image/armor/breastplate.gif", null),
+    SILVER_BREASTPLATE("image/armor/cuirass.gif", null),
+    GOLD_HELMET("image/armor/helmet.gif", null),
+    JADE_SHIELD("image/armor/shield.gif", null),
     NONE(null, null);
 
     private final String activeImageFilePath;
