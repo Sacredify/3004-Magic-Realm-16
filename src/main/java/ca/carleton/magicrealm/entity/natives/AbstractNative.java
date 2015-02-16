@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.entity.natives;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.item.Item;
+import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 /**
  * Represents one of the many natives within the magic Realm.
@@ -17,7 +18,7 @@ public abstract class AbstractNative extends Entity {
 
     protected int basicGoldWage;
 
-    protected Item weapon;
+    protected AbstractWeapon weapon;
 
     /**
      * The faction this native belongs to.
@@ -26,6 +27,24 @@ public abstract class AbstractNative extends Entity {
      */
     public NativeType getFaction() {
         return this.faction;
+    }
+
+    /**
+     * The basic amount of gold to hire the native. Multiply by the price result to get the final value.
+     *
+     * @return the gold amount.
+     */
+    public int getBasicGoldWage() {
+        return this.basicGoldWage;
+    }
+
+    /**
+     * The weapon the native is using.
+     *
+     * @return the weapon.
+     */
+    public AbstractWeapon getWeapon() {
+        return this.weapon;
     }
 
     /**
