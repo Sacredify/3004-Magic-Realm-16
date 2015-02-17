@@ -8,7 +8,7 @@ package ca.carleton.magicrealm.entity.natives;
  * Time: 8:39 AM
  */
 public enum NativeType {
-    NIGHT,
+    KNIGHT,
     GREAT_SWORDSMAN,
     GREAT_AXEMAN,
     PIKEMAN,

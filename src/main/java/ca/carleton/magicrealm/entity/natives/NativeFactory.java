@@ -1,7 +1,5 @@
 package ca.carleton.magicrealm.entity.natives;
 
-import ca.carleton.magicrealm.entity.EntityInformation;
-
 /**
  * Created with IntelliJ IDEA.
  * Date: 17/02/15
@@ -9,29 +7,31 @@ import ca.carleton.magicrealm.entity.EntityInformation;
  */
 public class NativeFactory {
 
-    public static AbstractNative createNative(final NativeFaction faction, final EntityInformation nativeType) {
+    public static AbstractNative createNative(final NativeFaction faction, final NativeType nativeType) {
 
         switch (nativeType) {
-            case NATIVE_ASSASSIN:
+            case ASSASSIN:
                 return new Assassin(faction);
-            case NATIVE_ARCHER:
+            case ARCHER:
                 return new Archer(faction);
-            case NATIVE_CROSSBOW_MAN:
+            case CROSSBOW_MAN:
                 return new Crossbowman(faction);
-            case NATIVE_GREAT_AXEMAN:
+            case GREAT_AXEMAN:
                 return new GreatAxeman(faction);
-            case NATIVE_GREAT_SWORDSMAN:
+            case GREAT_SWORDSMAN:
                 return new GreatSwordsman(faction);
-            case NATIVE_KNIGHT:
+            case KNIGHT:
                 return new Knight(faction);
-            case NATIVE_LANCER:
+            case LANCER:
                 return new Lancer(faction);
-            case NATIVE_PIKEMAN:
+            case PIKEMAN:
                 return new Pikeman(faction);
-            case NATIVE_RAIDER:
+            case RAIDER:
                 return new Raider(faction);
-            case NATIVE_SHORT_SWORDSMAN:
+            case SHORT_SWORDSMAN:
                 return new ShortSwordsman(faction);
+            case SWORDSMAN:
+                return new Swordsman(faction);
             default:
                 throw new IllegalArgumentException("Couldn't create character of type " + nativeType + ".");
         }
