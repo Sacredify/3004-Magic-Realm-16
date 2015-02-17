@@ -1,7 +1,9 @@
 package ca.carleton.magicrealm.entity.character;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
+import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.Vulnerability;
+import ca.carleton.magicrealm.entity.natives.NativeType;
 import ca.carleton.magicrealm.item.armor.BreastPlate;
 import ca.carleton.magicrealm.item.armor.Helmet;
 import ca.carleton.magicrealm.item.armor.Shield;
@@ -23,6 +25,11 @@ public class Amazon extends AbstractCharacter {
         this.addItem(new Helmet());
         this.addItem(new BreastPlate());
         this.addItem(new Shield());
+
+        this.addRelationship(NativeType.LANCERS, Relationship.FRIENDLY);
+        this.addRelationship(NativeType.PATROL, Relationship.FRIENDLY);
+        this.addRelationship(NativeType.COMPANY, Relationship.UNFRIENDLY);
+        this.addRelationship(NativeType.BASHKARS, Relationship.UNFRIENDLY);
 
     }
 
