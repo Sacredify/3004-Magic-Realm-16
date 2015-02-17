@@ -1,7 +1,9 @@
 package ca.carleton.magicrealm.entity.character;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
+import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.Vulnerability;
+import ca.carleton.magicrealm.entity.natives.NativeType;
 import ca.carleton.magicrealm.item.armor.Shield;
 import ca.carleton.magicrealm.item.armor.SuitOfArmor;
 import ca.carleton.magicrealm.item.weapon.Mace;
@@ -19,6 +21,11 @@ public class BlackKnight extends AbstractCharacter {
         this.addItem(new Mace());
         this.addItem(new SuitOfArmor());
         this.addItem(new Shield());
+
+        this.addRelationship(NativeType.COMPANY, Relationship.ALLY);
+        this.addRelationship(NativeType.SOLDIERS, Relationship.FRIENDLY);
+        this.addRelationship(NativeType.LANCERS, Relationship.UNFRIENDLY);
+        this.addRelationship(NativeType.GUARD, Relationship.ENEMY);
 
     }
 

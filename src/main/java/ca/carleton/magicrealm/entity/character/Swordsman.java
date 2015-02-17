@@ -1,7 +1,9 @@
 package ca.carleton.magicrealm.entity.character;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
+import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.Vulnerability;
+import ca.carleton.magicrealm.entity.natives.NativeType;
 import ca.carleton.magicrealm.item.weapon.ThrustingSword;
 
 /**
@@ -15,6 +17,10 @@ public class Swordsman extends AbstractCharacter {
         this.vulnerability = Vulnerability.LIGHT;
 
         this.addItem(new ThrustingSword());
+
+        this.addRelationship(NativeType.ROGUES, Relationship.FRIENDLY);
+        this.addRelationship(NativeType.COMPANY, Relationship.FRIENDLY);
+        this.addRelationship(NativeType.PATROL, Relationship.ENEMY);
     }
 
     @Override

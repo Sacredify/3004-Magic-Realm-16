@@ -14,6 +14,7 @@ public enum NativeType implements Interactable {
     BASHKARS,
     ROGUES,
     GUARD,
+    ORDER,
     LANCERS,
     WOODFOLK,
     PATROL,
