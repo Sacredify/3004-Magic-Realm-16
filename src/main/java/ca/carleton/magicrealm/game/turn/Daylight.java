@@ -1,5 +1,6 @@
-package ca.carleton.magicrealm.game;
+package ca.carleton.magicrealm.game.turn;
 
+import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.Phase;
 import ca.carleton.magicrealm.game.phase.strategy.MovePhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
