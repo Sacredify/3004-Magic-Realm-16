@@ -1,7 +1,5 @@
 package ca.carleton.magicrealm.entity.natives;
 
-import ca.carleton.magicrealm.entity.Interactable;
-
 /**
  * The different type of natives.
  * <p/>
@@ -9,14 +7,16 @@ import ca.carleton.magicrealm.entity.Interactable;
  * Date: 10/02/15
  * Time: 8:39 AM
  */
-public enum NativeType implements Interactable {
-    COMPANY,
-    BASHKARS,
-    ROGUES,
-    GUARD,
-    ORDER,
-    LANCERS,
-    WOODFOLK,
-    PATROL,
-    SOLDIERS
+public enum NativeType {
+    NIGHT,
+    GREAT_SWORDSMAN,
+    GREAT_AXEMAN,
+    PIKEMAN,
+    SHORT_SWORDSMAN,
+    CROSSBOW_MAN,
+    LANCER,
+    RAIDER,
+    ARCHER,
+    SWORDSMAN,
+    ASSASSIN
 }

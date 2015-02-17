@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.item.weapon.Spear;
  */
 public class Lancer extends AbstractNative {
 
-    public Lancer(final NativeType nativeType) {
+    protected Lancer(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.LIGHT;
         this.weapon = new Spear();
         this.basicGoldWage = 2;

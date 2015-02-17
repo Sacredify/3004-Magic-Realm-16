@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.item.weapon.ShortSword;
  */
 public class Raider extends AbstractNative {
 
-    public Raider(final NativeType nativeType) {
+    protected Raider(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.LIGHT;
         this.weapon = new ShortSword();
         this.basicGoldWage = 2;

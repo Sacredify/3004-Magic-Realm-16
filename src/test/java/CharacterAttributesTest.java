@@ -1,10 +1,10 @@
+import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.entity.character.Swordsman;
-import ca.carleton.magicrealm.entity.natives.Knight;
-import ca.carleton.magicrealm.entity.natives.NativeType;
+import ca.carleton.magicrealm.entity.natives.*;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -29,9 +29,9 @@ public class CharacterAttributesTest {
     public void canGetCharacterRelationship() throws Exception {
 
         final AbstractCharacter amazon = CharacterFactory.createCharacter(CharacterType.AMAZON);
-        final Knight nativeKnight = new Knight(NativeType.BASHKARS);
+        final AbstractNative knight = NativeFactory.createNative(NativeFaction.BASHKARS, EntityInformation.NATIVE_KNIGHT);
 
-        assertThat(amazon.getRelationshipWith(nativeKnight.getFaction()), is(Relationship.UNFRIENDLY));
+        assertThat(amazon.getRelationshipWith(knight.getFaction()), is(Relationship.UNFRIENDLY));
     }
 
 }

@@ -13,7 +13,7 @@ import ca.carleton.magicrealm.item.weapon.Spear;
  */
 public class Crossbowman extends AbstractNative {
 
-    public Crossbowman(final NativeType nativeType) {
+    protected Crossbowman(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.MEDIUM;
         this.weapon = new Crossbow();
         this.basicGoldWage = 2;

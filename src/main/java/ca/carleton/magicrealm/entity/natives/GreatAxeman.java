@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.item.weapon.GreatAxe;
  */
 public class GreatAxeman extends AbstractNative {
 
-    public GreatAxeman(final NativeType nativeType) {
+    protected GreatAxeman(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.HEAVY;
         this.weapon = new GreatAxe();
         this.basicGoldWage = 4;

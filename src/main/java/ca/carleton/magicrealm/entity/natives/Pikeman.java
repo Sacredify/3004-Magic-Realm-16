@@ -13,7 +13,7 @@ import ca.carleton.magicrealm.item.weapon.Spear;
  */
 public class Pikeman extends AbstractNative {
 
-    public Pikeman(final NativeType nativeType) {
+    protected Pikeman(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.MEDIUM;
         this.weapon = new Spear();
         this.basicGoldWage = 2;

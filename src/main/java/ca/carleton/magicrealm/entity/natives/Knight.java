@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.item.weapon.BroadSword;
  */
 public class Knight extends AbstractNative {
 
-    public Knight(final NativeType nativeType) {
+    protected Knight(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.TREMENDOUS;
         this.weapon = new BroadSword();
         this.basicGoldWage = 8;

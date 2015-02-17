@@ -15,7 +15,7 @@ import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
  */
 public abstract class AbstractNative extends Entity implements BountyCarrier {
 
-    protected NativeType faction;
+    protected NativeFaction faction;
 
     protected int basicGoldWage;
 
@@ -26,7 +26,7 @@ public abstract class AbstractNative extends Entity implements BountyCarrier {
      *
      * @return their faction.
      */
-    public NativeType getFaction() {
+    public NativeFaction getFaction() {
         return this.faction;
     }
 

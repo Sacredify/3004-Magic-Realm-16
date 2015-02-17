@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.item.weapon.MediumBow;
  */
 public class Archer extends AbstractNative {
 
-    public Archer(final NativeType nativeType) {
+    protected Archer(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.MEDIUM;
         this.weapon = new MediumBow();
         this.basicGoldWage = 2;

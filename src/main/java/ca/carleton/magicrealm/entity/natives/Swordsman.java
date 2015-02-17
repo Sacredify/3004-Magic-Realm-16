@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.item.weapon.ThrustingSword;
  */
 public class Swordsman extends AbstractNative {
 
-    public Swordsman(final NativeType nativeType) {
+    protected Swordsman(final NativeFaction nativeType) {
         this.vulnerability = Vulnerability.MEDIUM;
         this.weapon = new ThrustingSword();
         this.basicGoldWage = 1;
