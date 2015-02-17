@@ -22,7 +22,6 @@ public interface PhaseStrategy {
      * Execute the phase for the given player.
      *
      * @param player the player.
-     * @param args   the arguments to the phase. See javadoc for each phase for details.
      */
-    public void doPhase(final Player player, final Object... args);
+    public void doPhase(final Player player);
 }

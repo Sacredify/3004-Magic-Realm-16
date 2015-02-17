@@ -4,7 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 
 /**
- * Represents the player and their attributes.
+ * Represents the player and their various attributes and decisions made within the game..
  * <p/>
  * Created with IntelliJ IDEA.
  * Date: 14/02/15
@@ -26,6 +26,11 @@ public class Player {
      * The clearing the player is currently located on.
      */
     private Clearing currentClearing;
+
+    /**
+     * The clearing the player may want to move to.
+     */
+    private Clearing moveTarget;
 
     public VictoryCondition getVictoryCondition() {
         return this.victoryCondition;
@@ -50,4 +55,13 @@ public class Player {
     public void setCurrentClearing(final Clearing currentClearing) {
         this.currentClearing = currentClearing;
     }
+
+    public Clearing getMoveTarget() {
+        return this.moveTarget;
+    }
+
+    public void setMoveTarget(final Clearing moveTarget) {
+        this.moveTarget = moveTarget;
+    }
+
 }
