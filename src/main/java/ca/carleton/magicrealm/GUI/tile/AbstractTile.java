@@ -37,4 +37,14 @@ public abstract class AbstractTile {
 
     }
 
+    /**
+     * Return the clearing at the given index.
+     *
+     * @param index the index.
+     * @return the clearing.
+     */
+    public Clearing getClearingAt(final int index) {
+        return this.clearings[index];
+    }
+
 }
