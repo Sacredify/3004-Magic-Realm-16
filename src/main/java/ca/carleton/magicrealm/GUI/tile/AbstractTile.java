@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.tile;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,8 +10,31 @@ import java.util.List;
  */
 public abstract class AbstractTile {
 
-    private List<Clearing> clearings;
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractTile.class);
 
-    public abstract String getImagePath();
+    protected Clearing[] clearings;
+
+    private int clearingCount = 0;
+
+    public abstract TileInformation getTileInformation();
+
+    /**
+     * Add a clearing to th is tile.
+     *
+     * @param clearing the clearing to add.
+     */
+    public void addClearing(final Clearing clearing) {
+        if (this.clearings == null) {
+            LOG.warn("Cannot add a clearing to an uninitialized tile.");
+        }
+
+        if (this.clearingCount < this.clearings.length) {
+            this.clearings[this.clearingCount] = clearing;
+            this.clearingCount++;
+        } else {
+            LOG.warn("Clearings are full.");
+        }
+
+    }
 
 }
