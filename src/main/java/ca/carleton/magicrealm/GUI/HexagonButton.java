@@ -15,7 +15,7 @@ import java.util.List;
  *
  *
  */
-public class HexagonButton {
+public class HexagonButton extends JPanel{
 
     public static int WIDTH = 500;
     public static int HEIGHT = 430;
@@ -33,13 +33,16 @@ public class HexagonButton {
 
     private JLabel middleSquareButton;
 
-    private ArrayList<JComponent> components = new ArrayList<>();;
-
     private int xPrimePos;
 
     private int yPrimePos;
 
     public HexagonButton(int x, int y) {
+        setLayout(null);
+
+        this.setLocation(x, y);
+        this.setSize(WIDTH, HEIGHT);
+
         xPrimePos = x;
         yPrimePos = y;
 
@@ -86,7 +89,7 @@ public class HexagonButton {
         rightTriangleButton = new TriangleButton(pointA, pointB, pointC);
 
         // TODO: For now
-        ImageIcon icon = new ImageIcon("../../../assets/tiles/awfulvalley1.png");
+        ImageIcon icon = this.boardServices.createImageIcon("image/tiles/awfulvalley1.gif");
         pictureLabel = new JLabel();
         pictureLabel.setSize(WIDTH, HEIGHT);
         // TODO: change to actual loc
@@ -94,15 +97,22 @@ public class HexagonButton {
         pictureLabel.setIcon(icon);
 
         /** add the componenets of the hex **/
-        components.add(leftTriangleButton);
-        components.add(middleSquareButton);
-        components.add(rightTriangleButton);
-
-
+        this.add(leftTriangleButton);
+        this.add(middleSquareButton);
+        this.add(rightTriangleButton);
+        this.add(pictureLabel);
     }
 
-    public List<JComponent> getComponents() {
-        return this.components;
+    public TriangleButton getRightTriangleButton() {
+        return rightTriangleButton;
+    }
+
+    public TriangleButton getLeftTriangleButton() {
+        return leftTriangleButton;
+    }
+
+    public JLabel getMiddleSquareButton() {
+        return middleSquareButton;
     }
 
     public JLabel getPictureLabel() {
