@@ -47,4 +47,13 @@ public abstract class AbstractTile {
         return this.clearings[index];
     }
 
+    /**
+     * Test to see if the tile is full.
+     *
+     * @return true if it is full
+     */
+    public boolean isFull() {
+        return this.clearings[this.clearings.length - 1] != null;
+    }
+
 }
