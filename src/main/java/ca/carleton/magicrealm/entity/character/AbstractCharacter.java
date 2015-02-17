@@ -22,13 +22,13 @@ public abstract class AbstractCharacter extends Entity {
     protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
 
     /**
-     * Find the relationship with another entity.
+     * Find the relationship with another interactable entity.
      *
-     * @param entity The given entity to find the relationship with.
+     * @param interactable The given entity to find the relationship with.
      * @return The relationship.
      */
-    public Relationship getRelationshipWith(final Entity entity) {
-        return this.relationships.get(entity);
+    public Relationship getRelationshipWith(final Interactable interactable) {
+        return this.relationships.get(interactable);
     }
 
     public void addRelationship(final Interactable entity, final Relationship relationship) {
