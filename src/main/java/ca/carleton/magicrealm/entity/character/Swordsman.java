@@ -4,7 +4,6 @@ import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
-import ca.carleton.magicrealm.entity.natives.NativeType;
 import ca.carleton.magicrealm.item.weapon.ThrustingSword;
 
 /**
