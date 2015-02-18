@@ -16,7 +16,7 @@ public class CharacterCreateMenu extends JFrame {
 
     private static final String WINDOW_NAME = "Character Creation";
 
-    public static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_WIDTH = 650;
 
     public static final int WINDOW_HEIGHT = 200;
 

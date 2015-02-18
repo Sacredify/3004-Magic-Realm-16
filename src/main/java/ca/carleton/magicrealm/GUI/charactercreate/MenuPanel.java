@@ -38,6 +38,15 @@ public class MenuPanel extends JPanel {
         this.initializeVictoryButtons();
         this.initializeVictoryFields();
         this.initializeList();
+        this.initializeSubmit();
+    }
+
+    private void initializeSubmit() {
+        this.submitButton = new JButton("Finish");
+        this.submitButton.setSize(150, 100);
+        this.submitButton.setLocation(475, 40);
+        this.submitButton.setVisible(true);
+        this.add(this.submitButton);
     }
 
     private void initializeList() {
