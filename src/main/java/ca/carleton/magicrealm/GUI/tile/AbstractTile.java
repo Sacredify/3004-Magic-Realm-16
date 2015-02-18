@@ -1,6 +1,4 @@
-package tile;
-
-
+package ca.carleton.magicrealm.GUI.tile;
 
 /**
  * Created with IntelliJ IDEA.
