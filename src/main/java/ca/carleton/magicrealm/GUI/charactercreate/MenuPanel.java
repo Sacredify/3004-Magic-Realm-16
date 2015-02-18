@@ -51,7 +51,7 @@ public class MenuPanel extends JPanel {
     }
 
     private void initializeList() {
-        this.characterSelectList = new JList<CharacterType>(CharacterType.values());
+        this.characterSelectList = new JList<CharacterType>(this.model.availableCharacters.toArray(new CharacterType[this.model.availableCharacters.size()]));
         this.characterSelectList.setLocation(20, 40);
         this.characterSelectList.setSize(new Dimension(150, 110));
         this.characterSelectList.setToolTipText("Select a character.");

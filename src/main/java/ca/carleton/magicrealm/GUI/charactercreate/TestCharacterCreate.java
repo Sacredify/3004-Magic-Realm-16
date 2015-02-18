@@ -1,6 +1,9 @@
 package ca.carleton.magicrealm.GUI.charactercreate;
 
+import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
+
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +13,6 @@ import ca.carleton.magicrealm.game.Player;
 public class TestCharacterCreate {
 
     public static void main(String[] args) {
-        new CharacterCreateMenu(new Player()).displayWindow();
+        new CharacterCreateMenu(new Player(), Arrays.asList(CharacterType.values())).displayWindow();
     }
 }
