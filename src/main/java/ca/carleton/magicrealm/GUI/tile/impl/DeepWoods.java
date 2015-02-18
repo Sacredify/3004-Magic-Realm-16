@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.GUI.tile.TileInformation;
 public class DeepWoods extends AbstractTile {
 
     public DeepWoods() {
-        this.clearings = new Clearing[6];
+        this.clearings = Clearing.initializeClearingsArray(6,this);
     }
 
     @Override

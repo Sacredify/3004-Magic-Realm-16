@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.GUI.tile.TileInformation;
 public class BorderLand extends AbstractTile {
 
     public BorderLand() {
-        this.clearings = new Clearing[6];
+        this.clearings = Clearing.initializeClearingsArray(6,this);
     }
 
     @Override

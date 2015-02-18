@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.GUI.tile.TileInformation;
 public class MapleWoods extends AbstractTile {
 
     public MapleWoods() {
-        this.clearings = new Clearing[3];
+        this.clearings = Clearing.initializeClearingsArray(3,this);
     }
 
     @Override

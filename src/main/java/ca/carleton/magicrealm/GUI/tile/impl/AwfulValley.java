@@ -12,7 +12,8 @@ import ca.carleton.magicrealm.GUI.tile.TileInformation;
 public class AwfulValley extends AbstractTile {
 
     public AwfulValley() {
-        this.clearings = new Clearing[4];
+        this.clearings = Clearing.initializeClearingsArray(4,this);
+        
     }
     
 

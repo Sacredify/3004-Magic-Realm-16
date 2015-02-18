@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.GUI.tile.TileInformation;
 public class BadValley extends AbstractTile {
 
     public BadValley() {
-        this.clearings = new Clearing[4];
+        this.clearings = Clearing.initializeClearingsArray(4,this);
     }
 
     @Override

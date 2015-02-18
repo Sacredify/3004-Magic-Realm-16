@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.GUI.tile.TileInformation;
 public class LindenWoods extends AbstractTile {
 
     public LindenWoods() {
-        this.clearings = new Clearing[3];
+        this.clearings = Clearing.initializeClearingsArray(3,this);
     }
 
     @Override
