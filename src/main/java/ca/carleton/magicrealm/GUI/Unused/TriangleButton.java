@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.GUI;
+package ca.carleton.magicrealm.GUI.Unused;
 
 import java.awt.*;
 import javax.swing.JButton;

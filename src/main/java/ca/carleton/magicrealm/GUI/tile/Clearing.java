@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.tile;
 
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.item.Item;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class Clearing {
 
     private List<Item> items;
 
-    //private Dwelling dwelling;
+    private Dwelling dwelling;
 
     private AbstractTile parentTile;
 
@@ -100,6 +101,30 @@ public class Clearing {
         }
 
         return placeHolder;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Dwelling getDwelling() {
+        return dwelling;
+    }
+
+    public void setDwelling(Dwelling dwelling) {
+        this.dwelling = dwelling;
     }
 }
 
