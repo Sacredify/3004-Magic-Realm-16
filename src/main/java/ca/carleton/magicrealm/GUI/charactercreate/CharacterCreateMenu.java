@@ -16,9 +16,9 @@ public class CharacterCreateMenu extends JFrame {
 
     private static final String WINDOW_NAME = "Character Creation";
 
-    private static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_WIDTH = 500;
 
-    private static final int WINDOW_HEIGHT = 500;
+    public static final int WINDOW_HEIGHT = 350;
 
     private MenuPanel view;
 
@@ -33,7 +33,7 @@ public class CharacterCreateMenu extends JFrame {
         super(WINDOW_NAME);
         this.initWindowSettings();
         this.model = new MenuModel(player);
-        this.view = new MenuPanel();
+        this.view = new MenuPanel(this.model);
         this.add(this.view);
     }
 
@@ -58,6 +58,7 @@ public class CharacterCreateMenu extends JFrame {
     private void initWindowSettings() {
         this.setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.setResizable(false);
     }
 
 }
