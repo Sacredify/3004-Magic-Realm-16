@@ -11,7 +11,6 @@ import java.util.List;
  */
 
 
-
 public class Clearing {
 
     private int x;
@@ -29,25 +28,24 @@ public class Clearing {
     public Clearing(final AbstractTile parentTile) {
         this.parentTile = parentTile;
     }
-    
+
     //Initializes a clearings array with pTile as the parentTile for all of the members
 
     /**
      * Connects the clearing parameter .
-     * 
+     *
      * @param clearing is the clearing to add.
-     * returns clearing that was passed in as parameter 
-     * ,but with self added to the clearings possible paths list
+     *                 returns clearing that was passed in as parameter
+     *                 ,but with self added to the clearings possible paths list
      */
-    
-    public Clearing connectTo(Clearing clearing){
-    	adjacentClearings.add(clearing);
-    	clearing.adjacentClearings.add(clearing);
-    	return clearing;
+
+    public Clearing connectTo(Clearing clearing) {
+        adjacentClearings.add(clearing);
+        clearing.adjacentClearings.add(clearing);
+        return clearing;
     }
-    
-    
-    
+
+
     /**
      * Add an item to this clearing.
      *
@@ -92,16 +90,16 @@ public class Clearing {
     public AbstractTile getParentTime() {
         return this.parentTile;
     }
-  
-    public static Clearing[] initializeClearingsArray(int size, AbstractTile pTile){
-    	
-    	Clearing[] placeHolder = new Clearing[size];
-    	
-    	for(int i = 0 ; i < size ; i++){
-    		placeHolder[i] = new Clearing(pTile);
-    	}
-    	
-    	return placeHolder;
+
+    public static Clearing[] initializeClearingsArray(int size, AbstractTile pTile) {
+
+        Clearing[] placeHolder = new Clearing[size];
+
+        for (int i = 0; i < size; i++) {
+            placeHolder[i] = new Clearing(pTile);
+        }
+
+        return placeHolder;
     }
 }
 
