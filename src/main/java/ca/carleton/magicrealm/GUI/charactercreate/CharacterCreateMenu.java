@@ -18,7 +18,7 @@ public class CharacterCreateMenu extends JFrame {
 
     public static final int WINDOW_WIDTH = 500;
 
-    public static final int WINDOW_HEIGHT = 350;
+    public static final int WINDOW_HEIGHT = 200;
 
     private MenuPanel view;
 
