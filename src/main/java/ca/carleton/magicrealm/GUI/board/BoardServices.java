@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Tony on 14/02/2015.
+ *
+ * Service class to store methods used by a view
  */
 public class BoardServices {
 
@@ -74,9 +76,9 @@ public class BoardServices {
 
     /**
      * Method to resize a BufferedImage
-     * @param image
-     * @param width
-     * @param height
+     * @param image image to resize
+     * @param width width to resize to
+     * @param height height to resize to
      * @return
      */
     public static BufferedImage resize(BufferedImage image, int width, int height) {
@@ -90,22 +92,22 @@ public class BoardServices {
 
     /**
      * Convert an Image to a BufferedImage
-     * @param im
-     * @return
+     * @param image image to convert
+     * @return a BufferedImage of the image given
      */
-    public static BufferedImage imageToBufferedImage(Image im) {
+    public static BufferedImage imageToBufferedImage(Image image) {
         BufferedImage bi = new BufferedImage
-                (im.getWidth(null),im.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+                (image.getWidth(null),image.getHeight(null),BufferedImage.TYPE_INT_ARGB);
         Graphics bg = bi.getGraphics();
-        bg.drawImage(im, 0, 0, null);
+        bg.drawImage(image, 0, 0, null);
         bg.dispose();
         return bi;
     }
 
     /**
      * Rotate the Icon of a BufferedImage
-     * @param bufferedImage
-     * @param angle
+     * @param bufferedImage image to be rotated
+     * @param angle angle to rotate by
      */
     public static BufferedImage rotateBufferedImage(BufferedImage bufferedImage, double angle) {
         AffineTransform tx = new AffineTransform();
@@ -119,7 +121,7 @@ public class BoardServices {
     /**
      * Rotate a point around the center of an icon
      *
-     * @param point
+     * @param point (x,y) point to rotate
      */
     public static void rotatePoint(double[] point, double angle) {
         AffineTransform.getRotateInstance(Math.toRadians(angle), ICON_WIDTH/2, ICON_HEIGHT/2)

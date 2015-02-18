@@ -14,6 +14,9 @@ import java.util.List;
 
 public class Clearing {
 
+    public double TILE_SCALEDOWN_MULTIPLIER_X = 2;
+    public double TILE_SCALEDOWN_MULTIPLIER_Y = 1.72;
+
     private int x;
 
     private int y;
@@ -112,11 +115,11 @@ public class Clearing {
     }
 
     public void setX(int x) {
-        this.x = x;
+        this.x = (int)Math.round(x/TILE_SCALEDOWN_MULTIPLIER_X);
     }
 
     public void setY(int y) {
-        this.y = y;
+        this.y = (int)Math.round(y/TILE_SCALEDOWN_MULTIPLIER_Y);
     }
 
     public Dwelling getDwelling() {

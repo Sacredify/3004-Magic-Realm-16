@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Tony on 17/02/2015.
+ *
+ * Model to represent the board's GUI counterpart
  */
 public class BoardModel {
 

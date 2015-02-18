@@ -28,9 +28,6 @@ public class AwfulValley extends AbstractTile {
         this.clearings[3].setX(246);
         this.clearings[3].setY(85);
 
-
-
-        
     }
     
 

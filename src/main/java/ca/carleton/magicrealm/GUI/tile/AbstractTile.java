@@ -12,9 +12,6 @@ public abstract class AbstractTile {
 
     private int clearingCount = 0;
 
-    public double TILE_SCALEDOWN_MULTIPLIER_X = 2;
-    public double TILE_SCALEDOWN_MULTIPLIER_Y = 1.72;
-
     public abstract TileInformation getTileInformation();
 
     /**
