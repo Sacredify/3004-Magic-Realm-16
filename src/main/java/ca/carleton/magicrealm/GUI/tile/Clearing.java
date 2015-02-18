@@ -28,6 +28,22 @@ public class Clearing {
     }
 
     /**
+     * Connects the clearing parameter .
+     * 
+     * @param clearing is the clearing to add.
+     * returns clearing that was passed in as parameter 
+     * ,but with self added to the clearings possible paths list
+     */
+    
+    public Clearing connectTo(Clearing clearing){
+    	adjacentClearings.add(clearing);
+    	clearing.adjacentClearings.add(clearing);
+    	return clearing;
+    }
+    
+    
+    
+    /**
      * Add an item to this clearing.
      *
      * @param item the item to add.

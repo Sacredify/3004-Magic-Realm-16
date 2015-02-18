@@ -1,7 +1,6 @@
-package ca.carleton.magicrealm.GUI.tile;
+package tile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractTile {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractTile.class);
 
     protected Clearing[] clearings;
 
@@ -25,14 +23,14 @@ public abstract class AbstractTile {
      */
     public void addClearing(final Clearing clearing) {
         if (this.clearings == null) {
-            LOG.warn("Cannot add a clearing to an uninitialized tile.");
+            System.out.println("Cannot add a clearing to an uninitialized tile.");
         }
 
         if (this.clearingCount < this.clearings.length) {
             this.clearings[this.clearingCount] = clearing;
             this.clearingCount++;
         } else {
-            LOG.warn("Clearings are full.");
+            System.out.println("Clearings are full.");
         }
 
     }
