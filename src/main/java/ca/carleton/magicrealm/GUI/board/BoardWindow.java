@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.board;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by Tony on 12/02/2015.
@@ -17,22 +18,29 @@ public class BoardWindow extends JFrame{
 
     private BoardModel boardModel;
 
-    private JFrame boardFrame;
-
     public BoardWindow() {
-        boardFrame = new JFrame(WINDOW_NAME);
-        boardFrame.setLayout(null);
-        boardFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        boardFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setName(WINDOW_NAME);
+        this.setLayout(null);
+        this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         boardModel = new BoardModel();
 
         boardPanel = new BoardPanel();
         boardPanel.drawBoard(boardModel);
-        
-        boardFrame.add(boardPanel);
 
-        boardFrame.setVisible(true);
+        JPanel container = new JPanel();
+        container.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        // TODO: get a friggen scrollbar working
+
+        JScrollPane pane = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.add(pane);
+
+        this.add(boardPanel);
+
+        this.setVisible(true);
     }
 
 

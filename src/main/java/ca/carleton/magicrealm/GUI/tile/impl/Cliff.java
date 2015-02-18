@@ -13,9 +13,6 @@ public class Cliff extends AbstractTile {
 
     public Cliff() {
         this.clearings = Clearing.initializeClearingsArray(6,this);
-
-        this.clearings[0].addAdjacentClearing(this.clearings[5]);
-        this.clearings[1].addAdjacentClearing(this.clearings[2]);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class BoardPanel extends JLayeredPane {
     final static public int WINDOW_HEIGHT = 1000;
-    final static public int WINDOW_WIDTH = 1000;
+    final static public int WINDOW_WIDTH = 1500;
     final static public int TILE_X_OFFSET = 225;
     final static public int TILE_DELTA_X = 450;
     final static public int TILE_DELTA_Y = 130;
@@ -26,6 +26,7 @@ public class BoardPanel extends JLayeredPane {
 
     public BoardPanel() {
         boardServices = new BoardServices();
+        this.setAutoscrolls(true);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setLayout(null);
     }
@@ -37,6 +38,9 @@ public class BoardPanel extends JLayeredPane {
      */
     public void drawBoard(BoardModel boardModel) {
         this.removeAll();
+
+        int maxWidth = 0;
+        int maxHeight = 0;
 
         int y = 0;
         for (ArrayList<AbstractTile> row : boardModel.getBoard()) {
