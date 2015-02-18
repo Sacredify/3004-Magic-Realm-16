@@ -10,12 +10,12 @@ package ca.carleton.magicrealm.entity;
 public enum EntityInformation {
 
     // Characters
-    CHARACTER_AMAZON(null),
-    CHARACTER_BLACK_KNIGHT(null),
-    CHARACTER_CAPTAIN(null),
-    CHARACTER_DWARF(null),
-    CHARACTER_ELF(null),
-    CHARACTER_SWORDSMAN(null),
+    CHARACTER_AMAZON("image/character/amazon.png"),
+    CHARACTER_BLACK_KNIGHT("image/character/black_knight.png"),
+    CHARACTER_CAPTAIN("image/character/captain.png"),
+    CHARACTER_DWARF("image/character/dwarf.png"),
+    CHARACTER_ELF("image/character/elf.png"),
+    CHARACTER_SWORDSMAN("image/character/elf.png"),
 
     // Native types
     NATIVE_KNIGHT(null),
