@@ -20,11 +20,11 @@ public class BoardWindow {
     final static public String WINDOW_NAME = "Board";
     final static public int WINDOW_HEIGHT = 1000;
     final static public int WINDOW_WIDTH = 1000;
-    final static public int TILE_X_OFFSET = 375;
-    final static public int TILE_DELTA_X = 750;
-    final static public int TILE_DELTA_Y = 215;
-    public static int TILE_WIDTH = 500;
-    public static int TILE_HEIGHT = 430;
+    final static public int TILE_X_OFFSET = 225;
+    final static public int TILE_DELTA_X = 450;
+    final static public int TILE_DELTA_Y = 129;
+    public static int TILE_WIDTH = 300;
+    public static int TILE_HEIGHT = 258;
 
     private BoardModel boardModel;
 
