@@ -46,6 +46,7 @@ public class MenuPanel extends JPanel {
         this.submitButton.setSize(150, 100);
         this.submitButton.setLocation(475, 40);
         this.submitButton.setVisible(true);
+        this.submitButton.setEnabled(false);
         this.add(this.submitButton);
     }
 
@@ -83,14 +84,14 @@ public class MenuPanel extends JPanel {
         this.remainingPointsLabel.setVisible(true);
         this.add(this.remainingPointsLabel);
 
-        this.listInfoLabel = new JLabel("Choose your character:");
+        this.listInfoLabel = new JLabel("1. Choose your character:");
         this.listInfoLabel.setSize(new Dimension(150, 20));
         this.listInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
         this.listInfoLabel.setLocation(20, 10);
         this.listInfoLabel.setVisible(true);
         this.add(this.listInfoLabel);
 
-        this.pointsInfoLabel = new JLabel("Allocate your victory points:");
+        this.pointsInfoLabel = new JLabel("2. Allocate your victory points:");
         this.pointsInfoLabel.setSize(new Dimension(180, 20));
         this.pointsInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
         this.pointsInfoLabel.setLocation(265, 10);
@@ -130,6 +131,7 @@ public class MenuPanel extends JPanel {
                 this.victoryPointsButtons[i][j].setSize(new Dimension(45, 20));
                 this.victoryPointsButtons[i][j].setLocation(295 + (j * 100), 40 + (i * 20));
                 this.victoryPointsButtons[i][j].setVisible(true);
+                this.victoryPointsButtons[i][j].setEnabled(false);
                 this.add(this.victoryPointsButtons[i][j]);
 
             }
