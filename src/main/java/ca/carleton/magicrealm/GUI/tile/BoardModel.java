@@ -11,28 +11,32 @@ import java.util.ArrayList;
  */
 public class BoardModel {
 
-    private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
+    private ArrayList<AbstractTile> board;
 
     //TODO: Remove once proper builder is made, replace with looping... something better than this
     public BoardModel() {
         // In the future, mark each tile's x and y grid coordinates when added
-
-        ArrayList<AbstractTile> row1 = new ArrayList<>();
-
-        row1.add(new AwfulValley());
-        row1.add(new AwfulValley());
-
-        board.add(row1);
-
-        ArrayList<AbstractTile> row2 = new ArrayList<>();
-        row2.add(new AwfulValley());
-
-        board.add(row2);
-
-        ArrayList<AbstractTile> row3 = new ArrayList<>();
-        row3.add(new BadValley());
-
-        board.add(row3);
+        board = new ArrayList<AbstractTile>();
+        board.add(new AwfulValley());
+        board.add(new BadValley());
+        board.add(new BorderLand());
+        board.add(new Cavern());
+        board.add(new Caves());
+        board.add(new Cliff());
+        board.add(new Crag());
+        board.add(new CrustValley());
+        board.add(new DarkValley());
+        board.add(new DeepWoods());
+        board.add(new EvilValley());
+        board.add(new HighPass());
+        board.add(new Ledges());
+        board.add(new LindenWoods()); 
+        board.add(new MapleWoods);
+        board.add(new Mountain());
+        board.add(new NutWoods());
+        board.add(new OakWoods());
+        board.add(new PineWoods());
+        board.add(new Ruins());
     }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {
