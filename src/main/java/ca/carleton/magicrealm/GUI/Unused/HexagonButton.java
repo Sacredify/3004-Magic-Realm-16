@@ -1,10 +1,8 @@
-package ca.carleton.magicrealm.GUI;
+package ca.carleton.magicrealm.GUI.Unused;
 
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import ca.carleton.magicrealm.GUI.board.BoardServices;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

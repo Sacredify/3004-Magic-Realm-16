@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.tile.impl;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileInformation;
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,6 +14,22 @@ public class AwfulValley extends AbstractTile {
 
     public AwfulValley() {
         this.clearings = Clearing.initializeClearingsArray(4,this);
+
+        this.clearings[0].setX(138);
+        this.clearings[0].setY(156);
+        this.clearings[0].setDwelling(Dwelling.HOUSE);
+
+        this.clearings[1].setX(135);
+        this.clearings[1].setY(281);
+
+        this.clearings[2].setX(298);
+        this.clearings[2].setY(244);
+
+        this.clearings[3].setX(246);
+        this.clearings[3].setY(85);
+
+
+
         
     }
     

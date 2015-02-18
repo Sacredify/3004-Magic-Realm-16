@@ -14,7 +14,8 @@ public class BoardModel {
     //TODO: Remove once proper builder is made, replace with looping... something better than this
     public BoardModel() {
         // In the future, mark each tile's x and y grid coordinates when added
-        this.board = new ArrayList<AbstractTile>();
+
+        board = new ArrayList<AbstractTile>();
         //Awful Valley -0
         this.board.add(new AwfulValley());
         //Bad Valley -1
@@ -30,7 +31,7 @@ public class BoardModel {
         //Crag -6
         this.board.add(new Crag());
         //Crust Valley -7
-        this.board.add(new CurstValley());
+        //board.add(new CrustValley());
         //Dark Valley -8
         this.board.add(new DarkValley());
         //Deep Woods - 9 
@@ -44,7 +45,7 @@ public class BoardModel {
         //Linden Woods -13
         this.board.add(new LindenWoods());
         //Maple Woods -14
-        this.board.add(new MapleWoods());
+        board.add(new MapleWoods());
         //Mountains -15
         this.board.add(new Mountain());
         //Nut Woods -16
@@ -137,9 +138,33 @@ public class BoardModel {
         //5
         this.board.get(17).clearings[2] = this.board.get(1).clearings[0].connectTo(this.board.get(17).clearings[2]);
         //2
-        this.board.get(17).clearings[0] = this.board.get(12).clearings[4].connectTo(this.board.get(17).clearings[0]);
-        this.board.get(17).clearings[0] = this.board.get(2).clearings[1].connectTo(this.board.get(17).clearings[0]);
-        this.board.get(17).clearings[0] = this.board.get(17).clearings[1].connectTo(this.board.get(17).clearings[0]);
+        board.get(17).clearings[0] = board.get(12).clearings[4].connectTo(board.get(17).clearings[0]);
+        board.get(17).clearings[0] = board.get(2).clearings[1].connectTo(board.get(17).clearings[0]);
+        board.get(17).clearings[0] = board.get(17).clearings[1].connectTo(board.get(17).clearings[0]);
+        
+        
+
+        this.board = new ArrayList<AbstractTile>();
+        this.board.add(new AwfulValley());
+        this.board.add(new BadValley());
+        this.board.add(new BorderLand());
+        this.board.add(new Cavern());
+        this.board.add(new Caves());
+        this.board.add(new Cliff());
+        this.board.add(new Crag());
+        this.board.add(new CurstValley());
+        this.board.add(new DarkValley());
+        this.board.add(new DeepWoods());
+        this.board.add(new EvilValley());
+        this.board.add(new HighPass());
+        this.board.add(new Ledges());
+        this.board.add(new LindenWoods());
+        this.board.add(new MapleWoods());
+        this.board.add(new Mountain());
+        this.board.add(new NutWoods());
+        this.board.add(new OakWoods());
+        this.board.add(new PineWoods());
+        this.board.add(new Ruins());
 
     }
 

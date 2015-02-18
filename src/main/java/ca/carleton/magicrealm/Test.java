@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm;
 
-import ca.carleton.magicrealm.GUI.BoardWindow;
+import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +17,5 @@ public class Test {
         LOG.info("Logged something.");
 
         BoardWindow board = new BoardWindow();
-        board.initWindow();
     }
 }

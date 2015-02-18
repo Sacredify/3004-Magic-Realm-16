@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.GUI;
+package ca.carleton.magicrealm.GUI.Unused;
 
 /**
  * Created by Tony on 16/02/2015.
