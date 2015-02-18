@@ -9,6 +9,9 @@ import java.util.List;
  * Date: 16/02/15
  * Time: 7:54 PM
  */
+
+
+
 public class Clearing {
 
     private int x;
@@ -26,6 +29,8 @@ public class Clearing {
     public Clearing(final AbstractTile parentTile) {
         this.parentTile = parentTile;
     }
+    
+    //Initializes a clearings array with pTile as the parentTile for all of the members
 
     /**
      * Connects the clearing parameter .
@@ -87,4 +92,16 @@ public class Clearing {
     public AbstractTile getParentTime() {
         return this.parentTile;
     }
+  
+    public static Clearing[] initializeClearingsArray(int size, AbstractTile pTile){
+    	
+    	Clearing[] placeHolder = new Clearing[size];
+    	
+    	for(int i = 0 ; i < size ; i++){
+    		placeHolder[i] = new Clearing(pTile);
+    	}
+    	
+    	return placeHolder;
+    }
 }
+

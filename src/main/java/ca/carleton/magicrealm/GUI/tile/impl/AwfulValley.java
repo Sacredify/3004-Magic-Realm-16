@@ -14,6 +14,7 @@ public class AwfulValley extends AbstractTile {
     public AwfulValley() {
         this.clearings = new Clearing[4];
     }
+    
 
     @Override
     public TileInformation getTileInformation() {
