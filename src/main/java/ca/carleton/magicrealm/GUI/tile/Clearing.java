@@ -27,10 +27,17 @@ public class Clearing {
 
     private AbstractTile parentTile;
 
+    private int index;
+
     private List<Clearing> adjacentClearings;
 
-    public Clearing(final AbstractTile parentTile) {
+    public Clearing(final AbstractTile parentTile,int index) {
         this.parentTile = parentTile;
+        this.index  = index;
+    }
+
+    public int getIndex(){
+        return index;
     }
 
     //Initializes a clearings array with pTile as the parentTile for all of the members
@@ -100,7 +107,7 @@ public class Clearing {
         Clearing[] placeHolder = new Clearing[size];
 
         for (int i = 0; i < size; i++) {
-            placeHolder[i] = new Clearing(pTile);
+            placeHolder[i] = new Clearing(pTile,i);
         }
 
         return placeHolder;

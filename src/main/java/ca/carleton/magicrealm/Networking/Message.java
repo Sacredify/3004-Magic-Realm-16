@@ -1,5 +1,9 @@
 package ca.carleton.magicrealm.Networking;
 
+import ca.carleton.magicrealm.GUI.tile.Clearing;
+
+import java.util.List;
+
 public final class Message {
 
     //TILES
@@ -39,6 +43,7 @@ public final class Message {
     public final String SELECT_PLAYER = "SELECT_PLAYER";
     public final String TURN_ALERT = "TURN_ALERT";
     public final String PHASE_SELECT = "PHASE_SELECT";
+    public final String AVAILABLE_CLEARINGS = "AVAILABLE_CLEARINGS";
 
 
     //CHARACTER TYPES
@@ -49,5 +54,16 @@ public final class Message {
     public final String AMAZON = "AMAZON";
     public final String ELF = "ELF";
     public final String BLACK_KNIGHT = "BLACK_KNIGHT";
+
+
+    public static String makeMoveMessage(String location){
+        return MOVE + ":" + location;
+    }
+
+    public static String getMessageType(String message){
+        String[] mArray = message.split(":");
+        return mArray[0];
+    }
+
 
 }
