@@ -22,7 +22,7 @@ public class MenuModel {
 
     int pointsLeft = 5;
 
-    CharacterType selectedCharacter;
+    private CharacterType selectedCharacter;
 
     private CharacterCreateMenu frame;
 
@@ -97,6 +97,10 @@ public class MenuModel {
     public void done() {
         this.player.setCharacter(CharacterFactory.createCharacter(this.selectedCharacter));
         this.frame.disposeWindow();
+    }
+
+    public void setSelectedCharacter(final CharacterType type) {
+        this.selectedCharacter = type;
     }
 
     private void checkButtonUpdate() {

@@ -77,7 +77,7 @@ public class CharacterCreateMenu extends JFrame {
         this.view.characterSelectList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(final ListSelectionEvent e) {
-                CharacterCreateMenu.this.model.selectedCharacter = CharacterCreateMenu.this.view.characterSelectList.getSelectedValue();
+                CharacterCreateMenu.this.model.setSelectedCharacter(CharacterCreateMenu.this.view.characterSelectList.getSelectedValue());
                 CharacterCreateMenu.this.view.setIncrementKeysEnabled(true);
             }
         });
