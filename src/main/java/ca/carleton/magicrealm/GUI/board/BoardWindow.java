@@ -16,7 +16,7 @@ public class BoardWindow extends JFrame{
 
     private BoardPanel boardPanel;
 
-    private BoardModel boardModel;
+    private BoardGUIModel boardGUIModel;
 
     public BoardWindow() {
         this.setName(WINDOW_NAME);
@@ -25,10 +25,10 @@ public class BoardWindow extends JFrame{
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        boardModel = new BoardModel();
+        boardGUIModel = new BoardGUIModel();
 
         boardPanel = new BoardPanel();
-        boardPanel.drawBoard(boardModel);
+        boardPanel.drawBoard(boardGUIModel);
 
         JPanel container = new JPanel();
         container.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);

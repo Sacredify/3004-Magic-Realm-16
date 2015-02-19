@@ -10,12 +10,12 @@ import java.util.ArrayList;
  *
  * Model to represent the board's GUI counterpart
  */
-public class BoardModel {
+public class BoardGUIModel {
 
     private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
 
     //TODO: Remove once proper builder is made, replace with looping... something better than this
-    public BoardModel() {
+    public BoardGUIModel() {
         // In the future, mark each tile's x and y grid coordinates when added
         ArrayList<AbstractTile> row1 = new ArrayList<>();
 

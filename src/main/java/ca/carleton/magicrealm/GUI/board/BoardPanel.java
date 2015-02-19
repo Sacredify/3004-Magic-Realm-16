@@ -34,16 +34,16 @@ public class BoardPanel extends JLayeredPane {
     /**
      * Method to draw the board's current state, based on the given BoardModel
      *
-     * @param boardModel board to draw
+     * @param boardGUIModel board to draw
      */
-    public void drawBoard(BoardModel boardModel) {
+    public void drawBoard(BoardGUIModel boardGUIModel) {
         this.removeAll();
 
         int maxWidth = 0;
         int maxHeight = 0;
 
         int y = 0;
-        for (ArrayList<AbstractTile> row : boardModel.getBoard()) {
+        for (ArrayList<AbstractTile> row : boardGUIModel.getBoard()) {
             int x = 0;
             for (AbstractTile tile : row) {
                 if (tile != null) {
