@@ -14,8 +14,8 @@ import java.util.List;
 
 public class Clearing {
 
-    public double TILE_SCALEDOWN_MULTIPLIER_X = 2;
-    public double TILE_SCALEDOWN_MULTIPLIER_Y = 1.72;
+    public double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
+    public double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
 
     private int x;
 

@@ -19,14 +19,14 @@ public class BoardServices {
     public static final int ORIGINAL_TILE_WIDTH = 500;
     public static final int ORIGINAL_TILE_HEIGHT = 430;
 
-    public static final int TILE_WIDTH = 300;
-    public static final int TILE_HEIGHT = 258;
+    public static final int TILE_WIDTH = 250;
+    public static final int TILE_HEIGHT = 215;
 
-    public static final int RESIZE_TILE_WIDTH = 338;
-    public static final int RESIZE_TILE_HEIGHT = 323;
+    public static final int RESIZE_TILE_WIDTH = 282;
+    public static final int RESIZE_TILE_HEIGHT = 269;
 
-    public static final int CHIT_WIDTH = 61;
-    public static final int CHIT_HEIGHT = 52;
+    public static final int CHIT_WIDTH = 40;
+    public static final int CHIT_HEIGHT = 35;
 
     public ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = this.getClass().getClassLoader().getResource(path);

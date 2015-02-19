@@ -14,13 +14,13 @@ import java.util.ArrayList;
  * The view for the game board
  */
 public class BoardPanel extends JLayeredPane {
-    final static public int WINDOW_HEIGHT = 1000;
+    final static public int WINDOW_HEIGHT = 1500;
     final static public int WINDOW_WIDTH = 1500;
-    final static public int TILE_X_OFFSET = 225;
-    final static public int TILE_DELTA_X = 450;
-    final static public int TILE_DELTA_Y = 130;
-    public static final int CHIT_WIDTH = 61;
-    public static final int CHIT_HEIGHT = 52;
+    final static public int TILE_X_OFFSET = 188;
+    final static public int TILE_DELTA_X = 375;
+    final static public int TILE_DELTA_Y = 108;
+    public static final int CHIT_WIDTH = 40;
+    public static final int CHIT_HEIGHT = 35;
 
     private BoardServices boardServices;
 
