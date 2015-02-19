@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
+ * <p/>
  * Date: 16/02/15
  * Time: 7:54 PM
  */
@@ -122,11 +123,11 @@ public class Clearing {
     }
 
     public void setX(int x) {
-        this.x = (int)Math.round(x/TILE_SCALEDOWN_MULTIPLIER_X);
+        this.x = (int) Math.round(x / TILE_SCALEDOWN_MULTIPLIER_X);
     }
 
     public void setY(int y) {
-        this.y = (int)Math.round(y/TILE_SCALEDOWN_MULTIPLIER_Y);
+        this.y = (int) Math.round(y / TILE_SCALEDOWN_MULTIPLIER_Y);
     }
 
     public Dwelling getDwelling() {
