@@ -14,6 +14,9 @@ public abstract class AbstractTile {
 
     public abstract TileInformation getTileInformation();
 
+    // refactor this later
+    private int angle;
+
     /**
      * Add a clearing to th is tile.
      *
@@ -56,5 +59,11 @@ public abstract class AbstractTile {
         return clearings;
     }
 
+    public int getAngle() {
+        return angle;
+    }
 
+    public void setAngle(int angle) {
+        this.angle = angle;
+    }
 }

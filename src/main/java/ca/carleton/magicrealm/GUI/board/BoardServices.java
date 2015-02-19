@@ -16,9 +16,14 @@ import java.util.ArrayList;
  * Service class to store methods used by a view
  */
 public class BoardServices {
+    public static final int ORIGINAL_TILE_WIDTH = 500;
+    public static final int ORIGINAL_TILE_HEIGHT = 430;
 
-    public static final int ICON_WIDTH = 300;
-    public static final int ICON_HEIGHT = 258;
+    public static final int TILE_WIDTH = 300;
+    public static final int TILE_HEIGHT = 258;
+
+    public static final int RESIZE_TILE_WIDTH = 338;
+    public static final int RESIZE_TILE_HEIGHT = 323;
 
     public static final int CHIT_WIDTH = 61;
     public static final int CHIT_HEIGHT = 52;
@@ -35,12 +40,11 @@ public class BoardServices {
 
     public JLabel createTileIcon(AbstractTile tile) {
         JLabel newTile = new JLabel();
-        newTile.setSize(ICON_WIDTH, ICON_HEIGHT);
+        newTile.setSize(TILE_WIDTH, TILE_HEIGHT);
         ImageIcon newIcon = createImageIcon(tile.getTileInformation().getPath());
         BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
-        //newImage = rotateBufferedImage(newImage, 120);
+        newImage = applyTransformations(newImage, newTile, tile);
 
-        newImage = resize(newImage, ICON_WIDTH, ICON_HEIGHT);
         newIcon.setImage(newImage);
         newTile.setIcon(newIcon);
         return newTile;
@@ -104,6 +108,26 @@ public class BoardServices {
         return bi;
     }
 
+    public BufferedImage applyTransformations(BufferedImage bufferedImage, JLabel label, AbstractTile tile) {
+        bufferedImage = rotateBufferedImage(bufferedImage, tile.getAngle());
+        if (tile.getAngle() % 180 != 0) {
+            bufferedImage = resize(bufferedImage, RESIZE_TILE_WIDTH, RESIZE_TILE_HEIGHT);
+            label.setSize(RESIZE_TILE_WIDTH, RESIZE_TILE_HEIGHT);
+            for (Clearing clearing: tile.getClearings()) {
+                double[] point = new double[2];
+                point[0] = clearing.getX();
+                point[1] = clearing.getY();
+                rotatePoint(point, tile.getAngle());
+                clearing.setX((int)Math.round(point[0]));
+                clearing.setY((int)Math.round(point[1]));
+            }
+        }
+        else {
+            bufferedImage = resize(bufferedImage, TILE_WIDTH, TILE_HEIGHT);
+        }
+        return bufferedImage;
+    }
+
     /**
      * Rotate the Icon of a BufferedImage
      * @param bufferedImage image to be rotated
@@ -111,11 +135,12 @@ public class BoardServices {
      */
     public static BufferedImage rotateBufferedImage(BufferedImage bufferedImage, double angle) {
         AffineTransform tx = new AffineTransform();
-        tx.rotate(Math.toRadians(angle), bufferedImage.getWidth() / 2, bufferedImage.getHeight() / 2);
+        tx.rotate(Math.toRadians(angle), ORIGINAL_TILE_WIDTH / 2, ORIGINAL_TILE_HEIGHT / 2);
 
         AffineTransformOp op = new AffineTransformOp(tx,
                 AffineTransformOp.TYPE_BILINEAR);
         return op.filter(bufferedImage, null);
+
     }
 
     /**
@@ -124,7 +149,7 @@ public class BoardServices {
      * @param point (x,y) point to rotate
      */
     public static void rotatePoint(double[] point, double angle) {
-        AffineTransform.getRotateInstance(Math.toRadians(angle), ICON_WIDTH/2, ICON_HEIGHT/2)
+        AffineTransform.getRotateInstance(Math.toRadians(angle), ORIGINAL_TILE_WIDTH/2, ORIGINAL_TILE_HEIGHT/2)
                 .transform(point, 0, point, 0, 1); // specifying to use this double[] to hold coords
     }
 
