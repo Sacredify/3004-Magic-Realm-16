@@ -12,6 +12,8 @@ import java.awt.*;
  */
 public class MenuPanel extends JPanel {
 
+    private static final String FORMAT_STRING = "Remaining points: %d";
+
     JButton submitButton;
 
     JTextField[] victoryPointsFields;
@@ -39,6 +41,54 @@ public class MenuPanel extends JPanel {
         this.initializeVictoryFields();
         this.initializeList();
         this.initializeSubmit();
+    }
+
+    public void setFinishEnabled(final boolean status) {
+        this.submitButton.setEnabled(status);
+    }
+
+    public void setDecrementKeysEnabled(final boolean status) {
+        this.victoryPointsButtons[0][0].setEnabled(status);
+        this.victoryPointsButtons[1][0].setEnabled(status);
+        this.victoryPointsButtons[2][0].setEnabled(status);
+        this.victoryPointsButtons[3][0].setEnabled(status);
+        this.victoryPointsButtons[4][0].setEnabled(status);
+    }
+
+    public void setIncrementKeysEnabled(final boolean status) {
+        this.victoryPointsButtons[0][1].setEnabled(status);
+        this.victoryPointsButtons[1][1].setEnabled(status);
+        this.victoryPointsButtons[2][1].setEnabled(status);
+        this.victoryPointsButtons[3][1].setEnabled(status);
+        this.victoryPointsButtons[4][1].setEnabled(status);
+    }
+
+    public void checkIndividualButtons() {
+        // Need to check each individual condition for increment/decrement
+        if (this.model.player.getVictoryCondition().getGold() == 0) {
+            this.victoryPointsButtons[0][0].setEnabled(false);
+        }
+        if (this.model.player.getVictoryCondition().getNotoriety() == 0) {
+            this.victoryPointsButtons[1][0].setEnabled(false);
+        }
+        if (this.model.player.getVictoryCondition().getFame() == 0) {
+            this.victoryPointsButtons[2][0].setEnabled(false);
+        }
+        if (this.model.player.getVictoryCondition().getSpellsCount() == 0) {
+            this.victoryPointsButtons[3][0].setEnabled(false);
+        }
+        if (this.model.player.getVictoryCondition().getGreatTreasuresCount() == 0) {
+            this.victoryPointsButtons[4][0].setEnabled(false);
+        }
+    }
+
+    public void updateText() {
+        this.remainingPointsLabel.setText(String.format(FORMAT_STRING, this.model.pointsLeft));
+        this.victoryPointsFields[0].setText(String.valueOf(this.model.player.getVictoryCondition().getGold()));
+        this.victoryPointsFields[1].setText(String.valueOf(this.model.player.getVictoryCondition().getNotoriety()));
+        this.victoryPointsFields[2].setText(String.valueOf(this.model.player.getVictoryCondition().getFame()));
+        this.victoryPointsFields[3].setText(String.valueOf(this.model.player.getVictoryCondition().getSpellsCount()));
+        this.victoryPointsFields[4].setText(String.valueOf(this.model.player.getVictoryCondition().getGreatTreasuresCount()));
     }
 
     private void initializeSubmit() {

@@ -9,6 +9,14 @@ package ca.carleton.magicrealm.game;
  */
 public class VictoryCondition {
 
+    public enum Conditions {
+        GOLD,
+        NOTORIETY,
+        FAME,
+        SPELLS_COUNT,
+        GREAT_TREASURES_COUNT
+    }
+
     private int gold;
 
     private int notoriety;
@@ -31,12 +39,32 @@ public class VictoryCondition {
         this.fame += fame;
     }
 
-    public void increaseSpellCount() {
-        this.spellsCount++;
+    public void addSpells(final int spells) {
+        this.spellsCount += spells;
     }
 
-    public void increaseGreatTreasuresCount() {
-        this.greatTreasuresCount++;
+    public void addGreatTreasures(final int treasures) {
+        this.greatTreasuresCount += treasures;
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public int getNotoriety() {
+        return notoriety;
+    }
+
+    public int getFame() {
+        return fame;
+    }
+
+    public int getSpellsCount() {
+        return spellsCount;
+    }
+
+    public int getGreatTreasuresCount() {
+        return greatTreasuresCount;
     }
 
 }
