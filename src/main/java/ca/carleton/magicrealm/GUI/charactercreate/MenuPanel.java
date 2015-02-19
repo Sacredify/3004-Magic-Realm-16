@@ -38,10 +38,20 @@ public class MenuPanel extends JPanel {
         this.initializeVictoryButtons();
         this.initializeVictoryFields();
         this.initializeList();
+        this.initializeSubmit();
+    }
+
+    private void initializeSubmit() {
+        this.submitButton = new JButton("Finish");
+        this.submitButton.setSize(150, 100);
+        this.submitButton.setLocation(475, 40);
+        this.submitButton.setVisible(true);
+        this.submitButton.setEnabled(false);
+        this.add(this.submitButton);
     }
 
     private void initializeList() {
-        this.characterSelectList = new JList<CharacterType>(CharacterType.values());
+        this.characterSelectList = new JList<CharacterType>(this.model.availableCharacters.toArray(new CharacterType[this.model.availableCharacters.size()]));
         this.characterSelectList.setLocation(20, 40);
         this.characterSelectList.setSize(new Dimension(150, 110));
         this.characterSelectList.setToolTipText("Select a character.");
@@ -74,14 +84,14 @@ public class MenuPanel extends JPanel {
         this.remainingPointsLabel.setVisible(true);
         this.add(this.remainingPointsLabel);
 
-        this.listInfoLabel = new JLabel("Choose your character:");
+        this.listInfoLabel = new JLabel("1. Choose your character:");
         this.listInfoLabel.setSize(new Dimension(150, 20));
         this.listInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
         this.listInfoLabel.setLocation(20, 10);
         this.listInfoLabel.setVisible(true);
         this.add(this.listInfoLabel);
 
-        this.pointsInfoLabel = new JLabel("Allocate your victory points:");
+        this.pointsInfoLabel = new JLabel("2. Allocate your victory points:");
         this.pointsInfoLabel.setSize(new Dimension(180, 20));
         this.pointsInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
         this.pointsInfoLabel.setLocation(265, 10);
@@ -121,6 +131,7 @@ public class MenuPanel extends JPanel {
                 this.victoryPointsButtons[i][j].setSize(new Dimension(45, 20));
                 this.victoryPointsButtons[i][j].setLocation(295 + (j * 100), 40 + (i * 20));
                 this.victoryPointsButtons[i][j].setVisible(true);
+                this.victoryPointsButtons[i][j].setEnabled(false);
                 this.add(this.victoryPointsButtons[i][j]);
 
             }

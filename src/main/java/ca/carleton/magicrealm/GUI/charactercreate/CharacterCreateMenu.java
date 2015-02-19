@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.charactercreate;
 
+import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ public class CharacterCreateMenu extends JFrame {
 
     private static final String WINDOW_NAME = "Character Creation";
 
-    public static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_WIDTH = 650;
 
     public static final int WINDOW_HEIGHT = 200;
 
@@ -29,10 +30,10 @@ public class CharacterCreateMenu extends JFrame {
      *
      * @param player the player this dialog is for.
      */
-    public CharacterCreateMenu(final Player player) {
+    public CharacterCreateMenu(final Player player, final java.util.List<CharacterType> availableCharacters) {
         super(WINDOW_NAME);
         this.initWindowSettings();
-        this.model = new MenuModel(player);
+        this.model = new MenuModel(player, availableCharacters);
         this.view = new MenuPanel(this.model);
         this.add(this.view);
     }
