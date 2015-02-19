@@ -4,6 +4,8 @@ import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+
 /**
  * Created with IntelliJ IDEA.
  * Date: 03/02/15
@@ -14,8 +16,11 @@ public class Test {
     private static final Logger LOG = LoggerFactory.getLogger(Test.class);
 
     public static void main(String[] args) {
-        LOG.info("Logged something.");
-
-        BoardWindow board = new BoardWindow();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                BoardWindow board = new BoardWindow();
+            }
+        });
     }
 }
