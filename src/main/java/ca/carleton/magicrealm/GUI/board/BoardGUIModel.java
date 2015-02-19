@@ -12,12 +12,12 @@ import java.util.ArrayList;
  */
 public class BoardGUIModel {
 
-    private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
+    private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<AbstractTile>();
 
     //TODO: Remove once proper builder is made, replace with looping... something better than this
     public BoardGUIModel() {
         // In the future, mark each tile's x and y grid coordinates when added
-        ArrayList<AbstractTile> row1 = new ArrayList<>();
+        ArrayList<AbstractTile> row1 = new ArrayList<AbstractTile>();
 
         row1.add(null);
         row1.add(new Cliff());

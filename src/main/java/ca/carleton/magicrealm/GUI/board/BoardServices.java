@@ -51,7 +51,7 @@ public class BoardServices {
     }
 
     public ArrayList<JButton> createChitIconsForTile(AbstractTile tile) {
-        ArrayList<JButton> iconList = new ArrayList<>();
+        ArrayList<JButton> iconList = new ArrayList<JButton>();
 
         // TODO: Check with mike on getting clearings
         for (Clearing clearing : tile.getClearings()) {
