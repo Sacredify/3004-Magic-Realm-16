@@ -32,6 +32,10 @@ public class Player {
      */
     private Clearing moveTarget;
 
+    public Player() {
+        this.victoryCondition = new VictoryCondition();
+    }
+
     public VictoryCondition getVictoryCondition() {
         return this.victoryCondition;
     }
