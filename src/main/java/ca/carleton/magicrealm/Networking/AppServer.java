@@ -14,12 +14,14 @@ public class AppServer implements Runnable {
     private Thread thread = null;
     private ServerSocket server = null;
     private ArrayList<ServerThread> clients = null;
+    private TurnController turnController = null;
 
     public AppServer(int port) {
         try {
             server = new ServerSocket(port);
             server.setReuseAddress(true);
             clients = new ArrayList<ServerThread>();
+            this.turnController = new TurnController();
             start();
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -27,6 +29,23 @@ public class AppServer implements Runnable {
         }
     }
 
+    //Begins a new round of turns(DAYLIGHT)
+    public void beginPhase(){
+        turnController.createNewTurn(clients);
+        alertPlayerNextTurn();
+    }
+
+    //This function is called every time a Message.TURN_FINISHED is recieved
+    //STILL NEED TO IMPLEMENT SWORDSMAN FUNCTIONALITY
+    public void alertPlayerNextTurn(){
+        int nextID;
+        ServerThread nextClient;
+        nextID = turnController.getNextPlayer();
+        broadcastMessage(nextID,"TURN_PLAYER:"+nextID);
+        nextClient = getClientWithID(nextID);
+        nextClient.send(Message.TURN_ALERT);
+    }
+    
     public void start() {
         if (thread == null) {
             thread = new Thread(this);

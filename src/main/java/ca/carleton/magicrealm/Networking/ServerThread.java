@@ -11,7 +11,6 @@ public class ServerThread extends Thread {
     private int gameNumber = -1;
     private ObjectOutputStream objOutStream = null;
     private ObjectInputStream objInputStream = null;
-
     private boolean done = false;
 
     public ServerThread(AppServer server, Socket socket) {
@@ -20,6 +19,7 @@ public class ServerThread extends Thread {
         this.socket = socket;
         this.ID = socket.getPort();
     }
+
 
 
     public void send(Object msg) {
