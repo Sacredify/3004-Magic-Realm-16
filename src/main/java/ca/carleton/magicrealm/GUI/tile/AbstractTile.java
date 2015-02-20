@@ -1,11 +1,13 @@
 package ca.carleton.magicrealm.GUI.tile;
 
+import java.io.Serializable;
+
 /**
  * Created with IntelliJ IDEA.
  * Date: 16/02/15
  * Time: 7:54 PM
  */
-public abstract class AbstractTile {
+public abstract class AbstractTile implements Serializable {
 
 
     protected Clearing[] clearings;

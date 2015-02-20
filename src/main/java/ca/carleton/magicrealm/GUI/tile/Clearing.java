@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.tile;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.item.Item;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 
 
-public class Clearing {
+public class Clearing implements Serializable {
 
     public double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
     public double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class BoardGUIModel {
 
-    private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<AbstractTile>();
+    private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
 
     //TODO: Remove once proper builder is made, replace with looping... something better than this
     public BoardGUIModel() {

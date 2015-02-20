@@ -1,10 +1,6 @@
 package ca.carleton.magicrealm.Networking;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 
 
@@ -13,8 +9,8 @@ public class ServerThread extends Thread {
     private Socket socket = null;
     private AppServer server = null;
     private int gameNumber = -1;
-    private BufferedReader streamIn = null;
-    private BufferedWriter streamOut = null;
+    private ObjectOutputStream objOutStream = null;
+    private ObjectInputStream objInputStream = null;
 
     private boolean done = false;
 
@@ -26,11 +22,10 @@ public class ServerThread extends Thread {
     }
 
 
-    public void send(String msg) {
+    public void send(Object msg) {
         try {
-            streamOut.write(msg);
-            streamOut.newLine();
-            streamOut.flush();
+            objOutStream.writeObject(msg);
+            objOutStream.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -39,30 +34,48 @@ public class ServerThread extends Thread {
 
 
     public void run() {
+
+        Object obj = null;
         try {
-            String line = streamIn.readLine();
-            while (line != null) {
-                System.out.println(line);
-                server.handle(ID, line);
-                line = streamIn.readLine();
-                if (line == null) {
-                    System.out.println("Cliend dropped");
-                    break;
-                }
-            }
+            obj  = objInputStream.readObject();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            //e.printStackTrace();
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        while (obj != null) {
+            try {
+                server.handle(ID,obj);
+                obj = objInputStream.readObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (obj == null) {
+                System.out.println("Cliend dropped");
+                break;
+            }
         }
     }
 
 
     public void open() throws IOException {
         System.out.println(ID + ":Opening buffer streams");
-        streamIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        streamOut = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        if (streamIn != null && streamOut != null) {
-            System.out.println("Buffered streams opened on thread:" + ID);
+        objOutStream= new ObjectOutputStream(socket.getOutputStream());
+        objInputStream = new ObjectInputStream(socket.getInputStream());
+        objOutStream.flush();
+        if (objInputStream == null) {
+            System.out.println("Unable to Open Object Input Stream on Thread:" + ID);
+        }
+        else{
+            System.out.println("Able to Open Object Input Stream on Thread:" + ID);
+        }
+        if (objOutStream == null) {
+            System.out.println("Unable to Open Object Output Stream on Thread:" + ID);
+        }
+        else{
+            System.out.println("Able to Open Object Output Stream on Thread:" + ID);
         }
     }
 

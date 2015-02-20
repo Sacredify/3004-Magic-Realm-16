@@ -1,13 +1,10 @@
 package ca.carleton.magicrealm.Networking;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 
 public class AppServer implements Runnable {
@@ -38,9 +35,14 @@ public class AppServer implements Runnable {
     }
 
     //Handles input from the server threads
-    public synchronized void handle(int ID, String input) {
-        System.out.println("handle");
-        broadcastMessage(ID, input);
+    public synchronized void handle(int ID, Object obj) {
+        if("ca.carleton.magicrealm.GUI.tile.Clearing" == obj.getClass().getName()) {
+            System.out.println("This is a clearing");
+        }
+        else if("java.lang.String" == obj.getClass().getName()){
+            System.out.println("This is a string");
+        }
+        broadcastMessage(ID, obj);
     }
 
 
@@ -69,14 +71,7 @@ public class AppServer implements Runnable {
                     clients.get(clientCount).start();
                     clientCount++;
                 }
-                //Else send a game is full Message
-                else {
-                    System.out.println("GAME IS FULL");
-                    BufferedWriter streamOut = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-                    streamOut.write("GAME IS FULL");
-                    streamOut.newLine();
-                    streamOut.flush();
-                }
+
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -86,7 +81,7 @@ public class AppServer implements Runnable {
 
 
     //Broadcasts a message to all of the clients that did not send it
-    public void broadcastMessage(int ID, String message) {
+    public void broadcastMessage(int ID, Object message) {
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).getID() != ID) {
                 clients.get(i).send(message);

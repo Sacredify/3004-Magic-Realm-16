@@ -56,14 +56,7 @@ public final class Message {
     public final String BLACK_KNIGHT = "BLACK_KNIGHT";
 
 
-    public static String makeMoveMessage(String location){
-        return MOVE + ":" + location;
-    }
 
-    public static String getMessageType(String message){
-        String[] mArray = message.split(":");
-        return mArray[0];
-    }
 
 
 }

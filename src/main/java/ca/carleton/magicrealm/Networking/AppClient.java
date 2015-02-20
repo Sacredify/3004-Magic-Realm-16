@@ -1,10 +1,10 @@
 package ca.carleton.magicrealm.Networking;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import ca.carleton.magicrealm.GUI.tile.AbstractTile;
+import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.GUI.tile.impl.AwfulValley;
+
+import java.io.*;
 import java.net.Socket;
 
 
@@ -13,8 +13,8 @@ public class AppClient implements Runnable {
     private int ID = 0;
     private Socket socket = null;
     private Thread thread = null;
-    private BufferedReader streamIn = null;
-    private BufferedWriter streamOut = null;
+    private ObjectOutputStream objOutStream = null;
+    private ObjectInputStream objInputStream = null;
     private AppClient clnt = null;
 
 
@@ -24,6 +24,7 @@ public class AppClient implements Runnable {
             this.socket = new Socket(serverName, serverPort);
             this.ID = socket.getLocalPort();
             System.out.println(ID + "Connected to Server:" + socket.getInetAddress());
+            this.open();
             this.start();
         } catch (IOException ioe) {
             System.out.println("Couuld not connect to serever");
@@ -31,51 +32,53 @@ public class AppClient implements Runnable {
     }
 
 
-    public void write(String message) {
+    public void write(Object msg) {
         try {
-            streamOut.write(message);
-            streamOut.newLine();
-            streamOut.flush();
+            objOutStream.writeObject(msg);
+            objOutStream.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public String read() {
-        String line = null;
+    public Object read() {
+        Object obj = null;
 
         try {
-            line = streamIn.readLine();
+            obj = objInputStream.read();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return line;
+        return obj;
     }
 
     private void start() {
-        try {
-            streamIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            streamOut = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            if (thread == null) {
-                thread = new Thread(this);
-                thread.start();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (thread == null) {
+            thread = new Thread(this);
+            thread.start();
         }
 
     }
 
     public void open() throws IOException {
         System.out.println(ID + ":Opening buffer streams");
-        streamIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        streamOut = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        if (streamIn != null && streamOut != null) {
-            System.out.println("Buffered streams opened on thread:" + ID);
+        objOutStream = new ObjectOutputStream(socket.getOutputStream());
+        objInputStream = new ObjectInputStream(socket.getInputStream());
+        if (objInputStream == null) {
+            System.out.println("Unable to Open Object Input Stream on Thread:" + ID);
+        }
+        else{
+            System.out.println("Able to Open Object Input Stream on Thread:" + ID);
+        }
+        if (objOutStream == null) {
+            System.out.println("Unable to Open Object Output Stream on Thread:" + ID);
+        }
+        else{
+            System.out.println("Able to Open Object Output Stream on Thread:" + ID);
         }
     }
 
@@ -83,17 +86,23 @@ public class AppClient implements Runnable {
     @Override
     public void run() {
         System.out.println(ID + ": Client Started");
-        String line = read();
-        while (line != null) {
-            System.out.println(line);
-            line = read();
+        Object obj = read();
+        //While server is connected
+        while ((int)obj != -1) {
+            obj = read();
         }
+        System.out.println("Disconnected from server");
     }
 
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         AppClient clnt = new AppClient(Config.DEFAULT_HOST, Config.DEFAULT_HOST_PORT);
-        clnt.open();
+        AwfulValley a = new AwfulValley();
+        Clearing c;
+        c = new Clearing(a, 1);
+        clnt.write(c);
+        clnt.write("Elo dalin");
+
     }
 
 }
