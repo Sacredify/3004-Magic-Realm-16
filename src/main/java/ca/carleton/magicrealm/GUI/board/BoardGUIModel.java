@@ -28,7 +28,7 @@ public class BoardGUIModel {
 
         this.board.add(row1);
 
-        this.tiles.add(new AwfulValley());   // Replace with evil valley.
+        this.tiles.add(new EvilValley());
         ArrayList<AbstractTile> row2 = new ArrayList<>();
         row2.add(this.tiles.get(1));
         row2.get(0).setAngle(120);
