@@ -24,7 +24,6 @@ public class PhasesTest {
     @Test
     public void canMovePhase() {
 
-        final Daylight daylightOperations = new Daylight();
         final Player player = new Player();
 
         final BadValley badValley = new BadValley();
@@ -42,7 +41,7 @@ public class PhasesTest {
         phases.add(movePhaseChosen);
 
         // Execute phase
-        daylightOperations.processPhasesForPlayer(player, phases);
+        Daylight.processPhasesForPlayer(player, phases);
 
         assertThat(player.getCurrentClearing(), is(crag.getClearingAt(2)));
 

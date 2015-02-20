@@ -28,8 +28,6 @@ public class GameController {
 
     private Player currentPlayer;
 
-    private Daylight daylightController;
-
     private List<AbstractPhase> recordedPhases;
 
     public GameController() {
@@ -45,7 +43,7 @@ public class GameController {
      * Example method we can use when the user is done recording their phases.
      */
     public void doneWithBirdSong() {
-        this.daylightController.processPhasesForPlayer(this.currentPlayer, this.recordedPhases);
+        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhases);
     }
 
     public void movePlayerToClearing(Clearing clearing) {
