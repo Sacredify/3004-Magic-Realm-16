@@ -17,8 +17,8 @@ import java.util.List;
 
 public class Clearing implements Serializable {
 
-    public double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
-    public double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
+    public double TILE_SCALEDOWN_MULTIPLIER_X = 3.125;
+    public double TILE_SCALEDOWN_MULTIPLIER_Y = 3.125;
 
     private int x;
 
