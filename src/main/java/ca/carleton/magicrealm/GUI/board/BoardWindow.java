@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.GUI.board;
 
+import ca.carleton.magicrealm.GUI.tile.Clearing;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,7 +24,6 @@ public class BoardWindow extends JFrame {
 
     public BoardWindow() {
         super(WINDOW_NAME);
-        this.setLayout(null);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -32,16 +33,16 @@ public class BoardWindow extends JFrame {
         boardPanel = new BoardPanel();
         boardPanel.drawBoard(boardGUIModel);
 
-        JPanel container = new JPanel();
-        container.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-
         // TODO: get a friggen scrollbar working
+        JScrollPane pane = new JScrollPane(boardPanel);
+        pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        JScrollPane pane = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        this.add(pane);
-
-        this.add(this.boardPanel);
+        this.add(this.boardPanel, BorderLayout.NORTH);
+        this.add(pane, BorderLayout.CENTER);
         this.setupMenuBars();
+
+        this.pack();
 
         this.setVisible(true);
     }
@@ -59,6 +60,10 @@ public class BoardWindow extends JFrame {
         this.menuBar.add(networkMenu);
 
         this.setJMenuBar(this.menuBar);
+    }
+
+    public void setupMoveButtons(Clearing clearing) {
+        this.boardPanel.displayMoveButtonsForClearing(clearing);
     }
 
 

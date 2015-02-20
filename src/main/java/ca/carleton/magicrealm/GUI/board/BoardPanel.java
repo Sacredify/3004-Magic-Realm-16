@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.board;
 
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
+import ca.carleton.magicrealm.GUI.tile.Clearing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,11 +25,13 @@ public class BoardPanel extends JLayeredPane {
 
     private BoardServices boardServices;
 
+    private ArrayList<JButton> moveButtons;
+
     public BoardPanel() {
         boardServices = new BoardServices();
         this.setAutoscrolls(true);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        this.setLayout(null);
+        this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
     }
 
     /**
@@ -38,9 +41,6 @@ public class BoardPanel extends JLayeredPane {
      */
     public void drawBoard(BoardGUIModel boardGUIModel) {
         this.removeAll();
-
-        int maxWidth = 0;
-        int maxHeight = 0;
 
         int y = 0;
         for (ArrayList<AbstractTile> row : boardGUIModel.getBoard()) {
@@ -92,4 +92,13 @@ public class BoardPanel extends JLayeredPane {
         g.drawImage(image , 0, 0, this);
     }
 
+    public void displayMoveButtonsForClearing(Clearing clearing) {
+        for (JButton button : moveButtons) {
+            this.remove(button);
+        }
+        this.moveButtons = boardServices.getMoveButtonsForClearing(clearing);
+        for (JButton button : moveButtons) {
+            this.add(button);
+        }
+    }
 }

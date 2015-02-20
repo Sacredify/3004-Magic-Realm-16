@@ -21,7 +21,7 @@ public class BoardGUIModel {
 
         row1.add(null);
         row1.add(new Cliff());
-        row1.get(1).setAngle(240);
+        row1.get(1).setAngle(300);
 
         board.add(row1);
 

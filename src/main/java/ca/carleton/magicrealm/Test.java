@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm;
 
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
+import ca.carleton.magicrealm.control.GameController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ public class Test {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                BoardWindow board = new BoardWindow();
+                GameController game = new GameController();
             }
         });
     }
