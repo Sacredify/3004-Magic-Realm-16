@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Tony on 12/02/2015.
@@ -62,8 +63,8 @@ public class BoardWindow extends JFrame {
         this.setJMenuBar(this.menuBar);
     }
 
-    public void setupMoveButtons(Clearing clearing) {
-        this.boardPanel.displayMoveButtonsForClearing(clearing);
+    public void setupMoveButtons(ArrayList<JButton> buttons) {
+        this.boardPanel.displayMoveButtonsForClearing(buttons);
     }
 
 

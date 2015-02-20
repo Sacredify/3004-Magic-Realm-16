@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.entity.character;
 
+import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
@@ -22,6 +23,8 @@ public abstract class AbstractCharacter extends Entity {
      */
     protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
 
+    protected Clearing currentClearingLocation;
+
     /**
      * Find the relationship with another interactable entity.
      *
@@ -36,4 +39,11 @@ public abstract class AbstractCharacter extends Entity {
         this.relationships.putIfAbsent(entity, relationship);
     }
 
+    public Clearing getCurrentClearingLocation() {
+        return currentClearingLocation;
+    }
+
+    public void setCurrentClearingLocation(Clearing currentClearingLocation) {
+        this.currentClearingLocation = currentClearingLocation;
+    }
 }

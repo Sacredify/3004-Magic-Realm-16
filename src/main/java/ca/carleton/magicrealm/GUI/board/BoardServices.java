@@ -50,10 +50,10 @@ public class BoardServices {
         return newTile;
     }
 
+    // TODO: Move this to controller sometime?
     public ArrayList<JButton> createChitIconsForTile(AbstractTile tile) {
         ArrayList<JButton> iconList = new ArrayList<JButton>();
 
-        // TODO: Check with mike on getting clearings
         for (Clearing clearing : tile.getClearings()) {
             JButton newChit = null;
             ImageIcon newIcon = null;
@@ -153,16 +153,6 @@ public class BoardServices {
                 .transform(point, 0, point, 0, 1); // specifying to use this double[] to hold coords
     }
 
-    public ArrayList<JButton> getMoveButtonsForClearing(Clearing clearing) {
-        ArrayList<JButton> buttons = new ArrayList<>();
 
-        for (Clearing adjacentClearing: clearing.getAdjacentClearings()) {
-            JButton newButton = new JButton();
-            newButton.setSize(30,30);
-            newButton.setLocation(adjacentClearing.getX(), adjacentClearing.getY());
-            buttons.add(newButton);
-        }
-        return buttons;
-    }
 
 }

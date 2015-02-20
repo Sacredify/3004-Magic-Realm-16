@@ -92,11 +92,11 @@ public class BoardPanel extends JLayeredPane {
         g.drawImage(image , 0, 0, this);
     }
 
-    public void displayMoveButtonsForClearing(Clearing clearing) {
+    public void displayMoveButtonsForClearing(ArrayList<JButton> buttons) {
         for (JButton button : moveButtons) {
             this.remove(button);
         }
-        this.moveButtons = boardServices.getMoveButtonsForClearing(clearing);
+        moveButtons = buttons;
         for (JButton button : moveButtons) {
             this.add(button);
         }
