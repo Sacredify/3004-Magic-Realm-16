@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.GUI.tile.TileInformation;
 public class Ruins extends AbstractTile {
 
     public Ruins() {
-        this.clearings = Clearing.initializeClearingsArray(5,this);
+        this.clearings = Clearing.initializeClearingsArray(6,this);
     }
 
     @Override

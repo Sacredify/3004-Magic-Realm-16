@@ -19,11 +19,11 @@ public class BoardServices {
     public static final int ORIGINAL_TILE_WIDTH = 500;
     public static final int ORIGINAL_TILE_HEIGHT = 430;
 
-    public static final int TILE_WIDTH = 250;
-    public static final int TILE_HEIGHT = 215;
+    public static final int TILE_WIDTH = 200;
+    public static final int TILE_HEIGHT = 172;
 
-    public static final int RESIZE_TILE_WIDTH = 282;
-    public static final int RESIZE_TILE_HEIGHT = 269;
+    public static final int RESIZE_TILE_WIDTH = 226;
+    public static final int RESIZE_TILE_HEIGHT = 215;
 
     public static final int CHIT_WIDTH = 40;
     public static final int CHIT_HEIGHT = 35;

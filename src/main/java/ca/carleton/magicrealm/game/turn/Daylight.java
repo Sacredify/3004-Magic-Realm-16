@@ -1,7 +1,7 @@
 package ca.carleton.magicrealm.game.turn;
 
 import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.game.phase.Phase;
+import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.strategy.MovePhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
 import org.slf4j.Logger;
@@ -21,20 +21,21 @@ public class Daylight {
 
     private static final Logger LOG = LoggerFactory.getLogger(Daylight.class);
 
-    private final List<PhaseStrategy> phaseStrategies = new ArrayList<PhaseStrategy>();
+    private static final List<PhaseStrategy> phaseStrategies = new ArrayList<PhaseStrategy>();
 
     /**
      * Initialize the strategies to use.
-     */ {
-        this.phaseStrategies.add(new MovePhaseStrategy());
+     */
+    static {
+        phaseStrategies.add(new MovePhaseStrategy());
     }
 
-    public void processPhasesForPlayer(final Player player, final List<Phase> phasesToExecute) {
+    public static void processPhasesForPlayer(final Player player, final List<AbstractPhase> phasesToExecute) {
         LOG.info("Starting phase execution for player {}.", player);
-        for (final Phase phase : phasesToExecute) {
-            for (final PhaseStrategy strategy : this.phaseStrategies) {
+        for (final AbstractPhase phase : phasesToExecute) {
+            for (final PhaseStrategy strategy : phaseStrategies) {
                 if (strategy.appliesTo(phase)) {
-                    strategy.doPhase(player);
+                    strategy.doPhase(player, phase);
                     LOG.info("Executed phase {}.", phase);
                 }
             }

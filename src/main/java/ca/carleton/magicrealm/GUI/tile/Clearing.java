@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.item.Item;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,8 +17,8 @@ import java.util.List;
 
 public class Clearing implements Serializable {
 
-    public double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
-    public double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
+    public double TILE_SCALEDOWN_MULTIPLIER_X = 3.125;
+    public double TILE_SCALEDOWN_MULTIPLIER_Y = 3.125;
 
     private int x;
 
@@ -36,28 +37,25 @@ public class Clearing implements Serializable {
     public Clearing(final AbstractTile parentTile,int index) {
         this.parentTile = parentTile;
         this.index  = index;
+        this.adjacentClearings = new ArrayList<Clearing>();
     }
 
     public int getIndex(){
         return index;
     }
 
-    //Initializes a clearings array with pTile as the parentTile for all of the members
 
     /**
-     * Connects the clearing parameter .
+     * Connects the clearing parameter.
      *
      * @param clearing is the clearing to add.
      *                 returns clearing that was passed in as parameter
      *                 ,but with self added to the clearings possible paths list
      */
-
-    public Clearing connectTo(Clearing clearing) {
-        adjacentClearings.add(clearing);
-        clearing.adjacentClearings.add(clearing);
-        return clearing;
+    public void connectTo(Clearing clearing) {
+        this.adjacentClearings.add(clearing);
+        clearing.adjacentClearings.add(this);
     }
-
 
     /**
      * Add an item to this clearing.

@@ -1,7 +1,7 @@
 package ca.carleton.magicrealm.game.phase.strategy;
 
 import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.game.phase.Phase;
+import ca.carleton.magicrealm.game.phase.AbstractPhase;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,12 +16,13 @@ public interface PhaseStrategy {
      * @param phase the phase the player wishes to execute.
      * @return true if applicable.
      */
-    public boolean appliesTo(final Phase phase);
+    public boolean appliesTo(final AbstractPhase phase);
 
     /**
      * Execute the phase for the given player.
      *
      * @param player the player.
+     * @param phase  the phase data.
      */
-    public void doPhase(final Player player);
+    public void doPhase(final Player player, final AbstractPhase phase);
 }

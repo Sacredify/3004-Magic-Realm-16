@@ -1,7 +1,9 @@
 package ca.carleton.magicrealm.game.phase.strategy;
 
 import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.game.phase.Phase;
+import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.PhaseType;
+import ca.carleton.magicrealm.game.phase.impl.MovePhase;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,13 +13,12 @@ import ca.carleton.magicrealm.game.phase.Phase;
 public class MovePhaseStrategy implements PhaseStrategy {
 
     @Override
-    public boolean appliesTo(final Phase phase) {
-        return phase == Phase.MOVE;
+    public boolean appliesTo(final AbstractPhase phase) {
+        return phase.getPhaseType() == PhaseType.MOVE;
     }
 
     @Override
-    public void doPhase(final Player player) {
-        player.setCurrentClearing(player.getMoveTarget());
-        player.setMoveTarget(null);
+    public void doPhase(final Player player, final AbstractPhase phase) {
+        player.setCurrentClearing(((MovePhase)phase).getMoveTarget());
     }
 }
