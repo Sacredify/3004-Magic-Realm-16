@@ -3,6 +3,8 @@ package ca.carleton.magicrealm.game;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 
+import java.io.Serializable;
+
 /**
  * Represents the player and their various attributes and decisions made within the game..
  * <p/>
@@ -10,7 +12,9 @@ import ca.carleton.magicrealm.entity.character.AbstractCharacter;
  * Date: 14/02/15
  * Time: 10:23 AM
  */
-public class Player {
+public class Player implements Serializable {
+
+    private static final long serialVersionUID = -4131876579835520249L;
 
     /**
      * The character the player is playing.

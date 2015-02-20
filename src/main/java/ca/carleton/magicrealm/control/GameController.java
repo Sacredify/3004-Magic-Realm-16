@@ -44,6 +44,7 @@ public class GameController {
      */
     public void doneWithBirdSong() {
         Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhases);
+        // Update server
     }
 
     public void movePlayerToClearing(Clearing clearing) {
