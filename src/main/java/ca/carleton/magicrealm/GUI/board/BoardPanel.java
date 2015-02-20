@@ -19,7 +19,7 @@ public class BoardPanel extends JLayeredPane {
     final static public int WINDOW_WIDTH = 1500;
     final static public int TILE_X_OFFSET = 150;
     final static public int TILE_DELTA_X = 300;
-    final static public int TILE_DELTA_Y = 80;
+    final static public int TILE_DELTA_Y = 85;
     public static final int CHIT_WIDTH = 40;
     public static final int CHIT_HEIGHT = 35;
 
