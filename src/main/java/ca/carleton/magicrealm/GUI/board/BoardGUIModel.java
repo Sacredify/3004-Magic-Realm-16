@@ -143,13 +143,13 @@ public class BoardGUIModel {
         cliff[5].connectTo(cliff[0]);
         cliff[2].connectTo(cliff[1]);
 
-        Clearing[] awful = this.tiles.get(1).getClearings();
-        awful[0].connectTo(cliff[0]);
-        awful[0].connectTo(awful[2]);
-        awful[1].connectTo(awful[3]);
+        Clearing[] evil = this.tiles.get(1).getClearings();
+        evil[1].connectTo(cliff[0]);
+        evil[0].connectTo(evil[2]);
+        evil[1].connectTo(evil[3]);
 
         Clearing[] high = this.tiles.get(2).getClearings();
-        high[5].connectTo(awful[3]);
+        high[5].connectTo(evil[3]);
         high[5].connectTo(high[2]);
         high[4].connectTo(high[0]);
         high[0].connectTo(high[3]);
@@ -162,11 +162,11 @@ public class BoardGUIModel {
         ledge[0].connectTo(ledge[2]);
         ledge[0].connectTo(ledge[3]);
         ledge[5].connectTo(ledge[3]);
-        ledge[1].connectTo(awful[3]);
+        ledge[1].connectTo(evil[2]);
         ledge[1].connectTo(ledge[4]);
 
         Clearing[] borderland = this.tiles.get(4).getClearings();
-        borderland[1].connectTo(awful[2]);
+        borderland[1].connectTo(evil[2]);
         borderland[1].connectTo(borderland[2]);
         borderland[2].connectTo(borderland[5]);
         borderland[2].connectTo(borderland[4]);
@@ -258,7 +258,31 @@ public class BoardGUIModel {
         nutWoods[2].connectTo(curstValley[2]);
         nutWoods[1].connectTo(nutWoods[0]);
 
-        //TODO finish the last 4 once i can see them..
+        Clearing[] pineWoods = this.tiles.get(16).getClearings();
+        pineWoods[0].connectTo(pineWoods[1]);
+        pineWoods[1].connectTo(mountain[1]);
+        pineWoods[2].connectTo(caves[0]);
+
+        Clearing[] ruins = this.tiles.get(17).getClearings();
+        ruins[4].connectTo(mapleWoods[0]);
+        ruins[4].connectTo(ruins[2]);
+        ruins[2].connectTo(ruins[5]);
+        ruins[5].connectTo(ruins[3]);
+        ruins[3].connectTo(ruins[0]);
+        ruins[0].connectTo(ruins[4]);
+        ruins[0].connectTo(nutWoods[1]);
+        ruins[0].connectTo(ruins[1]);
+
+        Clearing[] awful = this.tiles.get(18).getClearings();
+        awful[0].connectTo(ruins[1]);
+        awful[0].connectTo(awful[2]);
+        awful[3].connectTo(nutWoods[0]);
+        awful[3].connectTo(awful[1]);
+
+        Clearing[] linden = this.tiles.get(19).getClearings();
+        linden[0].connectTo(linden[1]);
+        linden[1].connectTo(ruins[1]);
+        linden[2].connectTo(awful[1]);
 
     }
 
