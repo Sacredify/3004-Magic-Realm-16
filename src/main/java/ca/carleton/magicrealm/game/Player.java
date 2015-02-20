@@ -27,10 +27,6 @@ public class Player {
      */
     private Clearing currentClearing;
 
-    /**
-     * The clearing the player may want to move to.
-     */
-    private Clearing moveTarget;
 
     public Player() {
         this.victoryCondition = new VictoryCondition();
@@ -58,14 +54,6 @@ public class Player {
 
     public void setCurrentClearing(final Clearing currentClearing) {
         this.currentClearing = currentClearing;
-    }
-
-    public Clearing getMoveTarget() {
-        return this.moveTarget;
-    }
-
-    public void setMoveTarget(final Clearing moveTarget) {
-        this.moveTarget = moveTarget;
     }
 
 }

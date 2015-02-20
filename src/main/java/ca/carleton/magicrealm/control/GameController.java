@@ -2,14 +2,8 @@ package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.tile.BoardModel;
-import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
-import ca.carleton.magicrealm.entity.character.Amazon;
-import ca.carleton.magicrealm.entity.character.Swordsman;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -33,6 +27,14 @@ public class GameController {
         boardModel = new BoardModel();
 
     }
+
+    /*
+
+        DO NOT do it this way guys. We need to support multiple phases written down and executed simultaneously, not one
+        at a time by the user.
+
+        See ca.carleton.magicrealm.game.phase.abstractPhase
+
 
     // TODO: Do hard implementation of this when characters are defined
     public void movePlayerToClearing(Clearing clearing) {
@@ -59,5 +61,7 @@ public class GameController {
         }
         return buttons;
     }
+
+    */
 
 }

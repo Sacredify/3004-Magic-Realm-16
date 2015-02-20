@@ -7,7 +7,7 @@ package ca.carleton.magicrealm.game.phase;
  * Date: 17/02/15
  * Time: 1:25 PM
  */
-public enum Phase {
+public enum PhaseType {
     MOVE,
     HIDE,
     ALERT,
