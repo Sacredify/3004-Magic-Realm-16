@@ -3,12 +3,13 @@ package ca.carleton.magicrealm.GUI.board;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 
 import java.util.ArrayList;
 
 /**
  * Created by Tony on 17/02/2015.
- *
+ * <p/>
  * Model to represent the board's GUI counterpart
  */
 public class BoardGUIModel {
@@ -129,7 +130,6 @@ public class BoardGUIModel {
 
         this.setupConnections();
     }
-
 
     /**
      * Setup connects to the different clearings.
@@ -284,6 +284,22 @@ public class BoardGUIModel {
         linden[1].connectTo(ruins[1]);
         linden[2].connectTo(awful[1]);
 
+    }
+
+    /**
+     * Return the starting location on this board.
+     *
+     * @return the starting location.
+     */
+    public Clearing getStartingLocation() {
+        for (AbstractTile tile : this.tiles) {
+            for (Clearing clearing : tile.getClearings()) {
+                if (clearing.getDwelling() == Dwelling.INN) {
+                    return clearing;
+                }
+            }
+        }
+        return null;
     }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {

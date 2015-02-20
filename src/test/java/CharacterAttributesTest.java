@@ -1,3 +1,4 @@
+import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
@@ -7,10 +8,10 @@ import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.entity.natives.NativeFactory;
 import ca.carleton.magicrealm.entity.natives.NativeType;
+import ca.carleton.magicrealm.game.Player;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**

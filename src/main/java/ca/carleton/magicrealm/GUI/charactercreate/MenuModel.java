@@ -96,6 +96,7 @@ public class MenuModel {
      */
     public void done() {
         this.player.setCharacter(CharacterFactory.createCharacter(this.selectedCharacter));
+        this.player.setCurrentClearing(this.frame.board.getBoardModel().getStartingLocation());
         this.frame.disposeWindow();
     }
 
