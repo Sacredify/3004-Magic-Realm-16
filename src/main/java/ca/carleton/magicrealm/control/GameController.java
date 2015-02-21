@@ -31,6 +31,8 @@ public class GameController {
 
     private BoardGUIModel boardModel;
 
+    private CharacterCreateMenu characterCreateMenu;
+
     private Player currentPlayer;
 
     private AppClient networkConnection = null;
@@ -69,7 +71,7 @@ public class GameController {
 
             if (((Message) obj).getMessageType().equals(Message.SELECT_CHARACTER)) {
                 this.removeFromAvailableCharacters(m.getMessageObject());
-                // call character create stuff.
+                this.characterCreateMenu.updateAvailableCharacters();
             }
 
 
@@ -80,7 +82,7 @@ public class GameController {
 
     public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
-        networkConnection.sendMessage(Message.SELECT_CHARACTER, currentPlayer);
+        this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
     }
 
     public void movePlayerToClearing(Clearing clearing) {
@@ -113,8 +115,8 @@ public class GameController {
     }
 
     private void showCharacterCreate() {
-        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
-        characterCreateMenu.displayWindow();
+        this.characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
+        this.characterCreateMenu.displayWindow();
     }
 
     private void removeFromAvailableCharacters(final Object player) {

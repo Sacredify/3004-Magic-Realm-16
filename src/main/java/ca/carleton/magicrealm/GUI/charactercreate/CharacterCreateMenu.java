@@ -65,6 +65,10 @@ public class CharacterCreateMenu extends JFrame {
         this.dispose();
     }
 
+    public void updateAvailableCharacters() {
+        this.view.updateList();
+    }
+
     /**
      * Initialize settings for this frame.
      */

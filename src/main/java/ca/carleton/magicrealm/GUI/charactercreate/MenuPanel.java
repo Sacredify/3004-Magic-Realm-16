@@ -43,6 +43,17 @@ public class MenuPanel extends JPanel {
         this.initializeSubmit();
     }
 
+    public void updateList() {
+
+        DefaultListModel<CharacterType> dataModel = new DefaultListModel<>();
+
+        for (final CharacterType characterType : this.model.availableCharacters) {
+            dataModel.addElement(characterType);
+        }
+
+        this.characterSelectList.setModel(dataModel);
+    }
+
     public void setFinishEnabled(final boolean status) {
         this.submitButton.setEnabled(status);
     }
