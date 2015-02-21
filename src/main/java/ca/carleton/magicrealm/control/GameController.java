@@ -3,7 +3,6 @@ package ca.carleton.magicrealm.control;
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
-import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
@@ -144,7 +143,8 @@ public class GameController {
         this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
     }
 
-    /** Methods to set up the window to select a player's phase for the day **/
+    /*
+    Methods to set up the window to select a player's phase for the day
     public void setupPhaseSelection() {
         PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
 
@@ -161,5 +161,5 @@ public class GameController {
             }
         });
     }
-
+    */
 }

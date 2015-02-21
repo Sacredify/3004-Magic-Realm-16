@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.tile.impl;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileInformation;
+import ca.carleton.magicrealm.GUI.tile.TileType;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,5 +37,10 @@ public class HighPass extends AbstractTile {
     @Override
     public TileInformation getTileInformation() {
         return TileInformation.HIGH_PASS;
+    }
+
+    @Override
+    public TileType getTileType() {
+        return TileType.CAVE;
     }
 }
