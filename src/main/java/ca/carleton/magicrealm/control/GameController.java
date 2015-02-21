@@ -64,12 +64,14 @@ public class GameController {
             System.out.println("Game Controller:This is a Message Object");
             Message m = (Message)obj;
             System.out.println("This is a :"+ m.getMessageType() + " Message Type");
-            
+
         }
         else if("java.lang.String" == obj.getClass().getName()){
             System.out.println("This is a string");
         }
     }
+
+
 
     public void characterSelected(){
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
