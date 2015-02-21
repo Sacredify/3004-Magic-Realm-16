@@ -4,6 +4,8 @@ import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.Networking.AppClient;
+import ca.carleton.magicrealm.Networking.Message;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
@@ -31,6 +33,8 @@ public class GameController {
 
     private Player currentPlayer;
 
+    private AppClient networkConnection = null;
+
     private List<AbstractPhase> recordedPhases;
 
     public GameController() {
@@ -40,6 +44,10 @@ public class GameController {
 
         this.boardModel = new BoardGUIModel();
 
+        this.currentPlayer = new Player();
+
+        showCharacterCreate();
+
     }
 
     /**
@@ -48,6 +56,24 @@ public class GameController {
     public void doneWithBirdSong() {
         Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhases);
         // Update server
+    }
+
+    public void handleMessage(Object obj){
+
+        if("ca.carleton.magicrealm.Networking.Message" == obj.getClass().getName()) {
+            System.out.println("Game Controller:This is a Message Object");
+            Message m = (Message)obj;
+            System.out.println("This is a :"+ m.getMessageType() + " Message Type");
+            
+        }
+        else if("java.lang.String" == obj.getClass().getName()){
+            System.out.println("This is a string");
+        }
+    }
+
+    public void characterSelected(){
+        System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
+        networkConnection.sendMessage(Message.SELECT_CHARACTER,currentPlayer);
     }
 
     public void movePlayerToClearing(Clearing clearing) {
@@ -75,8 +101,12 @@ public class GameController {
         return buttons;
     }
 
+    public void setNetworkConnection(AppClient nC){
+        this.networkConnection  = nC;
+    }
+
     private void showCharacterCreate() {
-        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, Arrays.asList(CharacterType.values()));
+        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, Arrays.asList(CharacterType.values()),this);
         characterCreateMenu.displayWindow();
     }
 

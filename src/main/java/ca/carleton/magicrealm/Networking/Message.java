@@ -2,15 +2,22 @@ package ca.carleton.magicrealm.Networking;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 
+import java.io.Serializable;
 import java.util.List;
 
-public final class Message {
+public final class Message implements Serializable {
 
 
-    String senderID;
-    String MessageType;
+    int senderID;
+    String messageType;
     Object messageObject;
 
+
+    public Message(int senderID,String messageType,Object messageObject){
+         this.senderID = senderID;
+         this.messageType = messageType;
+         this.messageObject = messageObject;
+    }
 
     //TILES
 
@@ -46,7 +53,7 @@ public final class Message {
 
     //GAME MECHANICS
 
-    public static final String SELECT_PLAYER = "SELECT_PLAYER";
+    public static final String SELECT_CHARACTER = "SELECT_CHARACTER";
     public static final String TURN_ALERT = "TURN_ALERT";
     public static final String PHASE_SELECT = "PHASE_SELECT";
     public static final String AVAILABLE_CLEARINGS = "AVAILABLE_CLEARINGS";
@@ -63,6 +70,9 @@ public final class Message {
 
 
 
+    public String getMessageType(){
+        return messageType;
+    }
 
 
 }

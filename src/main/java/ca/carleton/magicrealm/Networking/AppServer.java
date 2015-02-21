@@ -55,14 +55,21 @@ public class AppServer implements Runnable {
 
     //Handles input from the server threads
     public synchronized void handle(int ID, Object obj) {
-        if("ca.carleton.magicrealm.GUI.tile.Clearing" == obj.getClass().getName()) {
-            System.out.println("This is a clearing");
+        if("ca.carleton.magicrealm.Networking.Message" == obj.getClass().getName()) {
+            System.out.println("AppServer:This is a Message Object");
+            Message m = (Message)obj;
+            System.out.println("This is a :"+ m.messageType + " message");
+
         }
         else if("java.lang.String" == obj.getClass().getName()){
             System.out.println("This is a string");
+            System.out.println("Message String Contents: " + obj);
         }
         broadcastMessage(ID, obj);
     }
+
+
+
 
 
     private ServerThread getClientWithID(int ID) {
@@ -101,10 +108,12 @@ public class AppServer implements Runnable {
 
     //Broadcasts a message to all of the clients that did not send it
     public void broadcastMessage(int ID, Object message) {
+        Message m = (Message)message;
         for (int i = 0; i < clients.size(); i++) {
-            if (clients.get(i).getID() != ID) {
+            System.out.print("This is the message being broadcasted:"+ m.getMessageType());
+            if (clients.get(i).getID() != ID)
                 clients.get(i).send(message);
-            }
+
         }
 
     }

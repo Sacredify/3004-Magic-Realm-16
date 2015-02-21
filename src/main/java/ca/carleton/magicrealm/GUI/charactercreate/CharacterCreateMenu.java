@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.charactercreate;
 
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
+import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.VictoryCondition;
@@ -39,11 +40,11 @@ public class CharacterCreateMenu extends JFrame {
      *
      * @param player the player this dialog is for.
      */
-    public CharacterCreateMenu(final BoardWindow board, final Player player, final List<CharacterType> availableCharacters) {
+    public CharacterCreateMenu(final BoardWindow board, final Player player, final List<CharacterType> availableCharacters,GameController cnt ) {
         super(WINDOW_NAME);
         this.initWindowSettings();
         this.board = board;
-        this.model = new MenuModel(this, player, availableCharacters);
+        this.model = new MenuModel(this, player, availableCharacters,cnt);
         this.view = new MenuPanel(this.model);
         this.setupListeners();
         this.add(this.view);

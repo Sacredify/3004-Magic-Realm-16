@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.charactercreate;
 
+import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
@@ -20,16 +21,19 @@ public class MenuModel {
 
     Player player;
 
+    private GameController cont;
+
     int pointsLeft = 5;
 
     private CharacterType selectedCharacter;
 
     private CharacterCreateMenu frame;
 
-    public MenuModel(final CharacterCreateMenu frame, final Player player, final List<CharacterType> availableCharacters) {
+    public MenuModel(final CharacterCreateMenu frame, final Player player, final List<CharacterType> availableCharacters,GameController cnt) {
         this.player = player;
         this.availableCharacters = availableCharacters;
         this.frame = frame;
+        this.cont = cnt;
     }
 
     /**
@@ -98,6 +102,8 @@ public class MenuModel {
         this.player.setCharacter(CharacterFactory.createCharacter(this.selectedCharacter));
         this.player.setCurrentClearing(this.frame.board.getBoardModel().getStartingLocation());
         this.frame.disposeWindow();
+        cont.characterSelected();
+
     }
 
     public void setSelectedCharacter(final CharacterType type) {

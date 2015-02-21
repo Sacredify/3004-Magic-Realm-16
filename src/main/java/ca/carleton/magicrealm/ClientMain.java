@@ -1,8 +1,11 @@
 package ca.carleton.magicrealm;
 
+import ca.carleton.magicrealm.GUI.board.BoardWindow;
+import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Config;
 import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.game.Player;
 import com.sun.deploy.util.SessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,6 @@ public class ClientMain {
 
         GameController game = new GameController();
         AppClient clnt = new AppClient(Config.DEFAULT_HOST, Config.DEFAULT_HOST_PORT,game);
-        
+        game.setNetworkConnection(clnt);
     }
 }

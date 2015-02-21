@@ -60,12 +60,17 @@ public class AppClient implements Runnable {
     }
 
     private void start() {
-
         if (thread == null) {
             thread = new Thread(this);
             thread.start();
         }
+    }
 
+    public void sendMessage(String messageType,Object messageObject){
+
+        System.out.print("MESSAGE TYPE BEING SENT: "+messageType + " SENT FROM ID:" + this.ID);
+        Message m = new Message(this.ID,messageType,messageObject);
+        write(m);
     }
 
     public void open() throws IOException {
@@ -90,12 +95,28 @@ public class AppClient implements Runnable {
     @Override
     public void run() {
         System.out.println(ID + ": Client Started");
-        Object obj = read();
-        //While server is connected
-        while ((int)obj != -1) {
-            obj = read();
+        Object obj = null;
+        try {
+            obj  = objInputStream.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        System.out.println("Disconnected from server");
+        while (obj != null) {
+            try {
+                gameController.handleMessage(obj);
+                obj = objInputStream.readObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (obj == null) {
+                System.out.println("Disconnected From Server");
+                break;
+            }
+        }
     }
 /*
     public static void main(String[] args) throws IOException {

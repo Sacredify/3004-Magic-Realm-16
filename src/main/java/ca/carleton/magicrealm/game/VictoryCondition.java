@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.game;
 
+import java.io.Serializable;
+
 /**
  * A player's individual victory condition data.
  * <p/>
@@ -7,7 +9,7 @@ package ca.carleton.magicrealm.game;
  * Date: 14/02/15
  * Time: 10:27 AM
  */
-public class VictoryCondition {
+public class VictoryCondition implements Serializable {
 
     public enum Conditions {
         GOLD,

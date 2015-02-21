@@ -6,6 +6,7 @@ import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import java.util.Map;
  * Date: 10/02/15
  * Time: 8:25 AM
  */
-public abstract class AbstractCharacter extends Entity {
+public abstract class AbstractCharacter extends Entity implements Serializable {
 
     /**
      * The relationships this entity has with other entities.
