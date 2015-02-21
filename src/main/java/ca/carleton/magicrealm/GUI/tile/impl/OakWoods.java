@@ -13,6 +13,15 @@ public class OakWoods extends AbstractTile {
 
     public OakWoods() {
         this.clearings = Clearing.initializeClearingsArray(3,this);
+
+        this.clearings[0].setX(346);
+        this.clearings[0].setY(218);
+
+        this.clearings[1].setX(139);
+        this.clearings[1].setY(284);
+
+        this.clearings[2].setX(194);
+        this.clearings[2].setY(125);
     }
 
     @Override
