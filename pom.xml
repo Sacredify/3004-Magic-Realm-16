@@ -61,7 +61,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ca.carleton.magicrealm.Test</mainClass>
+                            <mainClass>ca.carleton.magicrealm.ClientMain</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

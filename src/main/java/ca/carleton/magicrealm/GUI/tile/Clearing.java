@@ -57,6 +57,8 @@ public class Clearing implements Serializable {
         clearing.adjacentClearings.add(this);
     }
 
+
+
     /**
      * Add an item to this clearing.
      *

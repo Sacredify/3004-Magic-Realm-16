@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.Networking;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.impl.AwfulValley;
+import ca.carleton.magicrealm.control.GameController;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,13 +17,16 @@ public class AppClient implements Runnable {
     private ObjectOutputStream objOutStream = null;
     private ObjectInputStream objInputStream = null;
     private AppClient clnt = null;
+    private GameController gameController;
 
 
-    public AppClient(String serverName, int serverPort) {
+
+    public AppClient(String serverName, int serverPort,GameController gameController) {
 
         try {
             this.socket = new Socket(serverName, serverPort);
             this.ID = socket.getLocalPort();
+            this.gameController = gameController;
             System.out.println(ID + "Connected to Server:" + socket.getInetAddress());
             this.open();
             this.start();
@@ -93,7 +97,7 @@ public class AppClient implements Runnable {
         }
         System.out.println("Disconnected from server");
     }
-
+/*
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
         AppClient clnt = new AppClient(Config.DEFAULT_HOST, Config.DEFAULT_HOST_PORT);
@@ -103,6 +107,6 @@ public class AppClient implements Runnable {
         clnt.write(c);
         clnt.write("Elo dalin");
 
-    }
+    }*/
 
 }
