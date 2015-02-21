@@ -13,6 +13,15 @@ public class PineWoods extends AbstractTile {
 
     public PineWoods() {
         this.clearings = Clearing.initializeClearingsArray(3,this);
+
+        this.clearings[0].setX(129);
+        this.clearings[0].setY(213);
+
+        this.clearings[1].setX(247);
+        this.clearings[1].setY(82);
+
+        this.clearings[2].setX(352);
+        this.clearings[2].setY(216);
     }
 
     @Override

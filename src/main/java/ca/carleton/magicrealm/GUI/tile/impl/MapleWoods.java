@@ -13,6 +13,15 @@ public class MapleWoods extends AbstractTile {
 
     public MapleWoods() {
         this.clearings = Clearing.initializeClearingsArray(3,this);
+
+        this.clearings[0].setX(306);
+        this.clearings[0].setY(110);
+
+        this.clearings[1].setX(354);
+        this.clearings[1].setY(278);
+
+        this.clearings[2].setX(114);
+        this.clearings[2].setY(216);
     }
 
     @Override
