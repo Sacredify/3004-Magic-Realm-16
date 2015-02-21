@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.control;
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
+import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
@@ -83,13 +84,19 @@ public class GameController {
         networkConnection.sendMessage(Message.SELECT_CHARACTER, currentPlayer);
     }
 
+    /** Methods to set up a move phase **/
+    private void setupMovePhaseForPlayer() {
+        boardWindow.setupMoveButtons(createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
+        recordedPhases.add(new MovePhase());
+    }
+
     public void movePlayerToClearing(Clearing clearing) {
         MovePhase movement = new MovePhase();
         movement.setMoveTarget(clearing);
         this.recordedPhases.add(movement);
     }
 
-    public ArrayList<JButton> getMoveButtonsForClearing(Clearing clearing) {
+    public ArrayList<JButton> createMoveButtonsForClearing(Clearing clearing) {
         ArrayList<JButton> buttons = new ArrayList<>();
 
         for (final Clearing adjacentClearing : clearing.getAdjacentClearings()) {
@@ -123,6 +130,24 @@ public class GameController {
         }
 
         this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
+    }
+
+    /** Methods to set up the window to select a player's phase for the day **/
+    public void setupPhaseSelection() {
+        PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
+
+        JButton confirmFirstPhaseButton = new JButton("ENTER"); // TODO: make unhardcoded later
+
+        confirmFirstPhaseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedPhase = (String)phaseSelectorMenu.getPhaseSelectorPanel().getFirstPhaseBox().getSelectedItem();
+
+                if (selectedPhase.equals("Move")) {
+                    setupMovePhaseForPlayer();
+                }
+            }
+        });
     }
 
 }
