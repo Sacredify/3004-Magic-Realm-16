@@ -113,7 +113,7 @@ public class GameController {
     }
 
     private void showCharacterCreate() {
-        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, Arrays.asList(CharacterType.values()), this);
+        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
         characterCreateMenu.displayWindow();
     }
 
