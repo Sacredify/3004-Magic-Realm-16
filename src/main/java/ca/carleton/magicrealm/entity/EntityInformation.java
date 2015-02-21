@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.entity;
 
+import ca.carleton.magicrealm.entity.character.CharacterType;
+
 /**
  * File names mapping to the image in the image package items.
  * <p/>
@@ -38,6 +40,25 @@ public enum EntityInformation {
 
     public String getPath() {
         return this.imageFilePath;
+    }
+
+    public CharacterType convertToCharacterType() {
+        switch (this) {
+            case CHARACTER_AMAZON:
+                return CharacterType.AMAZON;
+            case CHARACTER_BLACK_KNIGHT:
+                return CharacterType.BLACK_KNIGHT;
+            case CHARACTER_CAPTAIN:
+                return CharacterType.CAPTAIN;
+            case CHARACTER_DWARF:
+                return CharacterType.DWARF;
+            case CHARACTER_ELF:
+                return CharacterType.ELF;
+            case CHARACTER_SWORDSMAN:
+                return CharacterType.SWORDSMAN;
+            default:
+                return null;
+        }
     }
 
 }

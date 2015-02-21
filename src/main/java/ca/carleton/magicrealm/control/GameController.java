@@ -37,6 +37,8 @@ public class GameController {
 
     private List<AbstractPhase> recordedPhases;
 
+    private List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
+
     public GameController() {
         this.boardWindow = new BoardWindow();
 
@@ -58,22 +60,27 @@ public class GameController {
         // Update server
     }
 
-    public void handleMessage(Object obj){
+    public void handleMessage(Object obj) {
 
-        if("ca.carleton.magicrealm.Networking.Message" == obj.getClass().getName()) {
+        if (obj instanceof Message) {
             System.out.println("Game Controller:This is a Message Object");
-            Message m = (Message)obj;
-            System.out.println("This is a :"+ m.getMessageType() + " Message Type");
-            
-        }
-        else if("java.lang.String" == obj.getClass().getName()){
+            Message m = (Message) obj;
+            System.out.println("This is a :" + m.getMessageType() + " Message Type");
+
+            if (((Message) obj).getMessageType().equals(Message.SELECT_CHARACTER)) {
+                this.removeFromAvailableCharacters(m.getMessageObject());
+                // call character create stuff.
+            }
+
+
+        } else if (obj instanceof String) {
             System.out.println("This is a string");
         }
     }
 
-    public void characterSelected(){
+    public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
-        networkConnection.sendMessage(Message.SELECT_CHARACTER,currentPlayer);
+        networkConnection.sendMessage(Message.SELECT_CHARACTER, currentPlayer);
     }
 
     public void movePlayerToClearing(Clearing clearing) {
@@ -85,9 +92,9 @@ public class GameController {
     public ArrayList<JButton> getMoveButtonsForClearing(Clearing clearing) {
         ArrayList<JButton> buttons = new ArrayList<>();
 
-        for (final Clearing adjacentClearing: clearing.getAdjacentClearings()) {
+        for (final Clearing adjacentClearing : clearing.getAdjacentClearings()) {
             JButton newButton = new JButton();
-            newButton.setSize(30,30);
+            newButton.setSize(30, 30);
             newButton.setLocation(adjacentClearing.getX(), adjacentClearing.getY());
 
             newButton.addActionListener(new ActionListener() {
@@ -101,13 +108,21 @@ public class GameController {
         return buttons;
     }
 
-    public void setNetworkConnection(AppClient nC){
-        this.networkConnection  = nC;
+    public void setNetworkConnection(AppClient nC) {
+        this.networkConnection = nC;
     }
 
     private void showCharacterCreate() {
-        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, Arrays.asList(CharacterType.values()),this);
+        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, Arrays.asList(CharacterType.values()), this);
         characterCreateMenu.displayWindow();
+    }
+
+    private void removeFromAvailableCharacters(final Object player) {
+        if (!(player instanceof Player)) {
+            throw new IllegalArgumentException("Not a player object");
+        }
+
+        this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
     }
 
 }
