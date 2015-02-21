@@ -9,12 +9,13 @@ import java.io.Serializable;
  */
 public abstract class AbstractTile implements Serializable {
 
-
     protected Clearing[] clearings;
 
     private int clearingCount = 0;
 
     public abstract TileInformation getTileInformation();
+
+    public abstract TileType getTileType();
 
     // refactor this later
     private int angle;

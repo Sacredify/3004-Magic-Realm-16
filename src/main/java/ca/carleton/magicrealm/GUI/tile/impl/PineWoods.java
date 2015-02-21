@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.tile.impl;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileInformation;
+import ca.carleton.magicrealm.GUI.tile.TileType;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,5 +28,10 @@ public class PineWoods extends AbstractTile {
     @Override
     public TileInformation getTileInformation() {
         return TileInformation.PINE_WOODS;
+    }
+
+    @Override
+    public TileType getTileType() {
+        return TileType.VALLEY;
     }
 }

@@ -14,7 +14,7 @@ public enum PhaseType {
     REST,
     SEARCH,
     TRADE,
-    HIRE,
+    //HIRE,
     FOLLOW,
     //FLY,
     //SPELL
