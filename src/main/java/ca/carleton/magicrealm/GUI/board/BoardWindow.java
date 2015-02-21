@@ -46,6 +46,10 @@ public class BoardWindow extends JFrame {
         this.setVisible(true);
     }
 
+    public void refresh() {
+        this.boardPanel.drawBoard(this.boardGUIModel);
+    }
+
     private void setupMenuBars() {
         this.menuBar = new JMenuBar();
 
