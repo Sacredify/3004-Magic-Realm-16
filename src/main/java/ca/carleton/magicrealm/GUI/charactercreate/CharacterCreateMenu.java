@@ -21,7 +21,7 @@ import java.util.List;
  * Date: 17/02/15
  * Time: 8:37 PM
  */
-public class CharacterCreateMenu extends JFrame {
+public class CharacterCreateMenu extends JDialog {
 
     private static final String WINDOW_NAME = "Character Creation";
 
@@ -41,7 +41,8 @@ public class CharacterCreateMenu extends JFrame {
      * @param player the player this dialog is for.
      */
     public CharacterCreateMenu(final BoardWindow board, final Player player, final List<CharacterType> availableCharacters,GameController cnt ) {
-        super(WINDOW_NAME);
+        this.setModal(true);
+        this.setName(WINDOW_NAME);
         this.initWindowSettings();
         this.board = board;
         this.model = new MenuModel(this, player, availableCharacters,cnt);
