@@ -83,6 +83,12 @@ public class GameController {
                     //Insert Stage incrementing functionality here
                     System.out.println("ALL PARTICIPATED MESSAGE RECIEVED");
                     break;
+                case(Message.SET_MAP):
+                    //SETTING MAP MODEL
+                    System.out.println("SETTING MAP MODEL");
+                    setBoardModel((BoardGUIModel)m.getMessageObject());
+
+
                 default:
                     break;
             }
@@ -91,6 +97,11 @@ public class GameController {
         } else if (obj instanceof String) {
             System.out.println("This is a string");
         }
+    }
+
+    public void setBoardModel(BoardGUIModel model){
+        this.boardModel = model;
+        //UpdateGUI
     }
 
     public void characterSelected() {
