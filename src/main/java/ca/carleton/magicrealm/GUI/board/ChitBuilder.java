@@ -99,17 +99,18 @@ public class ChitBuilder {
             while (iter.hasNext()) {
                 final ColoredChit chit = iter.next();
                 if (chit.getDescription().equals("BONES")) {
-                    // Ghosts get put here.
-
+                    tile.getClearings()[tile.getClearings().length - 1].addEntity(new Ghost());
+                    tile.getClearings()[tile.getClearings().length - 1].addEntity(new Ghost());
                 } else if (chit.getDescription().equals("DANK")) {
-                     tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.CHAPEL);
+                     tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.CHAPEL);
                 } else if (chit.getDescription().equals("RUINS")) {
-                    tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.GUARD);
+                    tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.GUARD);
                 } else if (chit.getDescription().equals("SMOKE")) {
-                    tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.HOUSE);
+                    tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.HOUSE);
                 } else if (chit.getDescription().equals("STINK")) {
-                    tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.INN);
+                    tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.INN);
                 }
+                iter.remove();
             }
         }
 

@@ -30,7 +30,10 @@ public enum EntityInformation {
     NATIVE_RAIDER(null),
     NATIVE_ARCHER(null),
     NATIVE_SWORDSMAN(null),
-    NATIVE_ASSASSIN(null);
+    NATIVE_ASSASSIN(null),
+
+    // Ghosts
+    GHOST("image/ghost/ghost.gif");
 
     private final String imageFilePath;
 

@@ -41,16 +41,15 @@ public class BoardServices {
     public JLabel createTileIcon(AbstractTile tile) {
         JLabel newTile = new JLabel();
         newTile.setSize(TILE_WIDTH, TILE_HEIGHT);
-        ImageIcon newIcon = createImageIcon(tile.getTileInformation().getPath());
+        ImageIcon newIcon = this.createImageIcon(tile.getTileInformation().getPath());
         BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
-        newImage = applyTransformations(newImage, newTile, tile);
+        newImage = this.applyTransformations(newImage, newTile, tile);
 
         newIcon.setImage(newImage);
         newTile.setIcon(newIcon);
         return newTile;
     }
 
-    // TODO: Move this to controller sometime?
     public ArrayList<JButton> createChitIconsForTile(AbstractTile tile) {
         ArrayList<JButton> iconList = new ArrayList<JButton>();
 
@@ -60,9 +59,11 @@ public class BoardServices {
             if (clearing.getDwelling() != null) {
                 newChit = new JButton();
                 newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
-
-                newIcon = createImageIcon(clearing.getDwelling().getPath());
-
+                newIcon = this.createImageIcon(clearing.getDwelling().getPath());
+            } else if (!clearing.getEntities().isEmpty()) {
+                newChit = new JButton();
+                newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
+                newIcon = this.createImageIcon(clearing.getEntities().get(0).getEntityInformation().getPath());
             }
             if (newChit != null && newIcon != null) {
                 BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
