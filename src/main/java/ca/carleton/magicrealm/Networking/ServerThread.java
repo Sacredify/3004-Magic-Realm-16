@@ -52,7 +52,7 @@ public class ServerThread extends Thread {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            if (obj == null) {
+            if ((int)obj == -1) {
                 System.out.println("Cliend dropped");
                 break;
             }
