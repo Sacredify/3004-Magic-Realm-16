@@ -65,6 +65,10 @@ public class CharacterCreateMenu extends JFrame {
         this.dispose();
     }
 
+    public void updateAvailableCharacters() {
+        this.view.updateList();
+    }
+
     /**
      * Initialize settings for this frame.
      */
@@ -156,7 +160,7 @@ public class CharacterCreateMenu extends JFrame {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (JOptionPane.showConfirmDialog(CharacterCreateMenu.this, "Are you sure these are your character details?") == JOptionPane.YES_OPTION) {
-                    CharacterCreateMenu.this.model.done();
+                    model.done();
                 }
             }
         });

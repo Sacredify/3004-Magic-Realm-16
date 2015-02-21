@@ -15,5 +15,4 @@ public class ServerMain {
         AppServer srvr = new AppServer(Config.DEFAULT_HOST_PORT);
         srvr.start();
     }
-
 }

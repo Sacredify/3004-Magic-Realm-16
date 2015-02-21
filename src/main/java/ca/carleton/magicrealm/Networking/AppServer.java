@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class AppServer implements Runnable {
     int clientCount = 0;
-    private final int MAX_PLAYERS = 3;
+    private final int MAX_PLAYERS = 6;
     int gameCount = 0;
     private Thread thread = null;
     private ServerSocket server = null;
@@ -28,6 +28,8 @@ public class AppServer implements Runnable {
             e.printStackTrace();
         }
     }
+
+
 
     //Begins a new round of turns(DAYLIGHT)
     public void beginPhase(){
@@ -59,13 +61,30 @@ public class AppServer implements Runnable {
             System.out.println("AppServer:This is a Message Object");
             Message m = (Message)obj;
             System.out.println("This is a :"+ m.messageType + " message");
-
+            handleMessage(m,ID,obj);
         }
         else if("java.lang.String" == obj.getClass().getName()){
             System.out.println("This is a string");
             System.out.println("Message String Contents: " + obj);
         }
+    }
+
+    public void handleMessage(Message m,int ID, Object obj){
         broadcastMessage(ID, obj);
+        switch(m.getMessageType()){
+            case(Message.SELECT_CHARACTER):
+
+                if(turnController.incrementTurnCount()==6){
+                    Message newMessage = new Message(0,Message.ALL_PARTICIPATED,obj);
+                    broadcastMessage(0, newMessage);
+                }
+                break;
+
+            default:
+                break;
+        }
+
+
     }
 
 

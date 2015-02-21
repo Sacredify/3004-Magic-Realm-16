@@ -32,6 +32,8 @@ public class GameController {
 
     private BoardGUIModel boardModel;
 
+    private CharacterCreateMenu characterCreateMenu;
+
     private Player currentPlayer;
 
     private AppClient networkConnection = null;
@@ -67,10 +69,20 @@ public class GameController {
             System.out.println("Game Controller:This is a Message Object");
             Message m = (Message) obj;
             System.out.println("This is a :" + m.getMessageType() + " Message Type");
-
-            if (((Message) obj).getMessageType().equals(Message.SELECT_CHARACTER)) {
-                this.removeFromAvailableCharacters(m.getMessageObject());
-                // call character create stuff.
+            switch(m.getMessageType()){
+                case(Message.SELECT_CHARACTER):
+                    this.removeFromAvailableCharacters(m.getMessageObject());
+                    this.characterCreateMenu.updateAvailableCharacters();
+                break;
+                case(Message.MOVE):
+                    //Insert move character functionality here.
+                    break;
+                case(Message.ALL_PARTICIPATED):
+                    //Insert Stage incrementing functionality here
+                    System.out.println("ALL PARTICIPATED MESSAGE RECIEVED");
+                    break;
+                default:
+                    break;
             }
 
 
@@ -81,7 +93,7 @@ public class GameController {
 
     public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
-        networkConnection.sendMessage(Message.SELECT_CHARACTER, currentPlayer);
+        this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
     }
 
     /** Methods to set up a move phase **/
@@ -120,8 +132,8 @@ public class GameController {
     }
 
     private void showCharacterCreate() {
-        final CharacterCreateMenu characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
-        characterCreateMenu.displayWindow();
+        this.characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
+        this.characterCreateMenu.displayWindow();
     }
 
     private void removeFromAvailableCharacters(final Object player) {
