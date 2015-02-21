@@ -58,6 +58,7 @@ public final class Message implements Serializable {
     public static final String PHASE_SELECT = "PHASE_SELECT";
     public static final String AVAILABLE_CLEARINGS = "AVAILABLE_CLEARINGS";
     public static final String ALL_PARTICIPATED = "ALL_PARTICIPATED";
+    public static final String SET_MAP = "SET_MAP";
 
 
 

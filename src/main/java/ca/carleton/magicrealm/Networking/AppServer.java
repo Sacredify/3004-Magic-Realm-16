@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.Networking;
 
+import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -15,6 +17,8 @@ public class AppServer implements Runnable {
     private ServerSocket server = null;
     private ArrayList<ServerThread> clients = null;
     private TurnController turnController = null;
+    private BoardGUIModel boardModel;
+
 
     public AppServer(int port) {
         try {
@@ -27,6 +31,12 @@ public class AppServer implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+
+    private void sendMap(){
+        Message m = new Message(0,Message.SET_MAP,boardModel);
+        broadcastMessage(0,m);
     }
 
 
@@ -79,12 +89,9 @@ public class AppServer implements Runnable {
                     broadcastMessage(0, newMessage);
                 }
                 break;
-
             default:
                 break;
         }
-
-
     }
 
 

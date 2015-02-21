@@ -31,7 +31,7 @@ public class AppClient implements Runnable {
             this.open();
             this.start();
         } catch (IOException ioe) {
-            System.out.println("Couuld not connect to serever");
+            System.out.println("Could not connect to serever");
         }
     }
 
@@ -118,6 +118,11 @@ public class AppClient implements Runnable {
             }
         }
     }
+
+    public int getId(){
+        return ID;
+    }
+
 /*
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
