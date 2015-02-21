@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.tile;
 
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.item.Item;
 
@@ -13,8 +14,6 @@ import java.util.List;
  * Date: 16/02/15
  * Time: 7:54 PM
  */
-
-
 public class Clearing implements Serializable {
 
     public double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
@@ -27,26 +26,26 @@ public class Clearing implements Serializable {
 
     private int y;
 
-    private List<Item> items;
-
     private Dwelling dwelling;
 
-    private AbstractTile parentTile;
+    private final AbstractTile parentTile;
 
-    private int index;
+    private final int index;
 
-    private List<Clearing> adjacentClearings;
+    private final List<Clearing> adjacentClearings;
+
+    private final List<Entity> entities;
 
     public Clearing(final AbstractTile parentTile,int index) {
         this.parentTile = parentTile;
         this.index  = index;
         this.adjacentClearings = new ArrayList<Clearing>();
+        this.entities = new ArrayList<Entity>();
     }
 
     public int getIndex(){
-        return index;
+        return this.index;
     }
-
 
     /**
      * Connects the clearing parameter.
@@ -58,17 +57,6 @@ public class Clearing implements Serializable {
     public void connectTo(Clearing clearing) {
         this.adjacentClearings.add(clearing);
         clearing.adjacentClearings.add(this);
-    }
-
-
-
-    /**
-     * Add an item to this clearing.
-     *
-     * @param item the item to add.
-     */
-    public void addItem(final Item item) {
-        this.items.add(item);
     }
 
     /**
@@ -87,15 +75,6 @@ public class Clearing implements Serializable {
      */
     public List<Clearing> getAdjacentClearings() {
         return this.adjacentClearings;
-    }
-
-    /**
-     * The list of items on this clearing.
-     *
-     * @return the list of items.
-     */
-    public List<Item> getItems() {
-        return this.items;
     }
 
     /**
@@ -119,11 +98,11 @@ public class Clearing implements Serializable {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     public void setX(int x) {
@@ -135,27 +114,45 @@ public class Clearing implements Serializable {
     }
 
     public void setScaledXRegular(int x) {
-        this.x = (int) Math.round(x / TILE_SCALEDOWN_MULTIPLIER_X);
+        this.x = (int) Math.round(x / this.TILE_SCALEDOWN_MULTIPLIER_X);
     }
 
     public void setScaledYRegular(int y) {
-        this.y = (int) Math.round(y / TILE_SCALEDOWN_MULTIPLIER_Y);
+        this.y = (int) Math.round(y / this.TILE_SCALEDOWN_MULTIPLIER_Y);
     }
 
     public void setScaledXAngled(int x) {
-        this.x = (int) Math.round(x / ROTATED_TILE_SCALEDOWN_MULTIPLIER_X);
+        this.x = (int) Math.round(x / this.ROTATED_TILE_SCALEDOWN_MULTIPLIER_X);
     }
 
     public void setScaledYAngled(int y) {
-        this.y = (int) Math.round(y / ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y);
+        this.y = (int) Math.round(y / this.ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y);
+    }
+
+    public void addEntity(final Entity entity) {
+        this.entities.add(entity);
+    }
+
+    public void removeEntity(final Entity entity) {
+        this.entities.remove(entity);
+    }
+
+    public List<Entity> getEntities() {
+        return this.entities;
     }
 
     public Dwelling getDwelling() {
-        return dwelling;
+        return this.dwelling;
     }
 
     public void setDwelling(Dwelling dwelling) {
         this.dwelling = dwelling;
     }
+
+    @Override
+    public String toString() {
+        return this.parentTile.getTileInformation() + " clearing number " + this.index + ".";
+    }
+
 }
 

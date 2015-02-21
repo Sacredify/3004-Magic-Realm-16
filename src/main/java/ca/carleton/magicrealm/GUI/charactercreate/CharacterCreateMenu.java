@@ -42,7 +42,7 @@ public class CharacterCreateMenu extends JDialog {
      */
     public CharacterCreateMenu(final BoardWindow board, final Player player, final List<CharacterType> availableCharacters,GameController cnt ) {
         this.setModal(true);
-        this.setName(WINDOW_NAME);
+        this.setTitle(WINDOW_NAME);
         this.initWindowSettings();
         this.board = board;
         this.model = new MenuModel(this, player, availableCharacters,cnt);
