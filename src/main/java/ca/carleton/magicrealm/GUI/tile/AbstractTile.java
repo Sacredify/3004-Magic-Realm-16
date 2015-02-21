@@ -1,6 +1,10 @@
 package ca.carleton.magicrealm.GUI.tile;
 
+import ca.carleton.magicrealm.entity.chit.ColoredChit;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,6 +16,8 @@ public abstract class AbstractTile implements Serializable {
     protected Clearing[] clearings;
 
     private int clearingCount = 0;
+
+    private List<ColoredChit> chits = new ArrayList<ColoredChit>();
 
     public abstract TileInformation getTileInformation();
 
@@ -68,5 +74,13 @@ public abstract class AbstractTile implements Serializable {
 
     public void setAngle(int angle) {
         this.angle = angle;
+    }
+
+    public List<ColoredChit> getChits() {
+        return this.chits;
+    }
+
+    public void addChit(final ColoredChit chit) {
+        this.chits.add(chit);
     }
 }

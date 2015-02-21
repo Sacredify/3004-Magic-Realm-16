@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.entity.chit;
 
+import ca.carleton.magicrealm.GUI.tile.TileType;
+
 /**
  * A yellow chit represents a warning chit on the map.
  *
@@ -9,13 +11,20 @@ package ca.carleton.magicrealm.entity.chit;
  */
 public class YellowChit extends ColoredChit {
 
-    public YellowChit(final int clearingNumber, final String warning) {
-        this.clearingNumber = clearingNumber;
+    private final TileType tileType;
+
+    public YellowChit(final String warning, final TileType tileType) {
+        this.clearingNumber = -1; //garbage, since they can appear anywhere in the tile.
         this.description = warning;
+        this.tileType = tileType;
     }
 
     @Override
     public ChitColor getChitColor() {
         return ChitColor.YELLOW;
+    }
+
+    public TileType getTileType() {
+        return this.tileType;
     }
 }

@@ -9,8 +9,8 @@ package ca.carleton.magicrealm.entity.chit;
  */
 public class RedChit extends ColoredChit {
 
-    public RedChit(final int clearingNumber, final String sound) {
-        this.clearingNumber = clearingNumber;
+    public RedChit(final String sound) {
+        this.clearingNumber = -1;
         this.description = sound;
     }
 

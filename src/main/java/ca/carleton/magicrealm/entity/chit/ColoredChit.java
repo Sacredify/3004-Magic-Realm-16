@@ -20,6 +20,11 @@ public abstract class ColoredChit {
     protected String description;
 
     /**
+     * Whether or not it has been found.
+     */
+    protected boolean hidden = false;
+
+    /**
      * The color of the chit.
      */
     public abstract ChitColor getChitColor();
@@ -30,6 +35,14 @@ public abstract class ColoredChit {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public boolean isHidden() {
+        return this.hidden;
+    }
+
+    public void reveal() {
+        this.hidden = true;
     }
 
 }

@@ -2,10 +2,12 @@ package ca.carleton.magicrealm.GUI.board;
 
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tony on 17/02/2015.
@@ -300,6 +302,24 @@ public class BoardGUIModel {
             }
         }
         return null;
+    }
+
+    /**
+     * Return all the tiles on the board of the given type.
+     *
+     * @param type the type of tile.
+     * @return the list.
+     */
+    public List<AbstractTile> getTilesOfType(final TileType type) {
+        final ArrayList<AbstractTile> toReturn = new ArrayList<AbstractTile>();
+
+        for (final AbstractTile tile : this.tiles) {
+            if (tile.getTileType() == type) {
+                toReturn.add(tile);
+            }
+        }
+
+        return toReturn;
     }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {

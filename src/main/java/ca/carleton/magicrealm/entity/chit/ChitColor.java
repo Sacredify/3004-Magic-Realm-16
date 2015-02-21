@@ -8,5 +8,7 @@ package ca.carleton.magicrealm.entity.chit;
 public enum ChitColor {
     RED,
     GOLD,
-    YELLOW
+    YELLOW,
+    LOST_CITY,
+    LOST_CASTLE
 }

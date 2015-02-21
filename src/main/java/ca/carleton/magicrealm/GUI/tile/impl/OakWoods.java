@@ -32,6 +32,6 @@ public class OakWoods extends AbstractTile {
 
     @Override
     public TileType getTileType() {
-        return TileType.VALLEY;
+        return TileType.WOODS;
     }
 }
