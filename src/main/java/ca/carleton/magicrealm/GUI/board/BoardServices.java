@@ -118,12 +118,19 @@ public class BoardServices {
                 point[0] = clearing.getX();
                 point[1] = clearing.getY();
                 rotatePoint(point, tile.getAngle());
-                clearing.setX((int)Math.round(point[0]));
-                clearing.setY((int)Math.round(point[1]));
+
+                clearing.setScaledXAngled((int)Math.round(point[0]));
+                clearing.setScaledYAngled((int)Math.round(point[1]));
             }
         }
         else {
             bufferedImage = resize(bufferedImage, TILE_WIDTH, TILE_HEIGHT);
+            label.setSize(TILE_WIDTH, TILE_HEIGHT);
+
+            for (Clearing clearing : tile.getClearings()) {
+                clearing.setScaledXRegular(clearing.getX());
+                clearing.setScaledYRegular(clearing.getY());
+            }
         }
         return bufferedImage;
     }

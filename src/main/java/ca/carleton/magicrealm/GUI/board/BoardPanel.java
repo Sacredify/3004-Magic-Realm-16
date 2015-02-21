@@ -30,6 +30,7 @@ public class BoardPanel extends JLayeredPane {
 
     public BoardPanel() {
         this.boardServices = new BoardServices();
+        this.setLayout(null);
         this.setAutoscrolls(true);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -58,7 +59,21 @@ public class BoardPanel extends JLayeredPane {
                         tileX += TILE_X_OFFSET;
                         newTile.setLocation(tileX, tileY);
                     }
+                    newTile.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            iconClickedEvent(e);
+                        }
+                    });
                     this.add(newTile, JLayeredPane.DEFAULT_LAYER);
+
+                    /** set the x and y locations relative to the board for each clearing (overwrites its current value) **/
+                    for (final Clearing clearing : tile.getClearings()) {
+                        int clearingNewX = tileX + clearing.getX() - CHIT_WIDTH / 2 ;
+                        int clearingNewY = tileY + clearing.getY() - CHIT_HEIGHT / 2;
+                        clearing.setX(clearingNewX);
+                        clearing.setY(clearingNewY);
+                    }
 
                     /** create the labels for each clearing **/
                     for (final Clearing clearing : tile.getClearings()) {
@@ -78,13 +93,12 @@ public class BoardPanel extends JLayeredPane {
                         this.add(clearingLabel, JLayeredPane.PALETTE_LAYER);
                     }
 
-
                     /** create the chits **/
                     ArrayList<JButton> newChits = this.boardServices.createChitIconsForTile(tile);
                     for (int i = 0; i < newChits.size(); i++) {
                         if (newChits.get(i) != null) {
-                            newChits.get(i).setLocation(tileX + tile.getClearingAt(i).getX() - CHIT_WIDTH / 2,
-                                    tileY + tile.getClearingAt(i).getY() - CHIT_HEIGHT / 2);
+                            newChits.get(i).setLocation(tile.getClearingAt(i).getX(),
+                                    tile.getClearingAt(i).getY());
                             this.add(newChits.get(i), JLayeredPane.PALETTE_LAYER);
                         }
                     }
@@ -96,6 +110,10 @@ public class BoardPanel extends JLayeredPane {
         }
     }
 
+    public void iconClickedEvent(MouseEvent e) {
+        System.out.println("clicked: x - " + e.getLocationOnScreen().getX() + " y - " + e.getLocationOnScreen().getY());
+    }
+    
     public void paintComponent(Graphics g, Image image) {
         super.paintComponent(g);
         g.drawImage(image, 0, 0, this);
