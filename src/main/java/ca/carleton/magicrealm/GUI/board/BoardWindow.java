@@ -67,5 +67,7 @@ public class BoardWindow extends JFrame {
         this.boardPanel.displayMoveButtonsForClearing(buttons);
     }
 
-
+    public BoardGUIModel getBoardModel() {
+        return this.boardGUIModel;
+    }
 }
