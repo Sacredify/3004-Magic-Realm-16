@@ -1,7 +1,5 @@
 package ca.carleton.magicrealm.GUI.board;
 
-import ca.carleton.magicrealm.GUI.tile.Clearing;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -23,19 +21,19 @@ public class BoardWindow extends JFrame {
 
     private JMenuBar menuBar;
 
-    public BoardWindow() {
+    public BoardWindow(final BoardGUIModel model) {
         super(WINDOW_NAME);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        boardGUIModel = new BoardGUIModel();
+        this.boardGUIModel = model;
 
-        boardPanel = new BoardPanel();
-        boardPanel.drawBoard(boardGUIModel);
+        this.boardPanel = new BoardPanel();
+        this.boardPanel.drawBoard(this.boardGUIModel);
 
         // TODO: get a friggen scrollbar working
-        JScrollPane pane = new JScrollPane(boardPanel);
+        JScrollPane pane = new JScrollPane(this.boardPanel);
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 

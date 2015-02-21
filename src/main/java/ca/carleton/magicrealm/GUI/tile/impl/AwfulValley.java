@@ -27,7 +27,7 @@ public class AwfulValley extends AbstractTile {
 
         this.clearings[3].setX(246);
         this.clearings[3].setY(85);
-        this.clearings[3].setDwelling(Dwelling.CHAPEL);
+        //this.clearings[3].setDwelling(Dwelling.CHAPEL);
 
     }
     

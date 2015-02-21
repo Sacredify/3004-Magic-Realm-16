@@ -28,7 +28,7 @@ public class CurstValley extends AbstractTile {
         // 5
         this.clearings[3].setX(359);
         this.clearings[3].setY(154);
-        this.clearings[3].setDwelling(Dwelling.HOUSE);
+       // this.clearings[3].setDwelling(Dwelling.HOUSE);
     }
 
     @Override

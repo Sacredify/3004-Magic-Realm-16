@@ -27,7 +27,7 @@ public class BadValley extends AbstractTile {
 
         this.clearings[3].setX(360);
         this.clearings[3].setY(152);
-        this.clearings[3].setDwelling(Dwelling.INN);
+       // this.clearings[3].setDwelling(Dwelling.INN);
     }
 
     @Override

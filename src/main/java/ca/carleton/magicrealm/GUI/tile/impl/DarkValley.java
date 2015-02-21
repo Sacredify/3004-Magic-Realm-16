@@ -29,7 +29,7 @@ public class DarkValley extends AbstractTile {
         // 4
         this.clearings[3].setX(359);
         this.clearings[3].setY(280);
-        this.clearings[3].setDwelling(Dwelling.GUARD);
+        //this.clearings[3].setDwelling(Dwelling.GUARD);
     }
 
     @Override

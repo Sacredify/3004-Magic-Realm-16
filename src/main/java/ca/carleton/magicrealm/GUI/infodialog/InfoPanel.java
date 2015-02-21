@@ -2,7 +2,6 @@ package ca.carleton.magicrealm.GUI.infodialog;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
-import ca.carleton.magicrealm.item.Item;
 
 import javax.swing.*;
 import java.awt.*;

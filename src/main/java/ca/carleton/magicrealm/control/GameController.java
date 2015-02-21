@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
+import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 ///import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
@@ -44,15 +45,20 @@ public class GameController {
     private List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
 
     public GameController() {
-        this.boardWindow = new BoardWindow();
 
-        this.otherPlayers = new ArrayList<>();
-
+        // Build the board data.
         this.boardModel = new BoardGUIModel();
+        // Place chits.
+        ChitBuilder.placeChits(this.boardModel);
+        // Build window.
+        this.boardWindow = new BoardWindow(this.boardModel);
 
+        // Other players.
+        this.otherPlayers = new ArrayList<>();
+        // The current player.
         this.currentPlayer = new Player();
 
-        showCharacterCreate();
+        this.showCharacterCreate();
 
     }
 
@@ -77,7 +83,7 @@ public class GameController {
                 break;
                 case(Message.MOVE):
                     //Insert move character functionality here
-                    handleMove((Player)m.getMessageObject());
+                    this.handleMove((Player)m.getMessageObject());
                     break;
                 case(Message.ALL_PARTICIPATED):
                     //Insert Stage incrementing functionality here
@@ -86,7 +92,7 @@ public class GameController {
                 case(Message.SET_MAP):
                     //SETTING MAP MODEL
                     System.out.println("SETTING MAP MODEL");
-                    setBoardModel((BoardGUIModel)m.getMessageObject());
+                    this.setBoardModel((BoardGUIModel) m.getMessageObject());
 
 
                 default:
@@ -141,7 +147,7 @@ public class GameController {
 
     /** Methods to set up a move phase **/
     private void setupMovePhaseForPlayer() {
-        boardWindow.setupMoveButtons(createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
+        boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
         recordedPhases.add(new MovePhase());
     }
 

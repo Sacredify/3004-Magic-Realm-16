@@ -6,10 +6,7 @@ import ca.carleton.magicrealm.entity.chit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,6 +91,29 @@ public class ChitBuilder {
         for (final AbstractTile tile : board.getTilesOfType(TileType.MOUNTAIN)) {
             tile.addChit(mountainsChits.remove(random.nextInt(mountainsChits.size())));
         }
+
+        LOG.info("Starting valley chit replacement.");
+
+        for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
+            final Iterator<ColoredChit> iter = tile.getChits().iterator();
+            while (iter.hasNext()) {
+                final ColoredChit chit = iter.next();
+                if (chit.getDescription().equals("BONES")) {
+                    // Ghosts get put here.
+
+                } else if (chit.getDescription().equals("DANK")) {
+                     tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.CHAPEL);
+                } else if (chit.getDescription().equals("RUINS")) {
+                    tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.GUARD);
+                } else if (chit.getDescription().equals("SMOKE")) {
+                    tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.HOUSE);
+                } else if (chit.getDescription().equals("STINK")) {
+                    tile.getClearings()[tile.getClearings().length -1].setDwelling(Dwelling.INN);
+                }
+            }
+        }
+
+        LOG.info("Done with valley chit placement.");
 
         LOG.info("Chit placement finished.");
         LOG.info("Beginning sanity checks.");
