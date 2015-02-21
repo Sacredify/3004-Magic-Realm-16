@@ -17,8 +17,11 @@ import java.util.List;
 
 public class Clearing implements Serializable {
 
-    public double TILE_SCALEDOWN_MULTIPLIER_X = 3.125;
-    public double TILE_SCALEDOWN_MULTIPLIER_Y = 3.125;
+    public double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
+    public double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
+
+    public double ROTATED_TILE_SCALEDOWN_MULTIPLIER_X = 2.21;
+    public double ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y = 2;
 
     private int x;
 
@@ -124,11 +127,27 @@ public class Clearing implements Serializable {
     }
 
     public void setX(int x) {
-        this.x = (int) Math.round(x / TILE_SCALEDOWN_MULTIPLIER_X);
+        this.x = x;
     }
 
     public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setScaledXRegular(int x) {
+        this.x = (int) Math.round(x / TILE_SCALEDOWN_MULTIPLIER_X);
+    }
+
+    public void setScaledYRegular(int y) {
         this.y = (int) Math.round(y / TILE_SCALEDOWN_MULTIPLIER_Y);
+    }
+
+    public void setScaledXAngled(int x) {
+        this.x = (int) Math.round(x / ROTATED_TILE_SCALEDOWN_MULTIPLIER_X);
+    }
+
+    public void setScaledYAngled(int y) {
+        this.y = (int) Math.round(y / ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y);
     }
 
     public Dwelling getDwelling() {

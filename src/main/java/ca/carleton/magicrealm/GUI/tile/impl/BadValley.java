@@ -15,17 +15,17 @@ public class BadValley extends AbstractTile {
     public BadValley() {
         this.clearings = Clearing.initializeClearingsArray(4,this);
 
-        this.clearings[0].setX(299);
-        this.clearings[0].setY(316);
+        this.clearings[0].setX(282);
+        this.clearings[0].setY(363);
 
-        this.clearings[1].setX(136);
-        this.clearings[1].setY(287);
+        this.clearings[1].setX(135);
+        this.clearings[1].setY(283);
 
-        this.clearings[2].setX(193);
-        this.clearings[2].setY(124);
+        this.clearings[2].setX(181);
+        this.clearings[2].setY(104);
 
         this.clearings[3].setX(360);
-        this.clearings[3].setY(156);
+        this.clearings[3].setY(152);
         this.clearings[3].setDwelling(Dwelling.INN);
     }
 
