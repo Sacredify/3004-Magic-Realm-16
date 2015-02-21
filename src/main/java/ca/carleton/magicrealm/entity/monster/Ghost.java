@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.entity.chit;
+package ca.carleton.magicrealm.entity.monster;
 
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.EntityInformation;

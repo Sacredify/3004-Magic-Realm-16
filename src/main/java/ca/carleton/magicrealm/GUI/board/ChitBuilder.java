@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.board;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.chit.*;
+import ca.carleton.magicrealm.entity.monster.Ghost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
