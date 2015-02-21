@@ -24,7 +24,10 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
      */
     protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
 
-    protected Clearing currentClearingLocation;
+    /**
+     * Whether or not this character is hidden.
+     */
+    protected boolean hidden;
 
     /**
      * Find the relationship with another interactable entity.
@@ -40,11 +43,11 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
         this.relationships.putIfAbsent(entity, relationship);
     }
 
-    public Clearing getCurrentClearingLocation() {
-        return currentClearingLocation;
+    public boolean isHidden() {
+        return this.hidden;
     }
 
-    public void setCurrentClearingLocation(Clearing currentClearingLocation) {
-        this.currentClearingLocation = currentClearingLocation;
+    public void setHidden(final boolean hidden) {
+        this.hidden = hidden;
     }
 }
