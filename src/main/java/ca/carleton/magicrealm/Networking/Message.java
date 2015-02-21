@@ -74,5 +74,9 @@ public final class Message implements Serializable {
         return messageType;
     }
 
+    public Object getMessageObject() {
+        return this.messageObject;
+    }
+
 
 }
