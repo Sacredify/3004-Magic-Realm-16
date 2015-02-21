@@ -7,11 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 /**
  * Created by Tony on 18/02/2015.
- *
+ * <p/>
  * The view for the game board
  */
 public class BoardPanel extends JLayeredPane {
@@ -28,7 +29,7 @@ public class BoardPanel extends JLayeredPane {
     private ArrayList<JButton> moveButtons;
 
     public BoardPanel() {
-        boardServices = new BoardServices();
+        this.boardServices = new BoardServices();
         this.setAutoscrolls(true);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -48,30 +49,42 @@ public class BoardPanel extends JLayeredPane {
             for (AbstractTile tile : row) {
                 if (tile != null) {
                     /** create the tile **/
-                    JLabel newTile = boardServices.createTileIcon(tile);
+                    JLabel newTile = this.boardServices.createTileIcon(tile);
                     int tileX = x * TILE_DELTA_X;
                     int tileY = y * TILE_DELTA_Y;
                     if (y % 2 == 0) {
                         newTile.setLocation(tileX, tileY);
-                    }
-                    else {
+                    } else {
                         tileX += TILE_X_OFFSET;
                         newTile.setLocation(tileX, tileY);
                     }
-                    //add a listener to the tile
-                    newTile.addMouseListener(new MouseAdapter() {
-                        public void mouseReleased(MouseEvent e) {
-                            iconClickedEvent(e);
-                        }
-                    });
                     this.add(newTile, JLayeredPane.DEFAULT_LAYER);
 
+                    /** create the labels for each clearing **/
+                    for (final Clearing clearing : tile.getClearings()) {
+                        ClearingLabel clearingLabel = new ClearingLabel();
+                        clearingLabel.clearing = clearing;
+                        clearingLabel.setSize(new Dimension(30, 30));
+                        clearingLabel.setLocation(clearing.getX(), clearing.getY());
+                        clearingLabel.setEnabled(true);
+
+                        clearingLabel.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(final MouseEvent e) {
+                                System.out.println("Clicked + " + ((ClearingLabel) e.getSource()).clearing);
+                            }
+                        });
+
+                        this.add(clearingLabel, JLayeredPane.PALETTE_LAYER);
+                    }
+
+
                     /** create the chits **/
-                    ArrayList<JButton> newChits = boardServices.createChitIconsForTile(tile);
+                    ArrayList<JButton> newChits = this.boardServices.createChitIconsForTile(tile);
                     for (int i = 0; i < newChits.size(); i++) {
                         if (newChits.get(i) != null) {
-                            newChits.get(i).setLocation(tileX + tile.getClearingAt(i).getX() - CHIT_WIDTH/2,
-                                    tileY + tile.getClearingAt(i).getY() - CHIT_HEIGHT/2);
+                            newChits.get(i).setLocation(tileX + tile.getClearingAt(i).getX() - CHIT_WIDTH / 2,
+                                    tileY + tile.getClearingAt(i).getY() - CHIT_HEIGHT / 2);
                             this.add(newChits.get(i), JLayeredPane.PALETTE_LAYER);
                         }
                     }
@@ -83,21 +96,17 @@ public class BoardPanel extends JLayeredPane {
         }
     }
 
-    public void iconClickedEvent(MouseEvent e) {
-        System.out.printf("clicked");
-    }
-
-    public void paintComponent(Graphics g, Image image){
+    public void paintComponent(Graphics g, Image image) {
         super.paintComponent(g);
-        g.drawImage(image , 0, 0, this);
+        g.drawImage(image, 0, 0, this);
     }
 
     public void displayMoveButtonsForClearing(ArrayList<JButton> buttons) {
-        for (JButton button : moveButtons) {
+        for (JButton button : this.moveButtons) {
             this.remove(button);
         }
-        moveButtons = buttons;
-        for (JButton button : moveButtons) {
+        this.moveButtons = buttons;
+        for (JButton button : this.moveButtons) {
             this.add(button);
         }
     }
