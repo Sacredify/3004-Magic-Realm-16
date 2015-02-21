@@ -120,6 +120,8 @@ public class MenuPanel extends JPanel {
         this.add(this.characterSelectList);
     }
 
+
+
     private void initializeLabels() {
         this.victoryLabels = new JLabel[5];
 

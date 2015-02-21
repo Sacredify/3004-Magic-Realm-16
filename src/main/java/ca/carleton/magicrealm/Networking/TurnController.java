@@ -9,8 +9,10 @@ import java.util.*;
  */
 public class TurnController {
     private PriorityQueue<Integer> orderedIDs= null;
+    private int turnCount;
 
     public TurnController(){
+        turnCount = 0;
         orderedIDs = new PriorityQueue<>();
     }
 
@@ -19,6 +21,17 @@ public class TurnController {
         for(ServerThread s:clientThreads){
             orderedIDs.add(s.getID());
         }
+    }
+
+    //Returns current turn count
+    public int incrementTurnCount(){
+        turnCount++;
+        if(turnCount == 6){
+            turnCount = 0;
+            return 6;
+        }
+        else
+        return turnCount;
     }
 
     public int getNextPlayer(){

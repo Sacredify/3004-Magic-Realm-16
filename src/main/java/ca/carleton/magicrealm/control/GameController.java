@@ -68,10 +68,20 @@ public class GameController {
             System.out.println("Game Controller:This is a Message Object");
             Message m = (Message) obj;
             System.out.println("This is a :" + m.getMessageType() + " Message Type");
-
-            if (((Message) obj).getMessageType().equals(Message.SELECT_CHARACTER)) {
-                this.removeFromAvailableCharacters(m.getMessageObject());
-                this.characterCreateMenu.updateAvailableCharacters();
+            switch(m.getMessageType()){
+                case(Message.SELECT_CHARACTER):
+                    this.removeFromAvailableCharacters(m.getMessageObject());
+                    this.characterCreateMenu.updateAvailableCharacters();
+                break;
+                case(Message.MOVE):
+                    //Insert move character functionality here.
+                    break;
+                case(Message.ALL_PARTICIPATED):
+                    //Insert Stage incrementing functionality here
+                    System.out.println("ALL PARTICIPATED MESSAGE RECIEVED");
+                    break;
+                default:
+                    break;
             }
 
 
