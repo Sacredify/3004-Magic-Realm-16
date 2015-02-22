@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.board;
 
+import ca.carleton.magicrealm.GUI.infodialog.InfoDialog;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.game.Player;
@@ -67,7 +68,7 @@ public class BoardPanel extends JLayeredPane {
                     newTile.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            iconClickedEvent(e);
+                            iconClickedEvent(e, tile);
                         }
                     });
                     this.add(newTile, JLayeredPane.DEFAULT_LAYER);
@@ -115,8 +116,9 @@ public class BoardPanel extends JLayeredPane {
         }
     }
 
-    public void iconClickedEvent(MouseEvent e) {
+    public void iconClickedEvent(MouseEvent e, AbstractTile tile) {
         System.out.println("clicked: x - " + e.getLocationOnScreen().getX() + " y - " + e.getLocationOnScreen().getY());
+        new InfoDialog(tile).displayWindow();
     }
     
     public void paintComponent(Graphics g, Image image) {
