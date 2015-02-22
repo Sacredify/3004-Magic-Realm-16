@@ -68,7 +68,7 @@ public class GameController {
                     this.characterCreateMenu.updateAvailableCharacters();
                     break;
                 case (Message.MOVE):
-                    //Insert move character functionality here
+
                     this.handleMove((Player) m.getMessageObject());
                     break;
                 case (Message.ALL_PARTICIPATED):
@@ -78,16 +78,38 @@ public class GameController {
                     //TODO Update label with message saying waiting for board or some shit.
                     break;
                 case (Message.SET_MAP):
-                    //SETTING MAP MODEL
                     this.setBoardModel((BoardGUIModel) m.getMessageObject());
-                    this.boardWindow.refresh(this.boardModel);
+                    this.updateCurrentPlayer(((BoardGUIModel) m.getMessageObject()).getPlayers());
+                    break;
+                case (Message.BIRDSONG):
+                    // Start birdsong here.
+                    //TODO Phase implmenetation here. Right now just movement.
+                    this.setupMovePhaseForPlayer();
 
                 default:
                     break;
             }
 
+            // If we have a board, refresh after every message.
+            if (this.boardModel != null) {
+                this.boardWindow.refresh(this.boardModel);
+            }
+
         } else if (obj instanceof String) {
             System.out.println("This is a string");
+        }
+    }
+
+    /**
+     * Update this client's player from the list of players returned by the server.
+     *
+     * @param players the players from the server.
+     */
+    private void updateCurrentPlayer(final List<Player> players) {
+        for (final Player player : players) {
+            if (player.getCharacter().getEntityInformation() == this.currentPlayer.getCharacter().getEntityInformation()) {
+                this.currentPlayer = player;
+            }
         }
     }
 

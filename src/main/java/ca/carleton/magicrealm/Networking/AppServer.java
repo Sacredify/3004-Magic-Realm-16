@@ -57,7 +57,7 @@ public class AppServer implements Runnable {
         this.alertPlayerNextTurn();
     }
 
-    //This function is called every time a Message.TURN_FINISHED is recieved
+    //This function is called every time a Message.TURN_FINISHED is received
     //STILL NEED TO IMPLEMENT SWORDSMAN FUNCTIONALITY
     public void alertPlayerNextTurn() {
         int nextID;
@@ -101,6 +101,7 @@ public class AppServer implements Runnable {
                     Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
                     this.broadcastMessage(0, newMessage);
                     this.sendMap();
+                    this.startBirdSong();
                 }
 
                 break;
@@ -109,6 +110,12 @@ public class AppServer implements Runnable {
         }
     }
 
+    /**
+     * Starts the birdsong phase for the clients.
+     */
+    private void startBirdSong() {
+        this.broadcastMessage(0, new Message(0, Message.BIRDSONG, null));
+    }
 
     private ServerThread getClientWithID(int ID) {
 

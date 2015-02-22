@@ -72,6 +72,9 @@ public final class Message implements Serializable {
     public static final String BLACK_KNIGHT = "BLACK_KNIGHT";
 
 
+    // Phases
+    public static final String BIRDSONG = "BIRDSONG";
+
 
     public String getMessageType(){
         return messageType;
