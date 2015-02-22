@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.control;
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
+import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
@@ -82,6 +83,7 @@ public class GameController {
                     this.setBoardModel((BoardGUIModel) m.getMessageObject());
                     this.updateCurrentPlayer();
                     this.boardWindow.refresh(this.boardModel);
+                    this.setupMovePhaseForPlayer();
 
                 default:
                     break;
@@ -109,7 +111,7 @@ public class GameController {
      * Methods to set up a move phase *
      */
     private void setupMovePhaseForPlayer() {
-        this.boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(this.currentPlayer.getCurrentClearing())); // display move buttons now? or later
+        new PhaseSelectorMenu();
     }
 
     public void movePlayerToClearing(Clearing clearing) {
@@ -124,25 +126,6 @@ public class GameController {
         // Send the new board to the server.
         Message m = new Message(this.networkConnection.getId(), Message.MOVE, this.boardModel);
         this.networkConnection.sendMessage(Message.MOVE, m);
-    }
-
-    public ArrayList<JButton> createMoveButtonsForClearing(Clearing clearing) {
-        ArrayList<JButton> buttons = new ArrayList<>();
-
-        for (final Clearing adjacentClearing : clearing.getAdjacentClearings()) {
-            JButton newButton = new JButton();
-            newButton.setSize(30, 30);
-            newButton.setLocation(adjacentClearing.getX(), adjacentClearing.getY());
-
-            newButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GameController.this.movePlayerToClearing(adjacentClearing);
-                }
-            });
-            buttons.add(newButton);
-        }
-        return buttons;
     }
 
     /**

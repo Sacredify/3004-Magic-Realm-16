@@ -1,7 +1,5 @@
 package ca.carleton.magicrealm.Networking;
 
-import com.sun.corba.se.spi.activation.Server;
-
 import java.util.*;
 
 /**
