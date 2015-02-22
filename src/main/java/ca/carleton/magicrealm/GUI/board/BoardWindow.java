@@ -25,6 +25,7 @@ public class BoardWindow extends JFrame {
         super(WINDOW_NAME);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.boardPanel = new BoardPanel();

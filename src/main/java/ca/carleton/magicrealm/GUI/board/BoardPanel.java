@@ -53,7 +53,7 @@ public class BoardPanel extends JLayeredPane {
         int y = 0;
         for (ArrayList<AbstractTile> row : boardGUIModel.getBoard()) {
             int x = 0;
-            for (AbstractTile tile : row) {
+            for (final AbstractTile tile : row) {
                 if (tile != null) {
                     /** create the tile **/
                     JLabel newTile = this.boardServices.createTileIcon(tile);
@@ -181,7 +181,7 @@ public class BoardPanel extends JLayeredPane {
         this.statusLabel = new JLabel();
 
         this.statusLabel.setSize(500,50);
-        this.statusLabel.setLocation(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+        this.statusLabel.setLocation(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
         add(statusLabel, JLayeredPane.PALETTE_LAYER);
     }
 
