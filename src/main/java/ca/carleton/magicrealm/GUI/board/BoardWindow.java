@@ -28,7 +28,6 @@ public class BoardWindow extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.boardPanel = new BoardPanel();
-        this.boardPanel.drawBoard(this.boardGUIModel);
         
         JScrollPane pane = new JScrollPane(this.boardPanel);
         pane.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -36,7 +35,6 @@ public class BoardWindow extends JFrame {
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         this.add(pane, BorderLayout.CENTER);
-        this.setupMenuBars();
 
         this.pack();
 
