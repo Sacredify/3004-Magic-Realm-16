@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -117,7 +118,9 @@ public class GameController {
         this.recordedPhasesForDay.add(movement);
         Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
         this.recordedPhasesForDay.clear();
-        // Update the current player
+        // Update
+        this.updatePlayerInMap();
+        // Send the new board to the server.
         Message m = new Message(this.networkConnection.getId(), Message.MOVE, this.boardModel);
         this.networkConnection.sendMessage(Message.MOVE, m);
     }
@@ -141,6 +144,20 @@ public class GameController {
         return buttons;
     }
 
+    /**
+     * Replaces the current player stored on the board with the updated one.
+     */
+    public void updatePlayerInMap() {
+        final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
+
+        while (iterator.hasNext()) {
+            if (iterator.next().getCharacter().getEntityInformation() == this.currentPlayer.getCharacter().getEntityInformation()) {
+                iterator.remove();
+            }
+        }
+
+        this.boardModel.getPlayers().add(this.currentPlayer);
+    }
 
     /**
      * Updates the current player status for use in the client's various methods..
