@@ -80,6 +80,7 @@ public class GameController {
                 case (Message.SET_MAP):
                     //SETTING MAP MODEL
                     this.setBoardModel((BoardGUIModel) m.getMessageObject());
+                    this.updateCurrentPlayer();
                     this.boardWindow.refresh(this.boardModel);
 
                 default:
@@ -91,10 +92,6 @@ public class GameController {
         }
     }
 
-
-
-
-
     public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
         this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
@@ -104,23 +101,29 @@ public class GameController {
 
     //Update Map
     public void handleMove(final BoardGUIModel newBoardModel) {
-        boardModel = newBoardModel;
+        this.boardModel = newBoardModel;
+        this.boardWindow.refresh(this.boardModel);
     }
 
     /**
      * Methods to set up a move phase *
      */
     private void setupMovePhaseForPlayer() {
-        boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
+        this.boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(this.currentPlayer.getCurrentClearing())); // display move buttons now? or later
     }
 
     public void movePlayerToClearing(Clearing clearing) {
+        // Record a move phase
         MovePhase movement = new MovePhase();
         movement.setMoveTarget(clearing);
         this.recordedPhasesForDay.add(movement);
-        updatePlayerInMap();
-        Message m = new Message(networkConnection.getId(), Message.MOVE,boardModel);
-        networkConnection.sendMessage(Message.MOVE, m);
+        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
+        this.recordedPhasesForDay.clear();
+        // Update
+        this.updatePlayerInMap();
+        // Send the new board to the server.
+        Message m = new Message(this.networkConnection.getId(), Message.MOVE, this.boardModel);
+        this.networkConnection.sendMessage(Message.MOVE, m);
     }
 
     public ArrayList<JButton> createMoveButtonsForClearing(Clearing clearing) {
@@ -142,18 +145,34 @@ public class GameController {
         return buttons;
     }
 
+    /**
+     * Replaces the current player stored on the board with the updated one.
+     */
+    public void updatePlayerInMap() {
+        final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
 
-    public void updatePlayerInMap(){
-        String characterType = currentPlayer.getCharacter().getEntityInformation().name();
-        String characterType2;
-        ArrayList<Player> players =  boardModel.getPlayers();
-        for(int i = 0; i < players.size(); i++){
-            characterType2 = players.get(i).getCharacter().getEntityInformation().name();
-            if(characterType == characterType2){
-                boardModel.setPlayer(currentPlayer);
+        final int sanityCheck = this.boardModel.getPlayers().size();
+        while (iterator.hasNext()) {
+            if (iterator.next().getCharacter().getEntityInformation() == this.currentPlayer.getCharacter().getEntityInformation()) {
+                iterator.remove();
+                break;
             }
         }
+        // Sanity check - check that we actually removed someone.
+        assert (this.boardModel.getPlayers().size() == (sanityCheck -1));
 
+        this.boardModel.getPlayers().add(this.currentPlayer);
+    }
+
+    /**
+     * Updates the current player status for use in the client's various methods..
+     */
+    public void updateCurrentPlayer() {
+        for (final Player player : this.boardModel.getPlayers()) {
+            if (this.currentPlayer.getCharacter().getEntityInformation() == player.getCharacter().getEntityInformation()) {
+                this.currentPlayer = player;
+            }
+        }
     }
 
     public void setNetworkConnection(AppClient nC) {
