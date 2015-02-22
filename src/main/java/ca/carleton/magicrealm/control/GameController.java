@@ -83,6 +83,7 @@ public class GameController {
                 case(Message.ALL_PARTICIPATED):
                     //Insert Stage incrementing functionality here
                     System.out.println("ALL PARTICIPATED MESSAGE RECIEVED");
+                    setupCharacterIcons();
                     break;
                 case(Message.SET_MAP):
                     //SETTING MAP MODEL
