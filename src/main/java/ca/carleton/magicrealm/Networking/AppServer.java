@@ -60,6 +60,8 @@ public class AppServer implements Runnable {
         this.alertPlayerNextTurn();
     }
 
+    
+
     //This function is called every time a Message.TURN_FINISHED is recieved
     //STILL NEED TO IMPLEMENT SWORDSMAN FUNCTIONALITY
     public void alertPlayerNextTurn() {
@@ -98,7 +100,7 @@ public class AppServer implements Runnable {
                 player.setCurrentClearing(this.boardModel.getStartingLocation());
                 boardModel.addPlayer(player);
                 broadcastMessage(0, m);
-                if (this.turnController.incrementTurnCount() == 6) {
+                if (this.turnController.incrementTurnCount() == 2) {
                     Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
                     this.sendMap();
                 }
