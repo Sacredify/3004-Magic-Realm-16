@@ -52,7 +52,7 @@ public class BoardWindow extends JFrame {
 
     public void refresh(final BoardGUIModel model) {
         this.boardModel = model;
-        this.boardPanel.drawBoard(model);
+        this.boardPanel.drawBoard( this.boardModel);
         this.add(this.addScrollPane(), BorderLayout.CENTER);
     }
 
