@@ -37,6 +37,8 @@ public class GameController {
 
     private AppClient networkConnection = null;
 
+    private List<AbstractPhase> recordedPhasesForDay = new ArrayList<AbstractPhase>();
+
     private List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
 
     public GameController() {
@@ -55,14 +57,6 @@ public class GameController {
 
         this.showCharacterCreate();
 
-    }
-
-    /**
-     * Execute a given phase.
-     */
-    public void executePhase(final AbstractPhase phase) {
-        Daylight.processPhaseForPlayer(this.currentPlayer, phase);
-        // Update server
     }
 
     public void handleMessage(Object obj) {
@@ -149,7 +143,7 @@ public class GameController {
     public void movePlayerToClearing(Clearing clearing) {
         MovePhase movement = new MovePhase();
         movement.setMoveTarget(clearing);
-        this.executePhase(movement);
+        this.recordedPhasesForDay.add(movement);
         Message m = new Message(networkConnection.getId(),Message.MOVE,this.currentPlayer);
         networkConnection.sendMessage(Message.MOVE,m);
     }
