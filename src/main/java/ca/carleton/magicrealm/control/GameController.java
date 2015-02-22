@@ -59,6 +59,7 @@ public class GameController {
     public void handleMessage(Object obj) {
 
         if (obj instanceof Message) {
+            System.out.println("Game Controller:This is a Message Object");
             Message m = (Message) obj;
             System.out.println("This is a :" + m.getMessageType() + " Message Type");
             switch (m.getMessageType()) {
@@ -67,7 +68,8 @@ public class GameController {
                     this.characterCreateMenu.updateAvailableCharacters();
                     break;
                 case (Message.MOVE):
-                    this.handleMove((Player) m.getMessageObject());
+                    //Insert move character functionality here
+                    this.handleMove((BoardGUIModel) m.getMessageObject());
                     break;
                 case (Message.ALL_PARTICIPATED):
                     //Insert Stage incrementing functionality here
@@ -76,21 +78,12 @@ public class GameController {
                     //TODO Update label with message saying waiting for board or some shit.
                     break;
                 case (Message.SET_MAP):
+                    //SETTING MAP MODEL
                     this.setBoardModel((BoardGUIModel) m.getMessageObject());
-                    this.updateCurrentPlayer(((BoardGUIModel) m.getMessageObject()).getPlayers());
-                    break;
-                case (Message.BIRDSONG):
-                    // Start birdsong here.
-                    //TODO Phase implementation here. Right now just movement.
-                    this.setupMovePhaseForPlayer();
+                    this.boardWindow.refresh(this.boardModel);
 
                 default:
                     break;
-            }
-
-            // If we have a board, refresh after every message, if there is a map to update..
-            if (this.boardModel != null && m.getMessageObject() instanceof BoardGUIModel) {
-                this.boardWindow.refresh(this.boardModel);
             }
 
         } else if (obj instanceof String) {
@@ -98,18 +91,9 @@ public class GameController {
         }
     }
 
-    /**
-     * Update this client's player from the list of players returned by the server.
-     *
-     * @param players the players from the server.
-     */
-    private void updateCurrentPlayer(final List<Player> players) {
-        for (final Player player : players) {
-            if (player.getCharacter().getEntityInformation() == this.currentPlayer.getCharacter().getEntityInformation()) {
-                this.currentPlayer = player;
-            }
-        }
-    }
+
+
+
 
     public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
@@ -118,41 +102,25 @@ public class GameController {
         //this.setStatusText("SELECTED CHARACTER, WAITING FOR OTHER PLAYERS");
     }
 
-    /**
-     * Update the location of a player from the server.
-     *
-     * @param playerFromServer the player to update.
-     */
-    public void handleMove(final Player playerFromServer) {
-
-        final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
-
-        // Find the player in the list of players and remove his old data.
-        while (iterator.hasNext()) {
-            if (iterator.next().isSamePlayer(playerFromServer)) {
-                iterator.remove();
-                break;
-            }
-        }
-
-        // Update with the new data.
-        this.boardModel.getPlayers().add(playerFromServer);
+    //Update Map
+    public void handleMove(final BoardGUIModel newBoardModel) {
+        boardModel = newBoardModel;
     }
 
     /**
      * Methods to set up a move phase *
      */
     private void setupMovePhaseForPlayer() {
-        this.boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(this.currentPlayer.getCurrentClearing()));
+        boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
     }
 
     public void movePlayerToClearing(Clearing clearing) {
         MovePhase movement = new MovePhase();
         movement.setMoveTarget(clearing);
         this.recordedPhasesForDay.add(movement);
-        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
-        Message m = new Message(this.networkConnection.getId(), Message.MOVE, this.currentPlayer);
-        this.networkConnection.sendMessage(Message.MOVE, m);
+        updatePlayerInMap();
+        Message m = new Message(networkConnection.getId(), Message.MOVE,boardModel);
+        networkConnection.sendMessage(Message.MOVE, m);
     }
 
     public ArrayList<JButton> createMoveButtonsForClearing(Clearing clearing) {
@@ -172,6 +140,20 @@ public class GameController {
             buttons.add(newButton);
         }
         return buttons;
+    }
+
+
+    public void updatePlayerInMap(){
+        String characterType = currentPlayer.getCharacter().getEntityInformation().name();
+        String characterType2;
+        ArrayList<Player> players =  boardModel.getPlayers();
+        for(int i = 0; i < players.size(); i++){
+            characterType2 = players.get(i).getCharacter().getEntityInformation().name();
+            if(characterType == characterType2){
+                boardModel.setPlayer(currentPlayer);
+            }
+        }
+
     }
 
     public void setNetworkConnection(AppClient nC) {
@@ -211,6 +193,13 @@ public class GameController {
                 }*/
             }
         });
+    }
+
+    /**
+     * Method to set the characters' icons on the game board once they have been created
+     */
+    public void setupCharacterIcons() {
+        this.boardWindow.setupCharacterIcons();
     }
 
     public void setBoardModel(BoardGUIModel model) {

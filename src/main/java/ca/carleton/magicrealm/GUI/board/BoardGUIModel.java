@@ -24,11 +24,12 @@ public class BoardGUIModel implements Serializable {
 
     private ArrayList<AbstractTile> tiles = new ArrayList<AbstractTile>();
 
-    private List<Player> players = new ArrayList<Player>();
+    private ArrayList<Player> players = new ArrayList<Player>();
 
     public BoardGUIModel() {
         // In the future, mark each tile's x and y grid coordinates when added
         ArrayList<AbstractTile> row1 = new ArrayList<AbstractTile>();
+
 
         this.tiles.add(new Cliff());
         row1.add(null);
@@ -336,8 +337,21 @@ public class BoardGUIModel implements Serializable {
         this.board = board;
     }
 
-    public List<Player> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return this.players;
     }
+
+    public void setPlayer(Player p){
+        String characterType = p.getCharacter().getEntityInformation().name();
+        String characterType2;
+        for(int i = 0; i < players.size(); i++){
+            characterType2 = players.get(i).getCharacter().getEntityInformation().name();
+            if(characterType == characterType2){
+                players.set(i,p);
+                break;
+            }
+        }
+    }
+
 
 }

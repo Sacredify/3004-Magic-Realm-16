@@ -12,13 +12,14 @@ import java.util.ArrayList;
 public class AppServer implements Runnable {
 
     int clientCount = 0;
-    private static final int MAX_PLAYERS = 1;
+    private final int MAX_PLAYERS = 6;
     int gameCount = 0;
     private Thread thread = null;
     private ServerSocket server = null;
     private ArrayList<ServerThread> clients = null;
     private TurnController turnController = null;
     private BoardGUIModel boardModel;
+
 
     public AppServer(int port) {
         try {
@@ -57,7 +58,7 @@ public class AppServer implements Runnable {
         this.alertPlayerNextTurn();
     }
 
-    //This function is called every time a Message.TURN_FINISHED is received
+    //This function is called every time a Message.TURN_FINISHED is recieved
     //STILL NEED TO IMPLEMENT SWORDSMAN FUNCTIONALITY
     public void alertPlayerNextTurn() {
         int nextID;
@@ -89,33 +90,32 @@ public class AppServer implements Runnable {
     }
 
     public void handleMessage(Message m, int ID, Object obj) {
-        this.broadcastMessage(ID, obj);
         switch (m.getMessageType()) {
             case (Message.SELECT_CHARACTER):
-
-                final Player player = (Player) m.getMessageObject();
-                player.setCurrentClearing(this.boardModel.getStartingLocation());
-                this.boardModel.getPlayers().add(player);
-
-                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                if (this.turnController.incrementTurnCount() == 1) {
                     Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
                     this.broadcastMessage(0, newMessage);
                     this.sendMap();
-                    this.startBirdSong();
+                    final Player player = (Player) m.getMessageObject();
+                    player.setCurrentClearing(this.boardModel.getStartingLocation());
+                    this.boardModel.getPlayers().add(player);
                 }
+                break;
+            case(Message.MOVE):
 
                 break;
             default:
+                this.broadcastMessage(ID, obj);
                 break;
         }
     }
 
-    /**
-     * Starts the birdsong phase for the clients.
-     */
-    private void startBirdSong() {
-        this.broadcastMessage(0, new Message(0, Message.BIRDSONG, null));
+
+    public void handleMoveMessage(Message m,int ID){
+        boardModel = (BoardGUIModel)m.getMessageObject();
+        broadcastMessage(ID,boardModel);
     }
+
 
     private ServerThread getClientWithID(int ID) {
 
@@ -136,7 +136,7 @@ public class AppServer implements Runnable {
                 //Accept client socket
                 Socket clientSocket = this.server.accept();
                 //If there is room in the game add client socket to the list of clients
-                if (this.clientCount < MAX_PLAYERS) {
+                if (this.clientCount < this.MAX_PLAYERS) {
                     this.clients.add(new ServerThread(this, clientSocket));
                     this.clients.get(this.clientCount).open();
                     this.clients.get(this.clientCount).start();
@@ -151,12 +151,7 @@ public class AppServer implements Runnable {
     }
 
 
-    /**
-     * Send a message to the other clients.
-     *
-     * @param ID      the client sending the message.
-     * @param message the message.
-     */
+    //Broadcasts a message to all of the clients that did not send it
     public void broadcastMessage(int ID, Object message) {
         Message m = (Message) message;
         for (int i = 0; i < this.clients.size(); i++) {
