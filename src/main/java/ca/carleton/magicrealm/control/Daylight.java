@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.game.turn;
+package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
@@ -30,18 +30,13 @@ public class Daylight {
         phaseStrategies.add(new MovePhaseStrategy());
     }
 
-    public static void processPhasesForPlayer(final Player player, final List<AbstractPhase> phasesToExecute) {
-        LOG.info("Starting phase execution for player {}.", player);
-        for (final AbstractPhase phase : phasesToExecute) {
-            for (final PhaseStrategy strategy : phaseStrategies) {
-                if (strategy.appliesTo(phase)) {
-                    strategy.doPhase(player, phase);
-                    LOG.info("Executed phase {}.", phase);
-                }
+    public static void processPhaseForPlayer(final Player player, final AbstractPhase phaseToExecute) {
+        for (final PhaseStrategy strategy : phaseStrategies) {
+            if (strategy.appliesTo(phaseToExecute)) {
+                strategy.doPhase(player, phaseToExecute);
+                LOG.info("Executed phase {}.", phaseToExecute);
             }
         }
-        LOG.info("Done executing phases.");
-
     }
 
 }
