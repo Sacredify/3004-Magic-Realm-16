@@ -123,15 +123,16 @@ public class GameController {
      * Methods to set up a move phase *
      */
     private void setupMovePhaseForPlayer() {
-        boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
+        this.boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(this.currentPlayer.getCurrentClearing())); // display move buttons now? or later
     }
 
     public void movePlayerToClearing(Clearing clearing) {
         MovePhase movement = new MovePhase();
         movement.setMoveTarget(clearing);
         this.recordedPhasesForDay.add(movement);
-        Message m = new Message(networkConnection.getId(), Message.MOVE, this.currentPlayer);
-        networkConnection.sendMessage(Message.MOVE, m);
+        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
+        Message m = new Message(this.networkConnection.getId(), Message.MOVE, this.currentPlayer);
+        this.networkConnection.sendMessage(Message.MOVE, m);
     }
 
     public ArrayList<JButton> createMoveButtonsForClearing(Clearing clearing) {
