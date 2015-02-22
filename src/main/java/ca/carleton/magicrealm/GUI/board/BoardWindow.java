@@ -15,8 +15,8 @@ import java.util.ArrayList;
 public class BoardWindow extends JFrame {
 
     final static public String WINDOW_NAME = "Board";
-    final static public int WINDOW_HEIGHT = 1000;
-    final static public int WINDOW_WIDTH = 1000;
+    final static public int WINDOW_HEIGHT = 700;
+    final static public int WINDOW_WIDTH = 1200;
 
     private BoardPanel boardPanel;
 
@@ -37,10 +37,10 @@ public class BoardWindow extends JFrame {
 
         // TODO: get a friggen scrollbar working
         JScrollPane pane = new JScrollPane(this.boardPanel);
+        pane.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(this.boardPanel, BorderLayout.NORTH);
         this.add(pane, BorderLayout.CENTER);
         this.setupMenuBars();
 
@@ -74,6 +74,14 @@ public class BoardWindow extends JFrame {
 
     public void updateCharacterIcons(ArrayList<Player> otherPlayers) {
         this.boardPanel.updateCharacterIcons(otherPlayers);
+    }
+
+    public void setupStatusLabel() {
+        this.boardPanel.setupStatusLabel();
+    }
+
+    public void setStatusText(final String text) {
+        this.boardPanel.setStatusText(text);
     }
 
     public void setupMoveButtons(ArrayList<JButton> buttons) {

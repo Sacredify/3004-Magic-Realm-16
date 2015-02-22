@@ -210,4 +210,11 @@ public class GameController {
         this.boardWindow.setupCharacterIcons(otherPlayers);
     }
 
+    public void setupStatusLabel() {
+        this.boardWindow.setupStatusLabel();
+    }
+
+    public void setStatusText(final String text) {
+        this.boardWindow.setStatusText(text);
+    }
 }

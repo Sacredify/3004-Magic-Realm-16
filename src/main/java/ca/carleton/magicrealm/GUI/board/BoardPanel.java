@@ -18,8 +18,8 @@ import java.util.ArrayList;
  * The view for the game board
  */
 public class BoardPanel extends JLayeredPane {
-    final static public int WINDOW_HEIGHT = 1500;
-    final static public int WINDOW_WIDTH = 1500;
+    final static public int WINDOW_HEIGHT = 1200;
+    final static public int WINDOW_WIDTH = 720;
     final static public int TILE_X_OFFSET = 150;
     final static public int TILE_DELTA_X = 300;
     final static public int TILE_DELTA_Y = 85;
@@ -32,9 +32,10 @@ public class BoardPanel extends JLayeredPane {
 
     private ArrayList<JLabel> characterIcons;
 
+    private JLabel statusLabel;
+
     public BoardPanel() {
         this.boardServices = new BoardServices();
-        this.setLayout(null);
         this.setAutoscrolls(true);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -167,10 +168,21 @@ public class BoardPanel extends JLayeredPane {
         }
     }
 
-    public void updateCharacterIcons(ArrayList<Player> otherPlayers) {
+    public void updateCharacterIcons(final ArrayList<Player> otherPlayers) {
         for (int i = 0; i < otherPlayers.size(); i++) {
             characterIcons.get(i).setLocation(otherPlayers.get(i).getCurrentClearing().getX(),
                                               otherPlayers.get(i).getCurrentClearing().getY());
         }
+    }
+
+    public void setupStatusLabel() {
+        this.statusLabel = new JLabel();
+
+        this.statusLabel.setSize(100,50);
+        this.statusLabel.setLocation(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+    }
+
+    public void setStatusText(final String text) {
+        this.statusLabel.setText(text);
     }
 }
