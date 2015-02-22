@@ -1,7 +1,10 @@
 package ca.carleton.magicrealm.GUI.board;
 
+import ca.carleton.magicrealm.game.Player;
+
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -63,6 +66,10 @@ public class BoardWindow extends JFrame {
         this.menuBar.add(networkMenu);
 
         this.setJMenuBar(this.menuBar);
+    }
+
+    public void setupCharacterIcons(ArrayList<Player> otherPlayers) {
+        this.setupCharacterIcons(otherPlayers);
     }
 
     public void setupMoveButtons(ArrayList<JButton> buttons) {

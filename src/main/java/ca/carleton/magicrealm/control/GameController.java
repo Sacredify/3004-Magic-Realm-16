@@ -201,4 +201,11 @@ public class GameController {
         });
     }
 
+    /**
+     * Method to set the characters' icons on the game board once they have been created
+     */
+    public void setupCharacterIcons() {
+        this.boardWindow.setupCharacterIcons(otherPlayers);
+    }
+
 }

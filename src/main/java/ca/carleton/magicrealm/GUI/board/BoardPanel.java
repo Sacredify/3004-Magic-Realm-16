@@ -2,12 +2,14 @@ package ca.carleton.magicrealm.GUI.board;
 
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.game.Player;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +29,8 @@ public class BoardPanel extends JLayeredPane {
     private BoardServices boardServices;
 
     private ArrayList<JButton> moveButtons;
+
+    private ArrayList<JLabel> characterIcons;
 
     public BoardPanel() {
         this.boardServices = new BoardServices();
@@ -126,6 +130,40 @@ public class BoardPanel extends JLayeredPane {
         this.moveButtons = buttons;
         for (JButton button : this.moveButtons) {
             this.add(button);
+        }
+    }
+
+    public void setupCharacterIcons(ArrayList<Player> otherPlayers) {
+        characterIcons = new ArrayList<>();
+        for (Player player : otherPlayers) {
+            JLabel newCharacterIcon = new JLabel();
+            newCharacterIcon.setSize(88, 88); // TODO: Set all these to be non-hard coded later
+            newCharacterIcon.setLocation(player.getCurrentClearing().getX(),
+                                         player.getCurrentClearing().getY());
+
+            ImageIcon newIcon = new ImageIcon();
+            switch(player.getCharacter().getEntityInformation().convertToCharacterType()){
+                case AMAZON:
+                    newIcon = boardServices.createImageIcon("image/character/amazon.png");
+                    break;
+                case BLACK_KNIGHT:
+                    newIcon = boardServices.createImageIcon("image/character/black_knight.png");
+                    break;
+                case CAPTAIN:
+                    newIcon = boardServices.createImageIcon("image/character/captain.png");
+                    break;
+                case DWARF:
+                    newIcon = boardServices.createImageIcon("image/character/dwarf.png");
+                    break;
+                case ELF:
+                    newIcon = boardServices.createImageIcon("image/character/elf.png");
+                    break;
+                case SWORDSMAN:
+                    newIcon = boardServices.createImageIcon("image/character/swordsman.png");
+                    break;
+            }
+            newCharacterIcon.setIcon(newIcon);
+            this.add(newCharacterIcon, JLayeredPane.PALETTE_LAYER);
         }
     }
 }
