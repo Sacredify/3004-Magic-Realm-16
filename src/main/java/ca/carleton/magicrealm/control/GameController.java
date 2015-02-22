@@ -8,13 +8,10 @@ import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
-import ca.carleton.magicrealm.entity.EntityInformation;
-import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.impl.MovePhase;
-import ca.carleton.magicrealm.game.turn.Daylight;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -40,8 +37,6 @@ public class GameController {
 
     private AppClient networkConnection = null;
 
-    private List<AbstractPhase> recordedPhases;
-
     private List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
 
     public GameController() {
@@ -63,10 +58,10 @@ public class GameController {
     }
 
     /**
-     * Example method we can use when the user is done recording their phases.
+     * Execute a given phase.
      */
-    public void doneWithBirdSong() {
-        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhases);
+    public void executePhase(final AbstractPhase phase) {
+        Daylight.processPhaseForPlayer(this.currentPlayer, phase);
         // Update server
     }
 
@@ -148,13 +143,12 @@ public class GameController {
     /** Methods to set up a move phase **/
     private void setupMovePhaseForPlayer() {
         boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
-        recordedPhases.add(new MovePhase());
     }
 
     public void movePlayerToClearing(Clearing clearing) {
         MovePhase movement = new MovePhase();
         movement.setMoveTarget(clearing);
-        this.recordedPhases.add(movement);
+        this.executePhase(movement);
         Message m = new Message(networkConnection.getId(),Message.MOVE,this.currentPlayer);
         networkConnection.sendMessage(Message.MOVE,m);
     }

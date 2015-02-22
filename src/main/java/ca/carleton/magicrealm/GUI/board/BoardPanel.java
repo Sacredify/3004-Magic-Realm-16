@@ -98,7 +98,7 @@ public class BoardPanel extends JLayeredPane {
                     }
 
                     /** create the chits **/
-                    ArrayList<JButton> newChits = this.boardServices.createChitIconsForTile(tile);
+                    ArrayList<JLabel> newChits = this.boardServices.createChitIconsForTile(tile);
                     for (int i = 0; i < newChits.size(); i++) {
                         if (newChits.get(i) != null) {
                             newChits.get(i).setLocation(tile.getClearingAt(i).getX(),
