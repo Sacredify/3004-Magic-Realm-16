@@ -112,6 +112,9 @@ public class BoardPanel extends JLayeredPane {
             }
             y++;
         }
+
+        this.setupCharacterIcons(boardGUIModel.getPlayers());
+
     }
 
     public void iconClickedEvent(MouseEvent e, AbstractTile tile) {

@@ -48,10 +48,6 @@ public class BoardWindow extends JFrame {
         this.add(this.boardPanel);
     }
 
-    public void setupCharacterIcons() {
-        this.boardPanel.setupCharacterIcons(this.boardModel.getPlayers());
-    }
-
     public void updateCharacterIcons(ArrayList<Player> otherPlayers) {
         this.boardPanel.updateCharacterIcons(otherPlayers);
     }
