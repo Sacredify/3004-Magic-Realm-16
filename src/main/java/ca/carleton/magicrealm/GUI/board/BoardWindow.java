@@ -72,10 +72,6 @@ public class BoardWindow extends JFrame {
         this.boardPanel.displayMoveButtonsForClearing(buttons);
     }
 
-    public void setupCharacterIcons() {
-       this.boardPanel.setupCharacterIcons(this.boardModel.getPlayers());
-    }
-
     public BoardGUIModel getBoardModel() {
         return this.boardModel;
     }
