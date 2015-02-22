@@ -93,16 +93,15 @@ public class AppServer implements Runnable {
 
     public void handleMessage(Message m, int ID, Object obj) {
         switch (m.getMessageType()) {
-
             case (Message.SELECT_CHARACTER):
+                Player player = (Player) m.getMessageObject();
+                player.setCurrentClearing(this.boardModel.getStartingLocation());
+                boardModel.addPlayer(player);
+                broadcastMessage(0, m);
                 if (this.turnController.incrementTurnCount() == 6) {
                     Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
                     this.sendMap();
-                    final Player player = (Player) m.getMessageObject();
-                    player.setCurrentClearing(this.boardModel.getStartingLocation());
-                    this.boardModel.getPlayers().add(player);
                 }
-                this.broadcastMessage(0, m);
                 break;
             case(Message.MOVE):
 

@@ -333,6 +333,10 @@ public class BoardGUIModel implements Serializable {
         return this.board;
     }
 
+    public void addPlayer(Player p){
+        players.add(p);
+    }
+
     public void setBoard(ArrayList<ArrayList<AbstractTile>> board) {
         this.board = board;
     }
