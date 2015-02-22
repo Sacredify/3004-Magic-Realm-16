@@ -50,18 +50,18 @@ public class BoardServices {
         return newTile;
     }
 
-    public ArrayList<JButton> createChitIconsForTile(AbstractTile tile) {
-        ArrayList<JButton> iconList = new ArrayList<JButton>();
+    public ArrayList<JLabel> createChitIconsForTile(AbstractTile tile) {
+        ArrayList<JLabel> iconList = new ArrayList<JLabel>();
 
         for (Clearing clearing : tile.getClearings()) {
-            JButton newChit = null;
+            JLabel newChit = null;
             ImageIcon newIcon = null;
             if (clearing.getDwelling() != null) {
-                newChit = new JButton();
+                newChit = new JLabel();
                 newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
                 newIcon = this.createImageIcon(clearing.getDwelling().getPath());
             } else if (!clearing.getEntities().isEmpty()) {
-                newChit = new JButton();
+                newChit = new JLabel();
                 newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
                 newIcon = this.createImageIcon(clearing.getEntities().get(0).getEntityInformation().getPath());
             }
