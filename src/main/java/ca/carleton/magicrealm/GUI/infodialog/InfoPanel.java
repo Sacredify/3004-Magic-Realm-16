@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.infodialog;
 
+import ca.carleton.magicrealm.GUI.board.BoardServices;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  */
 public class InfoPanel extends JPanel {
 
-    private JLabel listInfoLabel;
+    private JLabel entityLabel;
 
     private JList<Clearing> clearingList;
 
@@ -27,15 +28,16 @@ public class InfoPanel extends JPanel {
 
     private ArrayList<Entity> entities;
 
+    BoardServices boardServices;
+
     public InfoPanel(final AbstractTile info) {
 
         this.setLayout(null);
-        this.listInfoLabel = new JLabel("Clearings:");
-        this.listInfoLabel.setSize(new Dimension(150, 20));
-        this.listInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        this.listInfoLabel.setLocation(10, 10);
-        this.listInfoLabel.setVisible(true);
-        this.add(this.listInfoLabel);
+        this.entityLabel = new JLabel();
+        this.entityLabel.setSize(new Dimension(150, 150));
+        this.entityLabel.setLocation(400, 10);
+        this.entityLabel.setVisible(false);
+        this.add(this.entityLabel);
 
         this.clearingList = new JList<>(info.getClearings());
         this.clearingList.setLocation(20, 40);
@@ -55,6 +57,12 @@ public class InfoPanel extends JPanel {
         this.entityList.setSize(new Dimension(150, 110));
         this.entityList.setEnabled(false);
         this.entityList.setVisible(false);
+        this.entityList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                entityListSelectedAction();
+            }
+        });
         this.add(this.entityList);
 
         this.setVisible(true);
@@ -66,6 +74,12 @@ public class InfoPanel extends JPanel {
 
         this.entityList.setListData(this.entities.toArray(new Entity[entities.size()]));
         this.entityList.setVisible(true);
+    }
+
+    public void entityListSelectedAction() {
+        ImageIcon newIcon = this.boardServices.createImageIcon(entityList.getSelectedValue().getEntityInformation().getPath());
+        entityLabel.setIcon(newIcon);
+        entityLabel.setVisible(true);
     }
 
 }
