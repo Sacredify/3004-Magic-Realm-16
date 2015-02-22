@@ -73,7 +73,7 @@ public final class Message implements Serializable {
 
 
     // Phases
-    public static final String BIRDSONG = "BIRDSONG";
+    public static final String BIRDSONG = "START_BIRDSONG";
 
 
     public String getMessageType(){

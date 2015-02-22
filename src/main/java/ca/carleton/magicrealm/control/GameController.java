@@ -59,7 +59,6 @@ public class GameController {
     public void handleMessage(Object obj) {
 
         if (obj instanceof Message) {
-            System.out.println("Game Controller:This is a Message Object");
             Message m = (Message) obj;
             System.out.println("This is a :" + m.getMessageType() + " Message Type");
             switch (m.getMessageType()) {
@@ -68,7 +67,6 @@ public class GameController {
                     this.characterCreateMenu.updateAvailableCharacters();
                     break;
                 case (Message.MOVE):
-
                     this.handleMove((Player) m.getMessageObject());
                     break;
                 case (Message.ALL_PARTICIPATED):
@@ -83,15 +81,15 @@ public class GameController {
                     break;
                 case (Message.BIRDSONG):
                     // Start birdsong here.
-                    //TODO Phase implmenetation here. Right now just movement.
+                    //TODO Phase implementation here. Right now just movement.
                     this.setupMovePhaseForPlayer();
 
                 default:
                     break;
             }
 
-            // If we have a board, refresh after every message.
-            if (this.boardModel != null) {
+            // If we have a board, refresh after every message, if there is a map to update..
+            if (this.boardModel != null && m.getMessageObject() instanceof BoardGUIModel) {
                 this.boardWindow.refresh(this.boardModel);
             }
 
@@ -145,7 +143,7 @@ public class GameController {
      * Methods to set up a move phase *
      */
     private void setupMovePhaseForPlayer() {
-        this.boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(this.currentPlayer.getCurrentClearing())); // display move buttons now? or later
+        this.boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(this.currentPlayer.getCurrentClearing()));
     }
 
     public void movePlayerToClearing(Clearing clearing) {

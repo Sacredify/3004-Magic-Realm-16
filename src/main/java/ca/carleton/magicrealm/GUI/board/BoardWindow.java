@@ -29,23 +29,31 @@ public class BoardWindow extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.boardPanel = new BoardPanel();
-        
-        JScrollPane pane = new JScrollPane(this.boardPanel);
-        pane.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(pane, BorderLayout.CENTER);
+        this.add(this.addScrollPane(), BorderLayout.CENTER);
 
         this.pack();
 
         this.setVisible(true);
     }
 
+    public JScrollPane addScrollPane() {
+        JScrollPane pane = new JScrollPane(this.boardPanel);
+        pane.setBackground(Color.WHITE);
+        pane.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        pane.setViewportView(this.boardPanel);
+
+        this.add(pane, BorderLayout.CENTER);
+
+        return pane;
+    }
+
     public void refresh(final BoardGUIModel model) {
         this.boardModel = model;
         this.boardPanel.drawBoard(model);
-        this.add(this.boardPanel);
+        this.add(this.addScrollPane(), BorderLayout.CENTER);
     }
 
     public void updateCharacterIcons(ArrayList<Player> otherPlayers) {

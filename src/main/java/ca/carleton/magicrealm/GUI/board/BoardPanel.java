@@ -35,9 +35,12 @@ public class BoardPanel extends JLayeredPane {
 
     public BoardPanel() {
         this.boardServices = new BoardServices();
-        this.setAutoscrolls(true);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+    }
+
+    public Dimension getPreferredSize() {
+        return new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     /**
@@ -128,12 +131,14 @@ public class BoardPanel extends JLayeredPane {
     }
 
     public void displayMoveButtonsForClearing(ArrayList<JButton> buttons) {
-        for (JButton button : this.moveButtons) {
-            this.remove(button);
+        if (this.moveButtons != null) {
+            for (JButton button : this.moveButtons) {
+                this.remove(button);
+            }
         }
         this.moveButtons = buttons;
         for (JButton button : this.moveButtons) {
-            this.add(button);
+            this.add(button, JLayeredPane.DEFAULT_LAYER);
         }
     }
 
