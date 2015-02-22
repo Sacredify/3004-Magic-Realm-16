@@ -151,11 +151,15 @@ public class GameController {
     public void updatePlayerInMap() {
         final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
 
+        final int sanityCheck = this.boardModel.getPlayers().size();
         while (iterator.hasNext()) {
             if (iterator.next().getCharacter().getEntityInformation() == this.currentPlayer.getCharacter().getEntityInformation()) {
                 iterator.remove();
+                break;
             }
         }
+        // Sanity check - check that we actually removed someone.
+        assert (this.boardModel.getPlayers().size() == (sanityCheck -1));
 
         this.boardModel.getPlayers().add(this.currentPlayer);
     }
