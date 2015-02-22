@@ -12,16 +12,20 @@ import java.util.ArrayList;
 public class AppServer implements Runnable {
 
     int clientCount = 0;
-    private final int MAX_PLAYERS = 6;
+
+    private static final int MAX_PLAYERS = 2;
+
     int gameCount = 0;
+
     private Thread thread = null;
+
     private ServerSocket server = null;
+
     private ArrayList<ServerThread> clients = null;
+
     private TurnController turnController = null;
+
     private BoardGUIModel boardModel;
-
-
-
 
     public AppServer(int port) {
         try {
@@ -98,7 +102,7 @@ public class AppServer implements Runnable {
                 player.setCurrentClearing(this.boardModel.getStartingLocation());
                 boardModel.addPlayer(player);
                 broadcastMessage(0, m);
-                if (this.turnController.incrementTurnCount() == 6) {
+                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
                     this.sendMap();
                 }

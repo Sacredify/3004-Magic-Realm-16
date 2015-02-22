@@ -9,7 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import static ca.carleton.magicrealm.GUI.board.BoardServices.imageToBufferedImage;
 
 /**
  * Created by Tony on 18/02/2015.
@@ -150,7 +153,11 @@ public class BoardPanel extends JLayeredPane {
             newCharacterIcon.setLocation(player.getCurrentClearing().getX(),
                     player.getCurrentClearing().getY());
 
+
             ImageIcon newIcon = this.boardServices.createImageIcon(player.getCharacter().getEntityInformation().getPath());
+            BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
+            newImage = BoardServices.resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
+            newIcon.setImage(newImage);
 
             newCharacterIcon.setIcon(newIcon);
             this.add(newCharacterIcon, JLayeredPane.PALETTE_LAYER);
