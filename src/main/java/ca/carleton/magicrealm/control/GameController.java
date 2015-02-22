@@ -2,10 +2,7 @@ package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
-import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
-///import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
-import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
@@ -13,18 +10,25 @@ import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.impl.MovePhase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+
+///import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 
 /**
  * Created by Tony on 19/02/2015.
  */
 public class GameController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GameController.class);
 
     private ArrayList<Player> otherPlayers;
 
@@ -44,61 +48,52 @@ public class GameController {
 
     public GameController() {
 
-        // Build the board data.
-        this.boardModel = new BoardGUIModel();
-        // Place chits.
-        ChitBuilder.placeChits(this.boardModel);
         // Build window.
-        this.boardWindow = new BoardWindow(this.boardModel);
+        this.boardWindow = new BoardWindow();
 
-        // Other players.
+        // Other players and player info.
         this.otherPlayers = new ArrayList<>();
-        // The current player.
         this.currentPlayer = new Player();
-
-        this.showCharacterCreate();
 
     }
 
+    /**
+     * Handles a message from the server.
+     *
+     * @param obj the message.
+     */
     public void handleMessage(Object obj) {
 
         if (obj instanceof Message) {
             System.out.println("Game Controller:This is a Message Object");
             Message m = (Message) obj;
             System.out.println("This is a :" + m.getMessageType() + " Message Type");
-            switch(m.getMessageType()){
-                case(Message.SELECT_CHARACTER):
+            switch (m.getMessageType()) {
+                case (Message.SELECT_CHARACTER):
                     this.removeFromAvailableCharacters(m.getMessageObject());
                     this.characterCreateMenu.updateAvailableCharacters();
-                break;
-                case(Message.MOVE):
+                    break;
+                case (Message.MOVE):
                     //Insert move character functionality here
-                    this.handleMove((Player)m.getMessageObject());
+                    this.handleMove((Player) m.getMessageObject());
                     break;
-                case(Message.ALL_PARTICIPATED):
+                case (Message.ALL_PARTICIPATED):
                     //Insert Stage incrementing functionality here
-                    System.out.println("ALL PARTICIPATED MESSAGE RECIEVED");
-                    setupCharacterIcons();
+                    System.out.println("ALL PARTICIPATED MESSAGE RECEIVED");
+                    //TODO Update label with message saying waiting for board or some shit.
                     break;
-                case(Message.SET_MAP):
+                case (Message.SET_MAP):
                     //SETTING MAP MODEL
-                    System.out.println("SETTING MAP MODEL");
                     this.setBoardModel((BoardGUIModel) m.getMessageObject());
-
+                    this.boardWindow.refresh(this.boardModel);
 
                 default:
                     break;
             }
 
-
         } else if (obj instanceof String) {
             System.out.println("This is a string");
         }
-    }
-
-    public void setBoardModel(BoardGUIModel model){
-        this.boardModel = model;
-        //UpdateGUI
     }
 
     public void characterSelected() {
@@ -106,37 +101,30 @@ public class GameController {
         this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
     }
 
-    public void  handleMove(Player p){
+    /**
+     * Update the location of a player from the server.
+     *
+     * @param playerFromServer the player to update.
+     */
+    public void handleMove(final Player playerFromServer) {
 
-        //Get co-ordinates of the clearing to move to
-        Clearing c = p.getCurrentClearing();
+        final Iterator<Player> iterator = this.otherPlayers.iterator();
 
-
-        switch(p.getCharacter().getEntityInformation().convertToCharacterType()){
-            case AMAZON:
-                System.out.print("HANDLE AMAZON MOVE");
+        // Find the player in the list of players and remove his old data.
+        while (iterator.hasNext()) {
+            if (iterator.next().isSamePlayer(playerFromServer)) {
+                iterator.remove();
                 break;
-            case BLACK_KNIGHT:
-                System.out.print("HANDLE BLACK_KNIGHT MOVE");
-                break;
-            case CAPTAIN:
-                System.out.print("HANDLE CAPTAIN MOVE");
-                break;
-            case DWARF:
-                System.out.print("HANDLE DWARF MOVE");
-                break;
-            case ELF:
-                System.out.print("HANDLE ELF MOVE");
-                break;
-            case SWORDSMAN:
-                System.out.print("HANDLE SWORDSMAN MOVE");
-                break;
+            }
         }
 
+        // Update with the new data.
+        this.otherPlayers.add(playerFromServer);
     }
 
-
-    /** Methods to set up a move phase **/
+    /**
+     * Methods to set up a move phase *
+     */
     private void setupMovePhaseForPlayer() {
         boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(currentPlayer.getCurrentClearing())); // display move buttons now? or later
     }
@@ -145,7 +133,7 @@ public class GameController {
         MovePhase movement = new MovePhase();
         movement.setMoveTarget(clearing);
         this.recordedPhasesForDay.add(movement);
-        Message m = new Message(networkConnection.getId(),Message.MOVE,this.currentPlayer);
+        Message m = new Message(networkConnection.getId(), Message.MOVE, this.currentPlayer);
         networkConnection.sendMessage(Message.MOVE, m);
     }
 
@@ -170,6 +158,8 @@ public class GameController {
 
     public void setNetworkConnection(AppClient nC) {
         this.networkConnection = nC;
+        LOG.info("Set controller network connection succesfully. Showing character create for the user.");
+        this.showCharacterCreate();
     }
 
     private void showCharacterCreate() {
@@ -185,20 +175,22 @@ public class GameController {
         this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
     }
 
-    /** Methods to set up the window to select a player's phase for the day **/
+    /**
+     * Methods to set up the window to select a player's phase for the day *
+     */
     public void setupPhaseSelection() {
-       PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
+        // PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
 
         JButton confirmFirstPhaseButton = new JButton("ENTER"); // TODO: make unhardcoded later
 
         confirmFirstPhaseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedPhase = (String) phaseSelectorMenu.getPhaseSelectorPanel().getFirstPhaseBox().getSelectedItem();
+                //  String selectedPhase = (String)phaseSelectorMenu.getPhaseSelectorPanel().getFirstPhaseBox().getSelectedItem();
 
-                if (selectedPhase.equals("Move")) {
+              /*  if (selectedPhase.equals("Move")) {
                     setupMovePhaseForPlayer();
-                }
+                }*/
             }
         });
     }
@@ -208,6 +200,10 @@ public class GameController {
      */
     public void setupCharacterIcons() {
         this.boardWindow.setupCharacterIcons(otherPlayers);
+    }
+
+    public void setBoardModel(BoardGUIModel model) {
+        this.boardModel = model;
     }
 
 }

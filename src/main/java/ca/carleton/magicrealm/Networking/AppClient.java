@@ -1,8 +1,5 @@
 package ca.carleton.magicrealm.Networking;
 
-import ca.carleton.magicrealm.GUI.tile.AbstractTile;
-import ca.carleton.magicrealm.GUI.tile.Clearing;
-import ca.carleton.magicrealm.GUI.tile.impl.AwfulValley;
 import ca.carleton.magicrealm.control.GameController;
 
 import java.io.*;
@@ -31,7 +28,8 @@ public class AppClient implements Runnable {
             this.open();
             this.start();
         } catch (IOException ioe) {
-            System.out.println("Could not connect to serever");
+            System.err.println("Could not connect to server. Please ensure server is running.");
+            System.exit(0);
         }
     }
 

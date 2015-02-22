@@ -6,6 +6,7 @@ import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,9 @@ import java.util.List;
  * <p/>
  * Model to represent the board's GUI counterpart
  */
-public class BoardGUIModel {
+public class BoardGUIModel implements Serializable {
+
+    private static final long serialVersionUID = 6929938381836391322L;
 
     private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
 
