@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.Networking;
 
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
+import ca.carleton.magicrealm.game.Player;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -25,6 +26,8 @@ public class AppServer implements Runnable {
             this.server.setReuseAddress(true);
             this.clients = new ArrayList<ServerThread>();
             this.turnController = new TurnController();
+            this.buildMap();
+
             this.start();
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -32,15 +35,21 @@ public class AppServer implements Runnable {
         }
     }
 
-
-    private void sendMap() {
+    /**
+     * Builds the map for this session.
+     */
+    private void buildMap() {
         this.boardModel = new BoardGUIModel();
         ChitBuilder.placeChits(this.boardModel);
+    }
 
+    /**
+     * Broadcast the map to the clients.
+     */
+    private void sendMap() {
         Message m = new Message(0, Message.SET_MAP, this.boardModel);
         this.broadcastMessage(0, m);
     }
-
 
     //Begins a new round of turns(DAYLIGHT)
     public void beginPhase() {
@@ -88,6 +97,10 @@ public class AppServer implements Runnable {
                     this.broadcastMessage(0, newMessage);
                     this.sendMap();
                 }
+
+                final Player player = (Player) m.getMessageObject();
+                player.setCurrentClearing(this.boardModel.getStartingLocation());
+                this.boardModel.getPlayers().add(player);
 
                 break;
             default:

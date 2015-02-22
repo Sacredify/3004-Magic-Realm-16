@@ -136,7 +136,7 @@ public class BoardPanel extends JLayeredPane {
         }
     }
 
-    public void setupCharacterIcons(ArrayList<Player> otherPlayers) {
+    public void setupCharacterIcons(final java.util.List<Player> otherPlayers) {
         characterIcons = new ArrayList<>();
         for (Player player : otherPlayers) {
             JLabel newCharacterIcon = new JLabel();

@@ -28,8 +28,6 @@ public class GameController {
 
     private static final Logger LOG = LoggerFactory.getLogger(GameController.class);
 
-    private ArrayList<Player> otherPlayers;
-
     private BoardWindow boardWindow;
 
     private BoardGUIModel boardModel;
@@ -49,8 +47,6 @@ public class GameController {
         // Build window.
         this.boardWindow = new BoardWindow();
 
-        // Other players and player info.
-        this.otherPlayers = new ArrayList<>();
         this.currentPlayer = new Player();
 
     }
@@ -109,7 +105,7 @@ public class GameController {
      */
     public void handleMove(final Player playerFromServer) {
 
-        final Iterator<Player> iterator = this.otherPlayers.iterator();
+        final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
 
         // Find the player in the list of players and remove his old data.
         while (iterator.hasNext()) {
@@ -120,7 +116,7 @@ public class GameController {
         }
 
         // Update with the new data.
-        this.otherPlayers.add(playerFromServer);
+        this.boardModel.getPlayers().add(playerFromServer);
     }
 
     /**
@@ -200,7 +196,7 @@ public class GameController {
      * Method to set the characters' icons on the game board once they have been created
      */
     public void setupCharacterIcons() {
-        this.boardWindow.setupCharacterIcons(otherPlayers);
+        this.boardWindow.setupCharacterIcons();
     }
 
     public void setBoardModel(BoardGUIModel model) {
