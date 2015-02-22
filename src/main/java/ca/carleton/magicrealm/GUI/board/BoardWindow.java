@@ -71,4 +71,12 @@ public class BoardWindow extends JFrame {
         return this.boardModel;
     }
 
+    public void showStatusLabel() {
+        boardPanel.showStatusLabel();
+    }
+
+    public void hideStatusLabel() {
+        boardPanel.hideStatusLabel();
+    }
+
 }

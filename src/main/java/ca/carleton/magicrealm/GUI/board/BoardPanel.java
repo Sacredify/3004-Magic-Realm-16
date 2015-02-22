@@ -178,11 +178,20 @@ public class BoardPanel extends JLayeredPane {
     public void setupStatusLabel() {
         this.statusLabel = new JLabel();
 
-        this.statusLabel.setSize(100,50);
+        this.statusLabel.setSize(500,50);
         this.statusLabel.setLocation(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+        add(statusLabel, JLayeredPane.PALETTE_LAYER);
     }
 
     public void setStatusText(final String text) {
         this.statusLabel.setText(text);
+    }
+
+    public void showStatusLabel() {
+        this.statusLabel.setVisible(true);
+    }
+
+    public void hideStatusLabel() {
+        this.statusLabel.setVisible(false);
     }
 }

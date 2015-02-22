@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.infodialog;
 
+import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.impl.BadValley;
 
@@ -9,7 +10,8 @@ import ca.carleton.magicrealm.GUI.tile.impl.BadValley;
  * Time: 4:02 PM
  */
 public class TestDialog {
+
     public static void main(String[] args) {
-        new InfoDialog(new Clearing(new BadValley(), 1)).displayWindow();
+        new InfoDialog(new BadValley()).displayWindow();
     }
 }

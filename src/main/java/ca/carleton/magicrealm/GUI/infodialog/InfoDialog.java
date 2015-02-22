@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.infodialog;
 
+import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 
 import javax.swing.*;
@@ -16,10 +17,10 @@ public class InfoDialog extends JDialog {
 
     public static final int WINDOW_HEIGHT = 300;
 
-    public InfoDialog(final Clearing clearingClicked) {
+    public InfoDialog(final AbstractTile tileClicked) {
         this.initWindowSettings();
-        this.setTitle("Clearing Information Dialog");
-        this.add(new InfoPanel(clearingClicked));
+        this.setTitle("Tile Information Dialog");
+        this.add(new InfoPanel(tileClicked));
     }
 
     public void displayWindow() {

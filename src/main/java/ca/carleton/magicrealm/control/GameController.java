@@ -78,6 +78,7 @@ public class GameController {
                 case (Message.ALL_PARTICIPATED):
                     //Insert Stage incrementing functionality here
                     System.out.println("ALL PARTICIPATED MESSAGE RECEIVED");
+                    //this.boardWindow.hideStatusLabel();
                     //TODO Update label with message saying waiting for board or some shit.
                     break;
                 case (Message.SET_MAP):
@@ -97,6 +98,8 @@ public class GameController {
     public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
         this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
+        //this.setupStatusLabel();
+        //this.setStatusText("SELECTED CHARACTER, WAITING FOR OTHER PLAYERS");
     }
 
     /**
