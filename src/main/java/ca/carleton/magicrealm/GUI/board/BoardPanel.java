@@ -166,4 +166,11 @@ public class BoardPanel extends JLayeredPane {
             this.add(newCharacterIcon, JLayeredPane.PALETTE_LAYER);
         }
     }
+
+    public void updateCharacterIcons(ArrayList<Player> otherPlayers) {
+        for (int i = 0; i < otherPlayers.size(); i++) {
+            characterIcons.get(i).setLocation(otherPlayers.get(i).getCurrentClearing().getX(),
+                                              otherPlayers.get(i).getCurrentClearing().getY());
+        }
+    }
 }

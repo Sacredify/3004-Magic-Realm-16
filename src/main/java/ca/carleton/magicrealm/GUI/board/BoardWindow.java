@@ -69,7 +69,11 @@ public class BoardWindow extends JFrame {
     }
 
     public void setupCharacterIcons(ArrayList<Player> otherPlayers) {
-        this.setupCharacterIcons(otherPlayers);
+        this.boardPanel.setupCharacterIcons(otherPlayers);
+    }
+
+    public void updateCharacterIcons(ArrayList<Player> otherPlayers) {
+        this.boardPanel.updateCharacterIcons(otherPlayers);
     }
 
     public void setupMoveButtons(ArrayList<JButton> buttons) {

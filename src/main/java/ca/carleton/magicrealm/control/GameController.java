@@ -5,6 +5,7 @@ import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 ///import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
+import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
@@ -145,7 +146,7 @@ public class GameController {
         movement.setMoveTarget(clearing);
         this.recordedPhasesForDay.add(movement);
         Message m = new Message(networkConnection.getId(),Message.MOVE,this.currentPlayer);
-        networkConnection.sendMessage(Message.MOVE,m);
+        networkConnection.sendMessage(Message.MOVE, m);
     }
 
     public ArrayList<JButton> createMoveButtonsForClearing(Clearing clearing) {
@@ -186,18 +187,18 @@ public class GameController {
 
     /** Methods to set up the window to select a player's phase for the day **/
     public void setupPhaseSelection() {
-       // PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
+       PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
 
         JButton confirmFirstPhaseButton = new JButton("ENTER"); // TODO: make unhardcoded later
 
         confirmFirstPhaseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //  String selectedPhase = (String)phaseSelectorMenu.getPhaseSelectorPanel().getFirstPhaseBox().getSelectedItem();
+                String selectedPhase = (String) phaseSelectorMenu.getPhaseSelectorPanel().getFirstPhaseBox().getSelectedItem();
 
-              /*  if (selectedPhase.equals("Move")) {
+                if (selectedPhase.equals("Move")) {
                     setupMovePhaseForPlayer();
-                }*/
+                }
             }
         });
     }
