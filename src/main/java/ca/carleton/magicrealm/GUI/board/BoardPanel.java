@@ -9,8 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -75,7 +73,7 @@ public class BoardPanel extends JLayeredPane {
 
                     /** set the x and y locations relative to the board for each clearing (overwrites its current value) **/
                     for (final Clearing clearing : tile.getClearings()) {
-                        int clearingNewX = tileX + clearing.getX() - CHIT_WIDTH / 2 ;
+                        int clearingNewX = tileX + clearing.getX() - CHIT_WIDTH / 2;
                         int clearingNewY = tileY + clearing.getY() - CHIT_HEIGHT / 2;
                         clearing.setX(clearingNewX);
                         clearing.setY(clearingNewY);
@@ -120,7 +118,7 @@ public class BoardPanel extends JLayeredPane {
         System.out.println("clicked: x - " + e.getLocationOnScreen().getX() + " y - " + e.getLocationOnScreen().getY());
         new InfoDialog(tile).displayWindow();
     }
-    
+
     public void paintComponent(Graphics g, Image image) {
         super.paintComponent(g);
         g.drawImage(image, 0, 0, this);
@@ -137,52 +135,35 @@ public class BoardPanel extends JLayeredPane {
     }
 
     public void setupCharacterIcons(final java.util.List<Player> otherPlayers) {
-        characterIcons = new ArrayList<>();
+        this.characterIcons = new ArrayList<>();
         for (Player player : otherPlayers) {
             JLabel newCharacterIcon = new JLabel();
             newCharacterIcon.setSize(88, 88); // TODO: Set all these to be non-hard coded later
             newCharacterIcon.setLocation(player.getCurrentClearing().getX(),
-                                         player.getCurrentClearing().getY());
+                    player.getCurrentClearing().getY());
 
             ImageIcon newIcon = new ImageIcon();
-            switch(player.getCharacter().getEntityInformation().convertToCharacterType()){
-                case AMAZON:
-                    newIcon = boardServices.createImageIcon("image/character/amazon.png");
-                    break;
-                case BLACK_KNIGHT:
-                    newIcon = boardServices.createImageIcon("image/character/black_knight.png");
-                    break;
-                case CAPTAIN:
-                    newIcon = boardServices.createImageIcon("image/character/captain.png");
-                    break;
-                case DWARF:
-                    newIcon = boardServices.createImageIcon("image/character/dwarf.png");
-                    break;
-                case ELF:
-                    newIcon = boardServices.createImageIcon("image/character/elf.png");
-                    break;
-                case SWORDSMAN:
-                    newIcon = boardServices.createImageIcon("image/character/swordsman.png");
-                    break;
-            }
+            newIcon = this.boardServices.createImageIcon(player.getCharacter().getEntityInformation().getPath());
+
             newCharacterIcon.setIcon(newIcon);
             this.add(newCharacterIcon, JLayeredPane.PALETTE_LAYER);
         }
+
     }
 
     public void updateCharacterIcons(final ArrayList<Player> otherPlayers) {
         for (int i = 0; i < otherPlayers.size(); i++) {
-            characterIcons.get(i).setLocation(otherPlayers.get(i).getCurrentClearing().getX(),
-                                              otherPlayers.get(i).getCurrentClearing().getY());
+            this.characterIcons.get(i).setLocation(otherPlayers.get(i).getCurrentClearing().getX(),
+                    otherPlayers.get(i).getCurrentClearing().getY());
         }
     }
 
     public void setupStatusLabel() {
         this.statusLabel = new JLabel();
 
-        this.statusLabel.setSize(500,50);
+        this.statusLabel.setSize(500, 50);
         this.statusLabel.setLocation(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-        add(statusLabel, JLayeredPane.PALETTE_LAYER);
+        add(this.statusLabel, JLayeredPane.PALETTE_LAYER);
     }
 
     public void setStatusText(final String text) {
