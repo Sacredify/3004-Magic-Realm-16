@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.entity;
 
 import ca.carleton.magicrealm.item.Item;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import java.util.List;
  * Date: 09/02/15
  * Time: 5:45 PM
  */
-public abstract class Entity {
+public abstract class Entity implements Serializable {
+
+    private static final long serialVersionUID = -2942027905717935113L;
 
     /**
      * The vulnerability of an entity is their health. Determined by their character.

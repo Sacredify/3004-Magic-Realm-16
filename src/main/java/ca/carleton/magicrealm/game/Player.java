@@ -60,4 +60,8 @@ public class Player implements Serializable {
         this.currentClearing = currentClearing;
     }
 
+    public boolean isSamePlayer(final Player player) {
+        return this.getCharacter().getEntityInformation().convertToCharacterType() == player.getCharacter().getEntityInformation().convertToCharacterType();
+    }
+
 }

@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.entity.chit;
 
+import java.io.Serializable;
+
 /**
  * Represents one of the colored (gold, red, yellow) chits to be displayed on the map.
  *
@@ -7,7 +9,9 @@ package ca.carleton.magicrealm.entity.chit;
  * Date: 21/02/15
  * Time: 12:00 PM
  */
-public abstract class ColoredChit {
+public abstract class ColoredChit implements Serializable {
+
+    private static final long serialVersionUID = 6504002032717018780L;
 
     /**
      * The clearing number to place the chit in.

@@ -1,15 +1,15 @@
 package ca.carleton.magicrealm.Networking;
 
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class AppServer implements Runnable {
+
     int clientCount = 0;
     private final int MAX_PLAYERS = 6;
     int gameCount = 0;
@@ -19,14 +19,13 @@ public class AppServer implements Runnable {
     private TurnController turnController = null;
     private BoardGUIModel boardModel;
 
-
     public AppServer(int port) {
         try {
-            server = new ServerSocket(port);
-            server.setReuseAddress(true);
-            clients = new ArrayList<ServerThread>();
+            this.server = new ServerSocket(port);
+            this.server.setReuseAddress(true);
+            this.clients = new ArrayList<ServerThread>();
             this.turnController = new TurnController();
-            start();
+            this.start();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -34,60 +33,62 @@ public class AppServer implements Runnable {
     }
 
 
-    private void sendMap(){
-        Message m = new Message(0,Message.SET_MAP,boardModel);
-        broadcastMessage(0,m);
+    private void sendMap() {
+        this.boardModel = new BoardGUIModel();
+        ChitBuilder.placeChits(this.boardModel);
+
+        Message m = new Message(0, Message.SET_MAP, this.boardModel);
+        this.broadcastMessage(0, m);
     }
 
 
-
     //Begins a new round of turns(DAYLIGHT)
-    public void beginPhase(){
-        turnController.createNewTurn(clients);
-        alertPlayerNextTurn();
+    public void beginPhase() {
+        this.turnController.createNewTurn(this.clients);
+        this.alertPlayerNextTurn();
     }
 
     //This function is called every time a Message.TURN_FINISHED is recieved
     //STILL NEED TO IMPLEMENT SWORDSMAN FUNCTIONALITY
-    public void alertPlayerNextTurn(){
+    public void alertPlayerNextTurn() {
         int nextID;
         ServerThread nextClient;
-        nextID = turnController.getNextPlayer();
-        broadcastMessage(nextID,"TURN_PLAYER:"+nextID);
-        nextClient = getClientWithID(nextID);
+        nextID = this.turnController.getNextPlayer();
+        this.broadcastMessage(nextID, "TURN_PLAYER:" + nextID);
+        nextClient = this.getClientWithID(nextID);
         nextClient.send(Message.TURN_ALERT);
     }
-    
+
     public void start() {
-        if (thread == null) {
-            thread = new Thread(this);
-            thread.start();
+        if (this.thread == null) {
+            this.thread = new Thread(this);
+            this.thread.start();
         }
     }
 
     //Handles input from the server threads
     public synchronized void handle(int ID, Object obj) {
-        if("ca.carleton.magicrealm.Networking.Message" == obj.getClass().getName()) {
+        if (obj instanceof Message) {
             System.out.println("AppServer:This is a Message Object");
-            Message m = (Message)obj;
-            System.out.println("This is a :"+ m.messageType + " message");
-            handleMessage(m,ID,obj);
-        }
-        else if("java.lang.String" == obj.getClass().getName()){
+            Message m = (Message) obj;
+            System.out.println("This is a :" + m.messageType + " message");
+            this.handleMessage(m, ID, obj);
+        } else if (obj instanceof String) {
             System.out.println("This is a string");
             System.out.println("Message String Contents: " + obj);
         }
     }
 
-    public void handleMessage(Message m,int ID, Object obj){
-        broadcastMessage(ID, obj);
-        switch(m.getMessageType()){
-            case(Message.SELECT_CHARACTER):
-
-                if(turnController.incrementTurnCount()==6){
-                    Message newMessage = new Message(0,Message.ALL_PARTICIPATED,obj);
-                    broadcastMessage(0, newMessage);
+    public void handleMessage(Message m, int ID, Object obj) {
+        this.broadcastMessage(ID, obj);
+        switch (m.getMessageType()) {
+            case (Message.SELECT_CHARACTER):
+                if (this.turnController.incrementTurnCount() == 1) {
+                    Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
+                    this.broadcastMessage(0, newMessage);
+                    this.sendMap();
                 }
+
                 break;
             default:
                 break;
@@ -95,14 +96,11 @@ public class AppServer implements Runnable {
     }
 
 
-
-
-
     private ServerThread getClientWithID(int ID) {
 
-        for (int i = 0; i < clients.size(); i++) {
-            if (ID == clients.get(i).getID()) {
-                return clients.get(i);
+        for (int i = 0; i < this.clients.size(); i++) {
+            if (ID == this.clients.get(i).getID()) {
+                return this.clients.get(i);
             }
         }
 
@@ -115,13 +113,13 @@ public class AppServer implements Runnable {
         try {
             while (true) {
                 //Accept client socket
-                Socket clientSocket = server.accept();
+                Socket clientSocket = this.server.accept();
                 //If there is room in the game add client socket to the list of clients
-                if (clientCount < MAX_PLAYERS) {
-                    clients.add(new ServerThread(this, clientSocket));
-                    clients.get(clientCount).open();
-                    clients.get(clientCount).start();
-                    clientCount++;
+                if (this.clientCount < this.MAX_PLAYERS) {
+                    this.clients.add(new ServerThread(this, clientSocket));
+                    this.clients.get(this.clientCount).open();
+                    this.clients.get(this.clientCount).start();
+                    this.clientCount++;
                 }
 
             }
@@ -134,11 +132,11 @@ public class AppServer implements Runnable {
 
     //Broadcasts a message to all of the clients that did not send it
     public void broadcastMessage(int ID, Object message) {
-        Message m = (Message)message;
-        for (int i = 0; i < clients.size(); i++) {
-            System.out.print("This is the message being broadcasted:"+ m.getMessageType());
-            if (clients.get(i).getID() != ID)
-                clients.get(i).send(message);
+        Message m = (Message) message;
+        for (int i = 0; i < this.clients.size(); i++) {
+            System.out.println("This is the message being broad-casted: " + m.getMessageType());
+            if (this.clients.get(i).getID() != ID)
+                this.clients.get(i).send(message);
 
         }
 
