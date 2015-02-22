@@ -141,12 +141,11 @@ public class BoardPanel extends JLayeredPane {
         this.characterIcons = new ArrayList<>();
         for (Player player : otherPlayers) {
             JLabel newCharacterIcon = new JLabel();
-            newCharacterIcon.setSize(88, 88); // TODO: Set all these to be non-hard coded later
+            newCharacterIcon.setSize(CHIT_WIDTH, CHIT_HEIGHT);
             newCharacterIcon.setLocation(player.getCurrentClearing().getX(),
                     player.getCurrentClearing().getY());
 
-            ImageIcon newIcon = new ImageIcon();
-            newIcon = this.boardServices.createImageIcon(player.getCharacter().getEntityInformation().getPath());
+            ImageIcon newIcon = this.boardServices.createImageIcon(player.getCharacter().getEntityInformation().getPath());
 
             newCharacterIcon.setIcon(newIcon);
             this.add(newCharacterIcon, JLayeredPane.PALETTE_LAYER);
