@@ -102,6 +102,7 @@ public class GameController {
     //Update Map
     public void handleMove(final BoardGUIModel newBoardModel) {
         this.boardModel = newBoardModel;
+        this.boardWindow.refresh(this.boardModel);
     }
 
     /**
