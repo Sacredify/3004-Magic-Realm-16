@@ -21,6 +21,8 @@ public class AppServer implements Runnable {
     private BoardGUIModel boardModel;
 
 
+
+
     public AppServer(int port) {
         try {
             this.server = new ServerSocket(port);
@@ -91,21 +93,22 @@ public class AppServer implements Runnable {
 
     public void handleMessage(Message m, int ID, Object obj) {
         switch (m.getMessageType()) {
+
             case (Message.SELECT_CHARACTER):
-                if (this.turnController.incrementTurnCount() == 1) {
+                if (this.turnController.incrementTurnCount() == 6) {
                     Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
-                    this.broadcastMessage(0, newMessage);
                     this.sendMap();
                     final Player player = (Player) m.getMessageObject();
                     player.setCurrentClearing(this.boardModel.getStartingLocation());
                     this.boardModel.getPlayers().add(player);
                 }
+                this.broadcastMessage(0, m);
                 break;
             case(Message.MOVE):
 
                 break;
             default:
-                this.broadcastMessage(ID, obj);
+               // this.broadcastMessage(ID, obj);
                 break;
         }
     }
@@ -154,8 +157,8 @@ public class AppServer implements Runnable {
     //Broadcasts a message to all of the clients that did not send it
     public void broadcastMessage(int ID, Object message) {
         Message m = (Message) message;
+        System.out.println("This is the message being broad-casted: " + m.getMessageType());
         for (int i = 0; i < this.clients.size(); i++) {
-            System.out.println("This is the message being broad-casted: " + m.getMessageType());
             if (this.clients.get(i).getID() != ID)
                 this.clients.get(i).send(message);
 
