@@ -92,10 +92,12 @@ public class AppServer implements Runnable {
                 player.setCurrentClearing(this.boardModel.getStartingLocation());
                 player.getCurrentClearing().addEntity(player.getCharacter());
                 this.boardModel.addPlayer(player);
-                this.broadcastMessage(0, m);
+                LOG.info("Updated board model.");
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     // Start birdsong + send map as payload.
                     this.broadcastMessage(0, new Message(0, Message.BIRDSONG_START, this.boardModel));
+                }  else {
+                    this.broadcastMessage(0, m);
                 }
                 break;
             case (Message.BIRDSONG_DONE):

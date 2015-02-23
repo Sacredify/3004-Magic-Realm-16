@@ -2,7 +2,6 @@ package ca.carleton.magicrealm.GUI.tile;
 
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
-import ca.carleton.magicrealm.item.Item;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,14 +37,14 @@ public class Clearing implements Serializable {
 
     private String name = "";
 
-    public Clearing(final AbstractTile parentTile,int index) {
+    public Clearing(final AbstractTile parentTile, int index) {
         this.parentTile = parentTile;
-        this.index  = index;
+        this.index = index;
         this.adjacentClearings = new ArrayList<Clearing>();
         this.entities = new ArrayList<Entity>();
     }
 
-    public int getIndex(){
+    public int getIndex() {
         return this.index;
     }
 
@@ -93,7 +92,7 @@ public class Clearing implements Serializable {
         Clearing[] placeHolder = new Clearing[size];
 
         for (int i = 0; i < size; i++) {
-            placeHolder[i] = new Clearing(pTile,i);
+            placeHolder[i] = new Clearing(pTile, i);
         }
 
         return placeHolder;
@@ -158,6 +157,11 @@ public class Clearing implements Serializable {
     @Override
     public String toString() {
         return this.parentTile.getTileInformation() + " " + this.name + ".";
+    }
+
+    @Override
+    public boolean equals(final Object rhs) {
+        return !(rhs == null || !(rhs instanceof Clearing)) && this.toString().equals(rhs.toString());
     }
 
 }

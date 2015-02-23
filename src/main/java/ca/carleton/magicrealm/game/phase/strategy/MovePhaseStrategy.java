@@ -33,7 +33,7 @@ public class MovePhaseStrategy implements PhaseStrategy {
             player.getCurrentClearing().addEntity(player.getCharacter());
             LOG.info("Moved player from {} to {}.", temp, player.getCurrentClearing());
         }  else {
-            LOG.info("Played entered invalid location for his move phase. Not executed.");
+            LOG.info("Played entered invalid location for his move phase. Not executed. (Tried {}).", ((MovePhase) phase).getMoveTarget());
         }
     }
 }
