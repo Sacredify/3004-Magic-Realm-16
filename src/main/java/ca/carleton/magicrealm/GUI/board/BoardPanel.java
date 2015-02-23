@@ -20,6 +20,7 @@ import static ca.carleton.magicrealm.GUI.board.BoardServices.imageToBufferedImag
  * The view for the game board
  */
 public class BoardPanel extends JLayeredPane {
+
     final static public int WINDOW_HEIGHT = 1200;
     final static public int WINDOW_WIDTH = 720;
     final static public int TILE_X_OFFSET = 150;
@@ -29,8 +30,6 @@ public class BoardPanel extends JLayeredPane {
     public static final int CHIT_HEIGHT = 35;
 
     private BoardServices boardServices;
-
-    private ArrayList<JButton> moveButtons;
 
     private ArrayList<JLabel> characterIcons;
 
@@ -72,7 +71,7 @@ public class BoardPanel extends JLayeredPane {
                     newTile.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            iconClickedEvent(e, tile);
+                            BoardPanel.this.iconClickedEvent(e, tile);
                         }
                     });
                     this.add(newTile, JLayeredPane.DEFAULT_LAYER);
@@ -83,24 +82,6 @@ public class BoardPanel extends JLayeredPane {
                         int clearingNewY = tileY + clearing.getY() - CHIT_HEIGHT / 2;
                         clearing.setX(clearingNewX);
                         clearing.setY(clearingNewY);
-                    }
-
-                    /** create the labels for each clearing **/
-                    for (final Clearing clearing : tile.getClearings()) {
-                        ClearingLabel clearingLabel = new ClearingLabel();
-                        clearingLabel.clearing = clearing;
-                        clearingLabel.setSize(new Dimension(30, 30));
-                        clearingLabel.setLocation(clearing.getX(), clearing.getY());
-                        clearingLabel.setEnabled(true);
-
-                        clearingLabel.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mouseClicked(final MouseEvent e) {
-                                System.out.println("Clicked + " + ((ClearingLabel) e.getSource()).clearing);
-                            }
-                        });
-
-                        this.add(clearingLabel, JLayeredPane.PALETTE_LAYER);
                     }
 
                     /** create the chits **/
@@ -126,23 +107,6 @@ public class BoardPanel extends JLayeredPane {
     public void iconClickedEvent(MouseEvent e, AbstractTile tile) {
         System.out.println("clicked: x - " + e.getLocationOnScreen().getX() + " y - " + e.getLocationOnScreen().getY());
         new InfoDialog(tile).displayWindow();
-    }
-
-    public void paintComponent(Graphics g, Image image) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, this);
-    }
-
-    public void displayMoveButtonsForClearing(ArrayList<JButton> buttons) {
-        if (this.moveButtons != null) {
-            for (JButton button : this.moveButtons) {
-                this.remove(button);
-            }
-        }
-        this.moveButtons = buttons;
-        for (JButton button : this.moveButtons) {
-            this.add(button, JLayeredPane.DEFAULT_LAYER);
-        }
     }
 
     public void setupCharacterIcons(final java.util.List<Player> otherPlayers) {

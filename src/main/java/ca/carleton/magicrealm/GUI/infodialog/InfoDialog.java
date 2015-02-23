@@ -13,7 +13,7 @@ import java.awt.*;
  */
 public class InfoDialog extends JDialog {
 
-    public static final int WINDOW_WIDTH = 600;
+    public static final int WINDOW_WIDTH = 860;
 
     public static final int WINDOW_HEIGHT = 300;
 

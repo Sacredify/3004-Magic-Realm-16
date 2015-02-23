@@ -38,4 +38,9 @@ public abstract class Entity implements Serializable {
         this.items.add(item);
     }
 
+    @Override
+    public String toString() {
+        return this.getEntityInformation().toString();
+    }
+
 }

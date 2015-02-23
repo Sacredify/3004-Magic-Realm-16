@@ -151,7 +151,7 @@ public class Clearing implements Serializable {
 
     @Override
     public String toString() {
-        return this.parentTile.getTileInformation() + " clearing number " + this.index + ".";
+        return this.parentTile.getTileInformation() + " " + this.index + ".";
     }
 
 }

@@ -20,6 +20,8 @@ public class
 
     @Override
     public void doPhase(final Player player, final AbstractPhase phase) {
+        player.getCurrentClearing().removeEntity(player.getCharacter());
         player.setCurrentClearing(((MovePhase)phase).getMoveTarget());
+        player.getCurrentClearing().addEntity(player.getCharacter());
     }
 }

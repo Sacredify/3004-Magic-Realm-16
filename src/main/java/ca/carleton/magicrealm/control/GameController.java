@@ -109,7 +109,7 @@ public class GameController {
      * Opens up phase selector dialog.
      */
     public void selectPhasesForDay() {
-        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this);
+        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this).setVisible(true);
     }
 
     /**
@@ -189,11 +189,19 @@ public class GameController {
         this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
     }
 
+    public void refreshBoard() {
+        this.boardWindow.refresh(this.boardModel);
+    }
+
     public void setBoardModel(BoardGUIModel model) {
         this.boardModel = model;
     }
 
     public void setStatusText(final String text) {
         this.boardWindow.setStatusText(text);
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 }
