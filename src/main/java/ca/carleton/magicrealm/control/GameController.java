@@ -129,6 +129,8 @@ public class GameController {
         8 And so on.
         9. After they are all done, server sends EVENING message.
         */
+
+        LOG.info("User finished entering phase data.");
     }
 
     /**

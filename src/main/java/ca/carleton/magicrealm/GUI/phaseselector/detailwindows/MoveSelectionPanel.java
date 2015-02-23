@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.GUI.phaseselector;
+package ca.carleton.magicrealm.GUI.phaseselector.detailwindows;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 
@@ -37,6 +37,6 @@ public class MoveSelectionPanel extends JPanel{
     }
 
     public JButton getConfirmButton() {
-        return confirmButton;
+        return this.confirmButton;
     }
 }
