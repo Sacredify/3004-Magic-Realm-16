@@ -34,7 +34,7 @@ public class AppServer implements Runnable {
     /**
      * The number of days passed in the game. 28 is the max.
      */
-    private int daysPassed = 0;
+    private int currentDay = 0;
 
     public AppServer(int port) {
         try {
