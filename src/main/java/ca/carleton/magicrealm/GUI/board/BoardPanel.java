@@ -22,15 +22,15 @@ import static ca.carleton.magicrealm.GUI.board.BoardServices.imageToBufferedImag
  */
 public class BoardPanel extends JLayeredPane {
 
-    final static public int WINDOW_HEIGHT = 1200;
-    final static public int WINDOW_WIDTH = 720;
-    final static public int TILE_X_OFFSET = 150;
-    final static public int TILE_DELTA_X = 300;
-    final static public int TILE_DELTA_Y = 85;
+    public static final int WINDOW_HEIGHT = 1200;
+    public static final int WINDOW_WIDTH = 720;
+    public static final int TILE_X_OFFSET = 150;
+    public static final int TILE_DELTA_X = 300;
+    public static final int TILE_DELTA_Y = 85;
     public static final int CHIT_WIDTH = 44;
     public static final int CHIT_HEIGHT = 44;
-    public static final int CHARACTER_ICON_WIDTH = 88;
-    public static final int CHARACTER_ICON_HEIGHT = 88;
+    public static final int GAME_INFO_PANEL_WIDTH = 300;
+    public static final int GAME_INFO_PANEL_HEIGHT = 500;
 
     private BoardServices boardServices;
 
@@ -40,7 +40,11 @@ public class BoardPanel extends JLayeredPane {
 
     private JLabel statusLabel;
 
+    private JLabel gameInformationLabel;
+
     private boolean firstDraw;
+
+    private int maximumX;
 
     public BoardPanel() {
         firstDraw = true;
@@ -60,6 +64,7 @@ public class BoardPanel extends JLayeredPane {
      */
     public void drawBoard(BoardGUIModel boardGUIModel) {
         this.removeAll();
+        maximumX = 0;
 
         int y = 0;
         for (ArrayList<AbstractTile> row : boardGUIModel.getBoard()) {
@@ -83,6 +88,10 @@ public class BoardPanel extends JLayeredPane {
                         }
                     });
                     this.add(newTile, JLayeredPane.DEFAULT_LAYER);
+
+                    if (tileX + BoardServices.TILE_WIDTH > maximumX) {
+                        maximumX = tileX + BoardServices.TILE_WIDTH;
+                    }
 
                     if (firstDraw) {
                         /** set the x and y locations relative to the board for each clearing (overwrites its current value) **/
@@ -111,12 +120,27 @@ public class BoardPanel extends JLayeredPane {
         }
 
         this.setupCharacterIcons(boardGUIModel.getPlayers());
+        this.setupGameInfoLabel();
         this.firstDraw = false;
     }
 
     public void iconClickedEvent(MouseEvent e, AbstractTile tile) {
         System.out.println("clicked: x - " + e.getLocationOnScreen().getX() + " y - " + e.getLocationOnScreen().getY());
         new InfoDialog(tile).displayWindow();
+    }
+
+    /**
+     * Setup the information panel for the game
+     */
+    public void setupGameInfoLabel() {
+        this.gameInformationLabel = new JLabel();
+        this.gameInformationLabel.setSize(GAME_INFO_PANEL_WIDTH, GAME_INFO_PANEL_HEIGHT);
+        this.gameInformationLabel.setLocation(maximumX, 0);
+        this.add(gameInformationLabel);
+    }
+
+    public void setGameInfoText(final String text) {
+        this.gameInformationLabel.setText(text);
     }
 
     public void setupCharacterIcons(final java.util.List<Player> otherPlayers) {
@@ -149,7 +173,7 @@ public class BoardPanel extends JLayeredPane {
     /**
      * Method to set up the list of natives on the board
      *
-     * @param nativeList
+     * @param nativeList the list of natives on the board
      */
     public void setupNativeIcons(final java.util.List<AbstractNative> nativeList) {
         this.nativeIcons = new ArrayList<>();
@@ -174,7 +198,7 @@ public class BoardPanel extends JLayeredPane {
     /**
      * Method to update all the natives' icons on the board
      *
-     * @param nativeList
+     * @param nativeList the list of natives on the board
      */
     public void updateNativeIcons(final java.util.List<AbstractNative> nativeList) {
         for (int i = 0; i < nativeList.size(); i++) {

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.board;
 
+import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
 
 import javax.swing.*;
@@ -64,6 +65,14 @@ public class BoardWindow extends JFrame {
 
     public void hideStatusLabel() {
         boardPanel.hideStatusLabel();
+    }
+
+    public void setupNatives(java.util.List<AbstractNative> nativeList) {
+        this.boardPanel.setupNativeIcons(nativeList);
+    }
+
+    public void setGameInfoText(String text) {
+        this.boardPanel.setGameInfoText(text);
     }
 
 }
