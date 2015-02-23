@@ -41,7 +41,7 @@ public class InfoPanel extends JPanel {
 
         this.clearingList = new JList<>(info.getClearings());
         this.clearingList.setLocation(20, 40);
-        this.clearingList.setSize(new Dimension(150, 110));
+        this.clearingList.setSize(new Dimension(250, 200));
         this.clearingList.setEnabled(true);
         this.clearingList.setVisible(true);
         this.clearingList.addListSelectionListener(new ListSelectionListener() {
@@ -53,8 +53,8 @@ public class InfoPanel extends JPanel {
         this.add(this.clearingList);
 
         this.entityList = new JList<>();
-        this.entityList.setLocation(200, 40);
-        this.entityList.setSize(new Dimension(150, 110));
+        this.entityList.setLocation(300, 40);
+        this.entityList.setSize(new Dimension(250, 200));
         this.entityList.setEnabled(false);
         this.entityList.setVisible(false);
         this.entityList.addListSelectionListener(new ListSelectionListener() {

@@ -109,7 +109,7 @@ public class GameController {
      * Opens up phase selector dialog.
      */
     public void selectPhasesForDay() {
-        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this);
+        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this).setVisible(true);
     }
 
     /**

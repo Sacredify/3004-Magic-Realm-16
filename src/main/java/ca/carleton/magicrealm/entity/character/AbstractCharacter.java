@@ -1,10 +1,8 @@
 package ca.carleton.magicrealm.entity.character;
 
-import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
-import ca.carleton.magicrealm.entity.natives.NativeFaction;
 
 import java.io.Serializable;
 import java.util.HashMap;

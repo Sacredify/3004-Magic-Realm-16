@@ -100,6 +100,7 @@ public class AppServer implements Runnable {
             case (Message.SELECT_CHARACTER):
                 Player player = (Player) m.getMessageObject();
                 player.setCurrentClearing(this.boardModel.getStartingLocation());
+                player.getCurrentClearing().addEntity(player.getCharacter());
                 boardModel.addPlayer(player);
                 broadcastMessage(0, m);
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
