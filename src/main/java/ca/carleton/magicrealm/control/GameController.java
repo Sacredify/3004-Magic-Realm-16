@@ -222,13 +222,18 @@ public class GameController {
 
     public void refreshBoard() {
         this.boardWindow.refresh(this.boardModel);
+        this.boardWindow.setGameInfoText(createGameInfoString());
         LOG.info("Board refreshed.");
     }
 
     private String createGameInfoString() {
         String gameInfoText = new String();
-        gameInfoText = gameInfoText.concat("Character: "+ currentPlayer.getCharacter().toString() + '\n');
-
+        gameInfoText = gameInfoText.concat("Character: "+ currentPlayer.getCharacter().toString() + '\n' +
+                                           "Current gold: " + currentPlayer.getVictoryCondition().getGold() + '\n' +
+                                           "Current notoriety: " + currentPlayer.getVictoryCondition().getNotoriety() + '\n' +
+                                           "Current fame: " + currentPlayer.getVictoryCondition().getFame() + '\n' +
+                                           "Current spell count: " + currentPlayer.getVictoryCondition().getSpellsCount() + '\n' +
+                                           "Current great treasures count: " + currentPlayer.getVictoryCondition().getGreatTreasuresCount() + '\n');
 
         return gameInfoText;
     }
