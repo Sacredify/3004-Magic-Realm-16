@@ -40,12 +40,12 @@ public class CharacterCreateMenu extends JDialog {
      *
      * @param player the player this dialog is for.
      */
-    public CharacterCreateMenu(final BoardWindow board, final Player player, final List<CharacterType> availableCharacters,GameController cnt ) {
+    public CharacterCreateMenu(final BoardWindow board, final Player player, final List<CharacterType> availableCharacters, GameController cnt) {
         this.setModal(true);
         this.setTitle(WINDOW_NAME);
         this.initWindowSettings();
         this.board = board;
-        this.model = new MenuModel(this, player, availableCharacters,cnt);
+        this.model = new MenuModel(this, player, availableCharacters, cnt);
         this.view = new MenuPanel(this.model);
         this.setupListeners();
         this.add(this.view);
@@ -87,8 +87,17 @@ public class CharacterCreateMenu extends JDialog {
         this.view.characterSelectList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(final ListSelectionEvent e) {
-                CharacterCreateMenu.this.model.setSelectedCharacter(CharacterCreateMenu.this.view.characterSelectList.getSelectedValue());
-                CharacterCreateMenu.this.view.setIncrementKeysEnabled(true);
+                if (!CharacterCreateMenu.this.view.characterSelectList.isSelectionEmpty()) {
+                    CharacterCreateMenu.this.model.setSelectedCharacter(CharacterCreateMenu.this.view.characterSelectList.getSelectedValue());
+                    CharacterCreateMenu.this.view.setIncrementKeysEnabled(true);
+                } else {
+                    // Reset choices if for some reason a selection is disabled.
+                    CharacterCreateMenu.this.model.player.setVictoryCondition(new VictoryCondition());
+                    CharacterCreateMenu.this.view.setIncrementKeysEnabled(false);
+                    CharacterCreateMenu.this.view.setDecrementKeysEnabled(false);
+                    CharacterCreateMenu.this.view.setFinishEnabled(false);
+                    CharacterCreateMenu.this.view.updateText();
+                }
             }
         });
 
@@ -161,7 +170,7 @@ public class CharacterCreateMenu extends JDialog {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (JOptionPane.showConfirmDialog(CharacterCreateMenu.this, "Are you sure these are your character details?") == JOptionPane.YES_OPTION) {
-                    model.done();
+                    CharacterCreateMenu.this.model.done();
                 }
             }
         });
