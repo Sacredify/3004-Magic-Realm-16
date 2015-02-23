@@ -69,6 +69,7 @@ public class EntityBuilder {
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.CHAPEL);
 
         AbstractNative orderKnight1 = NativeFactory.createNative(NativeFaction.ORDER, NativeType.KNIGHT);
+        orderKnight1.markLeader();
         AbstractNative orderKnight2 = NativeFactory.createNative(NativeFaction.ORDER, NativeType.KNIGHT);
         AbstractNative orderKnight3 = NativeFactory.createNative(NativeFaction.ORDER, NativeType.KNIGHT);
         AbstractNative orderKnight4 = NativeFactory.createNative(NativeFaction.ORDER, NativeType.KNIGHT);
@@ -98,6 +99,7 @@ public class EntityBuilder {
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.HOUSE);
 
         AbstractNative soldier1 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.CROSSBOW_MAN);
+        soldier1.markLeader();
         AbstractNative soldier2 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.GREAT_SWORDSMAN);
         AbstractNative soldier3 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.PIKEMAN);
         AbstractNative soldier4 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.PIKEMAN);
@@ -126,14 +128,15 @@ public class EntityBuilder {
 
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.INN);
 
-        AbstractNative rogue1 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.ARCHER);
-        AbstractNative rogue2 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.ASSASSIN);
-        AbstractNative rogue3 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.ASSASSIN);
-        AbstractNative rogue4 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.GREAT_AXEMAN);
-        AbstractNative rogue5 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.GREAT_AXEMAN);
-        AbstractNative rogue6 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.SHORT_SWORDSMAN);
-        AbstractNative rogue7 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.SWORDSMAN);
-        AbstractNative rogue8 = NativeFactory.createNative(NativeFaction.SOLDIERS, NativeType.SWORDSMAN);
+        AbstractNative rogue1 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.ARCHER);
+        rogue1.markLeader();
+        AbstractNative rogue2 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.ASSASSIN);
+        AbstractNative rogue3 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.ASSASSIN);
+        AbstractNative rogue4 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.GREAT_AXEMAN);
+        AbstractNative rogue5 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.GREAT_AXEMAN);
+        AbstractNative rogue6 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.SHORT_SWORDSMAN);
+        AbstractNative rogue7 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.SWORDSMAN);
+        AbstractNative rogue8 = NativeFactory.createNative(NativeFaction.ROGUES, NativeType.SWORDSMAN);
 
         rogueNatives.add(rogue1);
         rogueNatives.add(rogue2);
@@ -164,6 +167,7 @@ public class EntityBuilder {
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.GUARD);
 
         AbstractNative guard1 = NativeFactory.createNative(NativeFaction.GUARD, NativeType.GREAT_SWORDSMAN);
+        guard1.markLeader();
         AbstractNative guard2 = NativeFactory.createNative(NativeFaction.GUARD, NativeType.GREAT_SWORDSMAN);
         AbstractNative guard3 = NativeFactory.createNative(NativeFaction.GUARD, NativeType.GREAT_SWORDSMAN);
 
