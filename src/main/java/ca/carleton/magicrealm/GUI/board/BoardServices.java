@@ -2,17 +2,17 @@ package ca.carleton.magicrealm.GUI.board;
 
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.entity.Entity;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 /**
  * Created by Tony on 14/02/2015.
- *
+ * <p/>
  * Service class to store methods used by a view
  */
 public class BoardServices {
@@ -50,8 +50,7 @@ public class BoardServices {
         return newTile;
     }
 
-    public ArrayList<JLabel> createChitIconsForTile(AbstractTile tile) {
-        ArrayList<JLabel> iconList = new ArrayList<JLabel>();
+    public void createChitIconsForTile(AbstractTile tile, final BoardPanel panel) {
 
         for (Clearing clearing : tile.getClearings()) {
             JLabel newChit = null;
@@ -60,25 +59,43 @@ public class BoardServices {
                 newChit = new JLabel();
                 newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
                 newIcon = this.createImageIcon(clearing.getDwelling().getPath());
-            }
-            if (newChit != null && newIcon != null) {
-                BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
 
-                newImage = resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
-                newIcon.setImage(newImage);
-                newChit.setIcon(newIcon);
-                newChit.setEnabled(true);
+                if (newChit != null && newIcon != null) {
+                    BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
+                    newImage = resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
+                    newIcon.setImage(newImage);
+                    newChit.setIcon(newIcon);
+                    newChit.setEnabled(true);
+                    newChit.setLocation(clearing.getX(), clearing.getY());
+                    panel.add(newChit, JLayeredPane.PALETTE_LAYER);
+                }
             }
-            iconList.add(newChit);
+            if (!clearing.getEntities().isEmpty()) {
+                for (Entity drawable : clearing.getEntities()) {
+                    newChit = new JLabel();
+                    newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
+                    newIcon = this.createImageIcon(drawable.getEntityInformation().getPath());
+
+                    if (newChit != null && newIcon != null) {
+                        BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
+                        newImage = resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
+                        newIcon.setImage(newImage);
+                        newChit.setIcon(newIcon);
+                        newChit.setEnabled(true);
+                        newChit.setLocation(clearing.getX(), clearing.getY());
+                        panel.add(newChit, JLayeredPane.PALETTE_LAYER);
+                    }
+                }
+            }
         }
 
-        return iconList;
     }
 
     /**
      * Method to resize a BufferedImage
-     * @param image image to resize
-     * @param width width to resize to
+     *
+     * @param image  image to resize
+     * @param width  width to resize to
      * @param height height to resize to
      * @return
      */
@@ -93,12 +110,13 @@ public class BoardServices {
 
     /**
      * Convert an Image to a BufferedImage
+     *
      * @param image image to convert
      * @return a BufferedImage of the image given
      */
     public static BufferedImage imageToBufferedImage(Image image) {
         BufferedImage bi = new BufferedImage
-                (image.getWidth(null),image.getHeight(null),BufferedImage.TYPE_INT_ARGB);
+                (image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         Graphics bg = bi.getGraphics();
         bg.drawImage(image, 0, 0, null);
         bg.dispose();
@@ -121,8 +139,7 @@ public class BoardServices {
                     clearing.setScaledYAngled((int) Math.round(point[1]));
                 }
             }
-        }
-        else {
+        } else {
             bufferedImage = resize(bufferedImage, TILE_WIDTH, TILE_HEIGHT);
             label.setSize(TILE_WIDTH, TILE_HEIGHT);
 
@@ -136,8 +153,7 @@ public class BoardServices {
 
                         clearing.setScaledXRegular((int) Math.round(point[0]));
                         clearing.setScaledYRegular((int) Math.round(point[1]));
-                    }
-                    else {
+                    } else {
                         clearing.setScaledXRegular(clearing.getX());
                         clearing.setScaledYRegular(clearing.getY());
                     }
@@ -149,8 +165,9 @@ public class BoardServices {
 
     /**
      * Rotate the Icon of a BufferedImage
+     *
      * @param bufferedImage image to be rotated
-     * @param angle angle to rotate by
+     * @param angle         angle to rotate by
      */
     public static BufferedImage rotateBufferedImage(BufferedImage bufferedImage, double angle) {
         AffineTransform tx = new AffineTransform();
@@ -168,12 +185,9 @@ public class BoardServices {
      * @param point (x,y) point to rotate
      */
     public static void rotatePoint(double[] point, double angle) {
-        AffineTransform.getRotateInstance(Math.toRadians(angle), ORIGINAL_TILE_WIDTH/2, ORIGINAL_TILE_HEIGHT/2)
+        AffineTransform.getRotateInstance(Math.toRadians(angle), ORIGINAL_TILE_WIDTH / 2, ORIGINAL_TILE_HEIGHT / 2)
                 .transform(point, 0, point, 0, 1); // specifying to use this double[] to hold coords
     }
-
-
-
 
 
 }
