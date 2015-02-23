@@ -24,7 +24,7 @@ public class GameController {
 
     private static final Logger LOG = LoggerFactory.getLogger(GameController.class);
 
-    private BoardWindow boardWindow;
+    private final BoardWindow boardWindow;
 
     private BoardGUIModel boardModel;
 
@@ -34,9 +34,9 @@ public class GameController {
 
     private AppClient networkConnection = null;
 
-    private List<AbstractPhase> recordedPhasesForDay = new ArrayList<AbstractPhase>();
+    private final List<AbstractPhase> recordedPhasesForDay = new ArrayList<AbstractPhase>();
 
-    private List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
+    private final List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
 
     public GameController() {
         this.boardWindow = new BoardWindow();
@@ -51,9 +51,8 @@ public class GameController {
     public void handleMessage(Object obj) {
 
         if (obj instanceof Message) {
-            System.out.println("Game Controller:This is a Message Object");
             Message m = (Message) obj;
-            System.out.println("This is a :" + m.getMessageType() + " Message Type");
+            LOG.info("Received {} message from server. Payload: {}.", m.getMessageType(), m.getMessageObject());
             switch (m.getMessageType()) {
                 case (Message.SELECT_CHARACTER):
                     this.removeFromAvailableCharacters(m.getMessageObject());
@@ -95,7 +94,7 @@ public class GameController {
      * This also sends the message to the server that the character has been selected, along with the player object.
      */
     public void characterSelected() {
-        System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
+        LOG.info("User selected {} as his/her character.", this.currentPlayer.getCharacter().getEntityInformation());
         this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
     }
 
@@ -115,6 +114,7 @@ public class GameController {
      */
     public void selectPhasesForDay() {
         new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this).setVisible(true);
+        LOG.info("Displayed birdsong action menu.");
     }
 
     /**
@@ -146,6 +146,7 @@ public class GameController {
         Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
         this.updatePlayerInMap();
         this.refreshBoard();
+        LOG.info("Executed daylight phase for player.");
         this.networkConnection.sendMessage(Message.DAYLIGHT_DONE, this.boardModel);
     }
 
@@ -158,6 +159,8 @@ public class GameController {
                 this.currentPlayer = player;
             }
         }
+
+        LOG.info("Current player information has been updated from the server.");
     }
 
     /**
@@ -178,11 +181,13 @@ public class GameController {
         assert (this.boardModel.getPlayers().size() == (sanityCheck - 1));
 
         this.boardModel.getPlayers().add(this.currentPlayer);
+
+        LOG.info("Model has been updated with client player information.");
     }
 
     public void setNetworkConnection(AppClient nC) {
         this.networkConnection = nC;
-        LOG.info("Set controller network connection succesfully. Showing character create for the user.");
+        LOG.info("Set controller network connection successfully.");
         this.showCharacterCreate();
     }
 
@@ -192,6 +197,7 @@ public class GameController {
     private void showCharacterCreate() {
         this.characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
         this.characterCreateMenu.displayWindow();
+        LOG.info("Displayed character create.");
     }
 
     /**
@@ -204,11 +210,14 @@ public class GameController {
             throw new IllegalArgumentException("Not a player object");
         }
 
-        this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
+        final CharacterType removed = ((Player) player).getCharacter().getEntityInformation().convertToCharacterType();
+        this.availableCharacters.remove(removed);
+        LOG.info("Removed {} from the list of available characters for character select, another user has chosen it.", removed);
     }
 
     public void refreshBoard() {
         this.boardWindow.refresh(this.boardModel);
+        LOG.info("Board refreshed.");
     }
 
     public void setBoardModel(BoardGUIModel model) {

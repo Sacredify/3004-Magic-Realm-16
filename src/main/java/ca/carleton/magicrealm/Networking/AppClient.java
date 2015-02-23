@@ -1,6 +1,8 @@
 package ca.carleton.magicrealm.Networking;
 
 import ca.carleton.magicrealm.control.GameController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
@@ -8,15 +10,21 @@ import java.net.Socket;
 
 public class AppClient implements Runnable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AppClient.class);
+
     private int ID = 0;
+
     private Socket socket = null;
+
     private Thread thread = null;
+
     private ObjectOutputStream objOutStream = null;
+
     private ObjectInputStream objInputStream = null;
+
     private AppClient clnt = null;
+
     private GameController gameController;
-
-
 
     public AppClient(String serverName, int serverPort,GameController gameController) {
 
@@ -66,9 +74,9 @@ public class AppClient implements Runnable {
 
     public void sendMessage(String messageType,Object messageObject){
 
-        System.out.print("MESSAGE TYPE BEING SENT: "+messageType + " SENT FROM ID:" + this.ID);
         Message m = new Message(this.ID,messageType,messageObject);
-        write(m);
+        this.write(m);
+        LOG.info("[ID {}] Sent {} message to the server.", this.ID, messageType);
     }
 
     public void open() throws IOException {

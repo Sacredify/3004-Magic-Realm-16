@@ -55,6 +55,7 @@ public class Daylight {
             }
         }
         LOG.info("Done executing phases.");
+        phasesToExecute.clear();
 
     }
 

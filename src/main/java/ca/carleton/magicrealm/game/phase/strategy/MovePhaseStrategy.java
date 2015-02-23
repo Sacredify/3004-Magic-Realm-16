@@ -29,6 +29,6 @@ public class MovePhaseStrategy implements PhaseStrategy {
         player.setCurrentClearing(((MovePhase)phase).getMoveTarget());
         player.getCurrentClearing().addEntity(player.getCharacter());
 
-        LOG.debug("Moved player from {} to {}.", temp, player.getCurrentClearing());
+        LOG.info("Moved player from {} to {}.", temp, player.getCurrentClearing());
     }
 }
