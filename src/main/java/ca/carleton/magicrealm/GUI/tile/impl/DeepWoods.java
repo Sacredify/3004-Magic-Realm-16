@@ -29,7 +29,7 @@ public class DeepWoods extends AbstractTile {
 
         this.clearings[3].setX(88);
         this.clearings[3].setY(220);
-        this.clearings[4].setName("4");
+        this.clearings[3].setName("4");
 
         this.clearings[4].setX(148);
         this.clearings[4].setY(323);
