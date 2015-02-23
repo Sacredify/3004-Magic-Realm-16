@@ -17,9 +17,6 @@ public class PhaseSelectorPanel extends JPanel {
     public static final int PHASE_PANEL_WIDTH = 500;
     public static final int PHASE_PANEL_HEIGHT = 300;
 
-    public static final String[] PHASE_NAMES = {"Move"};
-    public static final String CONFIRM = "ENTER";
-
     private JComboBox<AbstractPhase> firstPhaseBox;
 
     private JComboBox secondPhaseBox;
@@ -33,6 +30,7 @@ public class PhaseSelectorPanel extends JPanel {
     private ArrayList<AbstractPhase> phases;
 
     public PhaseSelectorPanel() {
+        this.phases = new ArrayList<>();
         this.phases.add(new MovePhase());
 
         this.setSize(PHASE_PANEL_WIDTH, PHASE_PANEL_HEIGHT);
