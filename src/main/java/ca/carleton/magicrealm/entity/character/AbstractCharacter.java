@@ -56,39 +56,39 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
         return currentGreatTreasuresCount;
     }
 
-    public void setCurrentGreatTreasuresCount(int currentGreatTreasuresCount) {
-        this.currentGreatTreasuresCount = currentGreatTreasuresCount;
+    public void addGreatTreasure(int currentGreatTreasuresCount) {
+        this.currentGreatTreasuresCount += currentGreatTreasuresCount;
     }
 
     public int getCurrentGold() {
         return currentGold;
     }
 
-    public void setCurrentGold(int currentGold) {
-        this.currentGold = currentGold;
+    public void addGold(int currentGold) {
+        this.currentGold += currentGold;
     }
 
     public int getCurrentNotoriety() {
         return currentNotoriety;
     }
 
-    public void setCurrentNotoriety(int currentNotoriety) {
-        this.currentNotoriety = currentNotoriety;
+    public void addNotoriety(int currentNotoriety) {
+        this.currentNotoriety += currentNotoriety;
     }
 
     public int getCurrentFame() {
         return currentFame;
     }
 
-    public void setCurrentFame(int currentFame) {
-        this.currentFame = currentFame;
+    public void addFame(int currentFame) {
+        this.currentFame += currentFame;
     }
 
     public int getCurrentSpellsCount() {
         return currentSpellsCount;
     }
 
-    public void setCurrentSpellsCount(int currentSpellsCount) {
-        this.currentSpellsCount = currentSpellsCount;
+    public void addCurrentSpells(int currentSpellsCount) {
+        this.currentSpellsCount += currentSpellsCount;
     }
 }

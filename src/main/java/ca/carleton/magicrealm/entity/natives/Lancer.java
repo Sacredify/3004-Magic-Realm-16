@@ -22,8 +22,8 @@ public class Lancer extends AbstractNative {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        player.getVictoryCondition().addGold(2);
-        player.getVictoryCondition().addNotoriety(4);
+        player.getCharacter().addGold(2);
+        player.getCharacter().addNotoriety(4);
     }
 
     @Override
