@@ -59,6 +59,10 @@ public class GameController {
                     this.removeFromAvailableCharacters(m.getMessageObject());
                     this.characterCreateMenu.updateAvailableCharacters();
                     break;
+                case (Message.SET_MAP):
+                    this.setBoardModel((BoardGUIModel) m.getMessageObject());
+                    this.updateCurrentPlayer();
+                    this.refreshBoard();
                 case (Message.MOVE):
                     //Insert move character functionality here
                     this.handleMove((BoardGUIModel) m.getMessageObject());
@@ -66,17 +70,16 @@ public class GameController {
                 case (Message.BIRDSONG_START):
                     this.selectPhasesForDay();
                     break;
-                case(Message.DAYLIGHT_START):
-                    this.setBoardModel(((BoardGUIModel)m.getMessageObject()));
+                case (Message.DAYLIGHT_START):
+                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
                     this.updateCurrentPlayer();
                     this.processDaylight();
                     this.refreshBoard();
                     break;
-                case (Message.SET_MAP):
-                    this.setBoardModel((BoardGUIModel) m.getMessageObject());
+                case (Message.SUNSET_START):
+                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
                     this.updateCurrentPlayer();
                     this.refreshBoard();
-
                 default:
                     break;
             }
