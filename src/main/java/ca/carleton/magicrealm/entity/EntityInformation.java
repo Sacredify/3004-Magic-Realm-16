@@ -20,17 +20,17 @@ public enum EntityInformation {
     CHARACTER_SWORDSMAN("image/character/swordsman.png"),
 
     // Native types
-    NATIVE_KNIGHT(null),
-    NATIVE_GREAT_SWORDSMAN(null),
-    NATIVE_GREAT_AXEMAN(null),
-    NATIVE_PIKEMAN(null),
-    NATIVE_SHORT_SWORDSMAN(null),
-    NATIVE_CROSSBOW_MAN(null),
-    NATIVE_LANCER(null),
-    NATIVE_RAIDER(null),
-    NATIVE_ARCHER(null),
-    NATIVE_SWORDSMAN(null),
-    NATIVE_ASSASSIN(null),
+    NATIVE_KNIGHT("image/natives/knight_o.png"),
+    NATIVE_GREAT_SWORDSMAN("image/natives/great_swordsman_c.png"),
+    NATIVE_GREAT_AXEMAN("image/natives/great_axeman_r.png"),
+    NATIVE_PIKEMAN("image/natives/pikeman_c.png"),
+    NATIVE_SHORT_SWORDSMAN("image/natives/short_swordsman_c.png"),
+    NATIVE_CROSSBOW_MAN("image/natives/crossbowman_c.png"),
+    NATIVE_LANCER("image/natives/lancer_l.png"),
+    NATIVE_RAIDER("image/natives/raider_b.png"),
+    NATIVE_ARCHER("image/natives/archer_r.png"),
+    NATIVE_SWORDSMAN("image/natives/swordsman_r.png"),
+    NATIVE_ASSASSIN("image/natives//assassin_m.png"),
 
     // Ghosts
     GHOST("image/ghost/ghost.gif");

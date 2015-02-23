@@ -26,12 +26,12 @@ public class CurstValley extends AbstractTile {
         // 4
         this.clearings[2].setX(243);
         this.clearings[2].setY(285);
-        this.clearings[2].setName("2");
+        this.clearings[2].setName("4");
 
         // 5
         this.clearings[3].setX(359);
         this.clearings[3].setY(153);
-        this.clearings[3].setName("3");
+        this.clearings[3].setName("5");
     }
 
     @Override

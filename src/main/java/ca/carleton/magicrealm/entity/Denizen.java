@@ -18,6 +18,8 @@ public abstract class Denizen extends Entity {
 
     protected Clearing startingClearing;
 
+    protected Clearing currentClearing;
+
     public boolean isProwling() {
         return this.prowling;
     }
@@ -34,4 +36,11 @@ public abstract class Denizen extends Entity {
         this.startingClearing = startingClearing;
     }
 
+    public Clearing getCurrentClearing() {
+        return currentClearing;
+    }
+
+    public void setCurrentClearing(Clearing currentClearing) {
+        this.currentClearing = currentClearing;
+    }
 }

@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.board;
 import ca.carleton.magicrealm.GUI.infodialog.InfoDialog;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
 
 import javax.swing.*;
@@ -34,6 +35,8 @@ public class BoardPanel extends JLayeredPane {
     private BoardServices boardServices;
 
     private ArrayList<JLabel> characterIcons;
+
+    private ArrayList<JLabel> nativeIcons;
 
     private JLabel statusLabel;
 
@@ -134,13 +137,49 @@ public class BoardPanel extends JLayeredPane {
             newCharacterIcon.setIcon(newIcon);
             this.add(newCharacterIcon, JLayeredPane.PALETTE_LAYER);
         }
-
     }
 
     public void updateCharacterIcons(final ArrayList<Player> otherPlayers) {
         for (int i = 0; i < otherPlayers.size(); i++) {
             this.characterIcons.get(i).setLocation(otherPlayers.get(i).getCurrentClearing().getX() - CHIT_WIDTH/2,
                     otherPlayers.get(i).getCurrentClearing().getY() - CHIT_HEIGHT/2);
+        }
+    }
+
+    /**
+     * Method to set up the list of natives on the board
+     *
+     * @param nativeList
+     */
+    public void setupNativeIcons(final java.util.List<AbstractNative> nativeList) {
+        this.nativeIcons = new ArrayList<>();
+        for (AbstractNative abstractNative : nativeList) {
+            JLabel newNativeIcon = new JLabel();
+            newNativeIcon.setSize(CHIT_WIDTH, CHIT_HEIGHT);
+
+            newNativeIcon.setLocation(abstractNative.getStartingClearing().getX() - CHIT_WIDTH/2,
+                                      abstractNative.getStartingClearing().getY() - CHIT_HEIGHT/2);
+
+
+            ImageIcon newIcon = this.boardServices.createImageIcon(abstractNative.getEntityInformation().getPath());
+            BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
+            newImage = BoardServices.resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
+            newIcon.setImage(newImage);
+
+            newNativeIcon.setIcon(newIcon);
+            this.add(newNativeIcon, JLayeredPane.PALETTE_LAYER);
+        }
+    }
+
+    /**
+     * Method to update all the natives' icons on the board
+     *
+     * @param nativeList
+     */
+    public void updateNativeIcons(final java.util.List<AbstractNative> nativeList) {
+        for (int i = 0; i < nativeList.size(); i++) {
+            this.nativeIcons.get(i).setLocation(nativeList.get(i).getCurrentClearing().getX() - CHIT_WIDTH/2,
+                                                nativeList.get(i).getCurrentClearing().getY() - CHIT_HEIGHT/2);
         }
     }
 
