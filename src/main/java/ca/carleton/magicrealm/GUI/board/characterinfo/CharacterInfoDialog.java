@@ -32,25 +32,26 @@ public class CharacterInfoDialog extends JDialog {
 
         this.characterInfoLabel = new JLabel();
         this.characterInfoLabel.setSize(CHARACTER_INFO_DIALOG_WIDTH, CHARACTER_INFO_DIALOG_HEIGHT);
+        this.characterInfoLabel.setLocation(0,0);
         ImageIcon imageIcon = new ImageIcon();
 
         if (character.getEntityInformation() == EntityInformation.CHARACTER_AMAZON) {
-            this.boardServices.createImageIcon(AMAZON_DETAIL_PATH);
+            imageIcon = this.boardServices.createImageIcon(AMAZON_DETAIL_PATH);
         }
         else if (character.getEntityInformation() == EntityInformation.CHARACTER_BLACK_KNIGHT) {
-            this.boardServices.createImageIcon(BLACK_KNIGHT_DETAIL_PATH);
+            imageIcon = this.boardServices.createImageIcon(BLACK_KNIGHT_DETAIL_PATH);
         }
         else if (character.getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN) {
-            this.boardServices.createImageIcon(CAPTAIN_DETAIL_PATH);
+            imageIcon = this.boardServices.createImageIcon(CAPTAIN_DETAIL_PATH);
         }
         else if (character.getEntityInformation() == EntityInformation.CHARACTER_DWARF) {
-            this.boardServices.createImageIcon(DWARF_DETAIL_PATH);
+            imageIcon = this.boardServices.createImageIcon(DWARF_DETAIL_PATH);
         }
         else if (character.getEntityInformation() == EntityInformation.CHARACTER_ELF) {
-            this.boardServices.createImageIcon(ELF_DETAIL_PATH);
+            imageIcon = this.boardServices.createImageIcon(ELF_DETAIL_PATH);
         }
         else if (character.getEntityInformation() == EntityInformation.CHARACTER_SWORDSMAN) {
-            this.boardServices.createImageIcon(SWORDSMAN_DETAIL_PATH);
+            imageIcon = this.boardServices.createImageIcon(SWORDSMAN_DETAIL_PATH);
         }
         this.characterInfoLabel.setIcon(imageIcon);
         this.add(characterInfoLabel);

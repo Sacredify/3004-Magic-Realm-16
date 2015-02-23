@@ -132,15 +132,15 @@ public class BoardPanel extends JLayeredPane {
 
     public void setupCharacterInfoButton(final AbstractCharacter character) {
         this.displayCharacterInformationButton = new JButton(CHARACTER_INFO_BUTTON_TEXT);
-        this.displayCharacterInformationButton.setSize(50,30);
-        this.displayCharacterInformationButton.setLocation(maximumX, -100);
+        this.displayCharacterInformationButton.setSize(150, 30);
+        this.displayCharacterInformationButton.setLocation(maximumX, 0);
         this.displayCharacterInformationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new CharacterInfoDialog(character);
+                CharacterInfoDialog characterInfoDialog = new CharacterInfoDialog(character);
             }
         });
-        this.add(displayCharacterInformationButton);
+        this.add(this.displayCharacterInformationButton, PALETTE_LAYER);
     }
 
     /**
