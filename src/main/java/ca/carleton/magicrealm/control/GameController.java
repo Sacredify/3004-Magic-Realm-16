@@ -189,6 +189,10 @@ public class GameController {
         this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
     }
 
+    public void refreshBoard() {
+        this.boardWindow.refresh(this.boardModel);
+    }
+
     public void setBoardModel(BoardGUIModel model) {
         this.boardModel = model;
     }

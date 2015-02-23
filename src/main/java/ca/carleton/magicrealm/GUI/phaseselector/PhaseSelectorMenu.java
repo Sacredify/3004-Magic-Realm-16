@@ -78,7 +78,8 @@ public class PhaseSelectorMenu extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 phaseSelectorModel.addMovementPhase(moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue());
-
+                moveSelectionMenu.dispose();
+                controller.refreshBoard();
             }
         };
     }
