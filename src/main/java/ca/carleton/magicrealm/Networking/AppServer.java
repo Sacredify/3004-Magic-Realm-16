@@ -14,8 +14,7 @@ import java.util.ArrayList;
 public class AppServer implements Runnable {
 
     int clientCount = 0;
-    public static final int MAX_PLAYERS = 2;
-    int gameCount = 0;
+    public static final int MAX_PLAYERS = 1;
     private Thread thread = null;
     private ServerSocket server = null;
     private ArrayList<ServerThread> clients = null;

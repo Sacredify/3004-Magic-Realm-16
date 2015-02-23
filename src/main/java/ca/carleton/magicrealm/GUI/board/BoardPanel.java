@@ -107,8 +107,9 @@ public class BoardPanel extends JLayeredPane {
             y++;
         }
 
-        this.setupCharacterIcons(boardGUIModel.getPlayers());
-        firstDraw = false;
+        // I don't think we need this here.
+        // this.setupCharacterIcons(boardGUIModel.getPlayers());
+        this.firstDraw = false;
     }
 
     public void iconClickedEvent(MouseEvent e, AbstractTile tile) {
