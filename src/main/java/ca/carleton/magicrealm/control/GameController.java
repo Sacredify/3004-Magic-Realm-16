@@ -12,9 +12,6 @@ import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -42,12 +39,8 @@ public class GameController {
     private List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
 
     public GameController() {
-
-        // Build window.
         this.boardWindow = new BoardWindow();
-
         this.currentPlayer = new Player();
-
     }
 
     /**
@@ -92,14 +85,21 @@ public class GameController {
         }
     }
 
+    /**
+     * Called by the Character Select Menu to indicate that the character has been set.
+     * This also sends the message to the server that the character has been selected, along with the player object.
+     */
     public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
         this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
-        //this.setupStatusLabel();
-        //this.setStatusText("SELECTED CHARACTER, WAITING FOR OTHER PLAYERS");
     }
 
-    //Update Map
+    /**
+     * Refreshes the board with the new model received.
+     *
+     * @param newBoardModel the model.
+     */
+    @Deprecated
     public void handleMove(final BoardGUIModel newBoardModel) {
         this.boardModel = newBoardModel;
         this.boardWindow.refresh(this.boardModel);
@@ -132,7 +132,19 @@ public class GameController {
     }
 
     /**
+     * Updates the current player status for use in the client's various methods after the board has been received from the server.
+     */
+    public void updateCurrentPlayer() {
+        for (final Player player : this.boardModel.getPlayers()) {
+            if (this.currentPlayer.getCharacter().getEntityInformation() == player.getCharacter().getEntityInformation()) {
+                this.currentPlayer = player;
+            }
+        }
+    }
+
+    /**
      * Replaces the current player stored on the board with the updated one.
+     * IMPORTANT This needs to be called before sending sending the map, as it updates the board.
      */
     public void updatePlayerInMap() {
         final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
@@ -150,28 +162,25 @@ public class GameController {
         this.boardModel.getPlayers().add(this.currentPlayer);
     }
 
-    /**
-     * Updates the current player status for use in the client's various methods..
-     */
-    public void updateCurrentPlayer() {
-        for (final Player player : this.boardModel.getPlayers()) {
-            if (this.currentPlayer.getCharacter().getEntityInformation() == player.getCharacter().getEntityInformation()) {
-                this.currentPlayer = player;
-            }
-        }
-    }
-
     public void setNetworkConnection(AppClient nC) {
         this.networkConnection = nC;
         LOG.info("Set controller network connection succesfully. Showing character create for the user.");
         this.showCharacterCreate();
     }
 
+    /**
+     * Show the character create dialog.
+     */
     private void showCharacterCreate() {
         this.characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
         this.characterCreateMenu.displayWindow();
     }
 
+    /**
+     * Remove a character from the list of available characeters when choosing a character.
+     *
+     * @param player the player containing the character to remove.
+     */
     private void removeFromAvailableCharacters(final Object player) {
         if (!(player instanceof Player)) {
             throw new IllegalArgumentException("Not a player object");
@@ -180,32 +189,8 @@ public class GameController {
         this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
     }
 
-    /**
-     * Methods to set up the window to select a player's phase for the day *
-     */
-    public void setupPhaseSelection() {
-        // PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
-
-        JButton confirmFirstPhaseButton = new JButton("ENTER"); // TODO: make unhardcoded later
-
-        confirmFirstPhaseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //  String selectedPhase = (String)phaseSelectorMenu.getPhaseSelectorPanel().getFirstPhaseBox().getSelectedItem();
-
-              /*  if (selectedPhase.equals("Move")) {
-                    setupMovePhaseForPlayer();
-                }*/
-            }
-        });
-    }
-
     public void setBoardModel(BoardGUIModel model) {
         this.boardModel = model;
-    }
-
-    public void setupStatusLabel() {
-        this.boardWindow.setupStatusLabel();
     }
 
     public void setStatusText(final String text) {
