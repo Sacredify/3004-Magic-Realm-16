@@ -4,13 +4,11 @@ import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
-import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
-import ca.carleton.magicrealm.game.phase.impl.MovePhase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,7 +116,19 @@ public class GameController {
      * Called by the selector menu when done entering phases.
      */
     public void doneEnteringPhasesForDay() {
-
+       /*
+        LOGIC -
+        1. This method is called, signifying this.recordedPhasesForDay has all the phases the client wishes to enter.
+        2. The client will send a message to the server saying they are done.
+        3. When the server receives all <x> number of clients saying they are done, the server starts DAYLIGHT.
+        4. The server will pick a client, send them a message with the current board, and the client will use Daylight.processPhasesForDay() that
+         will process the phases.
+        5. The client will upload the updated data to the server.
+        6. The server will then send the next message to the next person in turn, with the updated board.
+        7. The next client will update their board as per the first, then execute the phases.
+        8 And so on.
+        9. After they are all done, server sends EVENING message.
+        */
     }
 
     /**
@@ -135,7 +145,7 @@ public class GameController {
             }
         }
         // Sanity check - check that we actually removed someone.
-        assert (this.boardModel.getPlayers().size() == (sanityCheck -1));
+        assert (this.boardModel.getPlayers().size() == (sanityCheck - 1));
 
         this.boardModel.getPlayers().add(this.currentPlayer);
     }
