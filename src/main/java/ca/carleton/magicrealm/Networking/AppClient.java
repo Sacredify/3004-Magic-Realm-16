@@ -4,7 +4,9 @@ import ca.carleton.magicrealm.control.GameController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
@@ -22,17 +24,15 @@ public class AppClient implements Runnable {
 
     private ObjectInputStream objInputStream = null;
 
-    private AppClient clnt = null;
-
     private GameController gameController;
 
-    public AppClient(String serverName, int serverPort,GameController gameController) {
+    public AppClient(String serverName, int serverPort, GameController gameController) {
 
         try {
             this.socket = new Socket(serverName, serverPort);
-            this.ID = socket.getLocalPort();
+            this.ID = this.socket.getLocalPort();
             this.gameController = gameController;
-            System.out.println(ID + "Connected to Server:" + socket.getInetAddress());
+            System.out.println(this.ID + "Connected to Server:" + this.socket.getInetAddress());
             this.open();
             this.start();
         } catch (IOException ioe) {
@@ -41,92 +41,69 @@ public class AppClient implements Runnable {
         }
     }
 
-
     public void write(Object msg) {
         try {
-            objOutStream.writeObject(msg);
-            objOutStream.flush();
+            this.objOutStream.writeObject(msg);
+            this.objOutStream.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public Object read() {
-        Object obj = null;
-
-        try {
-            obj = objInputStream.read();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return obj;
-    }
-
     private void start() {
-        if (thread == null) {
-            thread = new Thread(this);
-            thread.start();
+        if (this.thread == null) {
+            this.thread = new Thread(this);
+            this.thread.start();
         }
     }
 
-    public void sendMessage(String messageType,Object messageObject){
+    public void sendMessage(String messageType, Object messageObject) {
 
-        Message m = new Message(this.ID,messageType,messageObject);
+        Message m = new Message(this.ID, messageType, messageObject);
         this.write(m);
         LOG.info("[ID {}] Sent {} message to the server.", this.ID, messageType);
     }
 
     public void open() throws IOException {
-        System.out.println(ID + ":Opening buffer streams");
-        objOutStream = new ObjectOutputStream(socket.getOutputStream());
-        objInputStream = new ObjectInputStream(socket.getInputStream());
-        if (objInputStream == null) {
-            System.out.println("Unable to Open Object Input Stream on Thread:" + ID);
+        LOG.info("Opening object streams...");
+        this.objOutStream = new ObjectOutputStream(this.socket.getOutputStream());
+        this.objInputStream = new ObjectInputStream(this.socket.getInputStream());
+        if (this.objInputStream == null) {
+            LOG.error("Error with opening the object input stream.");
         }
-        else{
-            System.out.println("Able to Open Object Input Stream on Thread:" + ID);
+        if (this.objOutStream == null) {
+            LOG.error("Error with opening the object output stream.");
         }
-        if (objOutStream == null) {
-            System.out.println("Unable to Open Object Output Stream on Thread:" + ID);
-        }
-        else{
-            System.out.println("Able to Open Object Output Stream on Thread:" + ID);
-        }
+        LOG.info("Object streams opened.");
     }
 
 
     @Override
     public void run() {
-        System.out.println(ID + ": Client Started");
+        LOG.info("Client thread started.");
         Object obj = null;
         try {
-            obj  = objInputStream.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            obj = this.objInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            LOG.error("Error with reading the object from the stream.", e);
         }
         while (obj != null) {
             try {
-                gameController.handleMessage(obj);
-                obj = objInputStream.readObject();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                this.gameController.handleMessage(obj);
+                obj = this.objInputStream.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                LOG.error("Error with reading the object from the stream.", e);
             }
             if (obj == null) {
-                System.out.println("Disconnected From Server");
+                LOG.info("Disconnected fron the server.");
                 break;
             }
         }
     }
 
-    public int getId(){
-        return ID;
+    public int getId() {
+        return this.ID;
     }
 
 /*
