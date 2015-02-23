@@ -34,7 +34,7 @@ public class AppServer implements Runnable {
     /**
      * The number of days passed in the game. 28 is the max.
      */
-    private int currentDay = 0;
+    private int daysPassed = 0;
 
     public AppServer(int port) {
         try {
@@ -109,13 +109,14 @@ public class AppServer implements Runnable {
             case (Message.DAYLIGHT_DONE):
                 this.boardModel = (BoardGUIModel) m.getMessageObject();
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    /*  For testing, and for now. Is sunset for all players simultaneously? Idk.
+                    //  For testing, and for now. Is sunset for all players simultaneously? Idk.
 
                     this.turnController.createNewTurn();
                     int nextID = this.turnController.getNextPlayer();
                     ServerThread nextClient = this.getClientWithID(nextID);
-                    Message msg = new Message(0, Message.SUNSET_START, this.boardModel);
-                    nextClient.send(msg);
+
+                    Message msg = new Message(0,Message.DAYLIGHT_START, this.boardModel);
+                   // nextClient.send(msg);
                     this.turnController.incrementTurnCount();
                     */
                     this.broadcastMessage(0, new Message(0, Message.SUNSET_START, this.boardModel));
