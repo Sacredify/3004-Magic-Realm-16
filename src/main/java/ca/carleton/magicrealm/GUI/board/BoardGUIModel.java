@@ -196,6 +196,7 @@ public class BoardGUIModel implements Serializable {
 
         Clearing[] cavern = this.tiles.get(6).getClearings();
         cavern[4].connectTo(high[2]);
+        cavern[4].connectTo(cavern[2]);
         cavern[4].connectTo(cavern[3]);
         cavern[5].connectTo(cavern[2]);
         cavern[2].connectTo(cavern[5]);
