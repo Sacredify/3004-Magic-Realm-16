@@ -15,23 +15,29 @@ public class Cavern extends AbstractTile {
     public Cavern() {
         this.clearings = Clearing.initializeClearingsArray(6,this);
 
-        this.clearings[0].setX(355);
-        this.clearings[0].setY(149);
+        this.clearings[0].setX(368);
+        this.clearings[0].setY(145);
+        this.clearings[0].setName("1");
 
-        this.clearings[1].setX(251);
-        this.clearings[1].setY(86);
+        this.clearings[1].setX(245);
+        this.clearings[1].setY(79);
+        this.clearings[1].setName("2");
 
-        this.clearings[2].setX(230);
-        this.clearings[2].setY(208);
+        this.clearings[2].setX(242);
+        this.clearings[2].setY(180);
+        this.clearings[2].setName("3");
 
-        this.clearings[3].setX(250);
-        this.clearings[3].setY(355);
+        this.clearings[3].setX(252);
+        this.clearings[3].setY(360);
+        this.clearings[3].setName("4");
 
         this.clearings[4].setX(134);
         this.clearings[4].setY(151);
+        this.clearings[4].setName("5");
 
-        this.clearings[5].setX(323);
-        this.clearings[5].setY(278);
+        this.clearings[5].setX(296);
+        this.clearings[5].setY(270);
+        this.clearings[5].setName("6");
     }
 
     @Override

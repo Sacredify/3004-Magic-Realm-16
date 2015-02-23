@@ -16,19 +16,22 @@ public class CurstValley extends AbstractTile {
     public CurstValley() {
         this.clearings = Clearing.initializeClearingsArray(4,this);
         this.clearings[0].setX(246);
-        this.clearings[0].setY(85);
+        this.clearings[0].setY(83);
+        this.clearings[0].setName("1");
 
-        this.clearings[1].setX(135);
-        this.clearings[1].setY(150);
+        this.clearings[1].setX(133);
+        this.clearings[1].setY(149);
+        this.clearings[1].setName("2");
 
         // 4
-        this.clearings[2].setX(248);
-        this.clearings[2].setY(282);
+        this.clearings[2].setX(243);
+        this.clearings[2].setY(285);
+        this.clearings[2].setName("2");
 
         // 5
         this.clearings[3].setX(359);
-        this.clearings[3].setY(154);
-       // this.clearings[3].setDwelling(Dwelling.HOUSE);
+        this.clearings[3].setY(153);
+        this.clearings[3].setName("3");
     }
 
     @Override
