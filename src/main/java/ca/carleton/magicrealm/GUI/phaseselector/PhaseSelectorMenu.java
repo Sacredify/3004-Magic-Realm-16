@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class PhaseSelectorMenu extends JDialog {
 
-    public static final String PHASE_SELECTOR_WINDOW = "Select your phases";
+    public static final String PHASE_SELECTOR_WINDOW = "Birdsong - Action Selection Menu";
     public static final int PHASE_WINDOW_WIDTH = 500;
     public static final int PHASE_WINDOW_HEIGHT = 300;
 
@@ -29,6 +29,7 @@ public class PhaseSelectorMenu extends JDialog {
 
     public PhaseSelectorMenu(final List<AbstractPhase> phases, int numberOfPhases, final GameController gameController) {
         this.setTitle(PHASE_SELECTOR_WINDOW);
+        this.setLocationRelativeTo(gameController.getParentWindow());
 
         this.phaseSelectorPanel = new PhaseSelectorPanel();
         this.phaseSelectorPanel.getConfirmButton().addActionListener(this.createActionListenerForPhaseSelectButton());

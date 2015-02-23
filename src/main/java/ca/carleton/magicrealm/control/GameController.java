@@ -67,6 +67,11 @@ public class GameController {
                     this.handleMove((BoardGUIModel) m.getMessageObject());
                     break;
                 case (Message.BIRDSONG_START):
+                    // Set new data
+                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
+                    this.updateCurrentPlayer();
+                    this.refreshBoard();
+                    // Process birdsong
                     this.selectPhasesForDay();
                     break;
                 case (Message.DAYLIGHT_START):
@@ -113,8 +118,8 @@ public class GameController {
      * Opens up phase selector dialog.
      */
     public void selectPhasesForDay() {
-        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this).setVisible(true);
         LOG.info("Displayed birdsong action menu.");
+        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this).setVisible(true);
     }
 
     /**
@@ -226,6 +231,10 @@ public class GameController {
 
     public void setStatusText(final String text) {
         this.boardWindow.setStatusText(text);
+    }
+
+    public BoardWindow getParentWindow() {
+        return this.boardWindow;
     }
 
     public Player getCurrentPlayer() {

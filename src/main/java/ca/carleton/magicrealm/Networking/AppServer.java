@@ -91,9 +91,8 @@ public class AppServer implements Runnable {
                 this.boardModel.addPlayer(player);
                 this.broadcastMessage(0, m);
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    // Send map data, start birdsong.
-                    this.sendMap();
-                    this.broadcastMessage(0, new Message(0, Message.BIRDSONG_START, obj));
+                    // Start birdsong + send map as payload.
+                    this.broadcastMessage(0, new Message(0, Message.BIRDSONG_START, this.boardModel));
                 }
                 break;
             case (Message.BIRDSONG_DONE):
