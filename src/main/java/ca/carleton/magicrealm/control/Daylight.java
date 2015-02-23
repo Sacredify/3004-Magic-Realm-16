@@ -39,7 +39,7 @@ public class Daylight {
 
         LOG.info("Setting character status to unhidden.");
         player.getCharacter().setHidden(false);
-        LOG.info("Starting phase execution for player {}.", player);
+        LOG.info("Starting phase execution for player {}.", player.getCharacter());
 
         phaseLoop:
         for (final AbstractPhase phase : phasesToExecute) {
