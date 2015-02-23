@@ -20,6 +20,7 @@ public class MoveSelectionMenu extends JDialog{
 
         this.moveSelectionPanel = new MoveSelectionPanel();
         this.moveSelectionPanel.setupClearingList(clearing);
+        this.add(moveSelectionPanel);
         this.setVisible(true);
     }
 

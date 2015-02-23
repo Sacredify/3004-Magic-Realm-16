@@ -63,7 +63,8 @@ public class PhaseSelectorMenu extends JDialog {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PhaseType selectedPhase = (PhaseType)e.getSource();
+                JComboBox comboBox = (JComboBox)e.getSource();
+                PhaseType selectedPhase = (PhaseType)comboBox.getSelectedItem();
                 if (selectedPhase.equals(PhaseType.MOVE)) {
                     moveSelectionMenu = new MoveSelectionMenu(controller.getCurrentPlayer().getCurrentClearing());
                     moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(createActionListenerForMoveSelectList());

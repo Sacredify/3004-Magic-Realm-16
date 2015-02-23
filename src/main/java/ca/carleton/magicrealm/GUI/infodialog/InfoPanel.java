@@ -72,7 +72,9 @@ public class InfoPanel extends JPanel {
         this.entities = new ArrayList<>();
         this.entities.addAll(clearingList.getSelectedValue().getEntities());
 
-        this.entityList.setListData(this.entities.toArray(new Entity[entities.size()]));
+        Entity[] entities = this.entities.toArray(new Entity[this.entities.size()]);
+
+        this.entityList.setListData(entities);
         this.entityList.setVisible(true);
     }
 
