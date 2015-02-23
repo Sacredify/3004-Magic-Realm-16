@@ -166,16 +166,16 @@ public class ChitBuilder {
     }
 
     private static void buildSoundChits() {
-        soundChits.add(new RedChit("HOWL"));
-        soundChits.add(new RedChit("SLITHER"));
-        soundChits.add(new RedChit("ROAR"));
-        soundChits.add(new RedChit("PATTER"));
-        soundChits.add(new RedChit("FLUTTER"));
-        soundChits.add(new RedChit("SLITHER"));
-        soundChits.add(new RedChit("ROAR"));
-        soundChits.add(new RedChit("PATTER"));
-        soundChits.add(new RedChit("SLITHER"));
-        soundChits.add(new RedChit("FLUTTER"));
+        soundChits.add(new RedChit("HOWL", 4));
+        soundChits.add(new RedChit("SLITHER", 3));
+        soundChits.add(new RedChit("ROAR", 6));
+        soundChits.add(new RedChit("PATTER", 2));
+        soundChits.add(new RedChit("FLUTTER", 1));
+        soundChits.add(new RedChit("SLITHER", 6));
+        soundChits.add(new RedChit("ROAR", 4));
+        soundChits.add(new RedChit("PATTER", 5));
+        soundChits.add(new RedChit("SLITHER", 6));
+        soundChits.add(new RedChit("FLUTTER", 2));
         Collections.shuffle(soundChits);
 
         LOG.info("Built and shuffled sound chits.");
