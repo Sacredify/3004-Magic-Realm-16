@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.tile;
 
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.chit.ColoredChit;
 
 import java.io.Serializable;
@@ -43,6 +44,10 @@ public abstract class AbstractTile implements Serializable {
             System.out.println("Clearings are full.");
         }
 
+    }
+
+    public void addEntityToClearing(int clearingIndex,Entity e){
+        getClearingAt(clearingIndex).addEntity(e);
     }
 
     /**

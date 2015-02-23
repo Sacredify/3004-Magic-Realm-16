@@ -210,7 +210,6 @@ public class GameController {
         if (!(player instanceof Player)) {
             throw new IllegalArgumentException("Not a player object");
         }
-
         final CharacterType removed = ((Player) player).getCharacter().getEntityInformation().convertToCharacterType();
         this.availableCharacters.remove(removed);
         LOG.info("Removed {} from the list of available characters for character select, another user has chosen it.", removed);

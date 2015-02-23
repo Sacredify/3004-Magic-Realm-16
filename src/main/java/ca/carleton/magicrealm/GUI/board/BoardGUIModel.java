@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.game.Player;
 
@@ -328,6 +329,17 @@ public class BoardGUIModel implements Serializable {
         }
 
         return toReturn;
+    }
+
+    public AbstractTile getTileFromTileCollection(AbstractTile t){
+        for(AbstractTile tileInMap:tiles){
+            if(tileInMap.getTileType() == t.getTileType()) return tileInMap;
+        }
+       return null;
+    }
+
+    public void addEntityToClearing(int indexOfClearing,AbstractTile t,Entity e ){
+        getTileFromTileCollection(t).addEntityToClearing(indexOfClearing,e);
     }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {

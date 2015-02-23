@@ -17,7 +17,7 @@ public class AppServer implements Runnable {
 
     public static final int MAX_ROUNDS = 28;
 
-    public static final int MAX_PLAYERS = 1;
+    public static final int MAX_PLAYERS = 2;
 
     private int clientCount = 0;
 
@@ -43,7 +43,6 @@ public class AppServer implements Runnable {
             this.clients = new ArrayList<ServerThread>();
             this.turnController = new TurnController();
             this.buildMap();
-
             this.start();
         } catch (IOException e) {
             LOG.error("Exception during server initialization.", e);
@@ -166,8 +165,9 @@ public class AppServer implements Runnable {
                     this.clients.get(this.clientCount).open();
                     this.clients.get(this.clientCount).start();
                     this.clientCount++;
-                    this.server.close();
                 }
+                else
+                    this.server.close();
 
             }
         } catch (IOException e) {
