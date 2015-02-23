@@ -111,7 +111,14 @@ public class GameController {
      * Opens up phase selector dialog.
      */
     public void selectPhasesForDay() {
-        PhaseSelectorMenu selectorMenu = new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this);
+        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this);
+    }
+
+    /**
+     * Called by the selector menu when done entering phases.
+     */
+    public void doneEnteringPhasesForDay() {
+
     }
 
     /**

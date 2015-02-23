@@ -31,6 +31,8 @@ public class PhaseSelectorMenu extends JDialog {
         this.controller = gameController;
 
         this.setSize(PHASE_WINDOW_WIDTH, PHASE_WINDOW_HEIGHT);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         this.add(this.phaseSelectorPanel);
     }
@@ -40,7 +42,7 @@ public class PhaseSelectorMenu extends JDialog {
      */
     public void disposeWindow() {
         this.dispose();
-        // TODO wire to controller.
+        this.controller.doneEnteringPhasesForDay();
     }
 
     public PhaseSelectorPanel getPhaseSelectorPanel() {
