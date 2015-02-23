@@ -19,21 +19,22 @@ public class MoveSelectionPanel extends JPanel{
         this.setLayout(new FlowLayout());
         this.setSize(MoveSelectionMenu.WINDOW_WIDTH, MoveSelectionMenu.WINDOW_HEIGHT);
 
+        JScrollPane scrollPane = new JScrollPane();
         this.clearingJList = new JList<>();
-        this.clearingJList.setSize(250, 150);
-        this.add(clearingJList);
+        scrollPane.setViewportView(this.clearingJList);
+        this.add(scrollPane);
 
         this.confirmButton = new JButton(CONFIRM_TEXT);
         this.confirmButton.setSize(40,20);
-        this.add(confirmButton);
+        this.add(this.confirmButton);
     }
 
-    public void setupClearingList(final Clearing clearing) {
-        this.clearingJList.setListData(clearing.getAdjacentClearings().toArray(new Clearing[clearing.getAdjacentClearings().size()]));
+    public void setupClearingList(final java.util.List<Clearing> clearings) {
+        this.clearingJList.setListData(clearings.toArray(new Clearing[clearings.size()]));
     }
 
     public JList<Clearing> getClearingJList() {
-        return clearingJList;
+        return this.clearingJList;
     }
 
     public JButton getConfirmButton() {

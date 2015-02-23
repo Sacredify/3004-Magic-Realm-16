@@ -16,8 +16,8 @@ import java.util.List;
 public class PhaseSelectorMenu extends JDialog {
 
     public static final String PHASE_SELECTOR_WINDOW = "Birdsong - Action Selection Menu";
-    public static final int PHASE_WINDOW_WIDTH = 500;
-    public static final int PHASE_WINDOW_HEIGHT = 300;
+    public static final int PHASE_WINDOW_WIDTH = 300;
+    public static final int PHASE_WINDOW_HEIGHT = 200;
 
     PhaseSelectorPanel phaseSelectorPanel;
 
@@ -59,7 +59,7 @@ public class PhaseSelectorMenu extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
                 if (selectedPhase.equals(PhaseType.MOVE)) {
-                    PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getCurrentPlayer().getCurrentClearing());
+                    PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getBoardModel().getAllTiles());
                     PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForMoveSelectButton());
                 } else if (selectedPhase.equals(PhaseType.HIDE)) {
                     PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase();

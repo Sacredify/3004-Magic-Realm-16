@@ -303,14 +303,33 @@ public class BoardGUIModel implements Serializable {
      * @return the starting location.
      */
     public Clearing getStartingLocation() {
+        return this.getClearingOfDwelling(Dwelling.INN);
+    }
+
+    /**
+     * Find the clearing of a certain dwelling.
+     *
+     * @param dwelling the dwelling.
+     * @return the clearing.
+     */
+    public Clearing getClearingOfDwelling(final Dwelling dwelling) {
         for (AbstractTile tile : this.tiles) {
             for (Clearing clearing : tile.getClearings()) {
-                if (clearing.getDwelling() == Dwelling.INN) {
+                if (clearing.getDwelling() == dwelling) {
                     return clearing;
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * Return all the tiles on the board.
+     *
+     * @return the tiles.
+     */
+    public List<AbstractTile> getAllTiles() {
+        return this.tiles;
     }
 
     /**
@@ -331,22 +350,22 @@ public class BoardGUIModel implements Serializable {
         return toReturn;
     }
 
-    public AbstractTile getTileFromTileCollection(AbstractTile t){
-        for(AbstractTile tileInMap:tiles){
-            if(tileInMap.getTileType() == t.getTileType()) return tileInMap;
+    public AbstractTile getTileFromTileCollection(AbstractTile t) {
+        for (AbstractTile tileInMap : tiles) {
+            if (tileInMap.getTileType() == t.getTileType()) return tileInMap;
         }
-       return null;
+        return null;
     }
 
-    public void addEntityToClearing(int indexOfClearing,AbstractTile t,Entity e ){
-        getTileFromTileCollection(t).addEntityToClearing(indexOfClearing,e);
+    public void addEntityToClearing(int indexOfClearing, AbstractTile t, Entity e) {
+        getTileFromTileCollection(t).addEntityToClearing(indexOfClearing, e);
     }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {
         return this.board;
     }
 
-    public void addPlayer(Player p){
+    public void addPlayer(Player p) {
         players.add(p);
     }
 

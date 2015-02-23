@@ -245,6 +245,10 @@ public class GameController {
         return this.boardWindow;
     }
 
+    public BoardGUIModel getBoardModel() {
+        return this.boardModel;
+    }
+
     public Player getCurrentPlayer() {
         return this.currentPlayer;
     }
