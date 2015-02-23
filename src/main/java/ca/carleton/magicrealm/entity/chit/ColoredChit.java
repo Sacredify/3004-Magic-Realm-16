@@ -49,5 +49,10 @@ public abstract class ColoredChit implements Serializable {
         this.hidden = true;
     }
 
+    @Override
+    public String toString() {
+        return this.description + " : hidden --> " + this.hidden;
+    }
+
 }
 
