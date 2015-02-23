@@ -20,6 +20,8 @@ public class TurnController {
 
     public void createNewTurnOrder(ArrayList<ServerThread> clientThreads) {
         Collections.shuffle(clientThreads);
+        this.orderedIDs.clear();
+        this.orderedIDsQueue.clear();
         for (ServerThread s : clientThreads) {
             this.orderedIDsQueue.add(s.getID());
             this.orderedIDs.add(s.getID());

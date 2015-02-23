@@ -3,6 +3,8 @@ package ca.carleton.magicrealm.Networking;
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.game.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -108,7 +110,6 @@ public class AppServer implements Runnable {
                     ServerThread nextClient = this.getClientWithID(nextID);
                     Message msg = new Message(0, Message.DAYLIGHT_START, this.boardModel);
                     nextClient.send(msg);
-                    this.turnController.incrementTurnCount();
                 }
                 break;
             case (Message.DAYLIGHT_DONE):
