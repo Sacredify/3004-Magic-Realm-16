@@ -18,14 +18,15 @@ import java.util.Map;
 public abstract class AbstractCharacter extends Entity implements Serializable {
 
     /**
+     * All characters start hidden.
+     */ {
+        this.setHidden(true);
+    }
+
+    /**
      * The relationships this entity has with other entities.
      */
     protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
-
-    /**
-     * Whether or not this character is hidden.
-     */
-    protected boolean hidden;
 
     /**
      * Find the relationship with another interactable entity.
@@ -41,11 +42,4 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
         this.relationships.putIfAbsent(entity, relationship);
     }
 
-    public boolean isHidden() {
-        return this.hidden;
-    }
-
-    public void setHidden(final boolean hidden) {
-        this.hidden = hidden;
-    }
 }

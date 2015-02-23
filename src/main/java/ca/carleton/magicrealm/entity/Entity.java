@@ -23,6 +23,11 @@ public abstract class Entity implements Serializable {
     protected Vulnerability vulnerability;
 
     /**
+     * Whether or not the entity is hidden on the tile.
+     */
+    protected boolean hidden;
+
+    /**
      * The list of items the entity is currently holding.
      * TODO Is this relevant for all entities? Or only characters?
      */
@@ -36,6 +41,14 @@ public abstract class Entity implements Serializable {
 
     public void addItem(final Item item) {
         this.items.add(item);
+    }
+
+    public boolean isHidden() {
+        return this.hidden;
+    }
+
+    public void setHidden(final boolean hidden) {
+        this.hidden = hidden;
     }
 
     @Override

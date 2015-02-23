@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.impl.HidePhase;
 import ca.carleton.magicrealm.game.phase.impl.MovePhase;
 
 import java.util.List;
@@ -26,6 +27,11 @@ public class PhaseSelectorModel {
         final MovePhase movePhase = new MovePhase();
         movePhase.setMoveTarget(clearing);
         this.phases.add(movePhase);
+    }
+
+    public void addHidePhase() {
+        final HidePhase hidePhase = new HidePhase();
+        this.phases.add(hidePhase);
     }
 
     public void done() {

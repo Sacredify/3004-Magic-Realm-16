@@ -56,11 +56,13 @@ public class PhaseSelectorMenu extends JDialog {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JButton comboBox = (JButton) e.getSource();
                 PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
                 if (selectedPhase.equals(PhaseType.MOVE)) {
                     PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getCurrentPlayer().getCurrentClearing());
                     PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForMoveSelectButton());
+                } else if (selectedPhase.equals(PhaseType.HIDE)) {
+                    PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase();
+                    ((JButton) e.getSource()).setEnabled(false);
                 }
             }
         };
