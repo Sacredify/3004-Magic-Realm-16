@@ -34,6 +34,10 @@ public class Caves extends AbstractTile {
         this.clearings[4].setX(134);
         this.clearings[4].setY(157);
         this.clearings[4].setName("5");
+
+        this.clearings[5].setX(329);
+        this.clearings[5].setY(80);
+        this.clearings[5].setName("6");
     }
 
     @Override
