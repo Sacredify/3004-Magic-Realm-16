@@ -63,11 +63,14 @@ public class GameController {
                     //Insert move character functionality here
                     this.handleMove((BoardGUIModel) m.getMessageObject());
                     break;
-                case (Message.ALL_PARTICIPATED):
+                case (Message.BIRDSONG_START):
                     //Insert Stage incrementing functionality here
-                    System.out.println("ALL PARTICIPATED MESSAGE RECEIVED");
+                    System.out.println("START BIRDSONG");
                     //this.boardWindow.hideStatusLabel();
                     //TODO Update label with message saying waiting for board or some shit.
+                    break;
+                case(Message.DAYLIGHT_START):
+                    System.out.println("START DAYLIGHT");
                     break;
                 case (Message.SET_MAP):
                     //SETTING MAP MODEL

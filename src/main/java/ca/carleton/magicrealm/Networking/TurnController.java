@@ -6,18 +6,27 @@ import java.util.*;
  * Created by anvargazizov on 2015-02-19.
  */
 public class TurnController {
-    private PriorityQueue<Integer> orderedIDs= null;
+    private PriorityQueue<Integer> orderedIDsQueue= null;
+    private ArrayList<Integer>  orderedIDs = null;
     private int turnCount;
 
     public TurnController(){
         turnCount = 0;
-        orderedIDs = new PriorityQueue<>();
+        orderedIDsQueue = new PriorityQueue<>();
+        orderedIDs = new ArrayList<>();
     }
 
-    public void createNewTurn(ArrayList<ServerThread> clientThreads){
+    public void createNewTurnOrder(ArrayList<ServerThread> clientThreads){
         Collections.shuffle(clientThreads);
         for(ServerThread s:clientThreads){
+            orderedIDsQueue.add(s.getID());
             orderedIDs.add(s.getID());
+        }
+    }
+
+    public void createNewTurn(){
+        for(Integer s:orderedIDs){
+            orderedIDsQueue.add(s);
         }
     }
 
@@ -33,8 +42,8 @@ public class TurnController {
     }
 
     public int getNextPlayer(){
-        if(orderedIDs.size()!=0){
-            return  orderedIDs.remove();
+        if(orderedIDsQueue.size()!=0){
+            return  orderedIDsQueue.remove();
         }
         else{
             return -1;

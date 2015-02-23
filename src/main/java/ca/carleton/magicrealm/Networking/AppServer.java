@@ -12,20 +12,16 @@ import java.util.ArrayList;
 public class AppServer implements Runnable {
 
     int clientCount = 0;
-
-    private static final int MAX_PLAYERS = 2;
-
+    private final int MAX_PLAYERS = 2;
     int gameCount = 0;
-
     private Thread thread = null;
-
     private ServerSocket server = null;
-
     private ArrayList<ServerThread> clients = null;
-
     private TurnController turnController = null;
-
     private BoardGUIModel boardModel;
+
+
+
 
     public AppServer(int port) {
         try {
@@ -60,7 +56,7 @@ public class AppServer implements Runnable {
 
     //Begins a new round of turns(DAYLIGHT)
     public void beginPhase() {
-        this.turnController.createNewTurn(this.clients);
+        this.turnController.createNewTurnOrder(this.clients);
         this.alertPlayerNextTurn();
     }
 
@@ -103,12 +99,40 @@ public class AppServer implements Runnable {
                 boardModel.addPlayer(player);
                 broadcastMessage(0, m);
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    Message newMessage = new Message(0, Message.ALL_PARTICIPATED, obj);
+                    Message newMessage = new Message(0, Message.BIRDSONG_START, obj);
                     this.sendMap();
                 }
                 break;
-            case(Message.MOVE):
+            case (Message.BIRDSONG_DONE):
+                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                        turnController.createNewTurnOrder(clients);
+                        int nextID = turnController.getNextPlayer();
+                        ServerThread nextClient = getClientWithID(nextID);
+                        Message msg = new Message(0,Message.DAYLIGHT_START,boardModel);
+                        nextClient.send(msg);
+                        turnController.incrementTurnCount();
+                }
+                break;
+            case(Message.DAYLIGHT_DONE):
+                boardModel = (BoardGUIModel)m.getMessageObject();
+                if(this.turnController.incrementTurnCount() == MAX_PLAYERS){
+                    turnController.createNewTurn();
+                    int nextID = turnController.getNextPlayer();
+                    ServerThread nextClient = getClientWithID(nextID);
+                    Message msg = new Message(0,Message.SUNSET_START,boardModel);
+                    nextClient.send(msg);
+                    turnController.incrementTurnCount();
 
+                }
+                else {
+                    int nextID = turnController.getNextPlayer();
+                    ServerThread nextClient = getClientWithID(nextID);
+                    Message msg = new Message(0, Message.DAYLIGHT_START, boardModel);
+                    nextClient.send(msg);
+                }
+                break;
+            case(Message.MOVE):
+                handleMoveMessage(m,ID);
                 break;
             default:
                // this.broadcastMessage(ID, obj);
