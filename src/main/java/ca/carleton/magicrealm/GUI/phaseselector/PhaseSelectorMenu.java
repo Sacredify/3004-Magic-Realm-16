@@ -1,8 +1,11 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
+import ca.carleton.magicrealm.game.phase.AbstractPhase;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 /**
  * Created by Tony on 20/02/2015.
@@ -15,18 +18,21 @@ public class PhaseSelectorMenu extends JFrame {
 
     PhaseSelectorPanel phaseSelectorPanel;
 
-    public PhaseSelectorMenu() {
+    PhaseSelectorModel phaseSelectorModel;
+
+    public PhaseSelectorMenu(final List<AbstractPhase> phases, int numberOfPhases) {
         super(PHASE_SELECTOR_WINDOW);
 
         this.phaseSelectorPanel = new PhaseSelectorPanel();
+        this.phaseSelectorModel = new PhaseSelectorModel(phases);
 
         this.setSize(PHASE_WINDOW_WIDTH, PHASE_WINDOW_HEIGHT);
 
-        this.add(phaseSelectorPanel);
+        this.add(this.phaseSelectorPanel);
     }
 
     public PhaseSelectorPanel getPhaseSelectorPanel() {
-        return phaseSelectorPanel;
+        return this.phaseSelectorPanel;
     }
 
     public void setPhaseSelectorPanel(PhaseSelectorPanel phaseSelectorPanel) {
