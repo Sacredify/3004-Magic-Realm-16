@@ -157,6 +157,7 @@ public class GameController {
         for (final Player player : this.boardModel.getPlayers()) {
             if (this.currentPlayer.getCharacter().getEntityInformation() == player.getCharacter().getEntityInformation()) {
                 this.currentPlayer = player;
+                break;
             }
         }
 

@@ -94,9 +94,10 @@ public class AppClient implements Runnable {
                 obj = this.objInputStream.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 LOG.error("Error with reading the object from the stream.", e);
+                System.exit(-1);
             }
             if (obj == null) {
-                LOG.info("Disconnected fron the server.");
+                LOG.info("Disconnected from the server.");
                 break;
             }
         }
