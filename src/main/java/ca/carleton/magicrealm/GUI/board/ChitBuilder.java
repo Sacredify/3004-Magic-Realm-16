@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.board;
 
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
+import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.chit.*;
 import ca.carleton.magicrealm.entity.monster.Ghost;
@@ -106,8 +107,13 @@ public class ChitBuilder {
             while (iter.hasNext()) {
                 final ColoredChit chit = iter.next();
                 if (chit.getDescription().equals("BONES")) {
-                    tile.getClearings()[tile.getClearings().length - 1].addEntity(new Ghost());
-                    tile.getClearings()[tile.getClearings().length - 1].addEntity(new Ghost());
+                    final Clearing startForGhosts = tile.getClearings()[tile.getClearings().length - 1];
+                    final Ghost ghost1 = new Ghost();
+                    ghost1.setStartingClearing(startForGhosts);
+                    final Ghost ghost2 = new Ghost();
+                    ghost2.setStartingClearing(startForGhosts);
+                    startForGhosts.addEntity(ghost1);
+                    startForGhosts.addEntity(ghost2);
                 } else if (chit.getDescription().equals("DANK")) {
                      tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.CHAPEL);
                 } else if (chit.getDescription().equals("RUINS")) {

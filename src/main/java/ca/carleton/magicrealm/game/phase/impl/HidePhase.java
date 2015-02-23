@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.game.phase.PhaseType;
 public class HidePhase extends AbstractPhase {
 
     public int getRollResult() {
-        return DiceRoller.rollOnce();
+        return DiceRoller.rollTwiceTakeHigher();
     }
 
     @Override
