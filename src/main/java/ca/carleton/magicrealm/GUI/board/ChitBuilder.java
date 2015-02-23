@@ -56,6 +56,7 @@ public class ChitBuilder {
         buildLostCityAndCastle();
 
         LOG.info("Starting chit placement.");
+        LOG.info("Starting warning chit placement.");
 
         // Step 1. Place warning chits of the correct type on the correct tile types [20 total].
         for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
@@ -71,11 +72,16 @@ public class ChitBuilder {
             tile.addChit(woodsWarningChits.remove(random.nextInt(woodsWarningChits.size())));
         }
 
+        LOG.info("Starting lost city/castle + 8 treasure/sound chit placement.");
+
         // Step 2. Place lost city and lost castle, as well as 4 site/sound chits [8 total + (2 * 5) = 18 total]
         // Lost city + 4 goes in caves. Lost castle + 4 goes in mountain.
         final List<ColoredChit> remainingChits = new ArrayList<ColoredChit>();
         remainingChits.addAll(treasureChits);
+        treasureChits.clear();
         remainingChits.addAll(soundChits);
+        soundChits.clear();
+        Collections.shuffle(remainingChits);
 
         final List<ColoredChit> cavesChits = new ArrayList<ColoredChit>();
         cavesChits.addAll(remainingChits.subList(0, 4));
