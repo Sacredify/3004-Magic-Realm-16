@@ -132,8 +132,19 @@ public class BoardServices {
 
             if (firstDraw) {
                 for (Clearing clearing : tile.getClearings()) {
-                    clearing.setScaledXRegular(clearing.getX());
-                    clearing.setScaledYRegular(clearing.getY());
+                    if (tile.getAngle() == 180) {
+                        double[] point = new double[2];
+                        point[0] = clearing.getX();
+                        point[1] = clearing.getY();
+                        rotatePoint(point, tile.getAngle());
+
+                        clearing.setScaledXRegular((int) Math.round(point[0]));
+                        clearing.setScaledYRegular((int) Math.round(point[1]));
+                    }
+                    else {
+                        clearing.setScaledXRegular(clearing.getX());
+                        clearing.setScaledYRegular(clearing.getY());
+                    }
                 }
             }
         }

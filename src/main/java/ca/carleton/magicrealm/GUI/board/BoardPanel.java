@@ -26,8 +26,10 @@ public class BoardPanel extends JLayeredPane {
     final static public int TILE_X_OFFSET = 150;
     final static public int TILE_DELTA_X = 300;
     final static public int TILE_DELTA_Y = 85;
-    public static final int CHIT_WIDTH = 40;
-    public static final int CHIT_HEIGHT = 35;
+    public static final int CHIT_WIDTH = 44;
+    public static final int CHIT_HEIGHT = 44;
+    public static final int CHARACTER_ICON_WIDTH = 88;
+    public static final int CHARACTER_ICON_HEIGHT = 88;
 
     private BoardServices boardServices;
 
@@ -119,8 +121,8 @@ public class BoardPanel extends JLayeredPane {
         for (Player player : otherPlayers) {
             JLabel newCharacterIcon = new JLabel();
             newCharacterIcon.setSize(CHIT_WIDTH, CHIT_HEIGHT);
-            newCharacterIcon.setLocation(player.getCurrentClearing().getX(),
-                    player.getCurrentClearing().getY());
+            newCharacterIcon.setLocation(player.getCurrentClearing().getX() - CHIT_WIDTH/2,
+                    player.getCurrentClearing().getY() - CHIT_HEIGHT/2);
 
 
             ImageIcon newIcon = this.boardServices.createImageIcon(player.getCharacter().getEntityInformation().getPath());
@@ -136,8 +138,8 @@ public class BoardPanel extends JLayeredPane {
 
     public void updateCharacterIcons(final ArrayList<Player> otherPlayers) {
         for (int i = 0; i < otherPlayers.size(); i++) {
-            this.characterIcons.get(i).setLocation(otherPlayers.get(i).getCurrentClearing().getX(),
-                    otherPlayers.get(i).getCurrentClearing().getY());
+            this.characterIcons.get(i).setLocation(otherPlayers.get(i).getCurrentClearing().getX() - CHIT_WIDTH/2,
+                    otherPlayers.get(i).getCurrentClearing().getY() - CHIT_HEIGHT/2);
         }
     }
 
