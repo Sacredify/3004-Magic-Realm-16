@@ -13,13 +13,28 @@ import java.util.ArrayList;
 
 public class AppServer implements Runnable {
 
-    int clientCount = 0;
+    private static final Logger LOG = LoggerFactory.getLogger(AppServer.class);
+
+    public static final int MAX_ROUNDS = 28;
+
     public static final int MAX_PLAYERS = 1;
+
+    private int clientCount = 0;
+
     private Thread thread = null;
+
     private ServerSocket server = null;
+
     private ArrayList<ServerThread> clients = null;
+
     private TurnController turnController = null;
+
     private BoardGUIModel boardModel;
+
+    /**
+     * The number of days passed in the game. 28 is the max.
+     */
+    private int daysPassed = 0;
 
     public AppServer(int port) {
         try {
@@ -31,8 +46,7 @@ public class AppServer implements Runnable {
 
             this.start();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Exception during server initialization.", e);
         }
     }
 
@@ -52,23 +66,6 @@ public class AppServer implements Runnable {
         this.broadcastMessage(0, m);
     }
 
-    //Begins a new round of turns(DAYLIGHT)
-    public void beginPhase() {
-        this.turnController.createNewTurnOrder(this.clients);
-        this.alertPlayerNextTurn();
-    }
-
-    //This function is called every time a Message.TURN_FINISHED is recieved
-    //STILL NEED TO IMPLEMENT SWORDSMAN FUNCTIONALITY
-    public void alertPlayerNextTurn() {
-        int nextID;
-        ServerThread nextClient;
-        nextID = this.turnController.getNextPlayer();
-        this.broadcastMessage(nextID, "TURN_PLAYER:" + nextID);
-        nextClient = this.getClientWithID(nextID);
-        nextClient.send(Message.TURN_ALERT);
-    }
-
     public void start() {
         if (this.thread == null) {
             this.thread = new Thread(this);
@@ -79,13 +76,11 @@ public class AppServer implements Runnable {
     //Handles input from the server threads
     public synchronized void handle(int ID, Object obj) {
         if (obj instanceof Message) {
-            System.out.println("AppServer:This is a Message Object");
             Message m = (Message) obj;
-            System.out.println("This is a :" + m.messageType + " message");
+            LOG.info("Received a {} message from ID {}.", m.getMessageType(), ID);
             this.handleMessage(m, ID, obj);
         } else if (obj instanceof String) {
-            System.out.println("This is a string");
-            System.out.println("Message String Contents: " + obj);
+            LOG.info("Receive a string - {}.", obj);
         }
     }
 
@@ -150,56 +145,52 @@ public class AppServer implements Runnable {
 
 
     private ServerThread getClientWithID(int ID) {
-
-        for (int i = 0; i < this.clients.size(); i++) {
-            if (ID == this.clients.get(i).getID()) {
-                return this.clients.get(i);
+        for (ServerThread client : this.clients) {
+            if (ID == client.getID()) {
+                return client;
             }
         }
-
         return null;
     }
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         try {
             while (true) {
-                //Accept client socket
-                Socket clientSocket = this.server.accept();
                 //If there is room in the game add client socket to the list of clients
-                if (this.clientCount < this.MAX_PLAYERS) {
+                if (this.clientCount < MAX_PLAYERS) {
+                    Socket clientSocket = this.server.accept();
                     this.clients.add(new ServerThread(this, clientSocket));
                     this.clients.get(this.clientCount).open();
                     this.clients.get(this.clientCount).start();
                     this.clientCount++;
+                    this.server.close();
                 }
 
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Exception during server accept process.", e);
         }
     }
 
-
-    //Broadcasts a message to all of the clients that did not send it
+    /**
+     * Broad a message to other clients on behalf of the given ID. The ID does not receieve this message.
+     *
+     * @param ID      the id of the sender (0 is server)..
+     * @param message the message to send.
+     */
     public void broadcastMessage(int ID, Object message) {
         Message m = (Message) message;
-        System.out.println("This is the message being broad-casted: " + m.getMessageType());
-        for (int i = 0; i < this.clients.size(); i++) {
-            if (this.clients.get(i).getID() != ID)
-                this.clients.get(i).send(message);
-
+        LOG.info("Broadcasting message {} to connected clients from ID {}.", m.getMessageType(), ID);
+        for (ServerThread client : this.clients) {
+            if (client.getID() != ID)
+                client.send(message);
         }
-
     }
 
-
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
-        AppServer srvr = new AppServer(Config.DEFAULT_HOST_PORT);
-        srvr.start();
+        AppServer server = new AppServer(Config.DEFAULT_HOST_PORT);
+        server.start();
     }
 
 }
