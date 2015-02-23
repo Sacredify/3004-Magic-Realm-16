@@ -118,8 +118,6 @@ public class AppServer implements Runnable {
                     Message msg = new Message(0,Message.DAYLIGHT_START, this.boardModel);
                    // nextClient.send(msg);
                     this.turnController.incrementTurnCount();
-                    */
-                    this.broadcastMessage(0, new Message(0, Message.SUNSET_START, this.boardModel));
 
                 } else {
                     // Send the next client to go that it is their turn to go.
