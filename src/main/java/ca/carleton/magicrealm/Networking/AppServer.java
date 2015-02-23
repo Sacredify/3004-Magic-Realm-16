@@ -3,6 +3,8 @@ package ca.carleton.magicrealm.Networking;
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.game.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 public class AppServer implements Runnable {
 
     int clientCount = 0;
-    public static final int MAX_PLAYERS = 1;
+    public static final int MAX_PLAYERS = 2;
     int gameCount = 0;
     private Thread thread = null;
     private ServerSocket server = null;
@@ -104,43 +106,46 @@ public class AppServer implements Runnable {
             case (Message.BIRDSONG_DONE):
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     this.turnController.createNewTurnOrder(this.clients);
-                        int nextID = this.turnController.getNextPlayer();
-                        ServerThread nextClient = this.getClientWithID(nextID);
-                        Message msg = new Message(0,Message.DAYLIGHT_START, this.boardModel);
-                        nextClient.send(msg);
-                    this.turnController.incrementTurnCount();
-                }
-                break;
-            case(Message.DAYLIGHT_DONE):
-                this.boardModel = (BoardGUIModel)m.getMessageObject();
-                if(this.turnController.incrementTurnCount() == MAX_PLAYERS){
-                    this.turnController.createNewTurn();
-                    int nextID = this.turnController.getNextPlayer();
-                    ServerThread nextClient = this.getClientWithID(nextID);
-                    Message msg = new Message(0,Message.SUNSET_START, this.boardModel);
-                    nextClient.send(msg);
-                    this.turnController.incrementTurnCount();
-
-                }
-                else {
                     int nextID = this.turnController.getNextPlayer();
                     ServerThread nextClient = this.getClientWithID(nextID);
                     Message msg = new Message(0, Message.DAYLIGHT_START, this.boardModel);
                     nextClient.send(msg);
                 }
                 break;
-            case(Message.MOVE):
-                this.handleMoveMessage(m,ID);
+            case (Message.DAYLIGHT_DONE):
+                this.boardModel = (BoardGUIModel) m.getMessageObject();
+                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                    /*  For testing, and for now. Is sunset for all players simultaneously? Idk.
+
+                    this.turnController.createNewTurn();
+                    int nextID = this.turnController.getNextPlayer();
+                    ServerThread nextClient = this.getClientWithID(nextID);
+                    Message msg = new Message(0, Message.SUNSET_START, this.boardModel);
+                    nextClient.send(msg);
+                    this.turnController.incrementTurnCount();
+                    */
+                    this.broadcastMessage(0, new Message(0, Message.SUNSET_START, this.boardModel));
+
+                } else {
+                    // Send the next client to go that it is their turn to go.
+                    int nextID = this.turnController.getNextPlayer();
+                    ServerThread nextClient = this.getClientWithID(nextID);
+                    Message msg = new Message(0, Message.DAYLIGHT_START, this.boardModel);
+                    nextClient.send(msg);
+                }
+                break;
+            case (Message.MOVE):
+                this.handleMoveMessage(m, ID);
                 break;
             default:
-               // this.broadcastMessage(ID, obj);
+                // this.broadcastMessage(ID, obj);
                 break;
         }
     }
 
 
-    public void handleMoveMessage(Message m,int ID){
-        this.boardModel = (BoardGUIModel)m.getMessageObject();
+    public void handleMoveMessage(Message m, int ID) {
+        this.boardModel = (BoardGUIModel) m.getMessageObject();
         this.broadcastMessage(ID, this.boardModel);
     }
 
