@@ -3,7 +3,6 @@ package ca.carleton.magicrealm.entity.natives;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.item.weapon.GreatAxe;
 import ca.carleton.magicrealm.item.weapon.Spear;
 
 /**
@@ -23,8 +22,8 @@ public class Pikeman extends AbstractNative {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        player.getVictoryCondition().addGold(2);
-        player.getVictoryCondition().addNotoriety(3);
+        player.getCharacter().addGold(2);
+        player.getCharacter().addNotoriety(3);
     }
 
     @Override

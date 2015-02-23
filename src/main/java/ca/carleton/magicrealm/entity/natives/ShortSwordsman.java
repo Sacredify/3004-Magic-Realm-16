@@ -22,8 +22,8 @@ public class ShortSwordsman extends AbstractNative {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        player.getVictoryCondition().addGold(2);
-        player.getVictoryCondition().addNotoriety(3);
+        player.getCharacter().addGold(2);
+        player.getCharacter().addNotoriety(3);
     }
 
     @Override

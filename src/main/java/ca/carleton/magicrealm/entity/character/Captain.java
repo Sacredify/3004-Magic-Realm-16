@@ -24,6 +24,8 @@ public class Captain extends AbstractCharacter {
         this.addItem(new BreastPlate());
         this.addItem(new Shield());
 
+        this.addGold(10);
+
         this.addRelationship(NativeFaction.PATROL, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.SOLDIERS, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.GUARD, Relationship.FRIENDLY);

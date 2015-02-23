@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class BoardWindow extends JFrame {
 
     final static public String WINDOW_NAME = "Board";
-    final static public int WINDOW_HEIGHT = 1200;
+    final static public int WINDOW_HEIGHT = 1000;
     final static public int WINDOW_WIDTH = 1000;
 
     private BoardPanel boardPanel;

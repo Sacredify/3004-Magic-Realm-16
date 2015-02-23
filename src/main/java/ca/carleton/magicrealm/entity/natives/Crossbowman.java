@@ -4,7 +4,6 @@ import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.item.weapon.Crossbow;
-import ca.carleton.magicrealm.item.weapon.Spear;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,8 +22,8 @@ public class Crossbowman extends AbstractNative {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        player.getVictoryCondition().addGold(2);
-        player.getVictoryCondition().addNotoriety(4);
+        player.getCharacter().addGold(2);
+        player.getCharacter().addNotoriety(4);
     }
 
     @Override

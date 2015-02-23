@@ -22,6 +22,8 @@ public class BlackKnight extends AbstractCharacter {
         this.addItem(new SuitOfArmor());
         this.addItem(new Shield());
 
+        this.addGold(10);
+
         this.addRelationship(NativeFaction.COMPANY, Relationship.ALLY);
         this.addRelationship(NativeFaction.SOLDIERS, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.LANCERS, Relationship.UNFRIENDLY);

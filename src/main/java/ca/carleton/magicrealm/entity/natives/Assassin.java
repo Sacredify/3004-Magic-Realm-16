@@ -22,8 +22,8 @@ public class Assassin extends AbstractNative {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        player.getVictoryCondition().addGold(1);
-        player.getVictoryCondition().addNotoriety(2);
+        player.getCharacter().addGold(1);
+        player.getCharacter().addNotoriety(2);
     }
 
     @Override

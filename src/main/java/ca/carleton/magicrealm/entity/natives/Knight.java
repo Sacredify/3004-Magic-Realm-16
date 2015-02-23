@@ -22,8 +22,8 @@ public class Knight extends AbstractNative {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        player.getVictoryCondition().addGold(8);
-        player.getVictoryCondition().addNotoriety(12);
+        player.getCharacter().addGold(8);
+        player.getCharacter().addNotoriety(12);
     }
 
     @Override
