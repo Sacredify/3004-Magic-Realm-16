@@ -107,8 +107,7 @@ public class BoardPanel extends JLayeredPane {
             y++;
         }
 
-        // I don't think we need this here.
-        // this.setupCharacterIcons(boardGUIModel.getPlayers());
+        this.setupCharacterIcons(boardGUIModel.getPlayers());
         this.firstDraw = false;
     }
 
@@ -122,6 +121,7 @@ public class BoardPanel extends JLayeredPane {
         for (Player player : otherPlayers) {
             JLabel newCharacterIcon = new JLabel();
             newCharacterIcon.setSize(CHIT_WIDTH, CHIT_HEIGHT);
+
             newCharacterIcon.setLocation(player.getCurrentClearing().getX() - CHIT_WIDTH/2,
                     player.getCurrentClearing().getY() - CHIT_HEIGHT/2);
 

@@ -34,7 +34,7 @@ public class AppServer implements Runnable {
     /**
      * The number of days passed in the game. 28 is the max.
      */
-    private int currentDay = 0;
+    private int currentDay = 1;
 
     public AppServer(int port) {
         try {
@@ -118,7 +118,9 @@ public class AppServer implements Runnable {
                     nextClient.send(msg);
                     this.turnController.incrementTurnCount();
                     */
-                    this.broadcastMessage(0, new Message(0, Message.SUNSET_START, this.boardModel));
+                    //TODO Temporary loop to see if we can get it to keep moving.
+                    this.currentDay++;
+                    this.broadcastMessage(0, new Message(0, Message.BIRDSONG_START, this.boardModel));
 
                 } else {
                     // Send the next client to go that it is their turn to go.

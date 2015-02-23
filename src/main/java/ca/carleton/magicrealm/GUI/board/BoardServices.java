@@ -60,10 +60,6 @@ public class BoardServices {
                 newChit = new JLabel();
                 newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
                 newIcon = this.createImageIcon(clearing.getDwelling().getPath());
-            } else if (!clearing.getEntities().isEmpty()) {
-                newChit = new JLabel();
-                newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
-                newIcon = this.createImageIcon(clearing.getEntities().get(0).getEntityInformation().getPath());
             }
             if (newChit != null && newIcon != null) {
                 BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
