@@ -2,8 +2,6 @@ package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.BountyCarrier;
 import ca.carleton.magicrealm.entity.Entity;
-import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 /**
@@ -20,6 +18,8 @@ public abstract class AbstractNative extends Entity implements BountyCarrier {
     protected int basicGoldWage;
 
     protected AbstractWeapon weapon;
+
+    protected boolean leader = false;
 
     /**
      * The faction this native belongs to.
@@ -46,6 +46,22 @@ public abstract class AbstractNative extends Entity implements BountyCarrier {
      */
     public AbstractWeapon getWeapon() {
         return this.weapon;
+    }
+
+    /**
+     * Mark the native as the leader.
+     */
+    public void markLeader() {
+        this.leader = true;
+    }
+
+    /**
+     * Determine if the native is a leader.
+     *
+     * @return true if yes.
+     */
+    public boolean isLeader() {
+        return this.leader;
     }
 
 }
