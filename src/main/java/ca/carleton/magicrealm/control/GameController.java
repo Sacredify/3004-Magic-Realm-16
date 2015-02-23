@@ -111,7 +111,7 @@ public class GameController {
     @Deprecated
     public void handleMove(final BoardGUIModel newBoardModel) {
         this.boardModel = newBoardModel;
-        this.boardWindow.refresh(this.boardModel);
+        this.boardWindow.refresh(this.boardModel, this.currentPlayer.getCharacter());
     }
 
     /**
@@ -221,19 +221,19 @@ public class GameController {
     }
 
     public void refreshBoard() {
-        this.boardWindow.refresh(this.boardModel);
+        this.boardWindow.refresh(this.boardModel, this.currentPlayer.getCharacter());
         this.boardWindow.setGameInfoText(createGameInfoString());
         LOG.info("Board refreshed.");
     }
 
     private String createGameInfoString() {
         String gameInfoText = new String();
-        gameInfoText = gameInfoText.concat("Character: "+ currentPlayer.getCharacter().toString() + '\n' +
-                                           "Current gold: " + currentPlayer.getVictoryCondition().getGold() + '\n' +
-                                           "Current notoriety: " + currentPlayer.getVictoryCondition().getNotoriety() + '\n' +
-                                           "Current fame: " + currentPlayer.getVictoryCondition().getFame() + '\n' +
-                                           "Current spell count: " + currentPlayer.getVictoryCondition().getSpellsCount() + '\n' +
-                                           "Current great treasures count: " + currentPlayer.getVictoryCondition().getGreatTreasuresCount() + '\n');
+        gameInfoText = gameInfoText.concat("<html>Character: "+ currentPlayer.getCharacter().toString() + "<br>" +
+                                           "Current gold: " + currentPlayer.getVictoryCondition().getGold() + "<br>" +
+                                           "Current notoriety: " + currentPlayer.getVictoryCondition().getNotoriety() + "<br>" +
+                                           "Current fame: " + currentPlayer.getVictoryCondition().getFame() + "<br>" +
+                                           "Current spell count: " + currentPlayer.getVictoryCondition().getSpellsCount() + "<br>" +
+                                           "Current great treasures count: " + currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br>" +"</html>");
 
         return gameInfoText;
     }

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.board;
 
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
 
@@ -37,9 +38,9 @@ public class BoardWindow extends JFrame {
         this.setVisible(true);
     }
 
-    public void refresh(final BoardGUIModel model) {
+    public void refresh(final BoardGUIModel model, AbstractCharacter character) {
         this.boardModel = model;
-        this.boardPanel.drawBoard( this.boardModel);
+        this.boardPanel.drawBoard( this.boardModel, character);
         this.add(this.boardPanel);
     }
 

@@ -1,13 +1,17 @@
 package ca.carleton.magicrealm.GUI.board;
 
+import ca.carleton.magicrealm.GUI.board.characterinfo.CharacterInfoDialog;
 import ca.carleton.magicrealm.GUI.infodialog.InfoDialog;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -32,6 +36,8 @@ public class BoardPanel extends JLayeredPane {
     public static final int GAME_INFO_PANEL_WIDTH = 300;
     public static final int GAME_INFO_PANEL_HEIGHT = 500;
 
+    public static final String CHARACTER_INFO_BUTTON_TEXT = "Character Info";
+
     private BoardServices boardServices;
 
     private ArrayList<JLabel> characterIcons;
@@ -45,6 +51,8 @@ public class BoardPanel extends JLayeredPane {
     private boolean firstDraw;
 
     private int maximumX;
+
+    private JButton displayCharacterInformationButton;
 
     public BoardPanel() {
         firstDraw = true;
@@ -62,7 +70,7 @@ public class BoardPanel extends JLayeredPane {
      *
      * @param boardGUIModel board to draw
      */
-    public void drawBoard(BoardGUIModel boardGUIModel) {
+    public void drawBoard(BoardGUIModel boardGUIModel, AbstractCharacter character) {
         this.removeAll();
         maximumX = 0;
 
@@ -121,12 +129,26 @@ public class BoardPanel extends JLayeredPane {
 
         this.setupCharacterIcons(boardGUIModel.getPlayers());
         this.setupGameInfoLabel();
+        this.setupCharacterInfoButton(character);
         this.firstDraw = false;
     }
 
     public void iconClickedEvent(MouseEvent e, AbstractTile tile) {
         System.out.println("clicked: x - " + e.getLocationOnScreen().getX() + " y - " + e.getLocationOnScreen().getY());
         new InfoDialog(tile).displayWindow();
+    }
+
+    public void setupCharacterInfoButton(AbstractCharacter character) {
+        this.displayCharacterInformationButton = new JButton(CHARACTER_INFO_BUTTON_TEXT);
+        this.displayCharacterInformationButton.setSize(50,30);
+        this.displayCharacterInformationButton.setLocation(maximumX, -100);
+        this.displayCharacterInformationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new CharacterInfoDialog(character);
+            }
+        });
+        this.add(displayCharacterInformationButton);
     }
 
     /**

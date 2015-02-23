@@ -1,0 +1,59 @@
+package ca.carleton.magicrealm.GUI.board.characterinfo;
+
+import ca.carleton.magicrealm.GUI.board.BoardPanel;
+import ca.carleton.magicrealm.GUI.board.BoardServices;
+import ca.carleton.magicrealm.entity.EntityInformation;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+
+import javax.swing.*;
+
+/**
+ * Created by Tony on 23/02/2015.
+ */
+public class CharacterInfoDialog extends JDialog {
+    public static int CHARACTER_INFO_DIALOG_WIDTH = 760;
+    public static int CHARACTER_INFO_DIALOG_HEIGHT = 600;
+
+    public static String AMAZON_DETAIL_PATH = "image/characterdetail/amazon.jpg";
+    public static String BLACK_KNIGHT_DETAIL_PATH = "image/characterdetail/black_knight.jpg";
+    public static String CAPTAIN_DETAIL_PATH = "image/characterdetail/captain.jpg";
+    public static String DWARF_DETAIL_PATH = "image/characterdetail/dwarf.jpg";
+    public static String ELF_DETAIL_PATH = "image/characterdetail/elf.jpg";
+    public static String SWORDSMAN_DETAIL_PATH = "image/characterdetail/swordsman.jpg";
+
+    BoardServices boardServices = new BoardServices();
+
+    JLabel characterInfoLabel;
+
+    public CharacterInfoDialog(final AbstractCharacter character) {
+        this.setTitle(BoardPanel.CHARACTER_INFO_BUTTON_TEXT);
+
+        this.setSize(CHARACTER_INFO_DIALOG_WIDTH, CHARACTER_INFO_DIALOG_HEIGHT);
+
+        this.characterInfoLabel = new JLabel();
+        this.characterInfoLabel.setSize(CHARACTER_INFO_DIALOG_WIDTH, CHARACTER_INFO_DIALOG_HEIGHT);
+        ImageIcon imageIcon = new ImageIcon();
+
+        if (character.getEntityInformation() == EntityInformation.CHARACTER_AMAZON) {
+            this.boardServices.createImageIcon(AMAZON_DETAIL_PATH);
+        }
+        else if (character.getEntityInformation() == EntityInformation.CHARACTER_BLACK_KNIGHT) {
+            this.boardServices.createImageIcon(BLACK_KNIGHT_DETAIL_PATH);
+        }
+        else if (character.getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN) {
+            this.boardServices.createImageIcon(CAPTAIN_DETAIL_PATH);
+        }
+        else if (character.getEntityInformation() == EntityInformation.CHARACTER_DWARF) {
+            this.boardServices.createImageIcon(DWARF_DETAIL_PATH);
+        }
+        else if (character.getEntityInformation() == EntityInformation.CHARACTER_ELF) {
+            this.boardServices.createImageIcon(ELF_DETAIL_PATH);
+        }
+        else if (character.getEntityInformation() == EntityInformation.CHARACTER_SWORDSMAN) {
+            this.boardServices.createImageIcon(SWORDSMAN_DETAIL_PATH);
+        }
+        this.characterInfoLabel.setIcon(imageIcon);
+        this.add(characterInfoLabel);
+        this.setVisible(true);
+    }
+}
