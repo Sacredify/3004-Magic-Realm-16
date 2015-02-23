@@ -84,24 +84,6 @@ public class BoardPanel extends JLayeredPane {
                         clearing.setY(clearingNewY);
                     }
 
-                    /** create the labels for each clearing **/
-                    for (final Clearing clearing : tile.getClearings()) {
-                        ClearingLabel clearingLabel = new ClearingLabel();
-                        clearingLabel.clearing = clearing;
-                        clearingLabel.setSize(new Dimension(30, 30));
-                        clearingLabel.setLocation(clearing.getX(), clearing.getY());
-                        clearingLabel.setEnabled(true);
-
-                        clearingLabel.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mouseClicked(final MouseEvent e) {
-                                System.out.println("Clicked + " + ((ClearingLabel) e.getSource()).clearing);
-                            }
-                        });
-
-                        this.add(clearingLabel, JLayeredPane.PALETTE_LAYER);
-                    }
-
                     /** create the chits **/
                     ArrayList<JLabel> newChits = this.boardServices.createChitIconsForTile(tile);
                     for (int i = 0; i < newChits.size(); i++) {
