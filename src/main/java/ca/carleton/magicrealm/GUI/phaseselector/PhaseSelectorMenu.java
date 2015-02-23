@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
-import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.MoveSelectionMenu;
 import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
@@ -31,7 +31,8 @@ public class PhaseSelectorMenu extends JDialog {
         this.setTitle(PHASE_SELECTOR_WINDOW);
 
         this.phaseSelectorPanel = new PhaseSelectorPanel();
-        this.phaseSelectorPanel.getFirstPhaseBox().addActionListener(createActionListenerForPhaseSelectList());
+        this.phaseSelectorPanel.getConfirmButton().addActionListener(this.createActionListenerForPhaseSelectButton());
+        this.phaseSelectorPanel.getDoneEnteringPhasesButton().addActionListener(this.createActionListenerForDoneButton());
 
         this.phaseSelectorModel = new PhaseSelectorModel(this, phases);
         this.controller = gameController;
@@ -51,35 +52,35 @@ public class PhaseSelectorMenu extends JDialog {
         this.controller.doneEnteringPhasesForDay();
     }
 
-    public PhaseSelectorPanel getPhaseSelectorPanel() {
-        return this.phaseSelectorPanel;
-    }
-
-    public void setPhaseSelectorPanel(PhaseSelectorPanel phaseSelectorPanel) {
-        this.phaseSelectorPanel = phaseSelectorPanel;
-    }
-
-    public ActionListener createActionListenerForPhaseSelectList() {
+    public ActionListener createActionListenerForPhaseSelectButton() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JComboBox comboBox = (JComboBox)e.getSource();
-                PhaseType selectedPhase = (PhaseType)comboBox.getSelectedItem();
+                JButton comboBox = (JButton) e.getSource();
+                PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
                 if (selectedPhase.equals(PhaseType.MOVE)) {
-                    moveSelectionMenu = new MoveSelectionMenu(controller.getCurrentPlayer().getCurrentClearing());
-                    moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(createActionListenerForMoveSelectList());
+                    PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getCurrentPlayer().getCurrentClearing());
+                    PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForMoveSelectButton());
                 }
             }
         };
     }
 
-    public ActionListener createActionListenerForMoveSelectList() {
+    public ActionListener createActionListenerForMoveSelectButton() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                phaseSelectorModel.addMovementPhase(moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue());
-                moveSelectionMenu.dispose();
-                controller.refreshBoard();
+                PhaseSelectorMenu.this.phaseSelectorModel.addMovementPhase(PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue());
+                PhaseSelectorMenu.this.moveSelectionMenu.dispose();
+            }
+        };
+    }
+
+    public ActionListener createActionListenerForDoneButton() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                PhaseSelectorMenu.this.phaseSelectorModel.done();
             }
         };
     }
