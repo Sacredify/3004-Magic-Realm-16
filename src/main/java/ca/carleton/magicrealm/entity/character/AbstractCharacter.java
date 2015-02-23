@@ -17,6 +17,16 @@ import java.util.Map;
  */
 public abstract class AbstractCharacter extends Entity implements Serializable {
 
+    private int currentGold;
+
+    private int currentNotoriety;
+
+    private int currentFame;
+
+    private int currentSpellsCount;
+
+    private int currentGreatTreasuresCount;
+
     /**
      * All characters start hidden.
      */ {
@@ -42,4 +52,43 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
         this.relationships.putIfAbsent(entity, relationship);
     }
 
+    public int getCurrentGreatTreasuresCount() {
+        return currentGreatTreasuresCount;
+    }
+
+    public void setCurrentGreatTreasuresCount(int currentGreatTreasuresCount) {
+        this.currentGreatTreasuresCount = currentGreatTreasuresCount;
+    }
+
+    public int getCurrentGold() {
+        return currentGold;
+    }
+
+    public void setCurrentGold(int currentGold) {
+        this.currentGold = currentGold;
+    }
+
+    public int getCurrentNotoriety() {
+        return currentNotoriety;
+    }
+
+    public void setCurrentNotoriety(int currentNotoriety) {
+        this.currentNotoriety = currentNotoriety;
+    }
+
+    public int getCurrentFame() {
+        return currentFame;
+    }
+
+    public void setCurrentFame(int currentFame) {
+        this.currentFame = currentFame;
+    }
+
+    public int getCurrentSpellsCount() {
+        return currentSpellsCount;
+    }
+
+    public void setCurrentSpellsCount(int currentSpellsCount) {
+        this.currentSpellsCount = currentSpellsCount;
+    }
 }

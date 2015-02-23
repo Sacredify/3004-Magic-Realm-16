@@ -225,6 +225,14 @@ public class GameController {
         LOG.info("Board refreshed.");
     }
 
+    private String createGameInfoString() {
+        String gameInfoText = new String();
+        gameInfoText = gameInfoText.concat("Character: "+ currentPlayer.getCharacter().toString() + '\n');
+
+
+        return gameInfoText;
+    }
+
     public void setBoardModel(BoardGUIModel model) {
         this.boardModel = model;
     }
