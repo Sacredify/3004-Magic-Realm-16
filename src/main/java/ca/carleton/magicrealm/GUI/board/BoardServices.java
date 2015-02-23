@@ -38,12 +38,12 @@ public class BoardServices {
         }
     }
 
-    public JLabel createTileIcon(AbstractTile tile) {
+    public JLabel createTileIcon(AbstractTile tile, final boolean firstDraw) {
         JLabel newTile = new JLabel();
         newTile.setSize(TILE_WIDTH, TILE_HEIGHT);
         ImageIcon newIcon = this.createImageIcon(tile.getTileInformation().getPath());
         BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
-        newImage = this.applyTransformations(newImage, newTile, tile);
+        newImage = this.applyTransformations(newImage, newTile, tile, firstDraw);
 
         newIcon.setImage(newImage);
         newTile.setIcon(newIcon);
@@ -109,28 +109,32 @@ public class BoardServices {
         return bi;
     }
 
-    public BufferedImage applyTransformations(BufferedImage bufferedImage, JLabel label, AbstractTile tile) {
+    public BufferedImage applyTransformations(BufferedImage bufferedImage, JLabel label, AbstractTile tile, final Boolean firstDraw) {
         bufferedImage = rotateBufferedImage(bufferedImage, tile.getAngle());
         if (tile.getAngle() % 180 != 0) {
             bufferedImage = resize(bufferedImage, RESIZE_TILE_WIDTH, RESIZE_TILE_HEIGHT);
             label.setSize(RESIZE_TILE_WIDTH, RESIZE_TILE_HEIGHT);
-            for (Clearing clearing: tile.getClearings()) {
-                double[] point = new double[2];
-                point[0] = clearing.getX();
-                point[1] = clearing.getY();
-                rotatePoint(point, tile.getAngle());
+            if (firstDraw) {
+                for (Clearing clearing : tile.getClearings()) {
+                    double[] point = new double[2];
+                    point[0] = clearing.getX();
+                    point[1] = clearing.getY();
+                    rotatePoint(point, tile.getAngle());
 
-                clearing.setScaledXAngled((int)Math.round(point[0]));
-                clearing.setScaledYAngled((int)Math.round(point[1]));
+                    clearing.setScaledXAngled((int) Math.round(point[0]));
+                    clearing.setScaledYAngled((int) Math.round(point[1]));
+                }
             }
         }
         else {
             bufferedImage = resize(bufferedImage, TILE_WIDTH, TILE_HEIGHT);
             label.setSize(TILE_WIDTH, TILE_HEIGHT);
 
-            for (Clearing clearing : tile.getClearings()) {
-                clearing.setScaledXRegular(clearing.getX());
-                clearing.setScaledYRegular(clearing.getY());
+            if (firstDraw) {
+                for (Clearing clearing : tile.getClearings()) {
+                    clearing.setScaledXRegular(clearing.getX());
+                    clearing.setScaledYRegular(clearing.getY());
+                }
             }
         }
         return bufferedImage;

@@ -35,7 +35,10 @@ public class BoardPanel extends JLayeredPane {
 
     private JLabel statusLabel;
 
+    private boolean firstDraw;
+
     public BoardPanel() {
+        firstDraw = true;
         this.boardServices = new BoardServices();
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -59,7 +62,7 @@ public class BoardPanel extends JLayeredPane {
             for (final AbstractTile tile : row) {
                 if (tile != null) {
                     /** create the tile **/
-                    JLabel newTile = this.boardServices.createTileIcon(tile);
+                    JLabel newTile = this.boardServices.createTileIcon(tile, firstDraw);
                     int tileX = x * TILE_DELTA_X;
                     int tileY = y * TILE_DELTA_Y;
                     if (y % 2 == 0) {
@@ -76,12 +79,14 @@ public class BoardPanel extends JLayeredPane {
                     });
                     this.add(newTile, JLayeredPane.DEFAULT_LAYER);
 
-                    /** set the x and y locations relative to the board for each clearing (overwrites its current value) **/
-                    for (final Clearing clearing : tile.getClearings()) {
-                        int clearingNewX = tileX + clearing.getX() - CHIT_WIDTH / 2;
-                        int clearingNewY = tileY + clearing.getY() - CHIT_HEIGHT / 2;
-                        clearing.setX(clearingNewX);
-                        clearing.setY(clearingNewY);
+                    if (firstDraw) {
+                        /** set the x and y locations relative to the board for each clearing (overwrites its current value) **/
+                        for (final Clearing clearing : tile.getClearings()) {
+                            int clearingNewX = tileX + clearing.getX() - CHIT_WIDTH / 2;
+                            int clearingNewY = tileY + clearing.getY() - CHIT_HEIGHT / 2;
+                            clearing.setX(clearingNewX);
+                            clearing.setY(clearingNewY);
+                        }
                     }
 
                     /** create the chits **/
@@ -101,7 +106,7 @@ public class BoardPanel extends JLayeredPane {
         }
 
         this.setupCharacterIcons(boardGUIModel.getPlayers());
-
+        firstDraw = false;
     }
 
     public void iconClickedEvent(MouseEvent e, AbstractTile tile) {
