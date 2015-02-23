@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.Networking;
 
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
+import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.game.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class AppServer implements Runnable {
     private void buildMap() {
         this.boardModel = new BoardGUIModel();
         ChitBuilder.placeChits(this.boardModel);
+        EntityBuilder.placeEntities(this.boardModel);
     }
 
     /**
