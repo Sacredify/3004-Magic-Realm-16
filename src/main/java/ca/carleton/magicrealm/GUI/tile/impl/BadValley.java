@@ -18,16 +18,19 @@ public class BadValley extends AbstractTile {
 
         this.clearings[0].setX(282);
         this.clearings[0].setY(363);
+        this.clearings[0].setName("1");
 
         this.clearings[1].setX(135);
         this.clearings[1].setY(283);
+        this.clearings[1].setName("2");
 
         this.clearings[2].setX(181);
         this.clearings[2].setY(104);
+        this.clearings[2].setName("4");
 
         this.clearings[3].setX(360);
         this.clearings[3].setY(152);
-       // this.clearings[3].setDwelling(Dwelling.INN);
+        this.clearings[3].setName("5");
     }
 
     @Override

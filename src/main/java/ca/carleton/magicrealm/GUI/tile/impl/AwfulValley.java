@@ -16,18 +16,21 @@ public class AwfulValley extends AbstractTile {
     public AwfulValley() {
         this.clearings = Clearing.initializeClearingsArray(4,this);
 
-        this.clearings[0].setX(138);
-        this.clearings[0].setY(156);
+        this.clearings[0].setX(129);
+        this.clearings[0].setY(153);
+        this.clearings[0].setName("1");
 
-        this.clearings[1].setX(135);
-        this.clearings[1].setY(281);
+        this.clearings[1].setX(129);
+        this.clearings[1].setY(277);
+        this.clearings[0].setName("2");
 
         this.clearings[2].setX(306);
         this.clearings[2].setY(253);
+        this.clearings[2].setName("4");
 
         this.clearings[3].setX(246);
-        this.clearings[3].setY(85);
-        //this.clearings[3].setDwelling(Dwelling.CHAPEL);
+        this.clearings[3].setY(88);
+        this.clearings[3].setName("5");
 
     }
     

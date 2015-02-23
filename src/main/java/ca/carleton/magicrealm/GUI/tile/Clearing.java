@@ -36,6 +36,8 @@ public class Clearing implements Serializable {
 
     private final List<Entity> entities;
 
+    private String name = "";
+
     public Clearing(final AbstractTile parentTile,int index) {
         this.parentTile = parentTile;
         this.index  = index;
@@ -147,6 +149,10 @@ public class Clearing implements Serializable {
 
     public void setDwelling(Dwelling dwelling) {
         this.dwelling = dwelling;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
