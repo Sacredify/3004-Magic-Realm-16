@@ -18,6 +18,8 @@ public class Elf extends AbstractCharacter {
 
         this.addItem(new LightBow());
 
+        this.addGold(10);
+
         this.addRelationship(NativeFaction.WOODFOLK, Relationship.ALLY);
         this.addRelationship(NativeFaction.BASHKARS, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.ORDER, Relationship.UNFRIENDLY);

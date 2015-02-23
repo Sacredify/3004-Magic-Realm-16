@@ -18,6 +18,8 @@ public class Swordsman extends AbstractCharacter {
 
         this.addItem(new ThrustingSword());
 
+        this.addGold(10);
+
         this.addRelationship(NativeFaction.ROGUES, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.COMPANY, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.PATROL, Relationship.ENEMY);

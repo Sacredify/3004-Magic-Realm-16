@@ -20,6 +20,8 @@ public class Dwarf extends AbstractCharacter {
         this.addItem(new GreatAxe());
         this.addItem(new Helmet());
 
+        this.addGold(10);
+
         this.addRelationship(NativeFaction.COMPANY, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.GUARD, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.WOODFOLK, Relationship.UNFRIENDLY);
