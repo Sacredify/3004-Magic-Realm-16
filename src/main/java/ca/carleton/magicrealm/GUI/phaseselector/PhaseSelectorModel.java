@@ -15,14 +15,21 @@ public class PhaseSelectorModel {
 
     private final List<AbstractPhase> phases;
 
-    public PhaseSelectorModel(final List<AbstractPhase> phases) {
+    private final PhaseSelectorMenu menu;
+
+    public PhaseSelectorModel(final PhaseSelectorMenu menu, final List<AbstractPhase> phases) {
         this.phases = phases;
+        this.menu = menu;
     }
 
     public void addMovementPhase(final Clearing clearing) {
         final MovePhase movePhase = new MovePhase();
         movePhase.setMoveTarget(clearing);
         this.phases.add(movePhase);
+    }
+
+    public void done() {
+        this.menu.disposeWindow();
     }
 
 }

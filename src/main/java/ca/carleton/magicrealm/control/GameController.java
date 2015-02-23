@@ -83,7 +83,7 @@ public class GameController {
                     this.setBoardModel((BoardGUIModel) m.getMessageObject());
                     this.updateCurrentPlayer();
                     this.boardWindow.refresh(this.boardModel);
-                    this.setupMovePhaseForPlayer();
+                    this.selectPhasesForDay();
 
                 default:
                     break;
@@ -108,24 +108,10 @@ public class GameController {
     }
 
     /**
-     * Methods to set up a move phase *
+     * Opens up phase selector dialog.
      */
-    private void setupMovePhaseForPlayer() {
-        new PhaseSelectorMenu();
-    }
-
-    public void movePlayerToClearing(Clearing clearing) {
-        // Record a move phase
-        MovePhase movement = new MovePhase();
-        movement.setMoveTarget(clearing);
-        this.recordedPhasesForDay.add(movement);
-        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
-        this.recordedPhasesForDay.clear();
-        // Update
-        this.updatePlayerInMap();
-        // Send the new board to the server.
-        Message m = new Message(this.networkConnection.getId(), Message.MOVE, this.boardModel);
-        this.networkConnection.sendMessage(Message.MOVE, m);
+    public void selectPhasesForDay() {
+        PhaseSelectorMenu selectorMenu = new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this);
     }
 
     /**

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
+import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by Tony on 20/02/2015.
  */
-public class PhaseSelectorMenu extends JFrame {
+public class PhaseSelectorMenu extends JDialog {
 
     public static final String PHASE_SELECTOR_WINDOW = "Select your phases";
     public static final int PHASE_WINDOW_WIDTH = 500;
@@ -20,15 +21,26 @@ public class PhaseSelectorMenu extends JFrame {
 
     PhaseSelectorModel phaseSelectorModel;
 
-    public PhaseSelectorMenu(final List<AbstractPhase> phases, int numberOfPhases) {
-        super(PHASE_SELECTOR_WINDOW);
+    GameController controller;
+
+    public PhaseSelectorMenu(final List<AbstractPhase> phases, int numberOfPhases, final GameController gameController) {
+        this.setTitle(PHASE_SELECTOR_WINDOW);
 
         this.phaseSelectorPanel = new PhaseSelectorPanel();
-        this.phaseSelectorModel = new PhaseSelectorModel(phases);
+        this.phaseSelectorModel = new PhaseSelectorModel(this, phases);
+        this.controller = gameController;
 
         this.setSize(PHASE_WINDOW_WIDTH, PHASE_WINDOW_HEIGHT);
 
         this.add(this.phaseSelectorPanel);
+    }
+
+    /**
+     * Called when done.
+     */
+    public void disposeWindow() {
+        this.dispose();
+        // TODO wire to controller.
     }
 
     public PhaseSelectorPanel getPhaseSelectorPanel() {
