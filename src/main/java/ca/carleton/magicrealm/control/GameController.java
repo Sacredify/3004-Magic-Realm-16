@@ -71,10 +71,11 @@ public class GameController {
                     this.selectPhasesForDay();
                     break;
                 case (Message.DAYLIGHT_START):
+                    // Set new data
                     this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
                     this.updateCurrentPlayer();
+                    // Process daylight
                     this.processDaylight();
-                    this.refreshBoard();
                     break;
                 case (Message.SUNSET_START):
                     this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
