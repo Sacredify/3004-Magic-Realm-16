@@ -1,7 +1,5 @@
 package ca.carleton.magicrealm.GUI.infodialog;
 
-import ca.carleton.magicrealm.GUI.tile.AbstractTile;
-import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.impl.BadValley;
 
 /**
