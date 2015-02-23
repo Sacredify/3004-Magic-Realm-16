@@ -1,6 +1,8 @@
 package ca.carleton.magicrealm.Networking;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
@@ -21,7 +23,6 @@ public class ServerThread extends Thread {
     }
 
 
-
     public void send(Object msg) {
         try {
             objOutStream.writeObject(msg);
@@ -37,7 +38,7 @@ public class ServerThread extends Thread {
 
         Object obj = null;
         try {
-            obj  = objInputStream.readObject();
+            obj = objInputStream.readObject();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -45,16 +46,13 @@ public class ServerThread extends Thread {
         }
         while (obj != null) {
             try {
-                server.handle(ID,obj);
+                server.handle(ID, obj);
                 obj = objInputStream.readObject();
             } catch (IOException e) {
                 e.printStackTrace();
+                System.exit(-1);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-            }
-            if ((int)obj == -1) {
-                System.out.println("Cliend dropped");
-                break;
             }
         }
     }
@@ -62,19 +60,17 @@ public class ServerThread extends Thread {
 
     public void open() throws IOException {
         System.out.println(ID + ":Opening buffer streams");
-        objOutStream= new ObjectOutputStream(socket.getOutputStream());
+        objOutStream = new ObjectOutputStream(socket.getOutputStream());
         objInputStream = new ObjectInputStream(socket.getInputStream());
         objOutStream.flush();
         if (objInputStream == null) {
             System.out.println("Unable to Open Object Input Stream on Thread:" + ID);
-        }
-        else{
+        } else {
             System.out.println("Able to Open Object Input Stream on Thread:" + ID);
         }
         if (objOutStream == null) {
             System.out.println("Unable to Open Object Output Stream on Thread:" + ID);
-        }
-        else{
+        } else {
             System.out.println("Able to Open Object Output Stream on Thread:" + ID);
         }
     }

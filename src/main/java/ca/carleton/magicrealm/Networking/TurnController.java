@@ -11,39 +11,39 @@ public class TurnController {
     private int turnCount;
 
     public TurnController(){
-        turnCount = 0;
-        orderedIDsQueue = new PriorityQueue<>();
-        orderedIDs = new ArrayList<>();
+        this.turnCount = 0;
+        this.orderedIDsQueue = new PriorityQueue<>();
+        this.orderedIDs = new ArrayList<>();
     }
 
     public void createNewTurnOrder(ArrayList<ServerThread> clientThreads){
         Collections.shuffle(clientThreads);
         for(ServerThread s:clientThreads){
-            orderedIDsQueue.add(s.getID());
-            orderedIDs.add(s.getID());
+            this.orderedIDsQueue.add(s.getID());
+            this.orderedIDs.add(s.getID());
         }
     }
 
     public void createNewTurn(){
-        for(Integer s:orderedIDs){
-            orderedIDsQueue.add(s);
+        for(Integer s: this.orderedIDs){
+            this.orderedIDsQueue.add(s);
         }
     }
 
     //Returns current turn count
     public int incrementTurnCount(){
-        turnCount++;
-        if(turnCount == 6){
-            turnCount = 0;
-            return 6;
+        this.turnCount++;
+        if(this.turnCount == AppServer.MAX_PLAYERS){
+            this.turnCount = 0;
+            return AppServer.MAX_PLAYERS;
         }
         else
-        return turnCount;
+        return this.turnCount;
     }
 
     public int getNextPlayer(){
-        if(orderedIDsQueue.size()!=0){
-            return  orderedIDsQueue.remove();
+        if(this.orderedIDsQueue.size()!=0){
+            return this.orderedIDsQueue.remove();
         }
         else{
             return -1;
