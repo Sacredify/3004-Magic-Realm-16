@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.monster.Ghost;
@@ -77,7 +78,7 @@ public class Daylight {
             for (final Entity entity : playerClearing.getEntities()) {
                 // Only natives, monsters and ghosts block for now.
                 // TODO Add visitors and characters when required.
-                if (entity instanceof AbstractNative || entity instanceof AbstractMonster || entity instanceof Ghost) {
+                if (entity instanceof Denizen) {
                     return true;
                 }
             }
