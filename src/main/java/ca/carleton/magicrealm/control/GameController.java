@@ -3,19 +3,15 @@ package ca.carleton.magicrealm.control;
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
-import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
-import ca.carleton.magicrealm.game.phase.impl.MovePhase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -43,12 +39,8 @@ public class GameController {
     private List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
 
     public GameController() {
-
-        // Build window.
         this.boardWindow = new BoardWindow();
-
         this.currentPlayer = new Player();
-
     }
 
     /**
@@ -82,6 +74,7 @@ public class GameController {
                     this.setBoardModel((BoardGUIModel) m.getMessageObject());
                     this.updateCurrentPlayer();
                     this.boardWindow.refresh(this.boardModel);
+                    this.selectPhasesForDay();
 
                 default:
                     break;
@@ -92,61 +85,66 @@ public class GameController {
         }
     }
 
+    /**
+     * Called by the Character Select Menu to indicate that the character has been set.
+     * This also sends the message to the server that the character has been selected, along with the player object.
+     */
     public void characterSelected() {
         System.out.println("CHARACTER SELECTED IN GAME CONTROLLER");
         this.networkConnection.sendMessage(Message.SELECT_CHARACTER, this.currentPlayer);
-        //this.setupStatusLabel();
-        //this.setStatusText("SELECTED CHARACTER, WAITING FOR OTHER PLAYERS");
     }
 
-    //Update Map
+    /**
+     * Refreshes the board with the new model received.
+     *
+     * @param newBoardModel the model.
+     */
+    @Deprecated
     public void handleMove(final BoardGUIModel newBoardModel) {
         this.boardModel = newBoardModel;
         this.boardWindow.refresh(this.boardModel);
     }
 
     /**
-     * Methods to set up a move phase *
+     * Opens up phase selector dialog.
      */
-    private void setupMovePhaseForPlayer() {
-        this.boardWindow.setupMoveButtons(this.createMoveButtonsForClearing(this.currentPlayer.getCurrentClearing())); // display move buttons now? or later
+    public void selectPhasesForDay() {
+        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this);
     }
 
-    public void movePlayerToClearing(Clearing clearing) {
-        // Record a move phase
-        MovePhase movement = new MovePhase();
-        movement.setMoveTarget(clearing);
-        this.recordedPhasesForDay.add(movement);
-        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
-        this.recordedPhasesForDay.clear();
-        // Update
-        this.updatePlayerInMap();
-        // Send the new board to the server.
-        Message m = new Message(this.networkConnection.getId(), Message.MOVE, this.boardModel);
-        this.networkConnection.sendMessage(Message.MOVE, m);
+    /**
+     * Called by the selector menu when done entering phases.
+     */
+    public void doneEnteringPhasesForDay() {
+       /*
+        LOGIC -
+        1. This method is called, signifying this.recordedPhasesForDay has all the phases the client wishes to enter.
+        2. The client will send a message to the server saying they are done.
+        3. When the server receives all <x> number of clients saying they are done, the server starts DAYLIGHT.
+        4. The server will pick a client, send them a message with the current board, and the client will use Daylight.processPhasesForDay() that
+         will process the phases.
+        5. The client will upload the updated data to the server.
+        6. The server will then send the next message to the next person in turn, with the updated board.
+        7. The next client will update their board as per the first, then execute the phases.
+        8 And so on.
+        9. After they are all done, server sends EVENING message.
+        */
     }
 
-    public ArrayList<JButton> createMoveButtonsForClearing(Clearing clearing) {
-        ArrayList<JButton> buttons = new ArrayList<>();
-
-        for (final Clearing adjacentClearing : clearing.getAdjacentClearings()) {
-            JButton newButton = new JButton();
-            newButton.setSize(30, 30);
-            newButton.setLocation(adjacentClearing.getX(), adjacentClearing.getY());
-
-            newButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    GameController.this.movePlayerToClearing(adjacentClearing);
-                }
-            });
-            buttons.add(newButton);
+    /**
+     * Updates the current player status for use in the client's various methods after the board has been received from the server.
+     */
+    public void updateCurrentPlayer() {
+        for (final Player player : this.boardModel.getPlayers()) {
+            if (this.currentPlayer.getCharacter().getEntityInformation() == player.getCharacter().getEntityInformation()) {
+                this.currentPlayer = player;
+            }
         }
-        return buttons;
     }
 
     /**
      * Replaces the current player stored on the board with the updated one.
+     * IMPORTANT This needs to be called before sending sending the map, as it updates the board.
      */
     public void updatePlayerInMap() {
         final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
@@ -159,20 +157,9 @@ public class GameController {
             }
         }
         // Sanity check - check that we actually removed someone.
-        assert (this.boardModel.getPlayers().size() == (sanityCheck -1));
+        assert (this.boardModel.getPlayers().size() == (sanityCheck - 1));
 
         this.boardModel.getPlayers().add(this.currentPlayer);
-    }
-
-    /**
-     * Updates the current player status for use in the client's various methods..
-     */
-    public void updateCurrentPlayer() {
-        for (final Player player : this.boardModel.getPlayers()) {
-            if (this.currentPlayer.getCharacter().getEntityInformation() == player.getCharacter().getEntityInformation()) {
-                this.currentPlayer = player;
-            }
-        }
     }
 
     public void setNetworkConnection(AppClient nC) {
@@ -181,11 +168,19 @@ public class GameController {
         this.showCharacterCreate();
     }
 
+    /**
+     * Show the character create dialog.
+     */
     private void showCharacterCreate() {
         this.characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
         this.characterCreateMenu.displayWindow();
     }
 
+    /**
+     * Remove a character from the list of available characeters when choosing a character.
+     *
+     * @param player the player containing the character to remove.
+     */
     private void removeFromAvailableCharacters(final Object player) {
         if (!(player instanceof Player)) {
             throw new IllegalArgumentException("Not a player object");
@@ -194,32 +189,8 @@ public class GameController {
         this.availableCharacters.remove(((Player) player).getCharacter().getEntityInformation().convertToCharacterType());
     }
 
-    /**
-     * Methods to set up the window to select a player's phase for the day *
-     */
-    public void setupPhaseSelection() {
-        // PhaseSelectorMenu phaseSelectorMenu = new PhaseSelectorMenu();
-
-        JButton confirmFirstPhaseButton = new JButton("ENTER"); // TODO: make unhardcoded later
-
-        confirmFirstPhaseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //  String selectedPhase = (String)phaseSelectorMenu.getPhaseSelectorPanel().getFirstPhaseBox().getSelectedItem();
-
-              /*  if (selectedPhase.equals("Move")) {
-                    setupMovePhaseForPlayer();
-                }*/
-            }
-        });
-    }
-
     public void setBoardModel(BoardGUIModel model) {
         this.boardModel = model;
-    }
-
-    public void setupStatusLabel() {
-        this.boardWindow.setupStatusLabel();
     }
 
     public void setStatusText(final String text) {

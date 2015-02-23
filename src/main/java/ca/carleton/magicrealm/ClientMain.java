@@ -1,16 +1,11 @@
 package ca.carleton.magicrealm;
 
-import ca.carleton.magicrealm.GUI.board.BoardWindow;
-import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Config;
 import ca.carleton.magicrealm.control.GameController;
-import ca.carleton.magicrealm.game.Player;
-import com.sun.deploy.util.SessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 
 /**
  * Created with IntelliJ IDEA.
