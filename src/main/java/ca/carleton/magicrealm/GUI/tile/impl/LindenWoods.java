@@ -15,14 +15,17 @@ public class LindenWoods extends AbstractTile {
     public LindenWoods() {
         this.clearings = Clearing.initializeClearingsArray(3,this);
 
-        this.clearings[0].setX(253);
-        this.clearings[0].setY(278);
+        this.clearings[0].setX(247);
+        this.clearings[0].setY(277);
+        this.clearings[0].setName("2");
 
-        this.clearings[1].setX(134);
-        this.clearings[1].setY(156);
+        this.clearings[1].setX(131);
+        this.clearings[1].setY(153);
+        this.clearings[1].setName("4");
 
-        this.clearings[2].setX(312);
-        this.clearings[2].setY(123);
+        this.clearings[2].setX(297);
+        this.clearings[2].setY(125);
+        this.clearings[2].setName("5");
     }
 
     @Override

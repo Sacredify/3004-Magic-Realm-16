@@ -15,23 +15,29 @@ public class Cliff extends AbstractTile {
     public Cliff() {
         this.clearings = Clearing.initializeClearingsArray(6,this);
 
-        this.clearings[0].setX(125);
-        this.clearings[0].setY(151);
+        this.clearings[0].setX(128);
+        this.clearings[0].setY(152);
+        this.clearings[0].setName("1");
 
-        this.clearings[1].setX(128);
-        this.clearings[1].setY(284);
+        this.clearings[1].setX(131);
+        this.clearings[1].setY(287);
+        this.clearings[1].setName("2");
 
-        this.clearings[2].setX(247);
-        this.clearings[2].setY(217);
+        this.clearings[2].setX(220);
+        this.clearings[2].setY(244);
+        this.clearings[2].setName("3");
 
-        this.clearings[3].setX(359);
-        this.clearings[3].setY(146);
+        this.clearings[3].setX(360);
+        this.clearings[3].setY(150);
+        this.clearings[3].setName("4");
 
-        this.clearings[4].setX(359);
-        this.clearings[4].setY(285);
+        this.clearings[4].setX(363);
+        this.clearings[4].setY(283);
+        this.clearings[4].setName("5");
 
         this.clearings[5].setX(249);
-        this.clearings[5].setY(84);
+        this.clearings[5].setY(87);
+        this.clearings[5].setName("6");
     }
 
     @Override

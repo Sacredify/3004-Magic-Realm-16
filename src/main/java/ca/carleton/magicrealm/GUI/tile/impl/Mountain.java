@@ -15,20 +15,29 @@ public class Mountain extends AbstractTile {
     public Mountain() {
         this.clearings = Clearing.initializeClearingsArray(6,this);
 
-        this.clearings[0].setX(188);
-        this.clearings[0].setY(186);
+        this.clearings[0].setX(178);
+        this.clearings[0].setY(169);
+        this.clearings[0].setName("1");
 
-        this.clearings[1].setX(126);
-        this.clearings[1].setY(280);
+        this.clearings[1].setX(122);
+        this.clearings[1].setY(291);
+        this.clearings[1].setName("2");
 
-        this.clearings[2].setX(265);
-        this.clearings[2].setY(290);
+        this.clearings[2].setX(239);
+        this.clearings[2].setY(288);
+        this.clearings[2].setName("3");
 
-        this.clearings[3].setX(245);
-        this.clearings[3].setY(78);
+        this.clearings[3].setX(249);
+        this.clearings[3].setY(70);
+        this.clearings[3].setName("4");
 
-        this.clearings[4].setX(366);
-        this.clearings[4].setY(290);
+        this.clearings[4].setX(372);
+        this.clearings[4].setY(288);
+        this.clearings[4].setName("5");
+
+        this.clearings[5].setX(343);
+        this.clearings[5].setY(163);
+        this.clearings[5].setName("6");
     }
 
     @Override

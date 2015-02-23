@@ -15,23 +15,29 @@ public class Caves extends AbstractTile {
     public Caves() {
         this.clearings = Clearing.initializeClearingsArray(6,this);
 
-        this.clearings[0].setX(354);
-        this.clearings[0].setX(278);
+        this.clearings[0].setX(361);
+        this.clearings[0].setY(286);
+        this.clearings[0].setName("1");
 
-        this.clearings[1].setX(128);
-        this.clearings[1].setY(280);
+        this.clearings[1].setX(135);
+        this.clearings[1].setY(282);
+        this.clearings[1].setName("2");
 
-        this.clearings[2].setX(262);
-        this.clearings[2].setX(189);
+        this.clearings[2].setX(228);
+        this.clearings[2].setX(220);
+        this.clearings[2].setName("3");
 
-        this.clearings[3].setX(250);
-        this.clearings[3].setY(335);
+        this.clearings[3].setX(275);
+        this.clearings[3].setY(350);
+        this.clearings[3].setName("4");
 
-        this.clearings[4].setX(127);
-        this.clearings[4].setY(150);
+        this.clearings[4].setX(134);
+        this.clearings[4].setY(157);
+        this.clearings[4].setName("5");
 
         this.clearings[5].setX(329);
         this.clearings[5].setY(80);
+        this.clearings[5].setName("6");
     }
 
     @Override

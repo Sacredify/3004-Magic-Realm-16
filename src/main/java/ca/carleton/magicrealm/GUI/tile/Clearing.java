@@ -157,7 +157,7 @@ public class Clearing implements Serializable {
 
     @Override
     public String toString() {
-        return this.parentTile.getTileInformation() + " " + this.index + ".";
+        return this.parentTile.getTileInformation() + " " + this.name + ".";
     }
 
 }

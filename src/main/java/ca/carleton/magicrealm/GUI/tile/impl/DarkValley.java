@@ -16,20 +16,23 @@ public class DarkValley extends AbstractTile {
     public DarkValley() {
         this.clearings = Clearing.initializeClearingsArray(4,this);
 
-        this.clearings[0].setX(348);
-        this.clearings[0].setY(153);
+        this.clearings[0].setX(364);
+        this.clearings[0].setY(152);
+        this.clearings[0].setName("1");
 
-        this.clearings[1].setX(249);
-        this.clearings[1].setY(92);
-
-        // 4
-        this.clearings[2].setX(191);
-        this.clearings[2].setY(244);
+        this.clearings[1].setX(253);
+        this.clearings[1].setY(86);
+        this.clearings[1].setName("2");
 
         // 4
-        this.clearings[3].setX(359);
-        this.clearings[3].setY(280);
-        //this.clearings[3].setDwelling(Dwelling.GUARD);
+        this.clearings[2].setX(185);
+        this.clearings[2].setY(252);
+        this.clearings[2].setName("4");
+
+        // 4
+        this.clearings[3].setX(361);
+        this.clearings[3].setY(281);
+        this.clearings[3].setName("5");
     }
 
     @Override

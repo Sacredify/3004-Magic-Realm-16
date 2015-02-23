@@ -15,14 +15,17 @@ public class OakWoods extends AbstractTile {
     public OakWoods() {
         this.clearings = Clearing.initializeClearingsArray(3,this);
 
-        this.clearings[0].setX(346);
-        this.clearings[0].setY(218);
+        this.clearings[0].setX(359);
+        this.clearings[0].setY(208);
+        this.clearings[0].setName("2");
 
-        this.clearings[1].setX(139);
-        this.clearings[1].setY(284);
+        this.clearings[1].setX(134);
+        this.clearings[1].setY(283);
+        this.clearings[1].setName("4");
 
-        this.clearings[2].setX(194);
-        this.clearings[2].setY(125);
+        this.clearings[2].setX(191);
+        this.clearings[2].setY(117);
+        this.clearings[2].setName("5");
     }
 
     @Override

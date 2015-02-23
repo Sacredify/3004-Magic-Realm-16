@@ -16,13 +16,16 @@ public class NutWoods extends AbstractTile {
         this.clearings = Clearing.initializeClearingsArray(3,this);
 
         this.clearings[0].setX(187);
-        this.clearings[0].setY(112);
+        this.clearings[0].setY(109);
+        this.clearings[0].setName("2");
 
-        this.clearings[1].setX(353);
-        this.clearings[1].setY(149);
+        this.clearings[1].setX(351);
+        this.clearings[1].setY(137);
+        this.clearings[1].setName("4");
 
-        this.clearings[2].setX(246);
-        this.clearings[2].setY(277);
+        this.clearings[2].setX(244);
+        this.clearings[2].setY(284);
+        this.clearings[2].setName("5");
     }
 
     @Override
