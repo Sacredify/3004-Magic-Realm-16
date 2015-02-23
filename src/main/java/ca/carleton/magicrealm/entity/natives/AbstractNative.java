@@ -1,7 +1,7 @@
 package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.BountyCarrier;
-import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 /**
@@ -11,7 +11,7 @@ import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
  * Date: 10/02/15
  * Time: 8:42 AM
  */
-public abstract class AbstractNative extends Entity implements BountyCarrier {
+public abstract class AbstractNative extends Denizen implements BountyCarrier {
 
     protected NativeFaction faction;
 
