@@ -196,4 +196,8 @@ public class GameController {
     public void setStatusText(final String text) {
         this.boardWindow.setStatusText(text);
     }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 }

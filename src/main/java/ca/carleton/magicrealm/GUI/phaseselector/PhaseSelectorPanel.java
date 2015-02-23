@@ -1,6 +1,10 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
+import ca.carleton.magicrealm.game.phase.AbstractPhase;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Tony on 20/02/2015.
@@ -13,7 +17,7 @@ public class PhaseSelectorPanel extends JPanel {
     public static final String[] PHASE_NAMES = {"Move"};
     public static final String CONFIRM = "ENTER";
 
-    private JComboBox firstPhaseBox;
+    private JComboBox<AbstractPhase> firstPhaseBox;
 
     private JComboBox secondPhaseBox;
 
@@ -27,6 +31,8 @@ public class PhaseSelectorPanel extends JPanel {
         this.setSize(PHASE_PANEL_WIDTH, PHASE_PANEL_HEIGHT);
 
         firstPhaseBox = new JComboBox(PHASE_NAMES);
+
+        this.add(firstPhaseBox);
 
     }
 
