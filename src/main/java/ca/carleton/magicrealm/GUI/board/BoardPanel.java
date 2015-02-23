@@ -112,22 +112,14 @@ public class BoardPanel extends JLayeredPane {
                     }
 
                     /** create the chits **/
-                    ArrayList<JLabel> newChits = this.boardServices.createChitIconsForTile(tile);
-                    for (int i = 0; i < newChits.size(); i++) {
-                        if (newChits.get(i) != null) {
-                            newChits.get(i).setLocation(tile.getClearingAt(i).getX(),
-                                    tile.getClearingAt(i).getY());
-                            this.add(newChits.get(i), JLayeredPane.PALETTE_LAYER);
-                        }
-                    }
-
+                    this.boardServices.createChitIconsForTile(tile, this);
                 }
                 x++;
             }
             y++;
         }
 
-        this.setupCharacterIcons(boardGUIModel.getPlayers());
+       // this.setupCharacterIcons(boardGUIModel.getPlayers());
         this.setupGameInfoLabel();
         this.setupCharacterInfoButton(character);
         this.firstDraw = false;
