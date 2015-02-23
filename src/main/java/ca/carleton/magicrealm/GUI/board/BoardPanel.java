@@ -130,7 +130,7 @@ public class BoardPanel extends JLayeredPane {
         new InfoDialog(tile).displayWindow();
     }
 
-    public void setupCharacterInfoButton(AbstractCharacter character) {
+    public void setupCharacterInfoButton(final AbstractCharacter character) {
         this.displayCharacterInformationButton = new JButton(CHARACTER_INFO_BUTTON_TEXT);
         this.displayCharacterInformationButton.setSize(50,30);
         this.displayCharacterInformationButton.setLocation(maximumX, -100);

@@ -228,12 +228,12 @@ public class GameController {
 
     private String createGameInfoString() {
         String gameInfoText = new String();
-        gameInfoText = gameInfoText.concat("<html>Character: "+ currentPlayer.getCharacter().toString() + "<br>" +
-                                           "Current gold: " + currentPlayer.getVictoryCondition().getGold() + "<br>" +
-                                           "Current notoriety: " + currentPlayer.getVictoryCondition().getNotoriety() + "<br>" +
-                                           "Current fame: " + currentPlayer.getVictoryCondition().getFame() + "<br>" +
-                                           "Current spell count: " + currentPlayer.getVictoryCondition().getSpellsCount() + "<br>" +
-                                           "Current great treasures count: " + currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br>" +"</html>");
+        gameInfoText = gameInfoText.concat("<html>Character: "+ currentPlayer.getCharacter().toString() + "<br/>" +
+                                           "Current gold: " + currentPlayer.getVictoryCondition().getGold() + "<br/>" +
+                                           "Current notoriety: " + currentPlayer.getVictoryCondition().getNotoriety() + "<br/>" +
+                                           "Current fame: " + currentPlayer.getVictoryCondition().getFame() + "<br/>" +
+                                           "Current spell count: " + currentPlayer.getVictoryCondition().getSpellsCount() + "<br/>" +
+                                           "Current great treasures count: " + currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/>" +"</html>");
 
         return gameInfoText;
     }
