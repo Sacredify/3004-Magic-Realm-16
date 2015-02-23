@@ -59,26 +59,27 @@ public class GameController {
                     this.removeFromAvailableCharacters(m.getMessageObject());
                     this.characterCreateMenu.updateAvailableCharacters();
                     break;
+                case (Message.SET_MAP):
+                    this.setBoardModel((BoardGUIModel) m.getMessageObject());
+                    this.updateCurrentPlayer();
+                    this.refreshBoard();
                 case (Message.MOVE):
                     //Insert move character functionality here
                     this.handleMove((BoardGUIModel) m.getMessageObject());
                     break;
                 case (Message.BIRDSONG_START):
-                    //Insert Stage incrementing functionality here
-                    System.out.println("START BIRDSONG");
-                    //this.boardWindow.hideStatusLabel();
-                    //TODO Update label with message saying waiting for board or some shit.
-                    break;
-                case(Message.DAYLIGHT_START):
-                    System.out.println("START DAYLIGHT");
-                    break;
-                case (Message.SET_MAP):
-                    //SETTING MAP MODEL
-                    this.setBoardModel((BoardGUIModel) m.getMessageObject());
-                    this.updateCurrentPlayer();
-                    this.boardWindow.refresh(this.boardModel);
                     this.selectPhasesForDay();
-
+                    break;
+                case (Message.DAYLIGHT_START):
+                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
+                    this.updateCurrentPlayer();
+                    this.processDaylight();
+                    this.refreshBoard();
+                    break;
+                case (Message.SUNSET_START):
+                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
+                    this.updateCurrentPlayer();
+                    this.refreshBoard();
                 default:
                     break;
             }
@@ -133,7 +134,18 @@ public class GameController {
         9. After they are all done, server sends EVENING message.
         */
 
-        LOG.info("User finished entering phase data.");
+        LOG.info("User finished entering phase data. Sending server message...");
+        this.networkConnection.sendMessage(Message.BIRDSONG_DONE, null);
+    }
+
+    /**
+     * Processes the daylight phases for this client.
+     */
+    public void processDaylight() {
+        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
+        this.updatePlayerInMap();
+        this.refreshBoard();
+        this.networkConnection.sendMessage(Message.DAYLIGHT_DONE, this.boardModel);
     }
 
     /**
@@ -207,6 +219,6 @@ public class GameController {
     }
 
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return this.currentPlayer;
     }
 }

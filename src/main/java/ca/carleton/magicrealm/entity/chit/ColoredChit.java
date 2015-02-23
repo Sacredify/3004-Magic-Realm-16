@@ -26,7 +26,7 @@ public abstract class ColoredChit implements Serializable {
     /**
      * Whether or not it has been found.
      */
-    protected boolean hidden = false;
+    protected boolean hidden = true;
 
     /**
      * The color of the chit.

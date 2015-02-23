@@ -12,16 +12,13 @@ import java.util.ArrayList;
 public class AppServer implements Runnable {
 
     int clientCount = 0;
-    private final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 1;
     int gameCount = 0;
     private Thread thread = null;
     private ServerSocket server = null;
     private ArrayList<ServerThread> clients = null;
     private TurnController turnController = null;
     private BoardGUIModel boardModel;
-
-
-
 
     public AppServer(int port) {
         try {
@@ -96,43 +93,44 @@ public class AppServer implements Runnable {
             case (Message.SELECT_CHARACTER):
                 Player player = (Player) m.getMessageObject();
                 player.setCurrentClearing(this.boardModel.getStartingLocation());
-                boardModel.addPlayer(player);
-                broadcastMessage(0, m);
+                this.boardModel.addPlayer(player);
+                this.broadcastMessage(0, m);
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    Message newMessage = new Message(0, Message.BIRDSONG_START, obj);
+                    // Send map data, start birdsong.
                     this.sendMap();
+                    this.broadcastMessage(0, new Message(0, Message.BIRDSONG_START, obj));
                 }
                 break;
             case (Message.BIRDSONG_DONE):
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                        turnController.createNewTurnOrder(clients);
-                        int nextID = turnController.getNextPlayer();
-                        ServerThread nextClient = getClientWithID(nextID);
-                        Message msg = new Message(0,Message.DAYLIGHT_START,boardModel);
+                    this.turnController.createNewTurnOrder(this.clients);
+                        int nextID = this.turnController.getNextPlayer();
+                        ServerThread nextClient = this.getClientWithID(nextID);
+                        Message msg = new Message(0,Message.DAYLIGHT_START, this.boardModel);
                         nextClient.send(msg);
-                        turnController.incrementTurnCount();
+                    this.turnController.incrementTurnCount();
                 }
                 break;
             case(Message.DAYLIGHT_DONE):
-                boardModel = (BoardGUIModel)m.getMessageObject();
+                this.boardModel = (BoardGUIModel)m.getMessageObject();
                 if(this.turnController.incrementTurnCount() == MAX_PLAYERS){
-                    turnController.createNewTurn();
-                    int nextID = turnController.getNextPlayer();
-                    ServerThread nextClient = getClientWithID(nextID);
-                    Message msg = new Message(0,Message.SUNSET_START,boardModel);
+                    this.turnController.createNewTurn();
+                    int nextID = this.turnController.getNextPlayer();
+                    ServerThread nextClient = this.getClientWithID(nextID);
+                    Message msg = new Message(0,Message.SUNSET_START, this.boardModel);
                     nextClient.send(msg);
-                    turnController.incrementTurnCount();
+                    this.turnController.incrementTurnCount();
 
                 }
                 else {
-                    int nextID = turnController.getNextPlayer();
-                    ServerThread nextClient = getClientWithID(nextID);
-                    Message msg = new Message(0, Message.DAYLIGHT_START, boardModel);
+                    int nextID = this.turnController.getNextPlayer();
+                    ServerThread nextClient = this.getClientWithID(nextID);
+                    Message msg = new Message(0, Message.DAYLIGHT_START, this.boardModel);
                     nextClient.send(msg);
                 }
                 break;
             case(Message.MOVE):
-                handleMoveMessage(m,ID);
+                this.handleMoveMessage(m,ID);
                 break;
             default:
                // this.broadcastMessage(ID, obj);
@@ -142,8 +140,8 @@ public class AppServer implements Runnable {
 
 
     public void handleMoveMessage(Message m,int ID){
-        boardModel = (BoardGUIModel)m.getMessageObject();
-        broadcastMessage(ID,boardModel);
+        this.boardModel = (BoardGUIModel)m.getMessageObject();
+        this.broadcastMessage(ID, this.boardModel);
     }
 
 
