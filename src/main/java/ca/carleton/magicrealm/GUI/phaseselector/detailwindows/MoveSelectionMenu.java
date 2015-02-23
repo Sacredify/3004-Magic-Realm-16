@@ -4,9 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Tony on 22/02/2015.
@@ -27,6 +25,13 @@ public class MoveSelectionMenu extends JDialog{
         for (final AbstractTile tile : tiles) {
             allClearings.addAll(Arrays.asList(tile.getClearings()));
         }
+
+        Collections.sort(allClearings, new Comparator<Clearing>() {
+            @Override
+            public int compare(final Clearing o1, final Clearing o2) {
+                return o1.toString().compareTo(o2.toString());
+            }
+        });
 
         this.moveSelectionPanel = new MoveSelectionPanel();
         this.moveSelectionPanel.setupClearingList(allClearings);
