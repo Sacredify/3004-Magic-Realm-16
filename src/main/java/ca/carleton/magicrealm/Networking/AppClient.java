@@ -32,11 +32,11 @@ public class AppClient implements Runnable {
             this.socket = new Socket(serverName, serverPort);
             this.ID = this.socket.getLocalPort();
             this.gameController = gameController;
-            System.out.println(this.ID + "Connected to Server:" + this.socket.getInetAddress());
+            LOG.info("Successfully connected to the server. Details: {}.", this.socket.getInetAddress());
             this.open();
             this.start();
         } catch (IOException ioe) {
-            System.err.println("Could not connect to server. Please ensure server is running.");
+            LOG.error("Could not connect to the server. Please ensure the server is available. Reason --> {}.", ioe.getMessage());
             System.exit(0);
         }
     }
