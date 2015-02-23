@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.board;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.natives.AbstractNative;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,6 +73,9 @@ public class BoardServices {
             }
             if (!clearing.getEntities().isEmpty()) {
                 for (Entity drawable : clearing.getEntities()) {
+                    if (drawable instanceof AbstractNative) {
+                        continue;
+                    }
                     newChit = new JLabel();
                     newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
                     newIcon = this.createImageIcon(drawable.getEntityInformation().getPath());
