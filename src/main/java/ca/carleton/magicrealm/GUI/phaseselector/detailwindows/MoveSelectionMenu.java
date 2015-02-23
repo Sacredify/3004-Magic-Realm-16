@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.GUI.phaseselector;
+package ca.carleton.magicrealm.GUI.phaseselector.detailwindows;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 
@@ -20,11 +20,12 @@ public class MoveSelectionMenu extends JDialog{
 
         this.moveSelectionPanel = new MoveSelectionPanel();
         this.moveSelectionPanel.setupClearingList(clearing);
-        this.add(moveSelectionPanel);
+        this.add(this.moveSelectionPanel);
         this.setVisible(true);
     }
 
     public MoveSelectionPanel getMoveSelectionPanel() {
-        return moveSelectionPanel;
+        return this.moveSelectionPanel;
     }
+
 }

@@ -59,7 +59,14 @@ public final class Message implements Serializable {
     public static final String AVAILABLE_CLEARINGS = "AVAILABLE_CLEARINGS";
     public static final String ALL_PARTICIPATED = "ALL_PARTICIPATED";
     public static final String SET_MAP = "SET_MAP";
-
+    public static final String BIRDSONG_START = "BIRDSONG_START";
+    public static final String DAYLIGHT_START = "DAYLIGHT_START";
+    public static final String SUNSET_START = "SUNSET_START";
+    public static final String MIDNIGHT_START = "MIDNIGHT_START";
+    public static final String BIRDSONG_DONE = "BIRDSONG_DONE";
+    public static final String DAYLIGHT_DONE = "DAYLIGHT_DONE";
+    public static final String SUNSET_DONE = "SUNSET_DONE";
+    public static final String MIDNIGHT_DONE = "MIDNIGHT_DONE";
 
 
     //CHARACTER TYPES
