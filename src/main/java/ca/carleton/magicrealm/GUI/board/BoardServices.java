@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.board;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 
 import javax.swing.*;
@@ -73,7 +74,8 @@ public class BoardServices {
             }
             if (!clearing.getEntities().isEmpty()) {
                 for (Entity drawable : clearing.getEntities()) {
-                    if (drawable instanceof AbstractNative) {
+                    //TODO figure out why abstract characters aren't being added to the list of entities properly.
+                    if (drawable instanceof AbstractNative || drawable instanceof AbstractCharacter) {
                         continue;
                     }
                     newChit = new JLabel();
