@@ -1,6 +1,7 @@
-import ca.carleton.magicrealm.GUI.tile.impl.BadValley;
-import ca.carleton.magicrealm.GUI.tile.impl.Crag;
+import ca.carleton.magicrealm.GUI.tile.impl.CurstValley;
 import ca.carleton.magicrealm.control.Daylight;
+import ca.carleton.magicrealm.entity.character.CharacterFactory;
+import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.impl.MovePhase;
@@ -24,15 +25,17 @@ public class PhasesTest {
     public void canMovePhase() {
 
         final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
 
-        final BadValley badValley = new BadValley();
-        final Crag crag = new Crag();
+        final CurstValley valley = new CurstValley();
 
-        player.setCurrentClearing(badValley.getClearingAt(1));
+        player.setCurrentClearing(valley.getClearingAt(3));
+
+        valley.getClearingAt(3).connectTo(valley.getClearingAt(1));
 
         // A move phases
         final MovePhase movePhaseChosen = new MovePhase();
-        movePhaseChosen.setMoveTarget(crag.getClearingAt(2));
+        movePhaseChosen.setMoveTarget(valley.getClearingAt(1));
 
         final ArrayList<AbstractPhase> phases = new ArrayList<>();
         phases.add(movePhaseChosen);
@@ -40,7 +43,7 @@ public class PhasesTest {
         // Execute phase
         Daylight.processPhasesForPlayer(player, phases);
 
-        assertThat(player.getCurrentClearing(), is(crag.getClearingAt(2)));
+        assertThat(player.getCurrentClearing(), is(valley.getClearingAt(1)));
 
     }
 
