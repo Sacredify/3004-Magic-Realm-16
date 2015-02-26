@@ -18,7 +18,7 @@ public class AppServer implements Runnable {
 
     public static final int MAX_ROUNDS = 28;
 
-    public static final int MAX_PLAYERS = 1;
+    public static final int MAX_PLAYERS = 2;
 
     private int clientCount = 0;
 
@@ -57,14 +57,6 @@ public class AppServer implements Runnable {
         this.boardModel = new BoardGUIModel();
         ChitBuilder.placeChits(this.boardModel);
         EntityBuilder.placeEntities(this.boardModel);
-    }
-
-    /**
-     * Broadcast the map to the clients.
-     */
-    private void sendMap() {
-        Message m = new Message(0, Message.SET_MAP, this.boardModel);
-        this.broadcastMessage(0, m);
     }
 
     public void start() {

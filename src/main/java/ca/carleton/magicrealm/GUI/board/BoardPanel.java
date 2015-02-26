@@ -119,7 +119,7 @@ public class BoardPanel extends JLayeredPane {
             y++;
         }
 
-        this.setupCharacterIcons(boardGUIModel.getPlayers());
+        //this.setupCharacterIcons(boardGUIModel.getPlayers());
         this.setupGameInfoLabel();
         this.setupCharacterInfoButton(character);
         this.firstDraw = false;
