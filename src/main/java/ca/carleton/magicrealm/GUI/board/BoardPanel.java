@@ -101,18 +101,8 @@ public class BoardPanel extends JLayeredPane {
                         maximumX = tileX + BoardServices.TILE_WIDTH;
                     }
 
-                    if (firstDraw) {
-                        /** set the x and y locations relative to the board for each clearing (overwrites its current value) **/
-                        for (final Clearing clearing : tile.getClearings()) {
-                            int clearingNewX = tileX + clearing.getX() - CHIT_WIDTH / 2;
-                            int clearingNewY = tileY + clearing.getY() - CHIT_HEIGHT / 2;
-                            clearing.setX(clearingNewX);
-                            clearing.setY(clearingNewY);
-                        }
-                    }
-
                     /** create the chits **/
-                    this.boardServices.createChitIconsForTile(tile, this);
+                    this.boardServices.createChitIconsForTile(tile, this, tileX, tileY);
                 }
                 x++;
             }

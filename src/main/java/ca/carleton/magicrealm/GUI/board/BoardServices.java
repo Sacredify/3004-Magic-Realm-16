@@ -51,7 +51,15 @@ public class BoardServices {
         return newTile;
     }
 
-    public void createChitIconsForTile(AbstractTile tile, final BoardPanel panel) {
+    /**
+     * Method to create the chits on the board.
+     * This is called from the drawBoard method in BoardPanel
+     * @param tile
+     * @param panel
+     * @param tileOffsetX
+     * @param tileOffsetY
+     */
+    public void createChitIconsForTile(AbstractTile tile, final BoardPanel panel, final int tileOffsetX, final int tileOffsetY) {
 
         for (Clearing clearing : tile.getClearings()) {
             JLabel newChit = null;
@@ -67,7 +75,7 @@ public class BoardServices {
                     newIcon.setImage(newImage);
                     newChit.setIcon(newIcon);
                     newChit.setEnabled(true);
-                    newChit.setLocation(clearing.getX(), clearing.getY());
+                    newChit.setLocation(applyTileXOffset(clearing.getX(), tileOffsetX), applyTileYOffset(clearing.getY(), tileOffsetY));
                     panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                 }
             }
@@ -87,7 +95,7 @@ public class BoardServices {
                         newIcon.setImage(newImage);
                         newChit.setIcon(newIcon);
                         newChit.setEnabled(true);
-                        newChit.setLocation(clearing.getX(), clearing.getY());
+                        newChit.setLocation(applyTileXOffset(clearing.getX(), tileOffsetX), applyTileYOffset(clearing.getY(), tileOffsetY));
                         panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                     }
                 }
@@ -104,7 +112,7 @@ public class BoardServices {
      * @param height height to resize to
      * @return
      */
-    public static BufferedImage resize(BufferedImage image, int width, int height) {
+    public static BufferedImage resize(BufferedImage image, final int width, final int height) {
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
         Graphics2D g2d = bi.createGraphics();
         g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
@@ -174,7 +182,7 @@ public class BoardServices {
      * @param bufferedImage image to be rotated
      * @param angle         angle to rotate by
      */
-    public static BufferedImage rotateBufferedImage(BufferedImage bufferedImage, double angle) {
+    public static BufferedImage rotateBufferedImage(BufferedImage bufferedImage, final double angle) {
         AffineTransform tx = new AffineTransform();
         tx.rotate(Math.toRadians(angle), ORIGINAL_TILE_WIDTH / 2, ORIGINAL_TILE_HEIGHT / 2);
 
@@ -189,9 +197,17 @@ public class BoardServices {
      *
      * @param point (x,y) point to rotate
      */
-    public static void rotatePoint(double[] point, double angle) {
+    public static void rotatePoint(final double[] point, final double angle) {
         AffineTransform.getRotateInstance(Math.toRadians(angle), ORIGINAL_TILE_WIDTH / 2, ORIGINAL_TILE_HEIGHT / 2)
                 .transform(point, 0, point, 0, 1); // specifying to use this double[] to hold coords
+    }
+
+    public int applyTileXOffset(final int clearingX, final int tileOffsetX) {
+        return tileOffsetX + clearingX - CHIT_WIDTH / 2;
+    }
+
+    public int applyTileYOffset(final int clearingY, final int tileOffsetY) {
+        return tileOffsetY + clearingY - CHIT_HEIGHT / 2;
     }
 
 
