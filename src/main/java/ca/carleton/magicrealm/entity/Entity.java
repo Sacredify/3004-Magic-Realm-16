@@ -43,6 +43,10 @@ public abstract class Entity implements Serializable {
         this.items.add(item);
     }
 
+    public void removeItem(final Item item) {
+        this.items.remove(item);
+    }
+
     public List<Item> getItems() {
         return this.items;
     }
