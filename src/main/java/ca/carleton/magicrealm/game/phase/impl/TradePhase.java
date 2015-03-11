@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * Date: 11/03/15
  * Time: 4:32 PM
  */
-public class TradePhase extends AbstractPhase {
+public class TradePhase extends AbstractPhase implements Interactable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TradePhase.class);
 
@@ -25,6 +26,8 @@ public class TradePhase extends AbstractPhase {
     private Item itemToTrade;
 
     private boolean selling;
+
+    private boolean drinksBought;
 
     @Override
     public PhaseType getPhaseType() {
@@ -91,4 +94,11 @@ public class TradePhase extends AbstractPhase {
         this.itemToTrade = itemToTrade;
     }
 
+    public boolean isDrinksBought() {
+        return this.drinksBought;
+    }
+
+    public void setDrinksBought(final boolean drinksBought) {
+        this.drinksBought = drinksBought;
+    }
 }

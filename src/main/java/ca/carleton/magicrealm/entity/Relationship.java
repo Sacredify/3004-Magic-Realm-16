@@ -11,5 +11,6 @@ public enum Relationship {
     ALLY,
     FRIENDLY,
     UNFRIENDLY,
+    NEUTRAL,
     ENEMY
 }

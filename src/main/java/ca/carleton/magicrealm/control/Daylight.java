@@ -40,8 +40,9 @@ public class Daylight {
 
     public static void processPhasesForPlayer(final BoardGUIModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
 
-        LOG.info("Setting character status to unhidden.");
+        LOG.info("Setting character status to unhidden/unblocked.");
         player.getCharacter().setHidden(false);
+        player.getCharacter().setBlocked(false);
         LOG.info("Starting phase execution for player {}.", player.getCharacter());
 
         phaseLoop:
@@ -79,6 +80,10 @@ public class Daylight {
      */
     public static boolean characterNowBlocked(final Player player, final BoardGUIModel board) {
         final Clearing playerClearing = board.getClearingForPlayer(player);
+
+        if (player.getCharacter().isBlocked()) {
+            return true;
+        }
 
         if (!player.getCharacter().isHidden()) {
             for (final Entity entity : playerClearing.getEntities()) {

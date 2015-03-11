@@ -25,8 +25,6 @@ public class Player implements Serializable {
      */
     private VictoryCondition victoryCondition;
 
-    //private Clearing currentClearing;
-
     public Player() {
         this.victoryCondition = new VictoryCondition();
     }
@@ -46,16 +44,6 @@ public class Player implements Serializable {
     public void setVictoryCondition(final VictoryCondition victoryCondition) {
         this.victoryCondition = victoryCondition;
     }
-
-    /*
-    public Clearing getCurrentClearing() {
-        return this.currentClearing;
-    }
-
-    public void setCurrentClearing(final Clearing currentClearing) {
-        this.currentClearing = currentClearing;
-    }
-    */
 
     public boolean isSamePlayer(final Player player) {
         return this.getCharacter().getEntityInformation().convertToCharacterType() == player.getCharacter().getEntityInformation().convertToCharacterType();

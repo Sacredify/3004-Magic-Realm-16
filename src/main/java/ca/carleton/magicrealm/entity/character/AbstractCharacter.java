@@ -27,10 +27,13 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
 
     private int currentGreatTreasuresCount;
 
+    private boolean blocked;
+
     /**
      * All characters start hidden.
      */ {
         this.setHidden(true);
+        this.setBlocked(false);
     }
 
     /**
@@ -53,7 +56,7 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     }
 
     public int getCurrentGreatTreasuresCount() {
-        return currentGreatTreasuresCount;
+        return this.currentGreatTreasuresCount;
     }
 
     public void addGreatTreasure(int currentGreatTreasuresCount) {
@@ -61,7 +64,7 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     }
 
     public int getCurrentGold() {
-        return currentGold;
+        return this.currentGold;
     }
 
     public void addGold(int currentGold) {
@@ -69,7 +72,7 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     }
 
     public int getCurrentNotoriety() {
-        return currentNotoriety;
+        return this.currentNotoriety;
     }
 
     public void addNotoriety(int currentNotoriety) {
@@ -77,7 +80,7 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     }
 
     public int getCurrentFame() {
-        return currentFame;
+        return this.currentFame;
     }
 
     public void addFame(int currentFame) {
@@ -85,7 +88,7 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     }
 
     public int getCurrentSpellsCount() {
-        return currentSpellsCount;
+        return this.currentSpellsCount;
     }
 
     public void addCurrentSpells(int currentSpellsCount) {
@@ -95,5 +98,13 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     @Override
     public boolean equals(final Object rhs) {
         return rhs instanceof AbstractCharacter && this.getEntityInformation() == ((AbstractCharacter) rhs).getEntityInformation();
+    }
+
+    public boolean isBlocked() {
+        return this.blocked;
+    }
+
+    public void setBlocked(final boolean blocked) {
+        this.blocked = blocked;
     }
 }
