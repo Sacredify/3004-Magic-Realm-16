@@ -15,7 +15,7 @@ import org.slf4j.Logger;
  */
 public class HidePhaseStrategy implements PhaseStrategy {
 
-    private static Logger LOG =LoggerFactory.getLogger(HidePhaseStrategy.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HidePhaseStrategy.class);
 
     @Override
     public boolean appliesTo(final AbstractPhase phase) {
@@ -24,6 +24,8 @@ public class HidePhaseStrategy implements PhaseStrategy {
 
     @Override
     public void doPhase(final Player player, final AbstractPhase phase) {
+
+        LOG.info("Roll result is {}.", ((HidePhase)phase).getRollResult());
 
         /*
         HIDE TABLE
