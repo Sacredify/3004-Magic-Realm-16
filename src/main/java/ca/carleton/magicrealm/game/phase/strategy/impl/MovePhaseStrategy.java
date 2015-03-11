@@ -1,10 +1,11 @@
-package ca.carleton.magicrealm.game.phase.strategy;
+package ca.carleton.magicrealm.game.phase.strategy.impl;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.game.phase.impl.MovePhase;
+import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

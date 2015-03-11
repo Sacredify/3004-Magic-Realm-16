@@ -43,6 +43,10 @@ public abstract class Entity implements Serializable {
         this.items.add(item);
     }
 
+    public List<Item> getItems() {
+        return this.items;
+    }
+
     public boolean isHidden() {
         return this.hidden;
     }

@@ -31,4 +31,9 @@ public abstract class Item implements Serializable {
 
     public abstract ItemInformation getItemInformation();
 
+    @Override
+    public boolean equals(final Object rhs) {
+             return rhs instanceof Item && ((Item) rhs).getItemInformation() == this.getItemInformation();
+    }
+
 }
