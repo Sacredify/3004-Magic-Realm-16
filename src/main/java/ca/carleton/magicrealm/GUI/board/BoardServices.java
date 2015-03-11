@@ -29,6 +29,12 @@ public class BoardServices {
     public static final int CHIT_WIDTH = 40;
     public static final int CHIT_HEIGHT = 35;
 
+    public static final double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
+    public static final double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
+
+    public static final double ROTATED_TILE_SCALEDOWN_MULTIPLIER_X = 2.21;
+    public static final double ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y = 2;
+
     public ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = this.getClass().getClassLoader().getResource(path);
         if (imgURL != null) {
@@ -64,6 +70,32 @@ public class BoardServices {
         for (Clearing clearing : tile.getClearings()) {
             JLabel newChit = null;
             ImageIcon newIcon = null;
+            int clearingX;
+            int clearingY;
+
+            if (tile.getAngle() % 180 != 0) {
+                double[] point = new double[2];
+                point[0] = clearing.getX();
+                point[1] = clearing.getY();
+                rotatePoint(point, tile.getAngle());
+
+                clearingX = this.getScaledXAngled((int) Math.round(point[0]));
+                clearingY = this.getScaledYAngled((int) Math.round(point[1]));
+            }
+            else if (tile.getAngle() % 180 == 0) {
+                double[] point = new double[2];
+                point[0] = clearing.getX();
+                point[1] = clearing.getY();
+                rotatePoint(point, tile.getAngle());
+
+                clearingX = this.getScaledXRegular((int) Math.round(point[0]));
+                clearingY = this.getScaledYRegular((int) Math.round(point[1]));
+            }
+            else {
+                clearingX = this.getScaledXRegular(clearing.getX());
+                clearingY = this.getScaledYRegular(clearing.getY());
+            }
+
             if (clearing.getDwelling() != null) {
                 newChit = new JLabel();
                 newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
@@ -75,7 +107,7 @@ public class BoardServices {
                     newIcon.setImage(newImage);
                     newChit.setIcon(newIcon);
                     newChit.setEnabled(true);
-                    newChit.setLocation(applyTileXOffset(clearing.getX(), tileOffsetX), applyTileYOffset(clearing.getY(), tileOffsetY));
+                    newChit.setLocation(applyTileXOffset(clearingX, tileOffsetX), applyTileYOffset(clearingY, tileOffsetY));
                     panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                 }
             }
@@ -95,7 +127,7 @@ public class BoardServices {
                         newIcon.setImage(newImage);
                         newChit.setIcon(newIcon);
                         newChit.setEnabled(true);
-                        newChit.setLocation(applyTileXOffset(clearing.getX(), tileOffsetX), applyTileYOffset(clearing.getY(), tileOffsetY));
+                        newChit.setLocation(applyTileXOffset(clearingX, tileOffsetX), applyTileYOffset(clearingY, tileOffsetY));
                         panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                     }
                 }
@@ -141,37 +173,9 @@ public class BoardServices {
         if (tile.getAngle() % 180 != 0) {
             bufferedImage = resize(bufferedImage, RESIZE_TILE_WIDTH, RESIZE_TILE_HEIGHT);
             label.setSize(RESIZE_TILE_WIDTH, RESIZE_TILE_HEIGHT);
-            if (firstDraw) {
-                for (Clearing clearing : tile.getClearings()) {
-                    double[] point = new double[2];
-                    point[0] = clearing.getX();
-                    point[1] = clearing.getY();
-                    rotatePoint(point, tile.getAngle());
-
-                    clearing.setScaledXAngled((int) Math.round(point[0]));
-                    clearing.setScaledYAngled((int) Math.round(point[1]));
-                }
-            }
         } else {
             bufferedImage = resize(bufferedImage, TILE_WIDTH, TILE_HEIGHT);
             label.setSize(TILE_WIDTH, TILE_HEIGHT);
-
-            if (firstDraw) {
-                for (Clearing clearing : tile.getClearings()) {
-                    if (tile.getAngle() == 180) {
-                        double[] point = new double[2];
-                        point[0] = clearing.getX();
-                        point[1] = clearing.getY();
-                        rotatePoint(point, tile.getAngle());
-
-                        clearing.setScaledXRegular((int) Math.round(point[0]));
-                        clearing.setScaledYRegular((int) Math.round(point[1]));
-                    } else {
-                        clearing.setScaledXRegular(clearing.getX());
-                        clearing.setScaledYRegular(clearing.getY());
-                    }
-                }
-            }
         }
         return bufferedImage;
     }
@@ -208,6 +212,22 @@ public class BoardServices {
 
     public int applyTileYOffset(final int clearingY, final int tileOffsetY) {
         return tileOffsetY + clearingY - CHIT_HEIGHT / 2;
+    }
+
+    public int getScaledXRegular(int x) {
+        return (int) Math.round(x / TILE_SCALEDOWN_MULTIPLIER_X);
+    }
+
+    public int getScaledYRegular(int y) {
+        return (int) Math.round(y / TILE_SCALEDOWN_MULTIPLIER_Y);
+    }
+
+    public int getScaledXAngled(int x) {
+        return (int) Math.round(x / ROTATED_TILE_SCALEDOWN_MULTIPLIER_X);
+    }
+
+    public int getScaledYAngled(int y) {
+        return (int) Math.round(y / ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y);
     }
 
 

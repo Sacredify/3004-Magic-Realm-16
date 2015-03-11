@@ -13,13 +13,7 @@ import java.util.List;
  * Date: 16/02/15
  * Time: 7:54 PM
  */
-public class Clearing implements Serializable {
-
-    public double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
-    public double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
-
-    public double ROTATED_TILE_SCALEDOWN_MULTIPLIER_X = 2.21;
-    public double ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y = 2;
+public class Clearing implements Serializable {;
 
     private int x;
 
@@ -112,22 +106,6 @@ public class Clearing implements Serializable {
 
     public void setY(int y) {
         this.y = y;
-    }
-
-    public void setScaledXRegular(int x) {
-        this.x = (int) Math.round(x / this.TILE_SCALEDOWN_MULTIPLIER_X);
-    }
-
-    public void setScaledYRegular(int y) {
-        this.y = (int) Math.round(y / this.TILE_SCALEDOWN_MULTIPLIER_Y);
-    }
-
-    public void setScaledXAngled(int x) {
-        this.x = (int) Math.round(x / this.ROTATED_TILE_SCALEDOWN_MULTIPLIER_X);
-    }
-
-    public void setScaledYAngled(int y) {
-        this.y = (int) Math.round(y / this.ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y);
     }
 
     public void addEntity(final Entity entity) {
