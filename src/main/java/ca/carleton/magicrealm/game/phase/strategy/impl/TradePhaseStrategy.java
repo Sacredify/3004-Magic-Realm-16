@@ -86,7 +86,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                                 case 5:
                                 case 6:
                                     // BLOCK/BATTLE
-                                    player.getCharacter().setBlocked(false);
+                                    player.getCharacter().setBlocked(true);
                                     break;
                                 default:
                                     LOG.error("Seriously how did we get this?");
@@ -118,7 +118,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                                     break;
                                 case 6:
                                     // BLOCK/BATTLE
-                                    player.getCharacter().setBlocked(false);
+                                    player.getCharacter().setBlocked(true);
                                     LOG.info("Blocked/Battle with the native!");
                                     break;
                                 default:
