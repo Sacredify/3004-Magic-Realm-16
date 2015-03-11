@@ -43,6 +43,7 @@ public class AppClient implements Runnable {
 
     public void write(Object msg) {
         try {
+            this.objOutStream.reset();
             this.objOutStream.writeObject(msg);
             this.objOutStream.flush();
         } catch (IOException e) {
@@ -83,15 +84,10 @@ public class AppClient implements Runnable {
     public void run() {
         LOG.info("Client thread started.");
         Object obj = null;
-        try {
-            obj = this.objInputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            LOG.error("Error with reading the object from the stream.", e);
-        }
-        while (obj != null) {
+        do {
             try {
-                this.gameController.handleMessage(obj);
                 obj = this.objInputStream.readObject();
+                this.gameController.handleMessage(obj);
             } catch (IOException | ClassNotFoundException e) {
                 LOG.error("Error with reading the object from the stream.", e);
                 System.exit(-1);
@@ -100,7 +96,7 @@ public class AppClient implements Runnable {
                 LOG.info("Disconnected from the server.");
                 break;
             }
-        }
+        } while (obj != null);
     }
 
     public int getId() {

@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class PhaseSelectorTest {
 
     public static void main(final String[] args) {
-        new PhaseSelectorMenu(new ArrayList<AbstractPhase>(), 4, new GameController()).setVisible(true);
+        new PhaseSelectorMenu(new Player(), new ArrayList<AbstractPhase>(), 4, new GameController()).setVisible(true);
     }
 
 }

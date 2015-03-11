@@ -25,8 +25,9 @@ public class ServerThread extends Thread {
 
     public void send(Object msg) {
         try {
-            objOutStream.writeObject(msg);
-            objOutStream.flush();
+            this.objOutStream.reset();
+            this.objOutStream.writeObject(msg);
+            this.objOutStream.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -35,49 +36,41 @@ public class ServerThread extends Thread {
 
 
     public void run() {
-
         Object obj = null;
-        try {
-            obj = objInputStream.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        while (obj != null) {
+        do {
             try {
-                server.handle(ID, obj);
-                obj = objInputStream.readObject();
+                obj = this.objInputStream.readObject();
+                this.server.handle(this.ID, obj);
             } catch (IOException e) {
                 e.printStackTrace();
                 System.exit(-1);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        }
+        } while (obj != null);
     }
 
 
     public void open() throws IOException {
-        System.out.println(ID + ":Opening buffer streams");
-        objOutStream = new ObjectOutputStream(socket.getOutputStream());
-        objInputStream = new ObjectInputStream(socket.getInputStream());
-        objOutStream.flush();
-        if (objInputStream == null) {
-            System.out.println("Unable to Open Object Input Stream on Thread:" + ID);
+        System.out.println(this.ID + ":Opening buffer streams");
+        this.objOutStream = new ObjectOutputStream(this.socket.getOutputStream());
+        this.objInputStream = new ObjectInputStream(this.socket.getInputStream());
+        this.objOutStream.flush();
+        if (this.objInputStream == null) {
+            System.out.println("Unable to Open Object Input Stream on Thread:" + this.ID);
         } else {
-            System.out.println("Able to Open Object Input Stream on Thread:" + ID);
+            System.out.println("Able to Open Object Input Stream on Thread:" + this.ID);
         }
-        if (objOutStream == null) {
-            System.out.println("Unable to Open Object Output Stream on Thread:" + ID);
+        if (this.objOutStream == null) {
+            System.out.println("Unable to Open Object Output Stream on Thread:" + this.ID);
         } else {
-            System.out.println("Able to Open Object Output Stream on Thread:" + ID);
+            System.out.println("Able to Open Object Output Stream on Thread:" + this.ID);
         }
     }
 
     public int getID() {
         // TODO Auto-generated method stub
-        return ID;
+        return this.ID;
     }
 
 }

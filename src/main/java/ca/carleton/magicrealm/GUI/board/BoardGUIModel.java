@@ -4,7 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
-import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.game.Player;
 
@@ -23,9 +23,9 @@ public class BoardGUIModel implements Serializable {
 
     private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
 
-    private ArrayList<AbstractTile> tiles = new ArrayList<AbstractTile>();
+    private final ArrayList<AbstractTile> tiles = new ArrayList<AbstractTile>();
 
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private final ArrayList<Player> players = new ArrayList<Player>();
 
     public BoardGUIModel() {
         // In the future, mark each tile's x and y grid coordinates when added
@@ -346,19 +346,25 @@ public class BoardGUIModel implements Serializable {
                 toReturn.add(tile);
             }
         }
-
         return toReturn;
     }
 
-    public AbstractTile getTileFromTileCollection(AbstractTile t) {
-        for (AbstractTile tileInMap : tiles) {
-            if (tileInMap.getTileType() == t.getTileType()) return tileInMap;
+    /**
+     * Return the clearing the player is currently located in.
+     *
+     * @param player the player to find.
+     * @return the clearing.
+     */
+    public Clearing getClearingForPlayer(final Player player) {
+        for (final AbstractTile tile : this.tiles) {
+            for (final Clearing clearing : tile.getClearings()) {
+                final AbstractCharacter playerCharacter = player.getCharacter();
+                if (clearing.getEntities().contains(playerCharacter)) {
+                    return clearing;
+                }
+            }
         }
         return null;
-    }
-
-    public void addEntityToClearing(int indexOfClearing, AbstractTile t, Entity e) {
-        getTileFromTileCollection(t).addEntityToClearing(indexOfClearing, e);
     }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {
@@ -366,7 +372,7 @@ public class BoardGUIModel implements Serializable {
     }
 
     public void addPlayer(Player p) {
-        players.add(p);
+        this.players.add(p);
     }
 
     public void setBoard(ArrayList<ArrayList<AbstractTile>> board) {

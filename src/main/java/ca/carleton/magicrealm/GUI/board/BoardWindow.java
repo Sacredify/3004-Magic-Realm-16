@@ -1,12 +1,9 @@
 package ca.carleton.magicrealm.GUI.board;
 
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
-import ca.carleton.magicrealm.entity.natives.AbstractNative;
-import ca.carleton.magicrealm.game.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by Tony on 12/02/2015.
@@ -44,10 +41,6 @@ public class BoardWindow extends JFrame {
         this.add(this.boardPanel);
     }
 
-    public void updateCharacterIcons(ArrayList<Player> otherPlayers) {
-        this.boardPanel.updateCharacterIcons(otherPlayers);
-    }
-
     public void setupStatusLabel() {
         this.boardPanel.setupStatusLabel();
     }
@@ -66,10 +59,6 @@ public class BoardWindow extends JFrame {
 
     public void hideStatusLabel() {
         boardPanel.hideStatusLabel();
-    }
-
-    public void setupNatives(java.util.List<AbstractNative> nativeList) {
-        this.boardPanel.setupNativeIcons(nativeList);
     }
 
     public void setGameInfoText(String text) {

@@ -24,15 +24,15 @@ public class MovePhaseStrategy implements PhaseStrategy {
 
     @Override
     public void doPhase(final Player player, final AbstractPhase phase) {
-        Clearing temp = player.getCurrentClearing();
 
+        final MovePhase move = (MovePhase) phase;
+        final Clearing temp = move.getOrigin();
 
         if (temp.getAdjacentClearings().contains(((MovePhase) phase).getMoveTarget())) {
-            player.getCurrentClearing().removeEntity(player.getCharacter());
-            player.setCurrentClearing(((MovePhase) phase).getMoveTarget());
-            player.getCurrentClearing().addEntity(player.getCharacter());
-            LOG.info("Moved player from {} to {}.", temp, player.getCurrentClearing());
-        }  else {
+            temp.removeEntity(player.getCharacter());
+            move.getMoveTarget().addEntity(player.getCharacter());
+            LOG.info("Moved player from {} to {}.", temp, move.getMoveTarget());
+        } else {
             LOG.info("Played entered invalid location for his move phase. Not executed. (Tried {}).", ((MovePhase) phase).getMoveTarget());
         }
     }

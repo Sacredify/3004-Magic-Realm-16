@@ -91,4 +91,9 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     public void addCurrentSpells(int currentSpellsCount) {
         this.currentSpellsCount += currentSpellsCount;
     }
+
+    @Override
+    public boolean equals(final Object rhs) {
+        return rhs instanceof AbstractCharacter && this.getEntityInformation() == ((AbstractCharacter) rhs).getEntityInformation();
+    }
 }

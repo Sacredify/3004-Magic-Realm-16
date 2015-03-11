@@ -1,6 +1,8 @@
 package ca.carleton.magicrealm.game.phase.impl;
 
+import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.game.DiceRoller;
+import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 
@@ -19,4 +21,10 @@ public class HidePhase extends AbstractPhase {
     public PhaseType getPhaseType() {
         return PhaseType.HIDE;
     }
+
+    @Override
+    public void updateFromBoard(final Player player, final BoardGUIModel board) {
+        // do nothing, we don't need to here.
+    }
+
 }

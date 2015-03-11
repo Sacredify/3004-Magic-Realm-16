@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.MoveSelectionMenu;
 import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 
@@ -27,7 +28,10 @@ public class PhaseSelectorMenu extends JDialog {
 
     MoveSelectionMenu moveSelectionMenu;
 
-    public PhaseSelectorMenu(final List<AbstractPhase> phases, int numberOfPhases, final GameController gameController) {
+    private final Player player;
+
+    public PhaseSelectorMenu(final Player player, final List<AbstractPhase> phases, int numberOfPhases, final GameController gameController) {
+        this.player = player;
         this.setTitle(PHASE_SELECTOR_WINDOW);
         this.setLocationRelativeTo(gameController.getParentWindow());
 
@@ -59,7 +63,7 @@ public class PhaseSelectorMenu extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
                 if (selectedPhase.equals(PhaseType.MOVE)) {
-                    PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getBoardModel().getAllTiles());
+                    PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getBoardModel());
                     PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForMoveSelectButton());
                 } else if (selectedPhase.equals(PhaseType.HIDE)) {
                     PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase();
@@ -73,7 +77,8 @@ public class PhaseSelectorMenu extends JDialog {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PhaseSelectorMenu.this.phaseSelectorModel.addMovementPhase(PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue());
+                PhaseSelectorMenu.this.phaseSelectorModel.addMovementPhase(PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue(),
+                        PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(PhaseSelectorMenu.this.player));
                 PhaseSelectorMenu.this.moveSelectionMenu.dispose();
             }
         };

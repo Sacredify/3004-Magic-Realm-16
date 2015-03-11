@@ -18,7 +18,7 @@ public class AppServer implements Runnable {
 
     public static final int MAX_ROUNDS = 28;
 
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 1;
 
     private int clientCount = 0;
 
@@ -81,8 +81,7 @@ public class AppServer implements Runnable {
         switch (m.getMessageType()) {
             case (Message.SELECT_CHARACTER):
                 Player player = (Player) m.getMessageObject();
-                player.setCurrentClearing(this.boardModel.getStartingLocation());
-                player.getCurrentClearing().addEntity(player.getCharacter());
+                this.boardModel.getStartingLocation().addEntity(player.getCharacter());
                 this.boardModel.addPlayer(player);
                 LOG.info("Updated board model.");
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {

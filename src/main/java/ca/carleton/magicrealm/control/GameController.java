@@ -79,6 +79,7 @@ public class GameController {
                     this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
                     this.updateCurrentPlayer();
                     // Process daylight
+                    this.processUpdatedPhasesFromBoard();
                     this.processDaylight();
                     break;
                 case (Message.SUNSET_START):
@@ -119,7 +120,7 @@ public class GameController {
      */
     public void selectPhasesForDay() {
         LOG.info("Displayed birdsong action menu.");
-        new PhaseSelectorMenu(this.recordedPhasesForDay, 1, this).setVisible(true);
+        new PhaseSelectorMenu(this.currentPlayer, this.recordedPhasesForDay, 1, this).setVisible(true);
     }
 
     /**
@@ -145,10 +146,19 @@ public class GameController {
     }
 
     /**
+     * Because we send the entire board, we need to update the phases, since the references are now garbled.
+     */
+    public void processUpdatedPhasesFromBoard() {
+        for (final AbstractPhase phase : this.recordedPhasesForDay) {
+            phase.updateFromBoard(this.currentPlayer, this.boardModel);
+        }
+    }
+
+    /**
      * Processes the daylight phases for this client.
      */
     public void processDaylight() {
-        Daylight.processPhasesForPlayer(this.currentPlayer, this.recordedPhasesForDay);
+        Daylight.processPhasesForPlayer(this.boardModel, this.currentPlayer, this.recordedPhasesForDay);
         this.updatePlayerInMap();
         this.refreshBoard();
         LOG.info("Executed daylight phase for player.");
@@ -222,18 +232,18 @@ public class GameController {
 
     public void refreshBoard() {
         this.boardWindow.refresh(this.boardModel, this.currentPlayer.getCharacter());
-        this.boardWindow.setGameInfoText(createGameInfoString());
+        this.boardWindow.setGameInfoText(this.createGameInfoString());
         LOG.info("Board refreshed.");
     }
 
     private String createGameInfoString() {
         String gameInfoText = "<html>";
-        gameInfoText = gameInfoText.concat("Character: "+ currentPlayer.getCharacter().toString() + "<br/>" +
-                                           "Needed gold: " + currentPlayer.getVictoryCondition().getGold() + "<br/>" +
-                                           "Needed notoriety: " + currentPlayer.getVictoryCondition().getNotoriety() + "<br/>" +
-                                           "Needed fame: " + currentPlayer.getVictoryCondition().getFame() + "<br/>" +
-                                           "Needed spell count: " + currentPlayer.getVictoryCondition().getSpellsCount() + "<br/>" +
-                                           "Needed great treasures count: " + currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/>");
+        gameInfoText = gameInfoText.concat("Character: "+ this.currentPlayer.getCharacter().toString() + "<br/>" +
+                                           "Needed gold: " + this.currentPlayer.getVictoryCondition().getGold() + "<br/>" +
+                                           "Needed notoriety: " + this.currentPlayer.getVictoryCondition().getNotoriety() + "<br/>" +
+                                           "Needed fame: " + this.currentPlayer.getVictoryCondition().getFame() + "<br/>" +
+                                           "Needed spell count: " + this.currentPlayer.getVictoryCondition().getSpellsCount() + "<br/>" +
+                                           "Needed great treasures count: " + this.currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/>");
         gameInfoText = gameInfoText.concat("</html>");
 
         return gameInfoText;

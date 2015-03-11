@@ -1,6 +1,5 @@
 package ca.carleton.magicrealm.game;
 
-import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 
 import java.io.Serializable;
@@ -26,11 +25,7 @@ public class Player implements Serializable {
      */
     private VictoryCondition victoryCondition;
 
-    /**
-     * The clearing the player is currently located on.
-     */
-    private Clearing currentClearing;
-
+    //private Clearing currentClearing;
 
     public Player() {
         this.victoryCondition = new VictoryCondition();
@@ -52,6 +47,7 @@ public class Player implements Serializable {
         this.victoryCondition = victoryCondition;
     }
 
+    /*
     public Clearing getCurrentClearing() {
         return this.currentClearing;
     }
@@ -59,9 +55,15 @@ public class Player implements Serializable {
     public void setCurrentClearing(final Clearing currentClearing) {
         this.currentClearing = currentClearing;
     }
+    */
 
     public boolean isSamePlayer(final Player player) {
         return this.getCharacter().getEntityInformation().convertToCharacterType() == player.getCharacter().getEntityInformation().convertToCharacterType();
+    }
+
+    @Override
+    public boolean equals(Object rhs) {
+        return rhs instanceof Player && this.getCharacter().getEntityInformation() == ((Player) rhs).getCharacter().getEntityInformation();
     }
 
 }

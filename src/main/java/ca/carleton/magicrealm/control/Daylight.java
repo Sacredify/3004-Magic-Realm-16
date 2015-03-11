@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.control;
 
+import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
@@ -35,7 +36,7 @@ public class Daylight {
         phaseStrategies.add(new HidePhaseStrategy());
     }
 
-    public static void processPhasesForPlayer(final Player player, final List<AbstractPhase> phasesToExecute) {
+    public static void processPhasesForPlayer(final BoardGUIModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
 
         LOG.info("Setting character status to unhidden.");
         player.getCharacter().setHidden(false);
@@ -48,7 +49,7 @@ public class Daylight {
                     strategy.doPhase(player, phase);
                     LOG.info("Executed phase {}.", phase);
                     LOG.info("Checking to see if the character is blocked...");
-                    if (characterNowBlocked(player)) {
+                    if (characterNowBlocked(player, board)) {
                         LOG.info("Player is now blocked. All remaining phases will not be executed.");
                         break phaseLoop;
                     } else {
@@ -71,10 +72,11 @@ public class Daylight {
      * See the rules for details on character vs character blocking in the THIRD ENCOUNTER.
      *
      * @param player the player to check
+     * @param board  the board.
      * @return true if the player is now BLOCKED.
      */
-    public static boolean characterNowBlocked(final Player player) {
-        final Clearing playerClearing = player.getCurrentClearing();
+    public static boolean characterNowBlocked(final Player player, final BoardGUIModel board) {
+        final Clearing playerClearing = board.getClearingForPlayer(player);
 
         if (!player.getCharacter().isHidden()) {
             for (final Entity entity : playerClearing.getEntities()) {
