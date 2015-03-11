@@ -238,12 +238,17 @@ public class GameController {
 
     private String createGameInfoString() {
         String gameInfoText = "<html>";
-        gameInfoText = gameInfoText.concat("Character: "+ this.currentPlayer.getCharacter().toString() + "<br/>" +
-                                           "Needed gold: " + this.currentPlayer.getVictoryCondition().getGold() + "<br/>" +
-                                           "Needed notoriety: " + this.currentPlayer.getVictoryCondition().getNotoriety() + "<br/>" +
-                                           "Needed fame: " + this.currentPlayer.getVictoryCondition().getFame() + "<br/>" +
-                                           "Needed spell count: " + this.currentPlayer.getVictoryCondition().getSpellsCount() + "<br/>" +
-                                           "Needed great treasures count: " + this.currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/>");
+        gameInfoText = gameInfoText.concat("Character: " + this.currentPlayer.getCharacter().toString() + "<br/>" +
+                "Current gold: " + this.currentPlayer.getCharacter().getCurrentGold() + "<br/>" +
+                "Current notoriety: " + this.currentPlayer.getCharacter().getCurrentNotoriety() + "<br/>" +
+                "Current fame: " + this.currentPlayer.getCharacter().getCurrentFame() + "<br/>" +
+                "Current spell count: " + this.currentPlayer.getCharacter().getCurrentSpellsCount() + "<br/>" +
+                "Current great treasures count: " + this.currentPlayer.getCharacter().getCurrentGreatTreasuresCount() + "<br/>" +
+                "Needed gold: " + this.currentPlayer.getVictoryCondition().getGold() + "<br/>" +
+                "Needed notoriety: " + this.currentPlayer.getVictoryCondition().getNotoriety() + "<br/>" +
+                "Needed fame: " + this.currentPlayer.getVictoryCondition().getFame() + "<br/>" +
+                "Needed spell count: " + this.currentPlayer.getVictoryCondition().getSpellsCount() + "<br/>" +
+                "Needed great treasures count: " + this.currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/>");
         gameInfoText = gameInfoText.concat("</html>");
 
         return gameInfoText;
