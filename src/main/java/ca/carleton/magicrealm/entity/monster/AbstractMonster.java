@@ -2,8 +2,6 @@ package ca.carleton.magicrealm.entity.monster;
 
 import ca.carleton.magicrealm.entity.BountyCarrier;
 import ca.carleton.magicrealm.entity.Denizen;
-import ca.carleton.magicrealm.entity.Entity;
-import com.sun.corba.se.impl.orbutil.DenseIntMapImpl;
 
 /**
  * Created with IntelliJ IDEA.
