@@ -127,7 +127,6 @@ public class TradePhaseStrategy implements PhaseStrategy {
                                 case 6:
                                     // BLOCK/BATTLE
                                     player.getCharacter().setBlocked(true);
-                                    LOG.info("Blocked/Battle with the native!");
                                     break;
                                 default:
                                     LOG.error("Seriously how did we get this?");
@@ -244,7 +243,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                 player.getCharacter().addItem(trade.getItemToTrade());
                 player.getCharacter().addGold(-goldValueOfItem);
                 LOG.info("Added {} to {}'s inventory.", trade.getItemToTrade(), player.getCharacter().getEntityInformation().convertToCharacterType());
-                LOG.info("Removed {} to {}'s inventory.", trade.getItemToTrade(), trade.getTradeTarget().getEntityInformation());
+                LOG.info("Removed {} from {}'s inventory.", trade.getItemToTrade(), trade.getTradeTarget().getEntityInformation());
             }
         }
     }
