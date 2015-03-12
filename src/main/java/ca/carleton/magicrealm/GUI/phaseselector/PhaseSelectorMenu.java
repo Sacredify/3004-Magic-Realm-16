@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.MoveSelectionMenu;
+import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.TradeSelectionMenu;
 import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
@@ -27,6 +28,8 @@ public class PhaseSelectorMenu extends JDialog {
     GameController controller;
 
     MoveSelectionMenu moveSelectionMenu;
+
+    TradeSelectionMenu tradeSelectionMenu;
 
     private final Player player;
 
@@ -69,6 +72,10 @@ public class PhaseSelectorMenu extends JDialog {
                     PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase();
                     ((JButton) e.getSource()).setEnabled(false);
                 }
+                else if (selectedPhase.equals(PhaseType.TRADE)) {
+                    PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(player, controller.getBoardModel().getTradeableTargets());
+
+                }
             }
         };
     }
@@ -92,4 +99,6 @@ public class PhaseSelectorMenu extends JDialog {
             }
         };
     }
+
+
 }

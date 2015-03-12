@@ -64,7 +64,7 @@ public class BoardPanel extends JLayeredPane {
      *
      * @param boardGUIModel board to draw
      */
-    public void drawBoard(BoardGUIModel boardGUIModel, AbstractCharacter character) {
+    public void drawBoard(final BoardGUIModel boardGUIModel, final AbstractCharacter character) {
         this.removeAll();
         maximumX = 0;
 
