@@ -23,11 +23,8 @@ public class TradeSelectionPanel extends JPanel {
 
     private JList<Entity> entitiesAvailableList;
     private JList<Item> itemsAvailableList;
-
-    private JScrollPane entitiesScrollPane;
     private JScrollPane itemsScrollPane;
 
-    private ButtonGroup buyOrSellButtonGroup;
     private JRadioButton buyRadioButton;
     private JRadioButton sellRadioButton;
 
@@ -42,8 +39,9 @@ public class TradeSelectionPanel extends JPanel {
         this.entitiesAvailableList.setListData(tradeableEntities.toArray(new Entity[entitiesOnClearing.size()]));
         this.entitiesAvailableList.addListSelectionListener(this.entitiesListActionListener());
 
-        this.entitiesScrollPane = new JScrollPane();
-        this.entitiesScrollPane.setViewportView(this.entitiesAvailableList);
+        JScrollPane entitiesScrollPane;
+        entitiesScrollPane = new JScrollPane();
+        entitiesScrollPane.setViewportView(this.entitiesAvailableList);
         this.add(entitiesScrollPane);
 
         /** Radio buttons **/
@@ -56,15 +54,17 @@ public class TradeSelectionPanel extends JPanel {
         this.sellRadioButton.setEnabled(false);
         this.add(sellRadioButton);
 
-        this.buyOrSellButtonGroup = new ButtonGroup();
-        this.buyOrSellButtonGroup.add(buyRadioButton);
-        this.buyOrSellButtonGroup.add(sellRadioButton);
+        ButtonGroup buyOrSellButtonGroup;
+        buyOrSellButtonGroup = new ButtonGroup();
+        buyOrSellButtonGroup.add(buyRadioButton);
+        buyOrSellButtonGroup.add(sellRadioButton);
 
         this.playerItems = new ArrayList<>();
         this.playerItems.addAll(player.getCharacter().getItems());
 
+        this.itemsAvailableList = new JList<>();
         this.itemsScrollPane = new JScrollPane();
-        this.itemsScrollPane.setVisible(false);
+        this.itemsScrollPane.setViewportView(this.itemsAvailableList);
         this.add(itemsScrollPane);
 
         this.confirmTradeButton = new JButton(CONFIRM);
@@ -102,8 +102,6 @@ public class TradeSelectionPanel extends JPanel {
             this.itemsAvailableList.setListData(this.playerItems.toArray(new Item[playerItems.size()]));
         }
         this.itemsScrollPane.setViewportView(this.itemsAvailableList);
-        this.itemsScrollPane.setVisible(true);
-        this.add(itemsScrollPane);
     }
 
     public JList<Entity> getEntitiesAvailableList() {

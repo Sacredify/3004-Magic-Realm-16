@@ -15,7 +15,7 @@ public class TradeSelectionMenu extends JDialog{
 
     public final String TRADE_SELECTION_WINDOW_TITLE = "What would you like to trade";
 
-    public static final int WINDOW_WIDTH = 500;
+    public static final int WINDOW_WIDTH = 600;
 
     public static final int WINDOW_HEIGHT = 350;
 
