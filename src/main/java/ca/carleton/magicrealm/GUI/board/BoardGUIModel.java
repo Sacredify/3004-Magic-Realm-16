@@ -4,8 +4,10 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
+import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
 
 import java.io.Serializable;
@@ -367,16 +369,36 @@ public class BoardGUIModel implements Serializable {
         return null;
     }
 
+    /**
+     * Finds all the entities on the board that can trade with a player.
+     * @return
+     */
+    public List<Entity> getTradeableTargets() {
+        final List<Entity> entities = new ArrayList<Entity>();
+
+        for (final AbstractTile tile : this.tiles) {
+            for (final Clearing clearing : tile.getClearings()) {
+               for (final Entity entity : clearing.getEntities()) {
+                   if (entity instanceof AbstractNative) {
+                      if (((AbstractNative) entity).isLeader()) {
+                          entities.add(entity);
+                      }
+                   } else if (entity instanceof AbstractCharacter) {
+                       // TODO No trading with other characters at the moment...
+                   }
+               }
+            }
+        }
+
+        return entities;
+    }
+
     public ArrayList<ArrayList<AbstractTile>> getBoard() {
         return this.board;
     }
 
     public void addPlayer(Player p) {
         this.players.add(p);
-    }
-
-    public void setBoard(ArrayList<ArrayList<AbstractTile>> board) {
-        this.board = board;
     }
 
     public ArrayList<Player> getPlayers() {
