@@ -25,7 +25,7 @@ public class Ledges extends AbstractTile {
 
         this.clearings[2].setX(376);
         this.clearings[2].setY(273);
-        this.clearings[3].setName("3");
+        this.clearings[2].setName("3");
 
         this.clearings[3].setX(209);
         this.clearings[3].setY(248);
