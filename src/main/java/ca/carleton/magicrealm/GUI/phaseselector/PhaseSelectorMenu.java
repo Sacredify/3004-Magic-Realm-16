@@ -73,7 +73,7 @@ public class PhaseSelectorMenu extends JDialog {
                     ((JButton) e.getSource()).setEnabled(false);
                 }
                 else if (selectedPhase.equals(PhaseType.TRADE)) {
-                    PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(player, controller.getBoardModel().getTradeableTargets());
+                    PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(PhaseSelectorMenu.this.player, PhaseSelectorMenu.this.controller.getBoardModel().getTradeableTargets());
 
                 }
             }
