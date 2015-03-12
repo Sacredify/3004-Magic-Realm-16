@@ -29,4 +29,8 @@ public class TradeSelectionMenu extends JDialog{
         this.add(this.tradeSelectionPanel);
         this.setVisible(true);
     }
+
+    public TradeSelectionPanel getTradeSelectionPanel() {
+        return tradeSelectionPanel;
+    }
 }
