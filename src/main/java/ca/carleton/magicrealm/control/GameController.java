@@ -152,6 +152,7 @@ public class GameController {
         for (final AbstractPhase phase : this.recordedPhasesForDay) {
             phase.updateFromBoard(this.currentPlayer, this.boardModel);
         }
+        LOG.info("Updated {} phases' data from the board before beginning daylight.", this.recordedPhasesForDay.size());
     }
 
     /**
