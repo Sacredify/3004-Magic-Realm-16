@@ -52,7 +52,7 @@ public class ClientMain {
 
         } catch (final Exception exception) {
             LOG.error("Error with options parse. {}", exception.getMessage());
-            formatter.printHelp("Team 16's Magic Realm Client", options);
+            formatter.printHelp("java -jar Magic_Realm_Client.jar", options);
         }
     }
 }
