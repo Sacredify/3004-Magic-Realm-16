@@ -1,6 +1,5 @@
 package ca.carleton.magicrealm.GUI.phaseselector.detailwindows;
 
-import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.item.Item;
@@ -20,6 +19,7 @@ public class TradeSelectionPanel extends JPanel {
     public final String SELL = "Sell";
     public final String BUY = "Buy";
     public final String CONFIRM = "Confirm";
+    public final String BUY_DRINKS_TEXT = "Buy drinks";
 
     private JList<Entity> entitiesAvailableList;
     private JList<Item> itemsAvailableList;
@@ -27,6 +27,8 @@ public class TradeSelectionPanel extends JPanel {
 
     private JRadioButton buyRadioButton;
     private JRadioButton sellRadioButton;
+
+    private JCheckBox buyDrinksCheckBox;
 
     private JButton confirmTradeButton;
 
@@ -37,7 +39,7 @@ public class TradeSelectionPanel extends JPanel {
 
         this.entitiesAvailableList = new JList<>();
         this.entitiesAvailableList.setListData(tradeableEntities.toArray(new Entity[entitiesOnClearing.size()]));
-        this.entitiesAvailableList.addListSelectionListener(this.entitiesListActionListener());
+        this.entitiesAvailableList.addListSelectionListener(this.entitiesListSelectionListener());
 
         JScrollPane entitiesScrollPane;
         entitiesScrollPane = new JScrollPane();
@@ -62,22 +64,37 @@ public class TradeSelectionPanel extends JPanel {
         this.playerItems = new ArrayList<>();
         this.playerItems.addAll(player.getCharacter().getItems());
 
+        this.buyDrinksCheckBox = new JCheckBox();
+        this.buyDrinksCheckBox.setText(BUY_DRINKS_TEXT);
+        this.add(buyDrinksCheckBox);
+
         this.itemsAvailableList = new JList<>();
+        this.itemsAvailableList.addListSelectionListener(this.itemListSelectionListener());
         this.itemsScrollPane = new JScrollPane();
         this.itemsScrollPane.setViewportView(this.itemsAvailableList);
         this.add(itemsScrollPane);
 
         this.confirmTradeButton = new JButton(CONFIRM);
         this.confirmTradeButton.setSize(40, 30);
+        this.confirmTradeButton.setEnabled(false);
         this.add(confirmTradeButton);
     }
 
-    private ListSelectionListener entitiesListActionListener() {
+    private ListSelectionListener entitiesListSelectionListener() {
         return new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 buyRadioButton.setEnabled(true);
                 sellRadioButton.setEnabled(true);
+            }
+        };
+    }
+
+    private ListSelectionListener itemListSelectionListener() {
+        return new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                confirmTradeButton.setEnabled(true);
             }
         };
     }
@@ -101,6 +118,7 @@ public class TradeSelectionPanel extends JPanel {
         else if (sellRadioButton.isSelected()) {
             this.itemsAvailableList.setListData(this.playerItems.toArray(new Item[playerItems.size()]));
         }
+        this.itemsAvailableList.addListSelectionListener(this.itemListSelectionListener());
         this.itemsScrollPane.setViewportView(this.itemsAvailableList);
     }
 
@@ -112,5 +130,15 @@ public class TradeSelectionPanel extends JPanel {
         return itemsAvailableList;
     }
 
+    public JRadioButton getSellRadioButton() {
+        return sellRadioButton;
+    }
 
+    public JCheckBox getBuyDrinksCheckBox() {
+        return buyDrinksCheckBox;
+    }
+
+    public JButton getConfirmTradeButton() {
+        return confirmTradeButton;
+    }
 }

@@ -1,9 +1,12 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.impl.HidePhase;
 import ca.carleton.magicrealm.game.phase.impl.MovePhase;
+import ca.carleton.magicrealm.game.phase.impl.TradePhase;
+import ca.carleton.magicrealm.item.Item;
 
 import java.util.List;
 
@@ -28,6 +31,15 @@ public class PhaseSelectorModel {
         movePhase.setMoveTarget(clearing);
         movePhase.setOrigin(origin);
         this.phases.add(movePhase);
+    }
+
+    public void addTradePhase(final Entity tradeTarget, final Item tradedItem, final boolean selling, final boolean isDrinksBought) {
+        final TradePhase tradePhase = new TradePhase();
+        tradePhase.setTradeTarget(tradeTarget);
+        tradePhase.setItemToTrade(tradedItem);
+        tradePhase.setSelling(selling);
+        tradePhase.setDrinksBought(isDrinksBought);
+        this.phases.add(tradePhase);
     }
 
     public void addHidePhase() {

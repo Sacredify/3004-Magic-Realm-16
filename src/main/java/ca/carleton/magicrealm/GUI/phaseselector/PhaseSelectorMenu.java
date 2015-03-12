@@ -3,9 +3,11 @@ package ca.carleton.magicrealm.GUI.phaseselector;
 import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.MoveSelectionMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.TradeSelectionMenu;
 import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
+import ca.carleton.magicrealm.item.Item;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -74,7 +76,7 @@ public class PhaseSelectorMenu extends JDialog {
                 }
                 else if (selectedPhase.equals(PhaseType.TRADE)) {
                     PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(PhaseSelectorMenu.this.player, PhaseSelectorMenu.this.controller.getBoardModel().getTradeableTargets());
-
+                    PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getConfirmTradeButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForTradeConfirmButton());
                 }
             }
         };
@@ -100,5 +102,18 @@ public class PhaseSelectorMenu extends JDialog {
         };
     }
 
+    public ActionListener createActionListenerForTradeConfirmButton() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Entity tradeTarget = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getEntitiesAvailableList().getSelectedValue();
+                Item tradedItem = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getItemsAvailableList().getSelectedValue();
+                boolean isSelling = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getSellRadioButton().isSelected();
+                boolean isBuyingDrinks = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getBuyDrinksCheckBox().isSelected();
 
+                PhaseSelectorMenu.this.phaseSelectorModel.addTradePhase(tradeTarget, tradedItem, isSelling, isBuyingDrinks);
+                PhaseSelectorMenu.this.tradeSelectionMenu.dispose();
+            }
+        };
+    }
 }
