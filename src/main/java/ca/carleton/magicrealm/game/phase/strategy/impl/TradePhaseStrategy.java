@@ -58,6 +58,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                 if (trade.override == 0) {
                     meetingTableRoll = DiceRoller.rollTwiceTakeHigher();
                     if (trade.isDrinksBought() && meetingTableRoll != 6) {
+                        player.getCharacter().addGold(-1);
                         meetingTableRoll += 1;
                     }
                 } else {
