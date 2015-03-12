@@ -29,6 +29,11 @@ public class TradePhase extends AbstractPhase implements Interactable {
 
     private boolean drinksBought;
 
+    /**
+     * For cheating. Allows overriding the default behaviour with the roll we want.
+     */
+    public int override = 0;
+
     @Override
     public PhaseType getPhaseType() {
         return PhaseType.TRADE;

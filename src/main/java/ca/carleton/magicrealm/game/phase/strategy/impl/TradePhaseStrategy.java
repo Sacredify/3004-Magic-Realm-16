@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Note that this does not do any error checking. That is, gold values are assumed to be correct. As with move phases,
  * it is up to the player to ensure they have the correct amount.
- *
+ * <p/>
  * Created with IntelliJ IDEA.
  * Date: 11/03/15
  * Time: 4:43 PM
@@ -52,10 +52,16 @@ public class TradePhaseStrategy implements PhaseStrategy {
                 doTrade = true;
             } else {
 
-                // Get roll from the meeting table for trading with native or visitor..
-                int meetingTableRoll = DiceRoller.rollTwiceTakeHigher();
-                if (trade.isDrinksBought() && meetingTableRoll != 6) {
-                    meetingTableRoll += 1;
+                // Get roll from the meeting table for trading with native or visitor...
+                // Also allows cheating.
+                int meetingTableRoll;
+                if (trade.override == 0) {
+                    meetingTableRoll = DiceRoller.rollTwiceTakeHigher();
+                    if (trade.isDrinksBought() && meetingTableRoll != 6) {
+                        meetingTableRoll += 1;
+                    }
+                } else {
+                    meetingTableRoll = trade.override;
                 }
 
                 LOG.info("Rolled a {} on the meeting table. [bought drinks = {}]", meetingTableRoll, trade.isDrinksBought());

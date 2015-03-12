@@ -53,6 +53,7 @@ public class MovePhaseTest {
 
     @Test
     public void canIgnoreMoveToInvalidLocation() {
+
         // Create the board and player
         final BoardGUIModel boardGUIModel = new BoardGUIModel();
         ChitBuilder.placeChits(boardGUIModel);
