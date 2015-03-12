@@ -1,6 +1,5 @@
 package ca.carleton.magicrealm.GUI.tile;
 
-import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.chit.ColoredChit;
 
 import java.io.Serializable;
@@ -14,11 +13,11 @@ import java.util.List;
  */
 public abstract class AbstractTile implements Serializable {
 
+    private static final long serialVersionUID = -5228583595459151067L;
+
     protected Clearing[] clearings;
 
-    private int clearingCount = 0;
-
-    private List<ColoredChit> chits = new ArrayList<ColoredChit>();
+    private final List<ColoredChit> chits = new ArrayList<ColoredChit>();
 
     public abstract TileInformation getTileInformation();
 
@@ -27,54 +26,12 @@ public abstract class AbstractTile implements Serializable {
     // refactor this later
     private int angle;
 
-    /**
-     * Add a clearing to th is tile.
-     *
-     * @param clearing the clearing to add.
-     */
-    public void addClearing(final Clearing clearing) {
-        if (this.clearings == null) {
-            System.out.println("Cannot add a clearing to an uninitialized tile.");
-        }
-
-        if (this.clearingCount < this.clearings.length) {
-            this.clearings[this.clearingCount] = clearing;
-            this.clearingCount++;
-        } else {
-            System.out.println("Clearings are full.");
-        }
-
-    }
-
-    public void addEntityToClearing(int clearingIndex,Entity e){
-        getClearingAt(clearingIndex).addEntity(e);
-    }
-
-    /**
-     * Return the clearing at the given index.
-     *
-     * @param index the index.
-     * @return the clearing.
-     */
-    public Clearing getClearingAt(final int index) {
-        return this.clearings[index];
-    }
-
-    /**
-     * Test to see if the tile is full.
-     *
-     * @return true if it is full
-     */
-    public boolean isFull() {
-        return this.clearings[this.clearings.length - 1] != null;
-    }
-
     public Clearing[] getClearings() {
-        return clearings;
+        return this.clearings;
     }
 
     public int getAngle() {
-        return angle;
+        return this.angle;
     }
 
     public void setAngle(int angle) {

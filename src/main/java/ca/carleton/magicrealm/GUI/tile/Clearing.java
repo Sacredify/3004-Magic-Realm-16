@@ -55,15 +55,6 @@ public class Clearing implements Serializable {;
     }
 
     /**
-     * Add a clearing that is adjacent to this one.
-     *
-     * @param clearing the clearing to add.
-     */
-    public void addAdjacentClearing(final Clearing clearing) {
-        this.adjacentClearings.add(clearing);
-    }
-
-    /**
      * Return the list of adjacent clearings.
      *
      * @return the adjacent clearings one may move to.
@@ -77,7 +68,7 @@ public class Clearing implements Serializable {;
      *
      * @return the parent tile.
      */
-    public AbstractTile getParentTime() {
+    public AbstractTile getParentTile() {
         return this.parentTile;
     }
 
