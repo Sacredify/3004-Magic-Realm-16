@@ -81,7 +81,7 @@ public class AppServer implements Runnable {
         switch (m.getMessageType()) {
             case (Message.SELECT_CHARACTER):
                 Player player = (Player) m.getMessageObject();
-                this.boardModel.getStartingLocation().addEntity(player.getCharacter());
+                this.boardModel.getClearingOfDwelling(player.getStartingLocation()).addEntity(player.getCharacter());
                 this.boardModel.addPlayer(player);
                 LOG.info("Updated board model.");
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {

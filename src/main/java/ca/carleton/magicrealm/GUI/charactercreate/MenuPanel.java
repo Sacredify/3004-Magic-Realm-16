@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.charactercreate;
 
 import ca.carleton.magicrealm.entity.character.CharacterType;
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,9 +29,15 @@ public class MenuPanel extends JPanel {
 
     JLabel pointsInfoLabel;
 
+    JLabel dwellingLabel;
+
     JList<CharacterType> characterSelectList;
 
-    private MenuModel model;
+    JList<Dwelling> dwellingList;
+
+    private DefaultListModel<Dwelling> data =  new DefaultListModel<Dwelling>();
+
+    private final MenuModel model;
 
     public MenuPanel(final MenuModel model) {
         this.setLayout(null);
@@ -74,6 +81,17 @@ public class MenuPanel extends JPanel {
         this.victoryPointsButtons[4][1].setEnabled(status);
     }
 
+    public void setChooseDwellingEnabled(final boolean status) {
+        if (status) {
+            for (final Dwelling dwelling : this.characterSelectList.getSelectedValue().getStartingLocations()) {
+                this.data.addElement(dwelling);
+            }
+        } else {
+            this.data.removeAllElements();
+        }
+        this.dwellingList.setEnabled(status);
+    }
+
     public void checkIndividualButtons() {
         // Need to check each individual condition for increment/decrement
         if (this.model.player.getVictoryCondition().getGold() == 0) {
@@ -104,8 +122,8 @@ public class MenuPanel extends JPanel {
 
     private void initializeSubmit() {
         this.submitButton = new JButton("Finish");
-        this.submitButton.setSize(150, 100);
-        this.submitButton.setLocation(475, 40);
+        this.submitButton.setSize(100, 100);
+        this.submitButton.setLocation(650, 40);
         this.submitButton.setVisible(true);
         this.submitButton.setEnabled(false);
         this.add(this.submitButton);
@@ -118,9 +136,14 @@ public class MenuPanel extends JPanel {
         this.characterSelectList.setToolTipText("Select a character.");
         this.characterSelectList.setVisible(true);
         this.add(this.characterSelectList);
+
+        this.dwellingList = new JList<Dwelling>(this.data);
+        this.dwellingList.setLocation(475, 40);
+        this.dwellingList.setSize(new Dimension(150, 110));
+        this.dwellingList.setToolTipText("Select a starting location.");
+        this.dwellingList.setVisible(true);
+        this.add(this.dwellingList);
     }
-
-
 
     private void initializeLabels() {
         this.victoryLabels = new JLabel[5];
@@ -158,6 +181,13 @@ public class MenuPanel extends JPanel {
         this.pointsInfoLabel.setSize(new Dimension(180, 20));
         this.pointsInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
         this.pointsInfoLabel.setLocation(265, 10);
+        this.pointsInfoLabel.setVisible(true);
+        this.add(this.pointsInfoLabel);
+
+        this.pointsInfoLabel = new JLabel("3. Select your start location:");
+        this.pointsInfoLabel.setSize(new Dimension(180, 20));
+        this.pointsInfoLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        this.pointsInfoLabel.setLocation(475, 10);
         this.pointsInfoLabel.setVisible(true);
         this.add(this.pointsInfoLabel);
 

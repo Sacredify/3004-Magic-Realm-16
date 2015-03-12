@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.game;
 
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 
 import java.io.Serializable;
 
@@ -24,6 +25,11 @@ public class Player implements Serializable {
      * The victory conditions for the player.
      */
     private VictoryCondition victoryCondition;
+
+    /**
+     * Where the player starts. Set during character create..
+     */
+    private Dwelling startingLocation;
 
     public Player() {
         this.victoryCondition = new VictoryCondition();
@@ -54,4 +60,11 @@ public class Player implements Serializable {
         return rhs instanceof Player && this.getCharacter().getEntityInformation() == ((Player) rhs).getCharacter().getEntityInformation();
     }
 
+    public Dwelling getStartingLocation() {
+        return this.startingLocation;
+    }
+
+    public void setStartingLocation(final Dwelling startingLocation) {
+        this.startingLocation = startingLocation;
+    }
 }

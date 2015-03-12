@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.charactercreate;
 import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.VictoryCondition;
 
@@ -21,13 +22,15 @@ public class MenuModel {
 
     Player player;
 
-    private GameController cont;
+    private final GameController cont;
 
     int pointsLeft = 5;
 
     private CharacterType selectedCharacter;
 
-    private CharacterCreateMenu frame;
+    private Dwelling selectedStartLocation;
+
+    private final CharacterCreateMenu frame;
 
     public MenuModel(final CharacterCreateMenu frame, final Player player, final List<CharacterType> availableCharacters,GameController cnt) {
         this.player = player;
@@ -100,6 +103,7 @@ public class MenuModel {
      */
     public void done() {
         this.player.setCharacter(CharacterFactory.createCharacter(this.selectedCharacter));
+        this.player.setStartingLocation(this.selectedStartLocation);
         this.frame.disposeWindow();
         this.cont.characterSelected();
     }
@@ -112,12 +116,13 @@ public class MenuModel {
         if (this.pointsLeft == 0) {
             this.frame.view.setIncrementKeysEnabled(false);
             this.frame.view.setDecrementKeysEnabled(true);
-            this.frame.view.setFinishEnabled(true);
+            this.frame.view.setChooseDwellingEnabled(true);
         } else if (this.pointsLeft == 5) {
             this.frame.view.setDecrementKeysEnabled(false);
             this.frame.view.setIncrementKeysEnabled(true);
+            this.frame.view.setChooseDwellingEnabled(false);
         } else {
-            this.frame.view.setFinishEnabled(false);
+            this.frame.view.setChooseDwellingEnabled(false);
             this.frame.view.setDecrementKeysEnabled(true);
             this.frame.view.setIncrementKeysEnabled(true);
         }
@@ -125,4 +130,11 @@ public class MenuModel {
         this.frame.view.checkIndividualButtons();
     }
 
+    public Dwelling getSelectedStartLocation() {
+        return this.selectedStartLocation;
+    }
+
+    public void setSelectedStartLocation(final Dwelling selectedStartLocation) {
+        this.selectedStartLocation = selectedStartLocation;
+    }
 }

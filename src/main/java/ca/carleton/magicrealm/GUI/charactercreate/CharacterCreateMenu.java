@@ -25,7 +25,7 @@ public class CharacterCreateMenu extends JDialog {
 
     private static final String WINDOW_NAME = "Character Creation";
 
-    public static final int WINDOW_WIDTH = 650;
+    public static final int WINDOW_WIDTH = 775;
 
     public static final int WINDOW_HEIGHT = 200;
 
@@ -89,14 +89,26 @@ public class CharacterCreateMenu extends JDialog {
             public void valueChanged(final ListSelectionEvent e) {
                 if (!CharacterCreateMenu.this.view.characterSelectList.isSelectionEmpty()) {
                     CharacterCreateMenu.this.model.setSelectedCharacter(CharacterCreateMenu.this.view.characterSelectList.getSelectedValue());
-                    CharacterCreateMenu.this.view.setIncrementKeysEnabled(true);
+                }
+                // Reset other data when choosing new character.
+                CharacterCreateMenu.this.model.player.setVictoryCondition(new VictoryCondition());
+                CharacterCreateMenu.this.model.pointsLeft = 5;
+                CharacterCreateMenu.this.view.updateText();
+                CharacterCreateMenu.this.view.setFinishEnabled(false);
+                CharacterCreateMenu.this.view.setChooseDwellingEnabled(false);
+                CharacterCreateMenu.this.view.setIncrementKeysEnabled(true);
+                CharacterCreateMenu.this.view.setDecrementKeysEnabled(false);
+            }
+        });
+
+        this.view.dwellingList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(final ListSelectionEvent e) {
+                if (!CharacterCreateMenu.this.view.dwellingList.isSelectionEmpty()) {
+                    CharacterCreateMenu.this.model.setSelectedStartLocation(CharacterCreateMenu.this.view.dwellingList.getSelectedValue());
+                    CharacterCreateMenu.this.view.setFinishEnabled(true);
                 } else {
-                    // Reset choices if for some reason a selection is disabled.
-                    CharacterCreateMenu.this.model.player.setVictoryCondition(new VictoryCondition());
-                    CharacterCreateMenu.this.view.setIncrementKeysEnabled(false);
-                    CharacterCreateMenu.this.view.setDecrementKeysEnabled(false);
                     CharacterCreateMenu.this.view.setFinishEnabled(false);
-                    CharacterCreateMenu.this.view.updateText();
                 }
             }
         });
