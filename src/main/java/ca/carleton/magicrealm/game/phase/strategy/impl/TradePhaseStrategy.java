@@ -97,6 +97,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                                 default:
                                     LOG.error("Seriously how did we get this?");
                             }
+                            break;
                         case UNFRIENDLY:
                             switch (meetingTableRoll) {
                                 case 1:
@@ -130,6 +131,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                                 default:
                                     LOG.error("Seriously how did we get this?");
                             }
+                            break;
                         case NEUTRAL:
                             switch (meetingTableRoll) {
                                 case 1:
@@ -158,6 +160,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                                 default:
                                     LOG.error("Seriously how did we get this?");
                             }
+                            break;
                         case FRIENDLY:
                             switch (meetingTableRoll) {
                                 case 1:
@@ -190,6 +193,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                                 default:
                                     LOG.error("Seriously how did we get this?");
                             }
+                            break;
                         case ALLY:
                             switch (meetingTableRoll) {
                                 case 1:
