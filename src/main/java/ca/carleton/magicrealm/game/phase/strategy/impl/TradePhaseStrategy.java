@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.game.phase.strategy.impl;
 
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
@@ -32,6 +33,11 @@ public class TradePhaseStrategy implements PhaseStrategy {
     @Override
     public void doPhase(final Player player, final AbstractPhase phase) {
         final TradePhase trade = (TradePhase) phase;
+
+        if (trade.getTradeTarget() instanceof Denizen && !((Denizen) trade.getTradeTarget()).getCurrentClearing().getEntities().contains(player.getCharacter())) {
+            LOG.info("Played entered invalid target for his trade phase. Not executed. (Tried {}).", trade.getTradeTarget());
+            return;
+        }
 
         // If we're selling our item to the native.
         if (trade.isSelling()) {
