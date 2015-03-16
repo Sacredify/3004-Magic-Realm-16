@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.game.combat.chit;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Used to do actions within the game (move, etc.)
  * <p/>
@@ -55,6 +57,21 @@ public class ActionChit {
 
     public int getTime() {
         return this.time;
+    }
+
+    @Override
+    public String toString() {
+        return StringUtils.capitalize(this.action.name().toLowerCase()) + this.strength + getAsterisksRepresentation(this.fatigueAsterisks);
+    }
+
+    private static String getAsterisksRepresentation(final int number) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(" ");
+        int count = 0;
+        while (count < number) {
+            builder.append("*");
+        }
+        return builder.toString();
     }
 
     /**
