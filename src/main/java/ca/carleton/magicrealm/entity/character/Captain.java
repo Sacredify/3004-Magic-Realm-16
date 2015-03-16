@@ -4,6 +4,8 @@ import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
+import ca.carleton.magicrealm.game.combat.chit.ActionType;
 import ca.carleton.magicrealm.item.armor.BreastPlate;
 import ca.carleton.magicrealm.item.armor.Helmet;
 import ca.carleton.magicrealm.item.armor.Shield;
@@ -15,6 +17,8 @@ import ca.carleton.magicrealm.item.weapon.ShortSword;
  * Time: 6:44 PM
  */
 public class Captain extends AbstractCharacter {
+
+    private static final long serialVersionUID = -4144177251532669363L;
 
     protected Captain() {
         this.vulnerability = Vulnerability.MEDIUM;
@@ -31,6 +35,23 @@ public class Captain extends AbstractCharacter {
         this.addRelationship(NativeFaction.GUARD, Relationship.FRIENDLY);
         this.addRelationship(NativeFaction.WOODFOLK, Relationship.UNFRIENDLY);
         this.addRelationship(NativeFaction.BASHKARS, Relationship.ENEMY);
+
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(1).withStrength("M").withTime(4).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(0).withStrength("M").withTime(5).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(1).withStrength("H").withTime(5).build());
+
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(0).withStrength("M").withTime(5).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength("M").withTime(3).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength("M").withTime(3).build());
+
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(1).withStrength("M").withTime(4).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(1).withStrength("H").withTime(5).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(1).withStrength("M").withTime(4).build());
+
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(1).withStrength("M").withTime(4).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(0).withStrength("H").withTime(6).build());
+        this.addActionChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(1).withStrength("M").withTime(4).build());
+
     }
 
     @Override
