@@ -61,7 +61,7 @@ public class ActionChit {
 
     @Override
     public String toString() {
-        return StringUtils.capitalize(this.action.name().toLowerCase()) + this.strength + getAsterisksRepresentation(this.fatigueAsterisks);
+        return StringUtils.capitalize(this.action.name().toLowerCase()) + " " + this.strength + getAsterisksRepresentation(this.fatigueAsterisks);
     }
 
     private static String getAsterisksRepresentation(final int number) {
