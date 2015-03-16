@@ -58,8 +58,10 @@ public class TradePhase extends AbstractPhase {
         // Update the clearing
         for (final AbstractTile tile : board.getAllTiles()) {
             for (final Clearing clearing : tile.getClearings()) {
-                if (clearing.equals(this.currentClearing)) {
+                if (this.currentClearing.equals(clearing)) {
                     this.currentClearing = clearing;
+                    LOG.info("Updated current clearing.");
+                    break;
                 }
             }
         }
