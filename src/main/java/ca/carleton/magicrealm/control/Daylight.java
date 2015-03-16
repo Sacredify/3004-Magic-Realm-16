@@ -6,6 +6,7 @@ import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.strategy.impl.AlertPhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.impl.HidePhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.impl.MovePhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
@@ -36,6 +37,7 @@ public class Daylight {
         phaseStrategies.add(new MovePhaseStrategy());
         phaseStrategies.add(new HidePhaseStrategy());
         phaseStrategies.add(new TradePhaseStrategy());
+        phaseStrategies.add(new AlertPhaseStrategy());
     }
 
     public static void processPhasesForPlayer(final BoardGUIModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
