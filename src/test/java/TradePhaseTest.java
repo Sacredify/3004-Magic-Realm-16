@@ -92,6 +92,7 @@ public class TradePhaseTest {
         assertThat(tradePhase.getTradeTarget().getItems().size(), is(0));
     }
 
+    @Test
     public void canIgnoreInvalidTrade() {
 
         final BoardGUIModel boardGUIModel = new BoardGUIModel();
