@@ -1,6 +1,7 @@
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.control.Daylight;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
@@ -28,7 +29,6 @@ public class TradePhaseTest {
     @Test
     public void canSellWithNative() {
 
-        // Create the board and player
         final BoardGUIModel boardGUIModel = new BoardGUIModel();
         ChitBuilder.placeChits(boardGUIModel);
         final Player player = new Player();
@@ -48,6 +48,7 @@ public class TradePhaseTest {
         tradePhase.setSelling(true);
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardGUIModel.getStartingLocation());
         tradePhase.override = 0;
 
         phases.add(tradePhase);
@@ -60,6 +61,7 @@ public class TradePhaseTest {
 
     @Test
     public void canBuyFromNative() {
+
         final BoardGUIModel boardGUIModel = new BoardGUIModel();
         ChitBuilder.placeChits(boardGUIModel);
         final Player player = new Player();
@@ -79,6 +81,7 @@ public class TradePhaseTest {
         tradePhase.setSelling(false);
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardGUIModel.getStartingLocation());
         tradePhase.override = 5; // price x 4
 
         phases.add(tradePhase);
@@ -86,6 +89,37 @@ public class TradePhaseTest {
         Daylight.processPhasesForPlayer(boardGUIModel, player, phases);
         assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade + 1));
         assertThat(player.getCharacter().getCurrentGold(), is(10 - (goldValueOfItem * 4)));
+        assertThat(tradePhase.getTradeTarget().getItems().size(), is(0));
+    }
+
+    public void canIgnoreInvalidTrade() {
+
+        final BoardGUIModel boardGUIModel = new BoardGUIModel();
+        ChitBuilder.placeChits(boardGUIModel);
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+
+        // Set starting location.
+        boardGUIModel.getStartingLocation().addEntity(player.getCharacter());
+
+        final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
+        final TradePhase tradePhase = new TradePhase();
+
+        final Item itemSelling = player.getCharacter().getItems().get(0);
+        final int itemsBeforeTrade = player.getCharacter().getItems().size();
+
+        tradePhase.setDrinksBought(false);
+        tradePhase.setSelling(false);
+        tradePhase.setItemToTrade(itemSelling);
+        tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardGUIModel.getStartingLocation().getAdjacentClearings().get(0));
+        tradePhase.override = 5; // price x 4
+
+        phases.add(tradePhase);
+
+        Daylight.processPhasesForPlayer(boardGUIModel, player, phases);
+        assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade));
+        assertThat(player.getCharacter().getCurrentGold(), is(10));
         assertThat(tradePhase.getTradeTarget().getItems().size(), is(0));
     }
 }

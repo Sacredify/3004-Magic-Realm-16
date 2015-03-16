@@ -11,9 +11,13 @@ import ca.carleton.magicrealm.item.Item;
  */
 public abstract class AbstractWeapon extends Item {
 
+    private static final long serialVersionUID = 979038272753356393L;
+
     protected AttackType attackType;
 
     protected int length;
+
+    protected boolean alert;
 
     public AttackType getAttackType() {
         return this.attackType;
@@ -22,4 +26,13 @@ public abstract class AbstractWeapon extends Item {
     public int getLength() {
         return this.length;
     }
+
+    public boolean isAlert() {
+        return this.alert;
+    }
+
+    public void setAlert(final boolean alert) {
+        this.alert = alert;
+    }
+
 }
