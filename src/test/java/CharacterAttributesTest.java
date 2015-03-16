@@ -1,4 +1,3 @@
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
@@ -8,7 +7,8 @@ import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.entity.natives.NativeFactory;
 import ca.carleton.magicrealm.entity.natives.NativeType;
-import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
+import ca.carleton.magicrealm.game.combat.chit.ActionType;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -35,6 +35,18 @@ public class CharacterAttributesTest {
         final AbstractNative knight = NativeFactory.createNative(NativeFaction.BASHKARS, NativeType.KNIGHT);
 
         assertThat(amazon.getRelationshipWith(knight.getFaction()), is(Relationship.UNFRIENDLY));
+    }
+
+    @Test
+    public void canBuildActionChit() throws Exception {
+        final ActionChit move = new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(1).withStrength("M").withTime(4).build();
+
+        assertThat(move, is(not(nullValue())));
+        assertThat(move.getAction(), is(ActionType.MOVE));
+        assertThat(move.getTime(), is(4));
+        assertThat(move.getStrength(), is("M"));
+
+        System.out.println(move);
     }
 
 }

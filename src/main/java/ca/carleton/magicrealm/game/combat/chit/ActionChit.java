@@ -66,10 +66,10 @@ public class ActionChit {
 
     private static String getAsterisksRepresentation(final int number) {
         StringBuilder builder = new StringBuilder();
-        builder.append(" ");
         int count = 0;
         while (count < number) {
             builder.append("*");
+            count++;
         }
         return builder.toString();
     }
