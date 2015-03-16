@@ -3,9 +3,12 @@ package ca.carleton.magicrealm.entity.character;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,6 +19,8 @@ import java.util.Map;
  * Time: 8:25 AM
  */
 public abstract class AbstractCharacter extends Entity implements Serializable {
+
+    private static final long serialVersionUID = 5076980254158357930L;
 
     private int currentGold;
 
@@ -41,6 +46,8 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
      */
     protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
 
+    protected List<ActionChit> actionChits = new ArrayList<ActionChit>();
+
     /**
      * Find the relationship with another interactable entity.
      *
@@ -53,6 +60,14 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
 
     public void addRelationship(final Interactable entity, final Relationship relationship) {
         this.relationships.putIfAbsent(entity, relationship);
+    }
+
+    public List<ActionChit> getActionChits() {
+        return this.actionChits;
+    }
+
+    public void addActionChit(final ActionChit actionChit) {
+        this.actionChits.add(actionChit);
     }
 
     public int getCurrentGreatTreasuresCount() {
