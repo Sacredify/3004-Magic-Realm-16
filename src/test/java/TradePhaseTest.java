@@ -48,7 +48,9 @@ public class TradePhaseTest {
         tradePhase.setSelling(true);
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        tradePhase.setCurrentClearing(boardGUIModel.getClearingForPlayer(player));
         ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardGUIModel.getStartingLocation());
+        ((Denizen) tradePhase.getTradeTarget()).getCurrentClearing().addEntity(tradePhase.getTradeTarget());
         tradePhase.override = 0;
 
         phases.add(tradePhase);
@@ -81,7 +83,9 @@ public class TradePhaseTest {
         tradePhase.setSelling(false);
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        tradePhase.setCurrentClearing(boardGUIModel.getClearingForPlayer(player));
         ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardGUIModel.getStartingLocation());
+        ((Denizen) tradePhase.getTradeTarget()).getCurrentClearing().addEntity(tradePhase.getTradeTarget());
         tradePhase.override = 5; // price x 4
 
         phases.add(tradePhase);
@@ -113,7 +117,9 @@ public class TradePhaseTest {
         tradePhase.setSelling(false);
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        tradePhase.setCurrentClearing(boardGUIModel.getClearingForPlayer(player));
         ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardGUIModel.getStartingLocation().getAdjacentClearings().get(0));
+        ((Denizen) tradePhase.getTradeTarget()).getCurrentClearing().addEntity(tradePhase.getTradeTarget());
         tradePhase.override = 5; // price x 4
 
         phases.add(tradePhase);

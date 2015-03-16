@@ -111,7 +111,7 @@ public class PhaseSelectorMenu extends JDialog {
                 boolean isSelling = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getSellRadioButton().isSelected();
                 boolean isBuyingDrinks = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getBuyDrinksCheckBox().isSelected();
 
-                PhaseSelectorMenu.this.phaseSelectorModel.addTradePhase(tradeTarget, tradedItem, isSelling, isBuyingDrinks);
+                PhaseSelectorMenu.this.phaseSelectorModel.addTradePhase(tradeTarget, tradedItem, isSelling, isBuyingDrinks, PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(player));
                 PhaseSelectorMenu.this.tradeSelectionMenu.dispose();
             }
         };

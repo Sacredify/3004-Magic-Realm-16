@@ -33,12 +33,13 @@ public class PhaseSelectorModel {
         this.phases.add(movePhase);
     }
 
-    public void addTradePhase(final Entity tradeTarget, final Item tradedItem, final boolean selling, final boolean isDrinksBought) {
+    public void addTradePhase(final Entity tradeTarget, final Item tradedItem, final boolean selling, final boolean isDrinksBought, final Clearing currentClearing) {
         final TradePhase tradePhase = new TradePhase();
         tradePhase.setTradeTarget(tradeTarget);
         tradePhase.setItemToTrade(tradedItem);
         tradePhase.setSelling(selling);
         tradePhase.setDrinksBought(isDrinksBought);
+        tradePhase.setCurrentClearing(currentClearing);
         this.phases.add(tradePhase);
     }
 

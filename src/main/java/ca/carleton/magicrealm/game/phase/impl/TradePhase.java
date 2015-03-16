@@ -4,7 +4,6 @@ import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
-import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
@@ -17,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * Date: 11/03/15
  * Time: 4:32 PM
  */
-public class TradePhase extends AbstractPhase implements Interactable {
+public class TradePhase extends AbstractPhase {
 
     private static final Logger LOG = LoggerFactory.getLogger(TradePhase.class);
 
@@ -28,6 +27,8 @@ public class TradePhase extends AbstractPhase implements Interactable {
     private boolean selling;
 
     private boolean drinksBought;
+
+    private Clearing currentClearing;
 
     /**
      * For cheating. Allows overriding the default behaviour with the roll we want.
@@ -105,5 +106,13 @@ public class TradePhase extends AbstractPhase implements Interactable {
 
     public void setDrinksBought(final boolean drinksBought) {
         this.drinksBought = drinksBought;
+    }
+
+    public Clearing getCurrentClearing() {
+        return this.currentClearing;
+    }
+
+    public void setCurrentClearing(final Clearing currentClearing) {
+        this.currentClearing = currentClearing;
     }
 }

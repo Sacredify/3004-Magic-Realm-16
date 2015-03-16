@@ -1,15 +1,14 @@
 package ca.carleton.magicrealm.game.phase.strategy.impl;
 
-import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
-import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.game.phase.impl.TradePhase;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
+import ca.carleton.magicrealm.game.table.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
     public void doPhase(final Player player, final AbstractPhase phase) {
         final TradePhase trade = (TradePhase) phase;
 
-        if (trade.getTradeTarget() instanceof Denizen && !((Denizen) trade.getTradeTarget()).getCurrentClearing().getEntities().contains(player.getCharacter())) {
+        if (!trade.getCurrentClearing().getEntities().contains(trade.getTradeTarget())) {
             LOG.info("Played entered invalid target for his trade phase. Not executed. (Tried {}).", trade.getTradeTarget());
             return;
         }
@@ -62,7 +61,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                 // Also allows cheating.
                 int meetingTableRoll;
                 if (trade.override == 0) {
-                    meetingTableRoll = DiceRoller.rollTwiceTakeHigher();
+                    meetingTableRoll = Table.MeetingTable.roll(player, trade.getCurrentClearing());
                     if (trade.isDrinksBought() && meetingTableRoll != 6) {
                         player.getCharacter().addGold(-1);
                         meetingTableRoll += 1;
