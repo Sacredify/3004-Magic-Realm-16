@@ -1,17 +1,21 @@
 package ca.carleton.magicrealm.game;
 
+import ca.carleton.magicrealm.ClientMain;
+
+import javax.swing.*;
 import java.util.Random;
 
 /**
  * Utility class for dice rolls.
- *
+ * <p/>
  * Created with IntelliJ IDEA.
  * Date: 23/02/15
  * Time: 4:15 AM
  */
 public final class DiceRoller {
 
-    private DiceRoller() {}
+    private DiceRoller() {
+    }
 
     private static final Random random = new Random();
 
@@ -20,11 +24,19 @@ public final class DiceRoller {
     }
 
     public static int rollTwiceTakeHigher() {
-      return Math.max(random.nextInt((6 - 1) + 1) + 1, random.nextInt((6 - 1) + 1) + 1);
+        if (!ClientMain.CHEAT_MODE) {
+            return Math.max(rollOnce(), rollOnce());
+        } else {
+            return Integer.parseInt(JOptionPane.showInputDialog(null, "Enter cheat roll. Warning: No validation will occur. Use at your own risk."));
+        }
     }
 
     public static int rollTwiceTakeLower() {
-        return Math.min(random.nextInt((6 - 1) + 1) + 1, random.nextInt((6 - 1) + 1) + 1);
+        if (!ClientMain.CHEAT_MODE) {
+            return Math.min(rollOnce(), rollOnce());
+        } else {
+            return Integer.parseInt(JOptionPane.showInputDialog(null, "Enter cheat roll. Warning: No validation will occur. Use at your own risk."));
+        }
     }
 
 }
