@@ -55,6 +55,15 @@ public class TradePhase extends AbstractPhase {
             }
         }
 
+        // Update the clearing
+        for (final AbstractTile tile : board.getAllTiles()) {
+            for (final Clearing clearing : tile.getClearings()) {
+                if (clearing.equals(this.currentClearing)) {
+                    this.currentClearing = clearing;
+                }
+            }
+        }
+
         if (this.selling) {
             // If selling, update from player.
             for (final Item item : player.getCharacter().getItems()) {
