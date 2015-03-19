@@ -171,11 +171,11 @@ public class EntityBuilder {
         AbstractNative guard2 = NativeFactory.createNative(NativeFaction.GUARD, NativeType.GREAT_SWORDSMAN);
         AbstractNative guard3 = NativeFactory.createNative(NativeFaction.GUARD, NativeType.GREAT_SWORDSMAN);
 
-        rogueNatives.add(guard1);
-        rogueNatives.add(guard2);
-        rogueNatives.add(guard3);
+        guardNatvies.add(guard1);
+        guardNatvies.add(guard2);
+        guardNatvies.add(guard3);
 
-        for (final AbstractNative guard : rogueNatives) {
+        for (final AbstractNative guard : guardNatvies) {
             guard.setStartingClearing(startingLocation);
             guard.setCurrentClearing(startingLocation);
             guard.getCurrentClearing().addEntity(guard);
