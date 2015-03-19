@@ -8,6 +8,7 @@ import ca.carleton.magicrealm.Networking.AppClient;
 import ca.carleton.magicrealm.Networking.Message;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,7 +250,14 @@ public class GameController {
                 "Needed notoriety: " + this.currentPlayer.getVictoryCondition().getNotoriety() + "<br/>" +
                 "Needed fame: " + this.currentPlayer.getVictoryCondition().getFame() + "<br/>" +
                 "Needed spell count: " + this.currentPlayer.getVictoryCondition().getSpellsCount() + "<br/>" +
-                "Needed great treasures count: " + this.currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/>");
+                "Needed great treasures count: " + this.currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/><br/>" +
+                "Action chits: <br/>");
+
+        StringBuilder actionChits = new StringBuilder();
+        for (final ActionChit chit : this.currentPlayer.getCharacter().getActionChits()) {
+            actionChits.append(chit).append("<br/>");
+        }
+        gameInfoText = gameInfoText.concat(actionChits.toString());
         gameInfoText = gameInfoText.concat("</html>");
 
         return gameInfoText;
