@@ -3,10 +3,12 @@ package ca.carleton.magicrealm.GUI.phaseselector;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.impl.AlertPhase;
 import ca.carleton.magicrealm.game.phase.impl.HidePhase;
 import ca.carleton.magicrealm.game.phase.impl.MovePhase;
 import ca.carleton.magicrealm.game.phase.impl.TradePhase;
 import ca.carleton.magicrealm.item.Item;
+import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 import java.util.List;
 
@@ -46,6 +48,12 @@ public class PhaseSelectorModel {
     public void addHidePhase() {
         final HidePhase hidePhase = new HidePhase();
         this.phases.add(hidePhase);
+    }
+
+    public void addAlertPhase(final AbstractWeapon weapon) {
+        final AlertPhase alertPhase = new AlertPhase();
+        alertPhase.setWeapon(weapon);
+        this.phases.add(alertPhase);
     }
 
     public void done() {
