@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
+import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.AlertSelectionMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.MoveSelectionMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.TradeSelectionMenu;
 import ca.carleton.magicrealm.control.GameController;
@@ -8,6 +9,7 @@ import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.item.Item;
+import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -32,6 +34,8 @@ public class PhaseSelectorMenu extends JDialog {
     MoveSelectionMenu moveSelectionMenu;
 
     TradeSelectionMenu tradeSelectionMenu;
+
+    AlertSelectionMenu alertSelectionMenu;
 
     private final Player player;
 
@@ -78,6 +82,10 @@ public class PhaseSelectorMenu extends JDialog {
                     PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(PhaseSelectorMenu.this.player, PhaseSelectorMenu.this.controller.getBoardModel().getTradeableTargets());
                     PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getConfirmTradeButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForTradeConfirmButton());
                 }
+                else if (selectedPhase.equals(PhaseType.ALERT)) {
+                    PhaseSelectorMenu.this.alertSelectionMenu = new AlertSelectionMenu(player);
+                    PhaseSelectorMenu.this.alertSelectionMenu.getAlertSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForAlertConfirmButton());
+                }
             }
         };
     }
@@ -113,6 +121,17 @@ public class PhaseSelectorMenu extends JDialog {
 
                 PhaseSelectorMenu.this.phaseSelectorModel.addTradePhase(tradeTarget, tradedItem, isSelling, isBuyingDrinks, PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(player));
                 PhaseSelectorMenu.this.tradeSelectionMenu.dispose();
+            }
+        };
+    }
+
+    public ActionListener createActionListenerForAlertConfirmButton() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AbstractWeapon alertedWeapon = PhaseSelectorMenu.this.alertSelectionMenu.getAlertSelectionPanel().getAlertableWeapons().getSelectedValue();
+                PhaseSelectorMenu.this.phaseSelectorModel.addAlertPhase(alertedWeapon);
+                PhaseSelectorMenu.this.alertSelectionMenu.dispose();
             }
         };
     }
