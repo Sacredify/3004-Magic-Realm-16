@@ -45,6 +45,7 @@ public class CharacterAttributesTest {
         assertThat(move.getAction(), is(ActionType.MOVE));
         assertThat(move.getTime(), is(4));
         assertThat(move.getStrength(), is("M"));
+        assertThat(move.getFatigueAsterisks(), is(1));
     }
 
 }
