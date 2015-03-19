@@ -24,12 +24,19 @@ public class ActionChit {
     /**
      * The number of fatigue asterisks on the chit
      */
-    private int fatigueAsterisks;
+    private final int fatigueAsterisks;
 
     /**
      * The action of the chit.
      */
     private final ActionType action;
+
+    /**
+     * Whether or not the chit is fatigued
+     */
+    private boolean fatigued = false;
+
+    private boolean wounded = false;
 
     private ActionChit(final ActionChitBuilder builder) {
         this.time = builder.time;
@@ -51,10 +58,6 @@ public class ActionChit {
         return this.fatigueAsterisks;
     }
 
-    public void setFatigueAsterisks(final int fatigueAsterisks) {
-        this.fatigueAsterisks = fatigueAsterisks;
-    }
-
     public int getTime() {
         return this.time;
     }
@@ -72,6 +75,22 @@ public class ActionChit {
             count++;
         }
         return builder.toString();
+    }
+
+    public boolean isWounded() {
+        return this.wounded;
+    }
+
+    public void setWounded(final boolean wounded) {
+        this.wounded = wounded;
+    }
+
+    public boolean isFatigued() {
+        return this.fatigued;
+    }
+
+    public void setFatigued(final boolean fatigued) {
+        this.fatigued = fatigued;
     }
 
     /**
