@@ -5,6 +5,7 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.chit.*;
 import ca.carleton.magicrealm.entity.monster.Ghost;
+import ca.carleton.magicrealm.item.treasure.TreasureCollection;
 
 
 import java.util.*;
@@ -74,6 +75,12 @@ public class ChitBuilder {
         // Step 2. Place lost city and lost castle, as well as 4 site/sound chits [8 total + (2 * 5) = 18 total]
         // Lost city + 4 goes in caves. Lost castle + 4 goes in mountain.
         final List<ColoredChit> remainingChits = new ArrayList<ColoredChit>();
+
+        TreasureCollection t = new TreasureCollection();
+        Random r = new Random();
+        for(int i = 0 ; i < t.treasures.length; i++){
+            treasureChits.get(r.nextInt(treasureChits.size())).addTreasure(t.treasures[i]);
+        }
         remainingChits.addAll(treasureChits);
 
         treasureChits.clear();

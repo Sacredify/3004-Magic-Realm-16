@@ -4,7 +4,7 @@ package ca.carleton.magicrealm.item.treasure;
  * Created by anvargazizov on 2015-03-19.
  */
 public class TreasureCollection {
-    Treasure[] treasures;
+    public Treasure[] treasures;
 
 
 
