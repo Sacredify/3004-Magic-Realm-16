@@ -6,10 +6,10 @@ import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.impl.AlertPhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.impl.HidePhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.impl.MovePhaseStrategy;
-import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.impl.TradePhaseStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,17 +28,14 @@ public class Daylight {
 
     private static final Logger LOG = LoggerFactory.getLogger(Daylight.class);
 
-    private static final List<PhaseStrategy> phaseStrategies = new ArrayList<PhaseStrategy>();
-
-    /**
-     * Initialize the strategies to use.
-     */
-    static {
-        phaseStrategies.add(new MovePhaseStrategy());
-        phaseStrategies.add(new HidePhaseStrategy());
-        phaseStrategies.add(new TradePhaseStrategy());
-        phaseStrategies.add(new AlertPhaseStrategy());
-    }
+    private static final List<PhaseStrategy> phaseStrategies = new ArrayList<PhaseStrategy>() {
+        {
+            this.add(new MovePhaseStrategy());
+            this.add(new HidePhaseStrategy());
+            this.add(new TradePhaseStrategy());
+            this.add(new AlertPhaseStrategy());
+        }
+    };
 
     public static void processPhasesForPlayer(final BoardGUIModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
 
