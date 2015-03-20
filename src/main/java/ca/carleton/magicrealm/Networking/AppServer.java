@@ -18,7 +18,7 @@ public class AppServer implements Runnable {
 
     public static final int MAX_ROUNDS = 28;
 
-    public static final int MAX_PLAYERS = 1;
+    public static final int MAX_PLAYERS = 2;
 
     private int clientCount = 0;
 
@@ -181,7 +181,7 @@ public class AppServer implements Runnable {
         LOG.info("Broadcasting message {} to connected clients from ID {}.", m.getMessageType(), ID);
         for (ServerThread client : this.clients) {
             if (client.getID() != ID)
-                client.send(message);
+                client.send(m);
         }
     }
 

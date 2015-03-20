@@ -5,8 +5,7 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.chit.*;
 import ca.carleton.magicrealm.entity.monster.Ghost;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.util.*;
 
@@ -17,7 +16,6 @@ import java.util.*;
  */
 public class ChitBuilder {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChitBuilder.class);
 
     private static final Random random = new Random();
 
@@ -56,8 +54,7 @@ public class ChitBuilder {
         buildSoundChits();
         buildLostCityAndCastle();
 
-        LOG.info("Starting chit placement.");
-        LOG.info("Starting warning chit placement.");
+
 
         // Step 1. Place warning chits of the correct type on the correct tile types [20 total].
         for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
@@ -73,12 +70,12 @@ public class ChitBuilder {
             tile.addChit(woodsWarningChits.remove(random.nextInt(woodsWarningChits.size())));
         }
 
-        LOG.info("Starting lost city/castle + 8 treasure/sound chit placement.");
 
         // Step 2. Place lost city and lost castle, as well as 4 site/sound chits [8 total + (2 * 5) = 18 total]
         // Lost city + 4 goes in caves. Lost castle + 4 goes in mountain.
         final List<ColoredChit> remainingChits = new ArrayList<ColoredChit>();
         remainingChits.addAll(treasureChits);
+
         treasureChits.clear();
         remainingChits.addAll(soundChits);
         soundChits.clear();
@@ -100,7 +97,6 @@ public class ChitBuilder {
             tile.addChit(mountainsChits.remove(random.nextInt(mountainsChits.size())));
         }
 
-        LOG.info("Starting valley chit replacement.");
 
         for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
             final Iterator<ColoredChit> iter = tile.getChits().iterator();
@@ -127,10 +123,7 @@ public class ChitBuilder {
             }
         }
 
-        LOG.info("Done with valley chit placement.");
 
-        LOG.info("Chit placement finished.");
-        LOG.info("Beginning sanity checks.");
         assert (treasureChits.size() == 0);
         assert (soundChits.size() == 0);
         assert (woodsWarningChits.size() == 0);
@@ -141,7 +134,7 @@ public class ChitBuilder {
         assert (mountainsChits.size() == 0);
         assert (lostCityChit.treasureChits.size() + lostCityChit.soundChits.size() == 5);
         assert (lostCastleChit.treasureChits.size() + lostCastleChit.soundChits.size() == 5);
-        LOG.info("Sanity checks complete. All chits assigned.");
+
 
     }
 
@@ -174,7 +167,6 @@ public class ChitBuilder {
         woodsWarningChits.add(new YellowChit("STINK", TileType.WOODS));
         Collections.shuffle(woodsWarningChits);
 
-        LOG.info("Built and shuffled warning chits.");
     }
 
     private static void buildSoundChits() {
@@ -190,7 +182,7 @@ public class ChitBuilder {
         soundChits.add(new RedChit("FLUTTER", 2));
         Collections.shuffle(soundChits);
 
-        LOG.info("Built and shuffled sound chits.");
+
     }
 
     private static void buildTreasureChits() {
@@ -204,7 +196,6 @@ public class ChitBuilder {
         treasureChits.add(new GoldChit(4, "SHRINE"));
         Collections.shuffle(treasureChits);
 
-        LOG.info("Built and shuffled treasure chits.");
     }
 
     /**
@@ -232,8 +223,6 @@ public class ChitBuilder {
             }
         }
 
-        LOG.info("Built lost city.");
-
         lostCastleChit = new LostCastle(1, "LOST CASTLE");
 
         // Add the remainder to the lost castle.
@@ -248,6 +237,5 @@ public class ChitBuilder {
             }
         }
 
-        LOG.info("Built lost castle.");
     }
 }

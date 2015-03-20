@@ -23,7 +23,7 @@ public class ServerThread extends Thread {
     }
 
 
-    public void send(Object msg) {
+    public void send(Message msg) {
         try {
             this.objOutStream.reset();
             this.objOutStream.writeObject(msg);

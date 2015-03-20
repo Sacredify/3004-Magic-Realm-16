@@ -1,4 +1,6 @@
 package ca.carleton.magicrealm.entity.chit;
+import java.util.Random;
+
 
 /**
  * A gold chit represents treasure sites on the map.
@@ -9,9 +11,15 @@ package ca.carleton.magicrealm.entity.chit;
  */
 public class GoldChit extends ColoredChit {
 
+    int weight;
+    int value;
+
     public GoldChit(final int clearingNumber, final String treasureSiteName) {
         this.clearingNumber = clearingNumber;
         this.description = treasureSiteName;
+        Random randomGenerator = new Random();
+        this.value = 50 - randomGenerator.nextInt(41);
+
     }
 
     @Override
