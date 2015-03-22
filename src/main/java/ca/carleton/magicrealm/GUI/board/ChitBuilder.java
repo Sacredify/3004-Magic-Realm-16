@@ -216,9 +216,19 @@ public class ChitBuilder {
 
         LOG.info("Built and shuffled treasure chits.");
 
-        TreasureCollection treasures = new TreasureCollection();
-        for (int i = 0; i < treasures.treasures.length; i++) {
-            treasureChits.get(random.nextInt(treasureChits.size())).addTreasure(treasures.treasures[i]);
+        TreasureCollection treasureCollection = new TreasureCollection();
+        for (int i = 0; i < treasureCollection.treasures.length; i++) {
+
+            // Only a maximum of 6 treasures can be on a treasure site (since the roll table only allows up to 6).
+            int chitIndex;
+            while (true) {
+                chitIndex = random.nextInt(treasureChits.size());
+                if (treasureChits.get(chitIndex).getTreasure().size() < 6) {
+                    treasureChits.get(chitIndex).addTreasure(treasureCollection.treasures[i]);
+                    LOG.info("Placed treasure {} in {}. Number of current treasures: {}.", treasureCollection.treasures[i].getName(), treasureChits.get(chitIndex).getDescription(), treasureChits.get(chitIndex).getTreasure().size());
+                    break;
+                }
+            }
         }
 
         LOG.info("Built treasure collection and assigned treasure to chits..");

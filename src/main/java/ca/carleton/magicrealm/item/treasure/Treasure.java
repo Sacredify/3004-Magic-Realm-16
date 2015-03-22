@@ -1,16 +1,20 @@
 package ca.carleton.magicrealm.item.treasure;
 
 import ca.carleton.magicrealm.item.Item;
-import java.util.Random;
 import ca.carleton.magicrealm.item.ItemInformation;
+
+import java.util.Random;
 
 /**
  * Created by anvargazizov on 2015-03-19.
  */
 public class Treasure extends Item {
 
-    int cost;
-    String name;
+    private static final long serialVersionUID = -7160719805476333887L;
+
+    protected static final Random random = new Random();
+
+    private String name;
 
     @Override
     public ItemInformation getItemInformation() {
@@ -19,7 +23,10 @@ public class Treasure extends Item {
 
     public Treasure(String name){
         this.name = name;
-        Random rn = new Random();
-        cost  = 10 + rn.nextInt(41);
+        this.goldValue = 10 + random.nextInt(41);
+    }
+
+    public String getName() {
+        return this.name;
     }
 }
