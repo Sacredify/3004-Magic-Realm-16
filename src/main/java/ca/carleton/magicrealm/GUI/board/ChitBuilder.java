@@ -82,11 +82,6 @@ public class ChitBuilder {
         // Step 2. Place lost city and lost castle, as well as 4 site/sound chits [8 total + (2 * 5) = 18 total]
         // Lost city + 4 goes in caves. Lost castle + 4 goes in mountain.
         final List<ColoredChit> remainingChits = new ArrayList<ColoredChit>();
-
-        TreasureCollection t = new TreasureCollection();
-        for (int i = 0; i < t.treasures.length; i++) {
-            treasureChits.get(random.nextInt(treasureChits.size())).addTreasure(t.treasures[i]);
-        }
         remainingChits.addAll(treasureChits);
 
         treasureChits.clear();
@@ -220,6 +215,13 @@ public class ChitBuilder {
         Collections.shuffle(treasureChits);
 
         LOG.info("Built and shuffled treasure chits.");
+
+        TreasureCollection treasures = new TreasureCollection();
+        for (int i = 0; i < treasures.treasures.length; i++) {
+            treasureChits.get(random.nextInt(treasureChits.size())).addTreasure(treasures.treasures[i]);
+        }
+
+        LOG.info("Built treasure collection and assigned treasure to chits..");
     }
 
     /**

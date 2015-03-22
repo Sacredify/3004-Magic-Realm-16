@@ -28,12 +28,6 @@ public class TurnController {
         }
     }
 
-    public void createNewTurn() {
-        for (Integer s : this.orderedIDs) {
-            this.orderedIDsQueue.add(s);
-        }
-    }
-
     //Returns current turn count
     public int incrementTurnCount() {
         this.turnCount++;

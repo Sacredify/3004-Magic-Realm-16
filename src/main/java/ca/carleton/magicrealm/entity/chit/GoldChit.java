@@ -1,8 +1,9 @@
 package ca.carleton.magicrealm.entity.chit;
-import ca.carleton.magicrealm.item.treasure.Treasure;
-import java.util.ArrayList;
 
-import java.util.Random;
+import ca.carleton.magicrealm.item.treasure.Treasure;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -14,9 +15,9 @@ import java.util.Random;
  */
 public class GoldChit extends ColoredChit {
 
-    int weight;
-    int value;
-    ArrayList<Treasure> treasure;
+    private static final long serialVersionUID = 345563872761671359L;
+
+    private List<Treasure> treasure = new ArrayList<Treasure>();
 
     public GoldChit(final int clearingNumber, final String treasureSiteName) {
         this.clearingNumber = clearingNumber;
@@ -25,7 +26,11 @@ public class GoldChit extends ColoredChit {
     }
 
     public void addTreasure(Treasure t){
-        treasure.add(t);
+        this.treasure.add(t);
+    }
+
+    public List<Treasure> getTreasure() {
+        return this.treasure;
     }
 
     @Override
