@@ -6,9 +6,13 @@ import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.chit.*;
 import ca.carleton.magicrealm.entity.monster.Ghost;
 import ca.carleton.magicrealm.item.treasure.TreasureCollection;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +21,7 @@ import java.util.*;
  */
 public class ChitBuilder {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ChitBuilder.class);
 
     private static final Random random = new Random();
 
@@ -55,7 +60,8 @@ public class ChitBuilder {
         buildSoundChits();
         buildLostCityAndCastle();
 
-
+        LOG.info("Starting chit placement.");
+        LOG.info("Starting warning chit placement.");
 
         // Step 1. Place warning chits of the correct type on the correct tile types [20 total].
         for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
@@ -71,15 +77,15 @@ public class ChitBuilder {
             tile.addChit(woodsWarningChits.remove(random.nextInt(woodsWarningChits.size())));
         }
 
+        LOG.info("Starting lost city/castle + 8 treasure/sound chit placement.");
 
         // Step 2. Place lost city and lost castle, as well as 4 site/sound chits [8 total + (2 * 5) = 18 total]
         // Lost city + 4 goes in caves. Lost castle + 4 goes in mountain.
         final List<ColoredChit> remainingChits = new ArrayList<ColoredChit>();
 
         TreasureCollection t = new TreasureCollection();
-        Random r = new Random();
-        for(int i = 0 ; i < t.treasures.length; i++){
-            treasureChits.get(r.nextInt(treasureChits.size())).addTreasure(t.treasures[i]);
+        for (int i = 0; i < t.treasures.length; i++) {
+            treasureChits.get(random.nextInt(treasureChits.size())).addTreasure(t.treasures[i]);
         }
         remainingChits.addAll(treasureChits);
 
@@ -104,45 +110,54 @@ public class ChitBuilder {
             tile.addChit(mountainsChits.remove(random.nextInt(mountainsChits.size())));
         }
 
+        LOG.info("Starting valley chit replacement.");
 
         for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
             final Iterator<ColoredChit> iter = tile.getChits().iterator();
             while (iter.hasNext()) {
                 final ColoredChit chit = iter.next();
-                if (chit.getDescription().equals("BONES")) {
-                    final Clearing startForGhosts = tile.getClearings()[tile.getClearings().length - 1];
-                    final Ghost ghost1 = new Ghost();
-                    ghost1.setStartingClearing(startForGhosts);
-                    final Ghost ghost2 = new Ghost();
-                    ghost2.setStartingClearing(startForGhosts);
-                    startForGhosts.addEntity(ghost1);
-                    startForGhosts.addEntity(ghost2);
-                } else if (chit.getDescription().equals("DANK")) {
-                     tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.CHAPEL);
-                } else if (chit.getDescription().equals("RUINS")) {
-                    tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.GUARD);
-                } else if (chit.getDescription().equals("SMOKE")) {
-                    tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.HOUSE);
-                } else if (chit.getDescription().equals("STINK")) {
-                    tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.INN);
+                switch (chit.getDescription()) {
+                    case "BONES":
+                        final Clearing startForGhosts = tile.getClearings()[tile.getClearings().length - 1];
+                        final Ghost ghost1 = new Ghost();
+                        ghost1.setStartingClearing(startForGhosts);
+                        final Ghost ghost2 = new Ghost();
+                        ghost2.setStartingClearing(startForGhosts);
+                        startForGhosts.addEntity(ghost1);
+                        startForGhosts.addEntity(ghost2);
+                        break;
+                    case "DANK":
+                        tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.CHAPEL);
+                        break;
+                    case "RUINS":
+                        tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.GUARD);
+                        break;
+                    case "SMOKE":
+                        tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.HOUSE);
+                        break;
+                    case "STINK":
+                        tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.INN);
+                        break;
                 }
                 iter.remove();
             }
         }
 
+        LOG.info("Done with valley chit placement.");
 
-        assert (treasureChits.size() == 0);
-        assert (soundChits.size() == 0);
-        assert (woodsWarningChits.size() == 0);
-        assert (valleyWarningChits.size() == 0);
-        assert (mountainWarningChits.size() == 0);
-        assert (caveWarningChits.size() == 0);
-        assert (cavesChits.size() == 0);
-        assert (mountainsChits.size() == 0);
-        assert (lostCityChit.treasureChits.size() + lostCityChit.soundChits.size() == 5);
-        assert (lostCastleChit.treasureChits.size() + lostCastleChit.soundChits.size() == 5);
-
-
+        LOG.info("Chit placement finished.");
+        LOG.info("Beginning sanity checks.");
+        assertThat(treasureChits.size(), is(0));
+        assertThat(soundChits.size(), is(0));
+        assertThat(woodsWarningChits.size(), is(0));
+        assertThat(valleyWarningChits.size(), is(0));
+        assertThat(mountainWarningChits.size(), is(0));
+        assertThat(caveWarningChits.size(), is(0));
+        assertThat(cavesChits.size(), is(0));
+        assertThat(mountainsChits.size(), is(0));
+        assertThat(lostCityChit.treasureChits.size() + lostCityChit.soundChits.size(), is(5));
+        assertThat(lostCastleChit.treasureChits.size() + lostCastleChit.soundChits.size(), is(5));
+        LOG.info("Sanity checks complete. All chits assigned.");
     }
 
     private static void buildWarningChits() {
@@ -174,6 +189,7 @@ public class ChitBuilder {
         woodsWarningChits.add(new YellowChit("STINK", TileType.WOODS));
         Collections.shuffle(woodsWarningChits);
 
+        LOG.info("Built and shuffled warning chits.");
     }
 
     private static void buildSoundChits() {
@@ -189,7 +205,7 @@ public class ChitBuilder {
         soundChits.add(new RedChit("FLUTTER", 2));
         Collections.shuffle(soundChits);
 
-
+        LOG.info("Built and shuffled sound chits.");
     }
 
     private static void buildTreasureChits() {
@@ -203,6 +219,7 @@ public class ChitBuilder {
         treasureChits.add(new GoldChit(4, "SHRINE"));
         Collections.shuffle(treasureChits);
 
+        LOG.info("Built and shuffled treasure chits.");
     }
 
     /**
@@ -223,12 +240,14 @@ public class ChitBuilder {
             final ColoredChit takenChit = mixedChits.remove(random.nextInt(mixedChits.size()));
             if (takenChit.getChitColor() == ChitColor.GOLD) {
                 lostCityChit.treasureChits.add((GoldChit) takenChit);
-                treasureChits.remove((GoldChit) takenChit);
+                treasureChits.remove(takenChit);
             } else {
                 lostCityChit.soundChits.add((RedChit) takenChit);
-                soundChits.remove((RedChit) takenChit);
+                soundChits.remove(takenChit);
             }
         }
+
+        LOG.info("Built lost city.");
 
         lostCastleChit = new LostCastle(1, "LOST CASTLE");
 
@@ -237,12 +256,14 @@ public class ChitBuilder {
             final ColoredChit takenChit = mixedChits.remove(random.nextInt(mixedChits.size()));
             if (takenChit.getChitColor() == ChitColor.GOLD) {
                 lostCastleChit.treasureChits.add((GoldChit) takenChit);
-                treasureChits.remove((GoldChit) takenChit);
+                treasureChits.remove(takenChit);
             } else {
                 lostCastleChit.soundChits.add((RedChit) takenChit);
-                soundChits.remove((RedChit) takenChit);
+                soundChits.remove(takenChit);
             }
         }
+
+        LOG.info("Built lost castle.");
 
     }
 }
