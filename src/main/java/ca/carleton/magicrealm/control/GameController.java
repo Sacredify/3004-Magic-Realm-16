@@ -132,7 +132,9 @@ public class GameController {
      */
     public void processCombat() {
         LOG.info("Starting combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
-
+        Combat.doCombat(this.boardModel, this.currentPlayer, this.boardWindow);
+        this.updatePlayerInMap();
+        this.refreshBoard();
         LOG.info("Executed combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
         this.networkConnection.sendMessage(Message.DONE_COMBAT_IN_CLEARING, this.boardModel);
     }

@@ -55,7 +55,14 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
      * @return The relationship.
      */
     public Relationship getRelationshipWith(final Interactable interactable) {
-        return this.relationships.get(interactable);
+
+        Relationship relationship = this.relationships.get(interactable);
+
+        if (relationship == null) {
+            relationship = Relationship.NEUTRAL;
+        }
+
+        return relationship;
     }
 
     public void addRelationship(final Interactable entity, final Relationship relationship) {
