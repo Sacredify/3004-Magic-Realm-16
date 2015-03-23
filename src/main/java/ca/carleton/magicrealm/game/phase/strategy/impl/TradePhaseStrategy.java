@@ -62,7 +62,7 @@ public class TradePhaseStrategy implements PhaseStrategy {
                 int meetingTableRoll;
                 if (trade.override == 0) {
                     meetingTableRoll = Table.MeetingTable.roll(player, trade.getCurrentClearing());
-                    if (trade.isDrinksBought() && meetingTableRoll != 6) {
+                    if (trade.isDrinksBought()) {
                         player.getCharacter().addGold(-1);
                     }
                 } else {
