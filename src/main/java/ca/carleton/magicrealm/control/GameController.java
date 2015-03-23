@@ -53,23 +53,15 @@ public class GameController {
 
         if (obj instanceof Message) {
             Message m = (Message) obj;
-            LOG.info("Received {} message from server. Payload: {}.", m.getMessageType(), m.getMessageObject());
+            LOG.info("Received {} message from server. Payload: {}.", m.getMessageType(), m.getPayload());
             switch (m.getMessageType()) {
                 case (Message.SELECT_CHARACTER):
-                    this.removeFromAvailableCharacters(m.getMessageObject());
+                    this.removeFromAvailableCharacters(m.getPayload());
                     this.characterCreateMenu.updateAvailableCharacters();
-                    break;
-                case (Message.SET_MAP):
-                    this.setBoardModel((BoardGUIModel) m.getMessageObject());
-                    this.updateCurrentPlayer();
-                    this.refreshBoard();
-                case (Message.MOVE):
-                    //Insert move character functionality here
-                    this.handleMove((BoardGUIModel) m.getMessageObject());
                     break;
                 case (Message.BIRDSONG_START):
                     // Set new data
-                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
+                    this.setBoardModel(((BoardGUIModel) m.getPayload()));
                     this.updateCurrentPlayer();
                     this.refreshBoard();
                     // Process birdsong
@@ -77,16 +69,19 @@ public class GameController {
                     break;
                 case (Message.DAYLIGHT_START):
                     // Set new data
-                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
+                    this.setBoardModel(((BoardGUIModel) m.getPayload()));
                     this.updateCurrentPlayer();
                     // Process daylight
                     this.processUpdatedPhasesFromBoard();
                     this.processDaylight();
                     break;
-                case (Message.SUNSET_START):
-                    this.setBoardModel(((BoardGUIModel) m.getMessageObject()));
+                case (Message.START_COMBAT_IN_CLEARING):
+                    // Set new data
+                    this.setBoardModel(((BoardGUIModel) m.getPayload()));
                     this.updateCurrentPlayer();
                     this.refreshBoard();
+                    // Process combat in the current clearing of the player
+                    this.processCombat();
                 default:
                     break;
             }
@@ -106,17 +101,6 @@ public class GameController {
     }
 
     /**
-     * Refreshes the board with the new model received.
-     *
-     * @param newBoardModel the model.
-     */
-    @Deprecated
-    public void handleMove(final BoardGUIModel newBoardModel) {
-        this.boardModel = newBoardModel;
-        this.boardWindow.refresh(this.boardModel, this.currentPlayer.getCharacter());
-    }
-
-    /**
      * Opens up phase selector dialog.
      */
     public void selectPhasesForDay() {
@@ -128,32 +112,8 @@ public class GameController {
      * Called by the selector menu when done entering phases.
      */
     public void doneEnteringPhasesForDay() {
-       /*
-        LOGIC -
-        1. This method is called, signifying this.recordedPhasesForDay has all the phases the client wishes to enter.
-        2. The client will send a message to the server saying they are done.
-        3. When the server receives all <x> number of clients saying they are done, the server starts DAYLIGHT.
-        4. The server will pick a client, send them a message with the current board, and the client will use Daylight.processPhasesForDay() that
-         will process the phases.
-        5. The client will upload the updated data to the server.
-        6. The server will then send the next message to the next person in turn, with the updated board.
-        7. The next client will update their board as per the first, then execute the phases.
-        8 And so on.
-        9. After they are all done, server sends EVENING message.
-        */
-
         LOG.info("User finished entering phase data. Sending server message...");
         this.networkConnection.sendMessage(Message.BIRDSONG_DONE, null);
-    }
-
-    /**
-     * Because we send the entire board, we need to update the phases, since the references are now garbled.
-     */
-    public void processUpdatedPhasesFromBoard() {
-        for (final AbstractPhase phase : this.recordedPhasesForDay) {
-            phase.updateFromBoard(this.currentPlayer, this.boardModel);
-        }
-        LOG.info("Updated {} phases' data from the board before beginning daylight.", this.recordedPhasesForDay.size());
     }
 
     /**
@@ -165,6 +125,26 @@ public class GameController {
         this.refreshBoard();
         LOG.info("Executed daylight phase for player.");
         this.networkConnection.sendMessage(Message.DAYLIGHT_DONE, this.boardModel);
+    }
+
+    /**
+     * Processes combat for the clearing of the current player.
+     */
+    public void processCombat() {
+        LOG.info("Starting combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
+
+        LOG.info("Executed combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
+        this.networkConnection.sendMessage(Message.DONE_COMBAT_IN_CLEARING, this.boardModel);
+    }
+
+    /**
+     * Because we send the entire board, we need to update the phases, since the references are now garbled.
+     */
+    public void processUpdatedPhasesFromBoard() {
+        for (final AbstractPhase phase : this.recordedPhasesForDay) {
+            phase.updateFromBoard(this.currentPlayer, this.boardModel);
+        }
+        LOG.info("Updated {} phases' data from the board before beginning daylight.", this.recordedPhasesForDay.size());
     }
 
     /**

@@ -18,7 +18,9 @@ public class AppServer implements Runnable {
 
     public static final int MAX_ROUNDS = 28;
 
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 1;
+
+    private static final int SERVER_ID = 0;
 
     private int clientCount = 0;
 
@@ -71,76 +73,89 @@ public class AppServer implements Runnable {
         if (obj instanceof Message) {
             Message m = (Message) obj;
             LOG.info("Received a {} message from ID {}.", m.getMessageType(), ID);
-            this.handleMessage(m, ID, obj);
+            this.handleMessage(m);
         } else if (obj instanceof String) {
             LOG.info("Receive a string - {}.", obj);
         }
     }
 
-    public void handleMessage(Message m, int ID, Object obj) {
-        switch (m.getMessageType()) {
+    /**
+     * Handles the game flow and logic between client and server.
+     *
+     * @param message the message to handle.
+     */
+    public void handleMessage(Message message) {
+        switch (message.getMessageType()) {
+
+            // Clients send the SELECT_CHARACTER message when they are done creating their character.
             case (Message.SELECT_CHARACTER):
-                Player player = (Player) m.getMessageObject();
+                // Add the player to the board
+                Player player = (Player) message.getPayload();
                 this.boardModel.getClearingOfDwelling(player.getStartingLocation()).addEntity(player.getCharacter());
                 this.boardModel.addPlayer(player);
-                LOG.info("Updated board model.");
+                // If all players have sent their characters, send the message to start birdsong. Else, forward
+                // the message to other players so they know who picked what.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    // Start birdsong + send map as payload.
-                    this.broadcastMessage(0, new Message(0, Message.BIRDSONG_START, this.boardModel));
-                }  else {
-                    this.broadcastMessage(0, m);
+                    Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
+                    this.broadcastMessage(SERVER_ID, toSend);
+                } else {
+                    this.broadcastMessage(SERVER_ID, message);
                 }
                 break;
+            // Clients send the BIRDSONG_DONE message when they are done with entering their actions for daylight.
             case (Message.BIRDSONG_DONE):
+                // If all players have sent the message, send the message to the first randomly picked player to start
+                // daylight (execution of their phases).
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     this.turnController.createNewTurnOrder(this.clients);
                     int nextID = this.turnController.getNextPlayer();
                     ServerThread nextClient = this.getClientWithID(nextID);
-                    Message msg = new Message(0, Message.DAYLIGHT_START, this.boardModel);
-                    nextClient.send(msg);
+                    Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
+                    nextClient.send(toSend);
                 }
                 break;
+            // Clients send the DAYLIGHT_DONE message when they are done executing their phases client-side.
             case (Message.DAYLIGHT_DONE):
-                this.boardModel = (BoardGUIModel) m.getMessageObject();
+                // Update the board.
+                this.boardModel = (BoardGUIModel) message.getPayload();
+                // If all players have sent the message, start COMBAT in clearings.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    /*  For testing, and for now. Is sunset for all players simultaneously? Idk.
-
-                    this.turnController.createNewTurn();
-                    int nextID = this.turnController.getNextPlayer();
-                    ServerThread nextClient = this.getClientWithID(nextID);
-                    Message msg = new Message(0, Message.SUNSET_START, this.boardModel);
-                    nextClient.send(msg);
-                    this.turnController.incrementTurnCount();
-                    */
-                    //TODO Temporary loop to see if we can get it to keep moving.
-                    this.currentDay++;
-                    this.broadcastMessage(0, new Message(0, Message.BIRDSONG_START, this.boardModel));
-
+                    this.turnController.createNewTurnOrder(this.clients);
+                    ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
+                    Message toSend = new Message(SERVER_ID, Message.START_COMBAT_IN_CLEARING, this.boardModel);
+                    nextClient.send(toSend);
                 } else {
                     // Send the next client to go that it is their turn to go.
                     int nextID = this.turnController.getNextPlayer();
                     ServerThread nextClient = this.getClientWithID(nextID);
-                    Message msg = new Message(0, Message.DAYLIGHT_START, this.boardModel);
+                    Message msg = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
                     nextClient.send(msg);
                 }
                 break;
-            case (Message.MOVE):
-                this.handleMoveMessage(m, ID);
+            // Clients send the DONE_COMBAT_IN_CLEARING message when they have resolved combat for their character in their clearing.
+            case (Message.DONE_COMBAT_IN_CLEARING):
+                // Update the board
+                this.boardModel = (BoardGUIModel) message.getPayload();
+                // If all players have sent the message (done with combat), start a new day.
+                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                    this.currentDay++;
+                    Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
+                    this.broadcastMessage(SERVER_ID, toSend);
+                } else {
+                    // Send the next client to go that it is their turn to go.
+                    int nextID = this.turnController.getNextPlayer();
+                    ServerThread nextClient = this.getClientWithID(nextID);
+                    Message msg = new Message(SERVER_ID, Message.START_COMBAT_IN_CLEARING, this.boardModel);
+                    nextClient.send(msg);
+                }
                 break;
             default:
-                // this.broadcastMessage(ID, obj);
+                LOG.error("No matching message type found... we done borked it good...");
                 break;
         }
     }
 
-
-    public void handleMoveMessage(Message m, int ID) {
-        this.boardModel = (BoardGUIModel) m.getMessageObject();
-        this.broadcastMessage(ID, this.boardModel);
-    }
-
-
-    private ServerThread getClientWithID(int ID) {
+    public ServerThread getClientWithID(int ID) {
         for (ServerThread client : this.clients) {
             if (ID == client.getID()) {
                 return client;
@@ -160,8 +175,7 @@ public class AppServer implements Runnable {
                     this.clients.get(this.clientCount).open();
                     this.clients.get(this.clientCount).start();
                     this.clientCount++;
-                }
-                else
+                } else
                     this.server.close();
 
             }
@@ -183,11 +197,6 @@ public class AppServer implements Runnable {
             if (client.getID() != ID)
                 client.send(m);
         }
-    }
-
-    public static void main(String[] args) {
-        AppServer server = new AppServer(Config.DEFAULT_HOST_PORT);
-        server.start();
     }
 
 }

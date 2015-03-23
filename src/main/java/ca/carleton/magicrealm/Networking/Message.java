@@ -1,94 +1,67 @@
 package ca.carleton.magicrealm.Networking;
 
-import ca.carleton.magicrealm.GUI.tile.Clearing;
-
 import java.io.Serializable;
-import java.util.List;
 
+/**
+ * Container class to facilitate the transfer to and from the server.
+ */
 public final class Message implements Serializable {
 
-
-    int senderID;
-    String messageType;
-    Object messageObject;
-
-
-    public Message(int senderID,String messageType,Object messageObject){
-         this.senderID = senderID;
-         this.messageType = messageType;
-         this.messageObject = messageObject;
-    }
-
-    //TILES
-
-    public static final String AWFUL_VALLEY = "AWFUL_VALLEY";
-    public static final String BAD_VALLEY = "BAD_VALLEY";
-    public static final String CRUST_VALLEY = "CRUST_VALLEY";
-    public static final String DARK_VALLEY = "DARK_VALLEY";
-    public static final String EVIL_VALLEY = "EVIL_VALLEY";
-    public static final String BORDER_LAND = "BORDER_LAND";
-    public static final String CAVERN = "CAVERN";
-    public static final String CAVES = "CAVES";
-    public static final String CLIFF = "CLIFF";
-    public static final String CRAG = "CRAG";
-    public static final String DEEP_WOODS = "DEEP_WOODS";
-    public static final String LINDEN_WOODS = "LINDEN_WOODS";
-    public static final String MAPLE_WOODS = "MAPLE_WOODS";
-    public static final String NUT_WOODS = "NUT_WOODS";
-    public static final String OAK_WOODS = "OAK_WOODS";
-    public static final String PINE_WOODS = "PINE_WOODS";
-    public static final String HIGH_PASS = "HIGH_PASS";
-    public static final String LEDGES = "LEDGES";
-    public static final String MOUNTAIN = "MOUNTAIN";
-    public static final String RUINS = "RUINS";
-
-    //PHASES
-
-    public static final String MOVE = "MOVE";
-    public static final String TRADE = "TRADE";
-    public static final String ALERT = "ALERT";
-    public static final String SEARCH = "SEARCH";
-    public static final String HIRE = "HIRE";
-    public static final String FOLLOW = "FOLLOW";
-
-    //GAME MECHANICS
+    private static final long serialVersionUID = 741681056897874122L;
 
     public static final String SELECT_CHARACTER = "SELECT_CHARACTER";
-    public static final String TURN_ALERT = "TURN_ALERT";
-    public static final String PHASE_SELECT = "PHASE_SELECT";
-    public static final String AVAILABLE_CLEARINGS = "AVAILABLE_CLEARINGS";
-    public static final String ALL_PARTICIPATED = "ALL_PARTICIPATED";
-    public static final String SET_MAP = "SET_MAP";
+
     public static final String BIRDSONG_START = "BIRDSONG_START";
+
     public static final String DAYLIGHT_START = "DAYLIGHT_START";
+
     public static final String SUNSET_START = "SUNSET_START";
+
+    public static final String START_COMBAT_IN_CLEARING = "COMBAT_START";
+
+    public static final String DONE_COMBAT_IN_CLEARING = "COMBAT_FINISH";
+
     public static final String MIDNIGHT_START = "MIDNIGHT_START";
+
     public static final String BIRDSONG_DONE = "BIRDSONG_DONE";
+
     public static final String DAYLIGHT_DONE = "DAYLIGHT_DONE";
+
     public static final String SUNSET_DONE = "SUNSET_DONE";
+
     public static final String MIDNIGHT_DONE = "MIDNIGHT_DONE";
 
+    /**
+     * The ID of the sender of the message (client(s)/server).
+     */
+    private final int senderID;
 
-    //CHARACTER TYPES
+    /**
+     * The type of message sent. Used to direct gameflow.
+     */
+    private final String messageType;
 
-    public static final String SWORDSMAN = "SWORDSMAN";
-    public static final String CAPTAIN = "CAPTAIN";
-    public static final String DWARF = "DWARF";
-    public static final String AMAZON = "AMAZON";
-    public static final String ELF = "ELF";
-    public static final String BLACK_KNIGHT = "BLACK_KNIGHT";
+    /**
+     * The data sent along with the message, if any.
+     */
+    private final Object payload;
 
-
-    // Phases
-    public static final String BIRDSONG = "START_BIRDSONG";
-
-
-    public String getMessageType(){
-        return messageType;
+    public Message(int senderID, String messageType, Object payload) {
+        this.senderID = senderID;
+        this.messageType = messageType;
+        this.payload = payload;
     }
 
-    public Object getMessageObject() {
-        return this.messageObject;
+    public int getSenderID() {
+        return this.senderID;
+    }
+
+    public String getMessageType() {
+        return this.messageType;
+    }
+
+    public Object getPayload() {
+        return this.payload;
     }
 
 
