@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.game.table;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
+import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.BlackKnight;
 import ca.carleton.magicrealm.entity.character.Dwarf;
 import ca.carleton.magicrealm.game.DiceRoller;
@@ -45,11 +46,34 @@ public abstract class Table {
                 return DiceRoller.rollOnce();
             }
 
-            LOG.info("Rolled twice on the meeting table.") ;
+            LOG.info("Rolled twice on the meeting table.");
             // The default is to roll twice for everything else.
             return DiceRoller.rollTwiceTakeHigher();
         }
 
+        /**
+         * Gets the relationship + 1, since the player bought drinks.
+         *
+         * @param relationship the current relationship.
+         * @return the next highest, if applicable.
+         */
+        public static Relationship getBoughtDrinksRelationship(final Relationship relationship) {
+            final Relationship toReturn;
+            LOG.info("Old relationship: {}.", relationship);
+            if (relationship == Relationship.ENEMY) {
+                toReturn = Relationship.UNFRIENDLY;
+            } else if (relationship == Relationship.UNFRIENDLY) {
+                toReturn = Relationship.NEUTRAL;
+            } else if (relationship == Relationship.NEUTRAL) {
+                toReturn = Relationship.FRIENDLY;
+            } else if (relationship == Relationship.FRIENDLY) {
+                toReturn = Relationship.ALLY;
+            } else {
+                toReturn = relationship;
+            }
+            LOG.info("New relationship (because of drinks): {}.", toReturn);
+            return toReturn;
+        }
     }
 
     public static class MissileTable {

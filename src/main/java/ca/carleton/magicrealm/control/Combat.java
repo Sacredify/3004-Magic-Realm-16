@@ -66,16 +66,15 @@ public class Combat {
 
         LOG.info("Checking to see if {} is battling {}", player.getCharacter().getEntityInformation().convertToCharacterType(), faction);
         int roll = Table.MeetingTable.roll(player, location);
+        Relationship relationship = player.getCharacter().getRelationshipWith(faction);
 
         if (JOptionPane.showConfirmDialog(parent, String.format(ROLL_ON_MEETING_TABLE_BUY_DRINKS, faction)) == JOptionPane.YES_OPTION && roll != 6) {
             player.getCharacter().addGold(-1);
-            roll += 1;
+            relationship =  Table.MeetingTable.getBoughtDrinksRelationship(relationship);
             LOG.info("Added roll for drinks bonus.");
         }
 
         boolean toReturn;
-
-        final Relationship relationship = player.getCharacter().getRelationshipWith(faction);
 
         LOG.info("Relationship with native: {}. Roll value: {}.", relationship, roll);
 

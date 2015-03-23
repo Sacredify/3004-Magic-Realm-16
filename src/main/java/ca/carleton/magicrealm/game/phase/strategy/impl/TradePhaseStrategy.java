@@ -64,7 +64,6 @@ public class TradePhaseStrategy implements PhaseStrategy {
                     meetingTableRoll = Table.MeetingTable.roll(player, trade.getCurrentClearing());
                     if (trade.isDrinksBought() && meetingTableRoll != 6) {
                         player.getCharacter().addGold(-1);
-                        meetingTableRoll += 1;
                     }
                 } else {
                     meetingTableRoll = trade.override;
@@ -74,7 +73,11 @@ public class TradePhaseStrategy implements PhaseStrategy {
 
                 if (trade.getTradeTarget() instanceof AbstractNative) {
                     final AbstractNative nativeTarget = (AbstractNative) trade.getTradeTarget();
-                    final Relationship relationship = player.getCharacter().getRelationshipWith(nativeTarget.getFaction());
+                    Relationship relationship = player.getCharacter().getRelationshipWith(nativeTarget.getFaction());
+
+                    if (trade.isDrinksBought()) {
+                        relationship = Table.MeetingTable.getBoughtDrinksRelationship(relationship);
+                    }
 
                     LOG.info("Characters relationship with the entity is {}.", relationship);
 
