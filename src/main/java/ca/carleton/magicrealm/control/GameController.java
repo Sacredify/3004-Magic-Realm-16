@@ -228,10 +228,10 @@ public class GameController {
                 "Current fame: " + this.currentPlayer.getCharacter().getCurrentFame() + "<br/>" +
                 "Current spell count: " + this.currentPlayer.getCharacter().getCurrentSpellsCount() + "<br/>" +
                 "Current great treasures count: " + this.currentPlayer.getCharacter().getCurrentGreatTreasuresCount() + "<br/>" +
-                "Needed gold: " + this.currentPlayer.getVictoryCondition().getGold() + "<br/>" +
-                "Needed notoriety: " + this.currentPlayer.getVictoryCondition().getNotoriety() + "<br/>" +
-                "Needed fame: " + this.currentPlayer.getVictoryCondition().getFame() + "<br/>" +
-                "Needed spell count: " + this.currentPlayer.getVictoryCondition().getSpellsCount() + "<br/>" +
+                "Needed gold: " + this.currentPlayer.getVictoryCondition().getGold() * 30 + "<br/>" +
+                "Needed notoriety: " + this.currentPlayer.getVictoryCondition().getNotoriety() * 20 + "<br/>" +
+                "Needed fame: " + this.currentPlayer.getVictoryCondition().getFame() * 10 + "<br/>" +
+                "Needed spell count: " + this.currentPlayer.getVictoryCondition().getSpellsCount() * 2 + "<br/>" +
                 "Needed great treasures count: " + this.currentPlayer.getVictoryCondition().getGreatTreasuresCount() + "<br/><br/>" +
                 "Action chits: <br/>");
 
