@@ -10,6 +10,8 @@ import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.MeleeSheet;
+import ca.carleton.magicrealm.game.combat.MeleeSheets;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ public class BoardGUIModel implements Serializable {
     private final ArrayList<Player> players = new ArrayList<Player>();
 
     private final ArrayList<Denizen> denizens = new ArrayList<Denizen>();
+
+    private final MeleeSheets meleeSheets = new MeleeSheets();
 
     public BoardGUIModel() {
         // In the future, mark each tile's x and y grid coordinates when added
@@ -374,6 +378,7 @@ public class BoardGUIModel implements Serializable {
 
     /**
      * Finds all the entities on the board that can trade with a player.
+     *
      * @return
      */
     public List<Entity> getTradeableTargets() {
@@ -381,15 +386,15 @@ public class BoardGUIModel implements Serializable {
 
         for (final AbstractTile tile : this.tiles) {
             for (final Clearing clearing : tile.getClearings()) {
-               for (final Entity entity : clearing.getEntities()) {
-                   if (entity instanceof AbstractNative) {
-                      if (((AbstractNative) entity).isLeader()) {
-                          entities.add(entity);
-                      }
-                   } else if (entity instanceof AbstractCharacter) {
-                       // TODO No trading with other characters at the moment...
-                   }
-               }
+                for (final Entity entity : clearing.getEntities()) {
+                    if (entity instanceof AbstractNative) {
+                        if (((AbstractNative) entity).isLeader()) {
+                            entities.add(entity);
+                        }
+                    } else if (entity instanceof AbstractCharacter) {
+                        // TODO No trading with other characters at the moment...
+                    }
+                }
             }
         }
 
@@ -409,6 +414,14 @@ public class BoardGUIModel implements Serializable {
     }
 
     public ArrayList<Denizen> getDenizens() {
-        return denizens;
+        return this.denizens;
+    }
+
+    public MeleeSheet getMeleeSheetForPlayer(final Player player) {
+        return this.meleeSheets.getMeleeSheetForPlayer(player);
+    }
+
+    public void createNewMeleeSheet(final Player player) {
+        this.meleeSheets.createNewMeleeSheetForPlayer(player);
     }
 }

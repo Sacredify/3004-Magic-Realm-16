@@ -90,14 +90,16 @@ public class AppServer implements Runnable {
 
             // Clients send the SELECT_CHARACTER message when they are done creating their character.
             case (Message.SELECT_CHARACTER):
-                // Add the player to the board
+                // Add the player to the board and create a new melee sheet for them.
                 Player player = (Player) message.getPayload();
+                this.getClientWithID(message.getSenderID()).setPlayer(player);
                 this.boardModel.getClearingOfDwelling(player.getStartingLocation()).addEntity(player.getCharacter());
                 this.boardModel.addPlayer(player);
+                this.boardModel.createNewMeleeSheet(player);
                 // If all players have sent their characters, send the message to start birdsong. Else, forward
                 // the message to other players so they know who picked what.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    Sunrise.doSunrise(boardModel, currentDay);
+                    Sunrise.doSunrise(this.boardModel, this.currentDay);
                     Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
                     this.broadcastMessage(SERVER_ID, toSend);
                 } else {
@@ -120,6 +122,7 @@ public class AppServer implements Runnable {
             case (Message.DAYLIGHT_DONE):
                 // Update the board.
                 this.boardModel = (BoardGUIModel) message.getPayload();
+                this.updateFromBoard();
                 // If all players have sent the message, start COMBAT in clearings.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     this.turnController.createNewTurnOrder(this.clients);
@@ -138,10 +141,11 @@ public class AppServer implements Runnable {
             case (Message.DONE_COMBAT_IN_CLEARING):
                 // Update the board
                 this.boardModel = (BoardGUIModel) message.getPayload();
+                this.updateFromBoard();
                 // If all players have sent the message (done with combat), start a new day.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     this.currentDay++;
-                    Sunrise.doSunrise(boardModel, currentDay);
+                    Sunrise.doSunrise(this.boardModel, this.currentDay);
                     Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
                     this.broadcastMessage(SERVER_ID, toSend);
                 } else {
@@ -158,7 +162,16 @@ public class AppServer implements Runnable {
         }
     }
 
-    public ServerThread getClientWithID(int ID) {
+    private void updateFromBoard() {
+        for (final ServerThread client : this.clients) {
+            this.boardModel.getPlayers().stream().filter(player -> client.getPlayer().equals(player)).forEach(player -> {
+                client.setPlayer(player);
+                LOG.info("Updated client thread player with board version [{}].", client.getPlayer().getCharacter());
+            });
+        }
+    }
+
+    private ServerThread getClientWithID(int ID) {
         for (ServerThread client : this.clients) {
             if (ID == client.getID()) {
                 return client;

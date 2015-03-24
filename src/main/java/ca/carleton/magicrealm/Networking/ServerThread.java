@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.Networking;
 
+import ca.carleton.magicrealm.game.Player;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,13 +9,18 @@ import java.net.Socket;
 
 
 public class ServerThread extends Thread {
+
     private int ID = -1;
+
     private Socket socket = null;
+
     private AppServer server = null;
-    private int gameNumber = -1;
+
     private ObjectOutputStream objOutStream = null;
+
     private ObjectInputStream objInputStream = null;
-    private boolean done = false;
+
+    private Player player;
 
     public ServerThread(AppServer server, Socket socket) {
         super();
@@ -29,7 +36,6 @@ public class ServerThread extends Thread {
             this.objOutStream.writeObject(msg);
             this.objOutStream.flush();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -69,8 +75,14 @@ public class ServerThread extends Thread {
     }
 
     public int getID() {
-        // TODO Auto-generated method stub
         return this.ID;
     }
 
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public void setPlayer(final Player player) {
+        this.player = player;
+    }
 }

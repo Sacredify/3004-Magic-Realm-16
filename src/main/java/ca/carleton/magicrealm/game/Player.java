@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.game;
 
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 
@@ -58,6 +59,11 @@ public class Player implements Serializable {
     @Override
     public boolean equals(Object rhs) {
         return rhs instanceof Player && this.getCharacter().getEntityInformation() == ((Player) rhs).getCharacter().getEntityInformation();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(3, 13).append(this.character).append(this.victoryCondition).build();
     }
 
     public Dwelling getStartingLocation() {
