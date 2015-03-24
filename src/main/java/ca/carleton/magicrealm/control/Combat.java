@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
@@ -44,10 +45,26 @@ public class Combat {
         LOG.info("Step 1: Checking to see if player is battling any unhired native groups in the clearing this day.");
         final Map<NativeFaction, Boolean> nativeCombat = new HashMap<NativeFaction, Boolean>();
         final List<NativeFaction> nativesInClearing = getNativeFactionsInClearing(combatSite);
-        nativesInClearing.stream().forEach(nativeFaction -> {
-            nativeCombat.put(nativeFaction, isDoingCombatWithNativeFaction(currentPlayer, combatSite, nativeFaction, parent));
-        });
+        nativesInClearing.stream().forEach(nativeFaction -> nativeCombat.put(nativeFaction, isDoingCombatWithNativeFaction(currentPlayer, combatSite, nativeFaction, parent)));
         LOG.info("Done checking to if doing native combat.");
+
+        final Map<Entity, Entity> battleAssignments = new HashMap<Entity, Entity>();
+
+        LOG.info("Step 2: Assign natives that will be fighting player.");
+        assignNativeFactionsToPlayer(currentPlayer, nativeCombat, battleAssignments, combatSite);
+        LOG.info("Done assigning valid natives.");
+
+        LOG.info("Step 3: Luring. Begin voluntary assignment of enemies to character.");
+        // TODO need to throw in a GUI into a dialog that will return a list of entities that the user wishes to fight.
+        LOG.info("Done luring for player.");
+
+        LOG.info("Step 4: Random Assignment. Begin assigning all remaining unassigned natives to player..");
+        // TODO
+        LOG.info("Done random assignment.");
+
+        LOG.info("Step 5: Deployment and Charging. Begin asking user is they want to charge other characters in clearing...");
+        // TODO
+        LOG.info("Done charging options.");
 
     }
 
@@ -87,11 +104,19 @@ public class Combat {
                 break;
             default:
                 toReturn = false;
-
         }
 
         LOG.info("Player battling with {} : {}.", faction, toReturn);
         return toReturn;
     }
 
+    private static void assignNativeFactionsToPlayer(final Player currentPlayer, final Map<NativeFaction, Boolean> fightingNatives, final Map<Entity, Entity> battleAssignments, final Clearing combatSite) {
+        fightingNatives.entrySet().stream().filter(Map.Entry::getValue).forEach(entry -> combatSite.getEntities().stream().filter(entity -> entity instanceof AbstractNative).forEach(entity -> {
+            final AbstractNative abstractNative = (AbstractNative) entity;
+            if (abstractNative.getFaction() == entry.getKey()) {
+                battleAssignments.put(currentPlayer.getCharacter(), entity);
+                LOG.info("Added {} battling {} to assignments.", entity, currentPlayer.getCharacter());
+            }
+        }));
+    }
 }
