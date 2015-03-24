@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.Networking;
 import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
+import ca.carleton.magicrealm.control.Sunrise;
 import ca.carleton.magicrealm.game.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +97,7 @@ public class AppServer implements Runnable {
                 // If all players have sent their characters, send the message to start birdsong. Else, forward
                 // the message to other players so they know who picked what.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                    Sunrise.doSunrise(boardModel, currentDay);
                     Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
                     this.broadcastMessage(SERVER_ID, toSend);
                 } else {
@@ -139,6 +141,7 @@ public class AppServer implements Runnable {
                 // If all players have sent the message (done with combat), start a new day.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     this.currentDay++;
+                    Sunrise.doSunrise(boardModel, currentDay);
                     Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
                     this.broadcastMessage(SERVER_ID, toSend);
                 } else {

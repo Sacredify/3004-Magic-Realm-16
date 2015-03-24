@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
@@ -28,6 +29,8 @@ public class BoardGUIModel implements Serializable {
     private final ArrayList<AbstractTile> tiles = new ArrayList<AbstractTile>();
 
     private final ArrayList<Player> players = new ArrayList<Player>();
+
+    private final ArrayList<Denizen> denizens = new ArrayList<Denizen>();
 
     public BoardGUIModel() {
         // In the future, mark each tile's x and y grid coordinates when added
@@ -405,4 +408,7 @@ public class BoardGUIModel implements Serializable {
         return this.players;
     }
 
+    public ArrayList<Denizen> getDenizens() {
+        return denizens;
+    }
 }

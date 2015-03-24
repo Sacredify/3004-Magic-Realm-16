@@ -33,7 +33,10 @@ public enum EntityInformation {
     NATIVE_ASSASSIN("image/natives//assassin_m.png"),
 
     // Ghosts
-    GHOST("image/ghost/ghost.gif");
+    GHOST("image/ghost/ghost.gif"),
+
+    //Monsters
+    GIANT("image/monsters/giant.gif");
 
     private final String imageFilePath;
 
