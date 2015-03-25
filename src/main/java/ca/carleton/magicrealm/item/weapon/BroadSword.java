@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.weapon;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -13,6 +14,9 @@ public class BroadSword extends AbstractWeapon {
         this.goldValue = 8;
         this.length = 7;
         this.attackType = AttackType.STRIKING;
+        this.strength = Harm.MEDIUM;
+        this.unAlertedSharpness = 1;
+        this.alertedSharpness = 1;
     }
 
     @Override

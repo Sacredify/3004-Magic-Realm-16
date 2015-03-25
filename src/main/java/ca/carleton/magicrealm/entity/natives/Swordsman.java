@@ -1,8 +1,8 @@
 package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
-import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.weapon.ThrustingSword;
 
 /**
@@ -13,7 +13,7 @@ import ca.carleton.magicrealm.item.weapon.ThrustingSword;
 public class Swordsman extends AbstractNative {
 
     protected Swordsman(final NativeFaction nativeType) {
-        this.vulnerability = Vulnerability.MEDIUM;
+        this.vulnerability = Harm.MEDIUM;
         this.weapon = new ThrustingSword();
         this.basicGoldWage = 1;
 

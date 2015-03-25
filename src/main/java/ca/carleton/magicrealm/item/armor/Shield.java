@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.armor;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -12,6 +13,7 @@ public class Shield extends AbstractArmor {
     public Shield() {
         this.goldValue = 7;
         this.protectsAgainst = ProtectionType.ONE_DIRECTION;
+        this.weight = Harm.MEDIUM;
     }
 
     public ItemInformation getItemInformation() {

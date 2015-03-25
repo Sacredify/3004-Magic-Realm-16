@@ -1,7 +1,10 @@
 package ca.carleton.magicrealm.entity.monster;
 
-import ca.carleton.magicrealm.entity.*;
+import ca.carleton.magicrealm.entity.BountyCarrier;
+import ca.carleton.magicrealm.entity.Denizen;
+import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +15,7 @@ public class Ghost extends Denizen implements BountyCarrier {
 
     public Ghost() {
         this.setProwling(true);
-        this.vulnerability = Vulnerability.LIGHT;
+        this.vulnerability = Harm.LIGHT;
     }
 
     @Override

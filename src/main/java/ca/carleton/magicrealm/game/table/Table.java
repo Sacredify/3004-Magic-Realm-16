@@ -2,11 +2,13 @@ package ca.carleton.magicrealm.game.table;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
+import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.BlackKnight;
 import ca.carleton.magicrealm.entity.character.Dwarf;
 import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +80,95 @@ public abstract class Table {
 
     public static class MissileTable {
 
+        /**
+         * Rolls on the missile table to modify ranged attacks.
+         *
+         * @param player       the player rolling
+         * @param baseStrength the base harm of the weapon.
+         */
+        public static Harm roll(final Player player, final Harm baseStrength) {
+            int roll = DiceRoller.rollTwiceTakeHigher();
+
+            // Amazon special, AIM. Subtract one.
+            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON) {
+                roll = roll - 1;
+            }
+
+            switch (roll) {
+                case 1:
+                    switch (baseStrength) {
+                        case NEGLIGIBLE:
+                            return baseStrength;
+                        case LIGHT:
+                            return Harm.HEAVY;
+                        case MEDIUM:
+                            return Harm.TREMENDOUS;
+                        case HEAVY:
+                        case TREMENDOUS:
+                            return Harm.LETHAL;
+                        default:
+                            return Harm.NEGLIGIBLE;
+                    }
+                case 2:
+                    switch (baseStrength) {
+                        case NEGLIGIBLE:
+                            return baseStrength;
+                        case LIGHT:
+                            return Harm.MEDIUM;
+                        case MEDIUM:
+                            return Harm.HEAVY;
+                        case HEAVY:
+                            return Harm.TREMENDOUS;
+                        case TREMENDOUS:
+                            return Harm.LETHAL;
+                        default:
+                            return Harm.NEGLIGIBLE;
+                    }
+                case 3:
+                    return baseStrength;
+                case 4:
+                    switch (baseStrength) {
+                        case NEGLIGIBLE:
+                        case LIGHT:
+                            return baseStrength;
+                        case MEDIUM:
+                            return Harm.LIGHT;
+                        case HEAVY:
+                            return Harm.MEDIUM;
+                        case TREMENDOUS:
+                            return Harm.HEAVY;
+                        default:
+                            return Harm.NEGLIGIBLE;
+                    }
+                case 5:
+                    switch (baseStrength) {
+                        case NEGLIGIBLE:
+                        case LIGHT:
+                        case MEDIUM:
+                            return baseStrength;
+                        case HEAVY:
+                            return Harm.LIGHT;
+                        case TREMENDOUS:
+                            return Harm.MEDIUM;
+                        default:
+                            return Harm.NEGLIGIBLE;
+                    }
+                case 6:
+                    switch (baseStrength) {
+                        case NEGLIGIBLE:
+                        case LIGHT:
+                        case MEDIUM:
+                        case HEAVY:
+                            return baseStrength;
+                        case TREMENDOUS:
+                            return Harm.LIGHT;
+                        default:
+                            return Harm.NEGLIGIBLE;
+                    }
+                default:
+                    return baseStrength;
+            }
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.armor;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -12,6 +13,7 @@ public class Helmet extends AbstractArmor {
     public Helmet() {
         this.goldValue = 5;
         this.protectsAgainst = ProtectionType.SMASH;
+        this.weight = Harm.MEDIUM;
     }
 
     public ItemInformation getItemInformation() {

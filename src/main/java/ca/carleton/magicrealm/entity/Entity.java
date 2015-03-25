@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.entity;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.Item;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public abstract class Entity implements Serializable {
     /**
      * The vulnerability of an entity is their health. Determined by their character.
      */
-    protected Vulnerability vulnerability;
+    protected Harm vulnerability;
 
     /**
      * Whether or not the entity is hidden on the tile.
@@ -35,7 +36,7 @@ public abstract class Entity implements Serializable {
 
     public abstract EntityInformation getEntityInformation();
 
-    public Vulnerability getVulnerability() {
+    public Harm getVulnerability() {
         return this.vulnerability;
     }
 

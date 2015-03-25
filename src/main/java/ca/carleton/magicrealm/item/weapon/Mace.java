@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.weapon;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -13,6 +14,9 @@ public class Mace extends AbstractWeapon {
         this.goldValue = 5;
         this.length = 1;
         this.attackType = AttackType.STRIKING;
+        this.strength = Harm.MEDIUM;
+        this.unAlertedSharpness = 0;
+        this.alertedSharpness = 0;
     }
 
     @Override

@@ -1,8 +1,8 @@
 package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
-import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.weapon.GreatAxe;
 
 /**
@@ -13,7 +13,7 @@ import ca.carleton.magicrealm.item.weapon.GreatAxe;
 public class GreatAxeman extends AbstractNative {
 
     protected GreatAxeman(final NativeFaction nativeType) {
-        this.vulnerability = Vulnerability.HEAVY;
+        this.vulnerability = Harm.HEAVY;
         this.weapon = new GreatAxe();
         this.basicGoldWage = 4;
 

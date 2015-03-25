@@ -1,8 +1,8 @@
 package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
-import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.weapon.BroadSword;
 
 /**
@@ -13,7 +13,7 @@ import ca.carleton.magicrealm.item.weapon.BroadSword;
 public class Knight extends AbstractNative {
 
     protected Knight(final NativeFaction nativeType) {
-        this.vulnerability = Vulnerability.TREMENDOUS;
+        this.vulnerability = Harm.TREMENDOUS;
         this.weapon = new BroadSword();
         this.basicGoldWage = 8;
 

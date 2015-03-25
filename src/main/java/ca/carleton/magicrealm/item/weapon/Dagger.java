@@ -5,22 +5,21 @@ import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
  * Created with IntelliJ IDEA.
- * Date: 14/02/15
- * Time: 9:14 AM
+ * Date: 25/03/2015
+ * Time: 2:59 PM
  */
-public class Staff extends AbstractWeapon {
+public class Dagger extends AbstractWeapon {
 
-    public Staff() {
-        this.goldValue = 1;
-        this.length = 9;
+    public Dagger() {
+        this.strength = Harm.NEGLIGIBLE;
         this.attackType = AttackType.STRIKING;
-        this.strength = Harm.LIGHT;
-        this.unAlertedSharpness = 0;
-        this.alertedSharpness = 0;
+        this.length = 0;
+        this.unAlertedSharpness = 1;
+        this.alertedSharpness =1;
     }
 
     @Override
     public ItemInformation getItemInformation() {
-        return ItemInformation.STAFF;
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.armor;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -11,7 +12,8 @@ public class BreastPlate extends AbstractArmor {
 
     public BreastPlate() {
         this.goldValue = 9;
-        this.protectsAgainst = ProtectionType.THURST_AND_SWING;
+        this.protectsAgainst = ProtectionType.THRUST_AND_SWING;
+        this.weight = Harm.MEDIUM;
     }
 
     public ItemInformation getItemInformation() {

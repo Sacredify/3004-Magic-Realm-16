@@ -1,8 +1,8 @@
 package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
-import ca.carleton.magicrealm.entity.Vulnerability;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.weapon.Spear;
 
 /**
@@ -13,7 +13,7 @@ import ca.carleton.magicrealm.item.weapon.Spear;
 public class Lancer extends AbstractNative {
 
     protected Lancer(final NativeFaction nativeType) {
-        this.vulnerability = Vulnerability.LIGHT;
+        this.vulnerability = Harm.LIGHT;
         this.weapon = new Spear();
         this.basicGoldWage = 2;
 

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.weapon;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -13,6 +14,9 @@ public class LightBow extends AbstractWeapon {
         this.goldValue = 6;
         this.length = 14;
         this.attackType = AttackType.MISSILE;
+        this.strength = Harm.LIGHT;
+        this.unAlertedSharpness = 0;
+        this.alertedSharpness = 2;
     }
 
     @Override

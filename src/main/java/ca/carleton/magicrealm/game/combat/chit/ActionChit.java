@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.game.combat.chit;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class ActionChit implements Serializable {
     /**
      * The letter on the chit (strength).
      */
-    private final String strength;
+    private final Harm strength;
 
     /**
      * The number of fatigue asterisks on the chit
@@ -54,7 +55,7 @@ public class ActionChit implements Serializable {
     }
 
 
-    public String getStrength() {
+    public Harm getStrength() {
         return this.strength;
     }
 
@@ -108,7 +109,7 @@ public class ActionChit implements Serializable {
 
         private int time;
 
-        private String strength;
+        private Harm strength;
 
         private int fatigueAsterisks;
 
@@ -123,7 +124,7 @@ public class ActionChit implements Serializable {
             return this;
         }
 
-        public ActionChitBuilder withStrength(final String strength) {
+        public ActionChitBuilder withStrength(final Harm strength) {
             this.strength = strength;
             return this;
         }

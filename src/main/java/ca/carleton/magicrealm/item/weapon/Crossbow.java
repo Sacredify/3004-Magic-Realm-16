@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.weapon;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -13,6 +14,9 @@ public class Crossbow extends AbstractWeapon {
         this.goldValue = 10;
         this.length = 12;
         this.attackType = AttackType.MISSILE;
+        this.strength = Harm.HEAVY;
+        this.unAlertedSharpness = 0;
+        this.alertedSharpness = 1;
     }
 
     @Override

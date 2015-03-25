@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.item.armor;
 
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.ItemInformation;
 
 /**
@@ -12,6 +13,7 @@ public class SuitOfArmor extends AbstractArmor {
     public SuitOfArmor() {
         this.goldValue = 17;
         this.protectsAgainst = ProtectionType.ALL_DIRECTIONS;
+        this.weight = Harm.HEAVY;
     }
 
     public ItemInformation getItemInformation() {
