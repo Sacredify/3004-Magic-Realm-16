@@ -90,7 +90,7 @@ public abstract class Table {
             int roll = DiceRoller.rollTwiceTakeHigher();
 
             // Amazon special, AIM. Subtract one.
-            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON) {
+            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON && roll != 1) {
                 roll = roll - 1;
             }
 
