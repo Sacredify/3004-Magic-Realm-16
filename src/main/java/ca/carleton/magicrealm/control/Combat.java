@@ -177,75 +177,80 @@ public class Combat {
             attackHit = attacker.getAttackChit().getTime() < defender.getManeuverChit().getTime();
             LOG.info("Attack landed after checking times: {}", attackHit);
         }
+        if (attackHit) {
 
-        // Determine the harm (strength) of the attack
-        AbstractWeapon weapon = attacker.getAttackWeapon();
+            // Determine the harm (strength) of the attack
+            AbstractWeapon weapon = attacker.getAttackWeapon();
 
-        // No weapon (using only a fight chit) means they use a dagger.
-        if (weapon == null) {
-            weapon = new Dagger();
-            LOG.info("Attacker had no weapon equipped. Using a dagger.");
-        }
-
-        // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
-        // than the power of the weapon. For missile attacks, roll on the table.
-        Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
-        LOG.info("Attacker weapon strength: {}", attackStrength);
-        if (weapon.getAttackType() == AttackType.STRIKING) {
-            if (attacker.getAttackChit().getStrength().greaterThan(attackStrength)) {
-                attackStrength = attackStrength.increase();
-                LOG.info("Attack chit stronger. Increased weapon strength to {}.", attackStrength);
+            // No weapon (using only a fight chit) means they use a dagger.
+            if (weapon == null) {
+                weapon = new Dagger();
+                LOG.info("Attacker had no weapon equipped. Using a dagger.");
             }
-        } else {
-            attackStrength = Table.MissileTable.roll(playerOne, attackStrength);
-            LOG.info("Rolled on missile table. New strength: {}.", attackStrength);
-        }
 
-        // Check to see if the armor the defender may be wearing intercepts.
-        boolean intercepted = false;
-        final AbstractArmor armor = defender.getArmor();
-        if (armor != null) {
-            intercepted = armor.getProtectsAgainst().intercepts(attacker.getAttackDirection());
-        }
-        LOG.info("Defender armor protects against {}. Attack intercepted: {}", armor.getProtectsAgainst(), intercepted);
-
-        CombatResults combatResults;
-
-        if (intercepted) {
-            if (attackStrength == armor.getWeight()) {
-                if (armor.isDamaged()) {
-                    // Armor that is already damaged is destroyed (removed from inventory).
-                    playerTwo.getCharacter().getItems().remove(armor);
-                    LOG.info("Armor was already damaged and has been destroyed! Removed from inventory of {}.", playerTwo.getCharacter());
-                } else {
-                    armor.setDamaged(true);
-                    LOG.info("Armor has been damaged by the hit.");
+            // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
+            // than the power of the weapon. For missile attacks, roll on the table.
+            Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
+            LOG.info("Attacker weapon strength: {}", attackStrength);
+            if (weapon.getAttackType() == AttackType.STRIKING) {
+                if (attacker.getAttackChit().getStrength().greaterThan(attackStrength)) {
+                    attackStrength = attackStrength.increase();
+                    LOG.info("Attack chit stronger. Increased weapon strength to {}.", attackStrength);
                 }
-            } else if (attackStrength.greaterThan(armor.getWeight())) {
-                // Any attack greater than the armor weight instantly destroys it
-                playerTwo.getCharacter().getItems().remove(armor);
-                LOG.info("Armor was destroyed by an attack greater than the weight of the armor!. Removed from inventory of {}.", playerTwo.getCharacter());
-            }
-            // Only MEDIUM and higher makes us wound stuff.
-            if (attackStrength.greaterThan(Harm.LIGHT)) {
-                combatResults = CombatResults.createResultsFor(playerTwo, false, true);
             } else {
-                combatResults = CombatResults.createResultsFor(playerTwo, false, false);
+                attackStrength = Table.MissileTable.roll(playerOne, attackStrength);
+                LOG.info("Rolled on missile table. New strength: {}.", attackStrength);
             }
 
+            // Check to see if the armor the defender may be wearing intercepts.
+            boolean intercepted = false;
+            final AbstractArmor armor = defender.getArmor();
+            if (armor != null) {
+                intercepted = armor.getProtectsAgainst().intercepts(attacker.getAttackDirection());
+            }
+            LOG.info("Defender armor protects against {}. Attack intercepted: {}", armor.getProtectsAgainst(), intercepted);
+
+            CombatResults combatResults;
+
+            if (intercepted) {
+                if (attackStrength == armor.getWeight()) {
+                    if (armor.isDamaged()) {
+                        // Armor that is already damaged is destroyed (removed from inventory).
+                        playerTwo.getCharacter().getItems().remove(armor);
+                        LOG.info("Armor was already damaged and has been destroyed! Removed from inventory of {}.", playerTwo.getCharacter());
+                    } else {
+                        armor.setDamaged(true);
+                        LOG.info("Armor has been damaged by the hit.");
+                    }
+                } else if (attackStrength.greaterThan(armor.getWeight())) {
+                    // Any attack greater than the armor weight instantly destroys it
+                    playerTwo.getCharacter().getItems().remove(armor);
+                    LOG.info("Armor was destroyed by an attack greater than the weight of the armor!. Removed from inventory of {}.", playerTwo.getCharacter());
+                }
+                // Only MEDIUM and higher makes us wound stuff.
+                if (attackStrength.greaterThan(Harm.LIGHT)) {
+                    combatResults = CombatResults.createResultsFor(playerTwo, false, true);
+                } else {
+                    combatResults = CombatResults.createResultsFor(playerTwo, false, false);
+                }
+
+            } else {
+                // Target is killed if the strength of the attack >= the players health.
+                if (attackStrength.greaterThan(playerTwo.getCharacter().getVulnerability()) || attackStrength == playerTwo.getCharacter().getVulnerability()) {
+                    combatResults = CombatResults.createResultsFor(playerTwo, true, false);
+                } else {
+                    combatResults = CombatResults.createResultsFor(playerTwo, false, true);
+                }
+            }
+
+            // Weapons automatically get un-alerted.
+            weapon.setAlert(false);
+
+            return combatResults;
         } else {
-            // Target is killed if the strength of the attack >= the players health.
-            if (attackStrength.greaterThan(playerTwo.getCharacter().getVulnerability()) || attackStrength == playerTwo.getCharacter().getVulnerability()) {
-                combatResults = CombatResults.createResultsFor(playerTwo, true, false);
-            } else {
-                combatResults = CombatResults.createResultsFor(playerTwo, false, true);
-            }
+            LOG.info("Attacker missed. Ending round of combat.");
+            return CombatResults.createResultsFor(playerTwo, false, false);
         }
-
-        // Weapons automatically get un-alerted.
-        weapon.setAlert(false);
-
-        return combatResults;
     }
 
     /**
