@@ -40,6 +40,8 @@ public enum Harm {
                 return harm == Harm.NEGLIGIBLE || harm == Harm.LIGHT || harm == Harm.MEDIUM;
             case TREMENDOUS:
                 return harm == Harm.NEGLIGIBLE || harm == Harm.LIGHT || harm == Harm.MEDIUM || harm == Harm.HEAVY;
+            case LETHAL:
+                return true;
             default:
                 return false;
         }
