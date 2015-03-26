@@ -45,6 +45,7 @@ public class AppServer implements Runnable {
             this.server = new ServerSocket(port);
             this.server.setReuseAddress(true);
             this.clients = new ArrayList<ServerThread>();
+            LOG.info("Starting game...");
             this.turnController = new TurnController();
             this.buildMap();
             this.start();
@@ -57,15 +58,18 @@ public class AppServer implements Runnable {
      * Builds the map for this session.
      */
     private void buildMap() {
+        LOG.info("Beginning map build process.");
         this.boardModel = new BoardModel();
         ChitBuilder.placeChits(this.boardModel);
         EntityBuilder.placeEntities(this.boardModel);
+        LOG.info("Finished map build process.");
     }
 
     public void start() {
         if (this.thread == null) {
             this.thread = new Thread(this);
             this.thread.start();
+            LOG.info("Game started.");
         }
     }
 
@@ -96,6 +100,7 @@ public class AppServer implements Runnable {
                 this.boardModel.getClearingOfDwelling(player.getStartingLocation()).addEntity(player.getCharacter());
                 this.boardModel.addPlayer(player);
                 this.boardModel.createNewMeleeSheet(player);
+                LOG.info("Added new player to the board.");
                 // If all players have sent their characters, send the message to start birdsong. Else, forward
                 // the message to other players so they know who picked what.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {

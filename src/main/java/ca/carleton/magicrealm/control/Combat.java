@@ -131,8 +131,8 @@ public class Combat {
      * Initiate combat between two players.
      *
      * @param boardModel the board.
-     * @param attacker  the first player.
-     * @param defender  the second player.
+     * @param attacker   the first player.
+     * @param defender   the second player.
      */
     public static void doCombat(final BoardModel boardModel, final Player attacker, final Player defender) {
 
@@ -164,20 +164,32 @@ public class Combat {
             // TODO code that the user must do "fatigue step" and wound a chit.
             LOG.info("Defender has been wounded and must wound a chit.");
         }
+    }
+
+    /**
+     * Cleanup after combat. This includes resetting the sheets and wound status.
+     *
+     * @param boardModel the board.
+     * @param attacker   the attacker.
+     * @param defender   the defender.
+     */
+    public static void cleanup(final BoardModel boardModel, final Player attacker, final Player defender) {
+
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
+        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
 
         LOG.info("Resetting wounded status at the end of the day.");
         attacker.getCharacter().setWounded(false);
         attackerSheet.resetSheet();
         defender.getCharacter().setWounded(false);
         defenderSheet.resetSheet();
-
     }
 
     /**
      * Resolve a round of combat between two characters. This assumes playerOne is attacking player two (who is defending).
      *
-     * @param attacker   the first player melee sheet.
-     * @param defender   the second player melee sheet.
+     * @param attacker the first player melee sheet.
+     * @param defender the second player melee sheet.
      */
     private static void resolveCombat(final MeleeSheet attacker, final MeleeSheet defender) {
 
@@ -224,6 +236,7 @@ public class Combat {
             LOG.info("Defender armor protects against {}. Attack intercepted: {}", armor.getProtectsAgainst(), intercepted);
 
             if (intercepted) {
+                LOG.info("Armor weight is {}.", armor.getWeight());
                 if (attackStrength == armor.getWeight()) {
                     if (armor.isDamaged()) {
                         // Armor that is already damaged is destroyed (removed from inventory).
@@ -252,7 +265,7 @@ public class Combat {
                     defender.getPlayer().getCharacter().setDead(true);
                     LOG.info("Attack strength was greater than or equal to vulnerability and has died.");
                 } else {
-                   defender.getPlayer().getCharacter().setWounded(true);
+                    defender.getPlayer().getCharacter().setWounded(true);
                     LOG.info("Player took a wound and must wound a chit.");
                 }
             }
