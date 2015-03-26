@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.control;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Relationship;
@@ -45,7 +45,7 @@ public class Combat {
      * @param currentPlayer the current player.
      * @param parent        the parent frame to attach any messages to.
      */
-    public static void doCombat(final BoardGUIModel boardModel, final Player currentPlayer, final Component parent) {
+    public static void doCombat(final BoardModel boardModel, final Player currentPlayer, final Component parent) {
 
         final Clearing combatSite = boardModel.getClearingForPlayer(currentPlayer);
 
@@ -134,7 +134,7 @@ public class Combat {
      * @param attacker  the first player.
      * @param defender  the second player.
      */
-    public static void doCombat(final BoardGUIModel boardModel, final Player attacker, final Player defender) {
+    public static void doCombat(final BoardModel boardModel, final Player attacker, final Player defender) {
 
         final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
         final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);

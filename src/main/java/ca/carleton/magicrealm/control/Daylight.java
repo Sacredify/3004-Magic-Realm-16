@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.control;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
@@ -37,7 +37,7 @@ public class Daylight {
         }
     };
 
-    public static void processPhasesForPlayer(final BoardGUIModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
+    public static void processPhasesForPlayer(final BoardModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
 
         LOG.info("Setting character status to unhidden/unblocked.");
         player.getCharacter().setHidden(false);
@@ -77,7 +77,7 @@ public class Daylight {
      * @param board  the board.
      * @return true if the player is now BLOCKED.
      */
-    public static boolean characterNowBlocked(final Player player, final BoardGUIModel board) {
+    public static boolean characterNowBlocked(final Player player, final BoardModel board) {
         final Clearing playerClearing = board.getClearingForPlayer(player);
 
         if (player.getCharacter().isBlocked()) {

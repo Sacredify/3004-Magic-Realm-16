@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.control;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
@@ -27,7 +27,7 @@ public class GameController {
 
     private final BoardWindow boardWindow;
 
-    private BoardGUIModel boardModel;
+    private BoardModel boardModel;
 
     private CharacterCreateMenu characterCreateMenu;
 
@@ -61,7 +61,7 @@ public class GameController {
                     break;
                 case (Message.BIRDSONG_START):
                     // Set new data
-                    this.setBoardModel(((BoardGUIModel) m.getPayload()));
+                    this.setBoardModel(((BoardModel) m.getPayload()));
                     this.updateCurrentPlayer();
                     this.refreshBoard();
                     // Process birdsong
@@ -69,7 +69,7 @@ public class GameController {
                     break;
                 case (Message.DAYLIGHT_START):
                     // Set new data
-                    this.setBoardModel(((BoardGUIModel) m.getPayload()));
+                    this.setBoardModel(((BoardModel) m.getPayload()));
                     this.updateCurrentPlayer();
                     // Process daylight
                     this.processUpdatedPhasesFromBoard();
@@ -77,7 +77,7 @@ public class GameController {
                     break;
                 case (Message.START_COMBAT_IN_CLEARING):
                     // Set new data
-                    this.setBoardModel(((BoardGUIModel) m.getPayload()));
+                    this.setBoardModel(((BoardModel) m.getPayload()));
                     this.updateCurrentPlayer();
                     this.refreshBoard();
                     // Process combat in the current clearing of the player
@@ -245,7 +245,7 @@ public class GameController {
         return gameInfoText;
     }
 
-    public void setBoardModel(BoardGUIModel model) {
+    public void setBoardModel(BoardModel model) {
         this.boardModel = model;
     }
 
@@ -257,7 +257,7 @@ public class GameController {
         return this.boardWindow;
     }
 
-    public BoardGUIModel getBoardModel() {
+    public BoardModel getBoardModel() {
         return this.boardModel;
     }
 

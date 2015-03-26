@@ -1,4 +1,4 @@
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.control.Daylight;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
@@ -25,18 +25,18 @@ public class HidePhaseTest {
     public void canHideSuccessfully() {
 
         // Create the board and player
-        final BoardGUIModel boardGUIModel = new BoardGUIModel();
-        ChitBuilder.placeChits(boardGUIModel);
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
         final Player player = new Player();
         player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
 
-        boardGUIModel.getStartingLocation().addEntity(player.getCharacter());
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
 
         final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
         final HidePhase hidePhase = new HidePhase();
         phases.add(hidePhase);
 
-        Daylight.processPhasesForPlayer(boardGUIModel, player, phases);
+        Daylight.processPhasesForPlayer(boardModel, player, phases);
 
         // Only should fail on 6.
         if (hidePhase.getRollResult() == 6) {

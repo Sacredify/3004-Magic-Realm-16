@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.GUI.phaseselector.detailwindows;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 
@@ -22,7 +22,7 @@ public class MoveSelectionMenu extends JDialog {
 
     private final MoveSelectionPanel moveSelectionPanel;
 
-    public MoveSelectionMenu(final BoardGUIModel board) {
+    public MoveSelectionMenu(final BoardModel board) {
         this.setTitle(MOVE_SELECTION_WINDOW_NAME);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 

@@ -33,7 +33,7 @@ public class EntityBuilder {
      * Test runner.
      */
     public static void main(String[] args) {
-        EntityBuilder.placeEntities(new BoardGUIModel());
+        EntityBuilder.placeEntities(new BoardModel());
     }
 
     /**
@@ -41,7 +41,7 @@ public class EntityBuilder {
      *
      * @param board the board.
      */
-    public static void placeEntities(final BoardGUIModel board) {
+    public static void placeEntities(final BoardModel board) {
 
         LOG.info("Starting build of natives that start at dwellings...");
         buildOrder(board);
@@ -64,7 +64,7 @@ public class EntityBuilder {
      *
      * @param board the board.
      */
-    private static void buildOrder(final BoardGUIModel board) {
+    private static void buildOrder(final BoardModel board) {
 
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.CHAPEL);
 
@@ -94,7 +94,7 @@ public class EntityBuilder {
      *
      * @param board the board.
      */
-    private static void buildSoldiers(final BoardGUIModel board) {
+    private static void buildSoldiers(final BoardModel board) {
 
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.HOUSE);
 
@@ -124,7 +124,7 @@ public class EntityBuilder {
      *
      * @param board the board.
      */
-    private static void buildRogues(final BoardGUIModel board) {
+    private static void buildRogues(final BoardModel board) {
 
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.INN);
 
@@ -162,7 +162,7 @@ public class EntityBuilder {
      *
      * @param board the board.
      */
-    private static void buildGuard(final BoardGUIModel board) {
+    private static void buildGuard(final BoardModel board) {
 
         final Clearing startingLocation = board.getClearingOfDwelling(Dwelling.GUARD);
 

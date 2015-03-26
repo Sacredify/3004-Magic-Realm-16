@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.game.phase;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.game.Player;
 
 /**
@@ -14,6 +14,6 @@ public abstract class AbstractPhase {
 
     public abstract PhaseType getPhaseType();
 
-    public abstract void updateFromBoard(final Player player, final BoardGUIModel board);
+    public abstract void updateFromBoard(final Player player, final BoardModel board);
 
 }

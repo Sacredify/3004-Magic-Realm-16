@@ -1,15 +1,13 @@
 package ca.carleton.magicrealm.control;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.chit.ColoredChit;
-import ca.carleton.magicrealm.entity.monster.Ghost;
 import ca.carleton.magicrealm.entity.monster.Giant;
-import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +34,7 @@ public class Sunrise {
      * @param boardModel the model to update.
      * @param currentDay the current day.
      */
-    public static void doSunrise(final BoardGUIModel boardModel, final int currentDay) {
+    public static void doSunrise(final BoardModel boardModel, final int currentDay) {
         /** day 1 initialize all the chits **/
         if (currentDay == 1) {
             for (final AbstractTile tile : boardModel.getTilesOfType(TileType.MOUNTAIN)) {

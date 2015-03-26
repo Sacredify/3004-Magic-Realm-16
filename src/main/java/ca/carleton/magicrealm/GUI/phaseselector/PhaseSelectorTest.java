@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.control.GameController;
@@ -23,7 +23,7 @@ public class PhaseSelectorTest {
 
         final GameController controller = new GameController();
 
-        controller.setBoardModel(new BoardGUIModel());
+        controller.setBoardModel(new BoardModel());
         ChitBuilder.placeChits(controller.getBoardModel());
         EntityBuilder.placeEntities(controller.getBoardModel());
 

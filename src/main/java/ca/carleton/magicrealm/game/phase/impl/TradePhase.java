@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.game.phase.impl;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
@@ -41,7 +41,7 @@ public class TradePhase extends AbstractPhase {
     }
 
     @Override
-    public void updateFromBoard(final Player player, final BoardGUIModel board) {
+    public void updateFromBoard(final Player player, final BoardModel board) {
         // Update the entity
         for (final AbstractTile tile : board.getAllTiles()) {
             for (final Clearing clearing : tile.getClearings()) {

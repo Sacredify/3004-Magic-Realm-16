@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * <p/>
  * Model to represent the board's GUI counterpart
  */
-public class BoardGUIModel implements Serializable {
+public class BoardModel implements Serializable {
 
     private static final long serialVersionUID = 6929938381836391322L;
 
@@ -37,7 +37,7 @@ public class BoardGUIModel implements Serializable {
 
     private final MeleeSheets meleeSheets = new MeleeSheets();
 
-    public BoardGUIModel() {
+    public BoardModel() {
         // In the future, mark each tile's x and y grid coordinates when added
         ArrayList<AbstractTile> row1 = new ArrayList<AbstractTile>();
 

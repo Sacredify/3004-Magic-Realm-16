@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.Networking;
 
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.control.Sunrise;
@@ -33,7 +33,7 @@ public class AppServer implements Runnable {
 
     private TurnController turnController = null;
 
-    private BoardGUIModel boardModel;
+    private BoardModel boardModel;
 
     /**
      * The number of days passed in the game. 28 is the max.
@@ -57,7 +57,7 @@ public class AppServer implements Runnable {
      * Builds the map for this session.
      */
     private void buildMap() {
-        this.boardModel = new BoardGUIModel();
+        this.boardModel = new BoardModel();
         ChitBuilder.placeChits(this.boardModel);
         EntityBuilder.placeEntities(this.boardModel);
     }
@@ -121,7 +121,7 @@ public class AppServer implements Runnable {
             // Clients send the DAYLIGHT_DONE message when they are done executing their phases client-side.
             case (Message.DAYLIGHT_DONE):
                 // Update the board.
-                this.boardModel = (BoardGUIModel) message.getPayload();
+                this.boardModel = (BoardModel) message.getPayload();
                 this.updateFromBoard();
                 // If all players have sent the message, start COMBAT in clearings.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
@@ -140,7 +140,7 @@ public class AppServer implements Runnable {
             // Clients send the DONE_COMBAT_IN_CLEARING message when they have resolved combat for their character in their clearing.
             case (Message.DONE_COMBAT_IN_CLEARING):
                 // Update the board
-                this.boardModel = (BoardGUIModel) message.getPayload();
+                this.boardModel = (BoardModel) message.getPayload();
                 this.updateFromBoard();
                 // If all players have sent the message (done with combat), start a new day.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {

@@ -1,4 +1,4 @@
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.control.Daylight;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
@@ -28,12 +28,12 @@ public class AlertPhaseTest {
     public void canAlertWeapon() {
 
         // Create the board and player
-        final BoardGUIModel boardGUIModel = new BoardGUIModel();
-        ChitBuilder.placeChits(boardGUIModel);
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
         final Player player = new Player();
         player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
 
-        boardGUIModel.getStartingLocation().addEntity(player.getCharacter());
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
 
         final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
         final AlertPhase alertPhase = new AlertPhase();
@@ -48,7 +48,7 @@ public class AlertPhaseTest {
         alertPhase.setWeapon(playerWeapon);
         phases.add(alertPhase);
 
-        Daylight.processPhasesForPlayer(boardGUIModel, player, phases);
+        Daylight.processPhasesForPlayer(boardModel, player, phases);
         assertThat(playerWeapon.isAlert(), is(true));
 
     }

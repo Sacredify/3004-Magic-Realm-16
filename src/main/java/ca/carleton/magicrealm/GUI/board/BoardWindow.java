@@ -18,7 +18,7 @@ public class BoardWindow extends JFrame {
 
     private BoardPanel boardPanel;
 
-    private BoardGUIModel boardModel;
+    private BoardModel boardModel;
 
     public BoardWindow() {
         super(WINDOW_NAME);
@@ -35,7 +35,7 @@ public class BoardWindow extends JFrame {
         this.setVisible(true);
     }
 
-    public void refresh(final BoardGUIModel model, AbstractCharacter character) {
+    public void refresh(final BoardModel model, AbstractCharacter character) {
         this.boardModel = model;
         this.boardPanel.drawBoard( this.boardModel, character);
         this.add(this.boardPanel);
@@ -49,7 +49,7 @@ public class BoardWindow extends JFrame {
         this.boardPanel.setStatusText(text);
     }
 
-    public BoardGUIModel getBoardModel() {
+    public BoardModel getBoardModel() {
         return this.boardModel;
     }
 

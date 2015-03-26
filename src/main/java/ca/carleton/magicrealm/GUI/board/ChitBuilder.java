@@ -45,7 +45,7 @@ public class ChitBuilder {
      * Test runner.
      */
     public static void main(String[] args) {
-        ChitBuilder.placeChits(new BoardGUIModel());
+        ChitBuilder.placeChits(new BoardModel());
     }
 
     /**
@@ -53,7 +53,7 @@ public class ChitBuilder {
      *
      * @param board the board.
      */
-    public static void placeChits(final BoardGUIModel board) {
+    public static void placeChits(final BoardModel board) {
 
         buildWarningChits();
         buildTreasureChits();

@@ -1,4 +1,4 @@
-import ca.carleton.magicrealm.GUI.board.BoardGUIModel;
+import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.control.Combat;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
@@ -21,38 +21,42 @@ import org.junit.Test;
  */
 public class CombatTest {
 
+    /**
+     * This test only ensures we can actually run the code properly (without an error). See logging output for the run info.
+     */
     @Test
     public void canDoCombat() {
 
         // Create the board and player
-        final BoardGUIModel boardGUIModel = new BoardGUIModel();
-        ChitBuilder.placeChits(boardGUIModel);
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
 
         final Player attacker = new Player();
         attacker.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
-        boardGUIModel.getStartingLocation().addEntity(attacker.getCharacter());
+        boardModel.getStartingLocation().addEntity(attacker.getCharacter());
 
         final Player defender = new Player();
         defender.setCharacter(CharacterFactory.createCharacter(CharacterType.CAPTAIN));
-        boardGUIModel.getStartingLocation().addEntity(defender.getCharacter());
+        boardModel.getStartingLocation().addEntity(defender.getCharacter());
 
         // Attacker melee sheet
-        boardGUIModel.createNewMeleeSheet(attacker);
-        final MeleeSheet attackerSheet = boardGUIModel.getMeleeSheet(attacker);
+        boardModel.createNewMeleeSheet(attacker);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
         attackerSheet.setAttackWeapon(new Crossbow());
         attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
         attackerSheet.setAttackDirection(AttackDirection.THRUST);
         attackerSheet.setTarget(defender.getCharacter());
 
         // Defender melee sheet
-        boardGUIModel.createNewMeleeSheet(defender);
-        final MeleeSheet defenderSheet = boardGUIModel.getMeleeSheet(defender);
+        boardModel.createNewMeleeSheet(defender);
+        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
         defenderSheet.setManeuver(Maneuver.CHARGE);
         defenderSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
         defenderSheet.setArmor(new SuitOfArmor());
 
-        Combat.doCombat(boardGUIModel, attacker, defender);
-
+        Combat.doCombat(boardModel, attacker, defender);
     }
+
+
 
 }
