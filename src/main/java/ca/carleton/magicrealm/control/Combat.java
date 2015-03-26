@@ -8,7 +8,6 @@ import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.game.combat.CombatResults;
 import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import ca.carleton.magicrealm.game.table.Table;
@@ -132,41 +131,55 @@ public class Combat {
      * Initiate combat between two players.
      *
      * @param boardModel the board.
-     * @param playerOne  the first player.
-     * @param playerTwo  the second player.
+     * @param attacker  the first player.
+     * @param defender  the second player.
      */
-    public void doCombat(final BoardGUIModel boardModel, final Player playerOne, final Player playerTwo) {
-        final CombatResults results = this.resolveCombat(boardModel, playerOne, playerTwo);
+    public static void doCombat(final BoardGUIModel boardModel, final Player attacker, final Player defender) {
+
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
+        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
+
+        resolveCombat(attackerSheet, defenderSheet);
 
         // Player two died. Transfer results to other player.
-        if (results.isDead()) {
+        if (defender.getCharacter().isDead()) {
             LOG.info("Defender died. Transferring items, gold, notoriety to other player.");
-            playerOne.getCharacter().getItems().addAll(playerTwo.getCharacter().getItems());
-            playerTwo.getCharacter().getItems().clear();
-            playerOne.getCharacter().addGold(playerTwo.getCharacter().getCurrentGold());
-            playerTwo.getCharacter().addGold(-playerTwo.getCharacter().getCurrentGold());
-            playerOne.getCharacter().addNotoriety(playerTwo.getCharacter().getCurrentNotoriety());
-            playerTwo.getCharacter().addNotoriety(-playerTwo.getCharacter().getCurrentNotoriety());
+            attacker.getCharacter().getItems().addAll(defender.getCharacter().getItems());
+            defender.getCharacter().getItems().clear();
+            attacker.getCharacter().addGold(defender.getCharacter().getCurrentGold());
+            defender.getCharacter().addGold(-defender.getCharacter().getCurrentGold());
+            attacker.getCharacter().addNotoriety(defender.getCharacter().getCurrentNotoriety());
+            defender.getCharacter().addNotoriety(-defender.getCharacter().getCurrentNotoriety());
 
             LOG.info("AUTO REINCARNATION. Giving player a new start.");
             LOG.info("Creating a new character and Setting location to starting location (inn).");
-            boardModel.getClearingForPlayer(playerTwo).removeEntity(playerTwo.getCharacter());
-            playerTwo.setCharacter(CharacterFactory.createCharacter(playerTwo.getCharacter().getEntityInformation().convertToCharacterType()));
-            boardModel.getStartingLocation().addEntity(playerTwo.getCharacter());
+            boardModel.getClearingForPlayer(defender).removeEntity(defender.getCharacter());
+            defender.setCharacter(CharacterFactory.createCharacter(defender.getCharacter().getEntityInformation().convertToCharacterType()));
+            boardModel.getStartingLocation().addEntity(defender.getCharacter());
         }
+
+        LOG.info("Begin fatigue step for both attacker and defender.");
+
+        if (defender.getCharacter().isWounded()) {
+            // TODO code that the user must do "fatigue step" and wound a chit.
+            LOG.info("Defender has been wounded and must wound a chit.");
+        }
+
+        LOG.info("Resetting wounded status at the end of the day.");
+        attacker.getCharacter().setWounded(false);
+        attackerSheet.resetSheet();
+        defender.getCharacter().setWounded(false);
+        defenderSheet.resetSheet();
+
     }
 
     /**
      * Resolve a round of combat between two characters. This assumes playerOne is attacking player two (who is defending).
      *
-     * @param boardModel the board model.
-     * @param playerOne  the first player.
-     * @param playerTwo  the second player.
-     * @return the results for the DEFENDER.
+     * @param attacker   the first player melee sheet.
+     * @param defender   the second player melee sheet.
      */
-    private CombatResults resolveCombat(final BoardGUIModel boardModel, final Player playerOne, final Player playerTwo) {
-        final MeleeSheet attacker = boardModel.getMeleeSheetForPlayer(playerOne);
-        final MeleeSheet defender = boardModel.getMeleeSheetForPlayer(playerTwo);
+    private static void resolveCombat(final MeleeSheet attacker, final MeleeSheet defender) {
 
         // Determine if attackers attack hits through defenders maneuver
         boolean attackHit = attacker.getAttackDirection().matches(defender.getManeuver());
@@ -198,7 +211,7 @@ public class Combat {
                     LOG.info("Attack chit stronger. Increased weapon strength to {}.", attackStrength);
                 }
             } else {
-                attackStrength = Table.MissileTable.roll(playerOne, attackStrength);
+                attackStrength = Table.MissileTable.roll(attacker.getPlayer(), attackStrength);
                 LOG.info("Rolled on missile table. New strength: {}.", attackStrength);
             }
 
@@ -210,46 +223,45 @@ public class Combat {
             }
             LOG.info("Defender armor protects against {}. Attack intercepted: {}", armor.getProtectsAgainst(), intercepted);
 
-            CombatResults combatResults;
-
             if (intercepted) {
                 if (attackStrength == armor.getWeight()) {
                     if (armor.isDamaged()) {
                         // Armor that is already damaged is destroyed (removed from inventory).
-                        playerTwo.getCharacter().getItems().remove(armor);
-                        LOG.info("Armor was already damaged and has been destroyed! Removed from inventory of {}.", playerTwo.getCharacter());
+                        defender.getPlayer().getCharacter().getItems().remove(armor);
+                        LOG.info("Armor was already damaged and has been destroyed! Removed from inventory of {}.", defender.getPlayer().getCharacter());
                     } else {
                         armor.setDamaged(true);
                         LOG.info("Armor has been damaged by the hit.");
                     }
                 } else if (attackStrength.greaterThan(armor.getWeight())) {
                     // Any attack greater than the armor weight instantly destroys it
-                    playerTwo.getCharacter().getItems().remove(armor);
-                    LOG.info("Armor was destroyed by an attack greater than the weight of the armor!. Removed from inventory of {}.", playerTwo.getCharacter());
+                    defender.getPlayer().getCharacter().getItems().remove(armor);
+                    LOG.info("Armor was destroyed by an attack greater than the weight of the armor!. Removed from inventory of {}.", defender.getPlayer().getCharacter());
                 }
                 // Only MEDIUM and higher makes us wound stuff.
                 if (attackStrength.greaterThan(Harm.LIGHT)) {
-                    combatResults = CombatResults.createResultsFor(playerTwo, false, true);
+                    LOG.info("Attack strength was greater than LIGHT. Player is wounded and must wound a chit.");
+                    defender.getPlayer().getCharacter().setWounded(true);
                 } else {
-                    combatResults = CombatResults.createResultsFor(playerTwo, false, false);
+                    LOG.info("Attack strength was LIGHT or less. No further duties required.");
                 }
 
             } else {
                 // Target is killed if the strength of the attack >= the players health.
-                if (attackStrength.greaterThan(playerTwo.getCharacter().getVulnerability()) || attackStrength == playerTwo.getCharacter().getVulnerability()) {
-                    combatResults = CombatResults.createResultsFor(playerTwo, true, false);
+                if (attackStrength.greaterThan(defender.getPlayer().getCharacter().getVulnerability()) || attackStrength == defender.getPlayer().getCharacter().getVulnerability()) {
+                    defender.getPlayer().getCharacter().setDead(true);
+                    LOG.info("Attack strength was greater than or equal to vulnerability and has died.");
                 } else {
-                    combatResults = CombatResults.createResultsFor(playerTwo, false, true);
+                   defender.getPlayer().getCharacter().setWounded(true);
+                    LOG.info("Player took a wound and must wound a chit.");
                 }
             }
 
             // Weapons automatically get un-alerted.
             weapon.setAlert(false);
 
-            return combatResults;
         } else {
             LOG.info("Attacker missed. Ending round of combat.");
-            return CombatResults.createResultsFor(playerTwo, false, false);
         }
     }
 

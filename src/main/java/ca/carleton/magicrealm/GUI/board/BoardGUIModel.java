@@ -16,6 +16,7 @@ import ca.carleton.magicrealm.game.combat.MeleeSheets;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tony on 17/02/2015.
@@ -26,7 +27,7 @@ public class BoardGUIModel implements Serializable {
 
     private static final long serialVersionUID = 6929938381836391322L;
 
-    private ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
+    private final ArrayList<ArrayList<AbstractTile>> board = new ArrayList<>();
 
     private final ArrayList<AbstractTile> tiles = new ArrayList<AbstractTile>();
 
@@ -348,14 +349,8 @@ public class BoardGUIModel implements Serializable {
      * @return the list.
      */
     public List<AbstractTile> getTilesOfType(final TileType type) {
-        final ArrayList<AbstractTile> toReturn = new ArrayList<AbstractTile>();
 
-        for (final AbstractTile tile : this.tiles) {
-            if (tile.getTileType() == type) {
-                toReturn.add(tile);
-            }
-        }
-        return toReturn;
+        return this.tiles.stream().filter(tile -> tile.getTileType() == type).collect(Collectors.<AbstractTile>toList());
     }
 
     /**
@@ -379,9 +374,9 @@ public class BoardGUIModel implements Serializable {
     /**
      * Finds all the entities on the board that can trade with a player.
      *
-     * @return
+     * @return the list of entities the user can trade with.
      */
-    public List<Entity> getTradeableTargets() {
+    public List<Entity> getTradableTargets() {
         final List<Entity> entities = new ArrayList<Entity>();
 
         for (final AbstractTile tile : this.tiles) {
@@ -417,7 +412,7 @@ public class BoardGUIModel implements Serializable {
         return this.denizens;
     }
 
-    public MeleeSheet getMeleeSheetForPlayer(final Player player) {
+    public MeleeSheet getMeleeSheet(final Player player) {
         return this.meleeSheets.getMeleeSheetForPlayer(player);
     }
 

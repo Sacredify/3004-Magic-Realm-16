@@ -7,10 +7,6 @@ import ca.carleton.magicrealm.item.armor.AbstractArmor;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,14 +20,6 @@ public class MeleeSheet implements Serializable {
     private static final int NUMBER_ATTACKERS = 3;
 
     private final Player player;
-
-    // The chits used by the player while planning a round. They cannot use these ones again (need to check this list).
-    private List<ActionChit> usedChits = new ArrayList<ActionChit>();
-
-    // The chits placed on this melee sheet by enemy natives/characters.
-    private Map<Entity, ActionChit> enemyChits = new HashMap<Entity, ActionChit>();
-
-    private AttackBox[] attackBoxes = new AttackBox[NUMBER_ATTACKERS];
 
     // The move or fight chit used during the encounter step. If encounter, allow the player to alert a weapon. If move, run away to another clearing.
     private ActionChit encounterStepChit;
@@ -59,9 +47,6 @@ public class MeleeSheet implements Serializable {
     }
 
     public void resetSheet() {
-        this.usedChits.clear();
-        this.enemyChits.clear();
-        this.maneuverChit = null;
         this.attackChit = null;
         this.encounterStepChit = null;
         this.attackWeapon = null;
@@ -69,19 +54,20 @@ public class MeleeSheet implements Serializable {
         this.maneuver = null;
     }
 
+    public Player getPlayer() {
+        return this.player;
+    }
+
     public void setEncounterStepChit(final ActionChit chit) {
         this.encounterStepChit = chit;
-        this.usedChits.add(this.encounterStepChit);
     }
 
     public void setAttackChit(final ActionChit chit) {
         this.attackChit = chit;
-        this.usedChits.add(this.attackChit);
     }
 
     public void setManeuverChit(final ActionChit chit) {
         this.maneuverChit = chit;
-        this.usedChits.add(this.maneuverChit);
     }
 
     public ActionChit getEncounterStepChit() {
@@ -128,28 +114,12 @@ public class MeleeSheet implements Serializable {
         this.target = target;
     }
 
-    public List<ActionChit> getUsedChits() {
-        return this.usedChits;
-    }
-
     public AbstractArmor getArmor() {
         return this.armor;
     }
 
     public void setArmor(final AbstractArmor armor) {
         this.armor = armor;
-    }
-
-    public Map<Entity, ActionChit> getEnemyChits() {
-        return this.enemyChits;
-    }
-
-    public void addEnemyChitToSheet(final Entity entity, final ActionChit chit) {
-        this.enemyChits.put(entity, chit);
-    }
-
-    public AttackBox[] getAttackBoxes() {
-        return attackBoxes;
     }
 
 }
