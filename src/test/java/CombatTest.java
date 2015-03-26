@@ -128,7 +128,7 @@ public class CombatTest {
 
         Combat.doCombat(boardModel, attacker, defender);
 
-        assertThat(defender.getCharacter().isWounded(), is(true));
+        assertThat(defender.getCharacter().isWounded(), is(false));
         assertThat(defender.getCharacter().isDead(), is(false));
         assertThat(defenderSheet.getArmor().isDamaged(), is(false));
     }

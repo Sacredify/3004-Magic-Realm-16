@@ -162,7 +162,6 @@ public class Combat {
         LOG.info("Begin fatigue step for both attacker and defender.");
 
         if (defender.getCharacter().isWounded()) {
-            // TODO code that the user must do "fatigue step" and wound a chit.
             LOG.info("Defender has been wounded and must wound a chit.");
         }
     }
@@ -214,10 +213,10 @@ public class Combat {
                 LOG.info("Attacker had no weapon equipped. Using a dagger.");
             }
 
+            LOG.info("Attacker weapon strength: {}", weapon.getStrength());
             // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
             // than the power of the weapon. For missile attacks, roll on the table.
             Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
-            LOG.info("Attacker weapon strength: {}", attackStrength);
             if (weapon.getAttackType() == AttackType.STRIKING) {
                 if (attacker.getAttackChit().getStrength().greaterThan(attackStrength)) {
                     attackStrength = attackStrength.increase();
@@ -235,9 +234,10 @@ public class Combat {
                 intercepted = armor.getProtectsAgainst().intercepts(attacker.getAttackDirection());
             }
             LOG.info("Defender armor protects against {}. Attack intercepted: {}", armor.getProtectsAgainst(), intercepted);
-
             if (intercepted) {
                 LOG.info("Armor weight is {}.", armor.getWeight());
+                attackStrength = attackStrength.decrease();
+                LOG.info("Strength reduced by 1 for hitting armor. New value: {}", attackStrength);
                 if (attackStrength == armor.getWeight()) {
                     if (armor.isDamaged()) {
                         // Armor that is already damaged is destroyed (removed from inventory).
@@ -288,10 +288,12 @@ public class Combat {
      */
     private static Harm increaseStrengthBySharpness(final Harm strength, final int sharpness) {
         int count = 0;
+        Harm toReturn = strength;
         while (count < sharpness) {
-            strength.increase();
+            toReturn = toReturn.increase();
             count++;
         }
-        return strength;
+        LOG.info("Increased strength through sharpness. New strength: {}.", toReturn);
+        return toReturn;
     }
 }

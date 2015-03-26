@@ -60,8 +60,8 @@ public class ChitBuilder {
         buildSoundChits();
         buildLostCityAndCastle();
 
-        LOG.info("Starting chit placement.");
-        LOG.info("Starting warning chit placement.");
+        LOG.debug("Starting chit placement.");
+        LOG.debug("Starting warning chit placement.");
 
         // Step 1. Place warning chits of the correct type on the correct tile types [20 total].
         for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
@@ -77,7 +77,7 @@ public class ChitBuilder {
             tile.addChit(woodsWarningChits.remove(random.nextInt(woodsWarningChits.size())));
         }
 
-        LOG.info("Starting lost city/castle + 8 treasure/sound chit placement.");
+        LOG.debug("Starting lost city/castle + 8 treasure/sound chit placement.");
 
         // Step 2. Place lost city and lost castle, as well as 4 site/sound chits [8 total + (2 * 5) = 18 total]
         // Lost city + 4 goes in caves. Lost castle + 4 goes in mountain.
@@ -105,7 +105,7 @@ public class ChitBuilder {
             tile.addChit(mountainsChits.remove(random.nextInt(mountainsChits.size())));
         }
 
-        LOG.info("Starting valley chit replacement.");
+        LOG.debug("Starting valley chit replacement.");
 
         for (final AbstractTile tile : board.getTilesOfType(TileType.VALLEY)) {
             final Iterator<ColoredChit> iter = tile.getChits().iterator();
@@ -138,10 +138,10 @@ public class ChitBuilder {
             }
         }
 
-        LOG.info("Done with valley chit placement.");
+        LOG.debug("Done with valley chit placement.");
 
-        LOG.info("Chit placement finished.");
-        LOG.info("Beginning sanity checks.");
+        LOG.debug("Chit placement finished.");
+        LOG.debug("Beginning sanity checks.");
         assertThat(treasureChits.size(), is(0));
         assertThat(soundChits.size(), is(0));
         assertThat(woodsWarningChits.size(), is(0));
@@ -152,7 +152,7 @@ public class ChitBuilder {
         assertThat(mountainsChits.size(), is(0));
         assertThat(lostCityChit.treasureChits.size() + lostCityChit.soundChits.size(), is(5));
         assertThat(lostCastleChit.treasureChits.size() + lostCastleChit.soundChits.size(), is(5));
-        LOG.info("Sanity checks complete. All chits assigned.");
+        LOG.debug("Sanity checks complete. All chits assigned.");
     }
 
     private static void buildWarningChits() {
@@ -184,7 +184,7 @@ public class ChitBuilder {
         woodsWarningChits.add(new YellowChit("STINK", TileType.WOODS));
         Collections.shuffle(woodsWarningChits);
 
-        LOG.info("Built and shuffled warning chits.");
+        LOG.debug("Built and shuffled warning chits.");
     }
 
     private static void buildSoundChits() {
@@ -200,7 +200,7 @@ public class ChitBuilder {
         soundChits.add(new RedChit("FLUTTER", 2));
         Collections.shuffle(soundChits);
 
-        LOG.info("Built and shuffled sound chits.");
+        LOG.debug("Built and shuffled sound chits.");
     }
 
     private static void buildTreasureChits() {
@@ -214,7 +214,7 @@ public class ChitBuilder {
         treasureChits.add(new GoldChit(4, "SHRINE"));
         Collections.shuffle(treasureChits);
 
-        LOG.info("Built and shuffled treasure chits.");
+        LOG.debug("Built and shuffled treasure chits.");
 
         TreasureCollection treasureCollection = new TreasureCollection();
         for (int i = 0; i < treasureCollection.treasures.length; i++) {
@@ -225,13 +225,13 @@ public class ChitBuilder {
                 chitIndex = random.nextInt(treasureChits.size());
                 if (treasureChits.get(chitIndex).getTreasure().size() < 6) {
                     treasureChits.get(chitIndex).addTreasure(treasureCollection.treasures[i]);
-                    LOG.info("Placed treasure {} in {}. Number of current treasures: {}.", treasureCollection.treasures[i].getName(), treasureChits.get(chitIndex).getDescription(), treasureChits.get(chitIndex).getTreasure().size());
+                    LOG.debug("Placed treasure {} in {}. Number of current treasures: {}.", treasureCollection.treasures[i].getName(), treasureChits.get(chitIndex).getDescription(), treasureChits.get(chitIndex).getTreasure().size());
                     break;
                 }
             }
         }
 
-        LOG.info("Built treasure collection and assigned treasure to chits..");
+        LOG.debug("Built treasure collection and assigned treasure to chits..");
     }
 
     /**
@@ -259,7 +259,7 @@ public class ChitBuilder {
             }
         }
 
-        LOG.info("Built lost city.");
+        LOG.debug("Built lost city.");
 
         lostCastleChit = new LostCastle(1, "LOST CASTLE");
 
@@ -275,7 +275,7 @@ public class ChitBuilder {
             }
         }
 
-        LOG.info("Built lost castle.");
+        LOG.debug("Built lost castle.");
 
     }
 }

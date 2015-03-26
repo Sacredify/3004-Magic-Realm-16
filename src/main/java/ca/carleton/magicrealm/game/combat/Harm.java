@@ -28,6 +28,23 @@ public enum Harm {
         }
     }
 
+    public Harm decrease() {
+        switch (this) {
+            case NEGLIGIBLE:
+                return NEGLIGIBLE;
+            case LIGHT:
+                return NEGLIGIBLE;
+            case MEDIUM:
+                return LIGHT;
+            case HEAVY:
+                return MEDIUM;
+            case TREMENDOUS:
+                return HEAVY;
+            default:
+                return HEAVY;
+        }
+    }
+
     public boolean greaterThan(final Harm harm) {
         switch (this) {
             case NEGLIGIBLE:

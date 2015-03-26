@@ -43,27 +43,27 @@ public class EntityBuilder {
      */
     public static void placeEntities(final BoardModel board) {
 
-        LOG.info("Starting build of natives that start at dwellings...");
+        LOG.debug("Starting build of natives that start at dwellings...");
         buildOrder(board);
         buildSoldiers(board);
         buildRogues(board);
         buildGuard(board);
-        LOG.info("Done building and placement natives that start at dwellings...");
+        LOG.debug("Done building and placement natives that start at dwellings...");
 
         // Build HOUSE Solider natives
 
         // Build INN Rogue natives
 
-        // Build GUARD HOUSE guard natvies
+        // Build GUARD HOUSE guard natives
 
-        LOG.info("Creating melee sheets for natives...");
+        LOG.debug("Creating melee sheets for natives...");
         final List<AbstractNative> allNatives = new ArrayList<AbstractNative>();
         allNatives.addAll(orderNatives);
         allNatives.addAll(soldierNatives);
         allNatives.addAll(rogueNatives);
         allNatives.addAll(guardNatives);
         allNatives.forEach(board::createNewMeleeSheet);
-        LOG.info("Done creating melee sheets for natives.");
+        LOG.debug("Done creating melee sheets for natives.");
 
     }
 
