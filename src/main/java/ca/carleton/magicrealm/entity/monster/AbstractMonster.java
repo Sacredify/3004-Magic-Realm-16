@@ -9,5 +9,4 @@ import ca.carleton.magicrealm.entity.Denizen;
  * Time: 12:56 PM
  */
 public abstract class AbstractMonster extends Denizen implements BountyCarrier {
-
 }

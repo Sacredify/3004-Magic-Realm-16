@@ -18,6 +18,7 @@ public class GreatSwordsman extends AbstractNative {
         this.basicGoldWage = 4;
 
         this.faction = nativeType;
+        this.moveStrength = Harm.HEAVY;
     }
 
     @Override

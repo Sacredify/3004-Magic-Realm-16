@@ -27,7 +27,7 @@ public class EntityBuilder {
 
     private static final List<AbstractNative> rogueNatives = new ArrayList<AbstractNative>();
 
-    private static final List<AbstractNative> guardNatvies = new ArrayList<AbstractNative>();
+    private static final List<AbstractNative> guardNatives = new ArrayList<AbstractNative>();
 
     /**
      * Test runner.
@@ -56,6 +56,14 @@ public class EntityBuilder {
 
         // Build GUARD HOUSE guard natvies
 
+        LOG.info("Creating melee sheets for natives...");
+        final List<AbstractNative> allNatives = new ArrayList<AbstractNative>();
+        allNatives.addAll(orderNatives);
+        allNatives.addAll(soldierNatives);
+        allNatives.addAll(rogueNatives);
+        allNatives.addAll(guardNatives);
+        allNatives.forEach(board::createNewMeleeSheet);
+        LOG.info("Done creating melee sheets for natives.");
 
     }
 
@@ -171,11 +179,11 @@ public class EntityBuilder {
         AbstractNative guard2 = NativeFactory.createNative(NativeFaction.GUARD, NativeType.GREAT_SWORDSMAN);
         AbstractNative guard3 = NativeFactory.createNative(NativeFaction.GUARD, NativeType.GREAT_SWORDSMAN);
 
-        guardNatvies.add(guard1);
-        guardNatvies.add(guard2);
-        guardNatvies.add(guard3);
+        guardNatives.add(guard1);
+        guardNatives.add(guard2);
+        guardNatives.add(guard3);
 
-        for (final AbstractNative guard : guardNatvies) {
+        for (final AbstractNative guard : guardNatives) {
             guard.setStartingClearing(startingLocation);
             guard.setCurrentClearing(startingLocation);
             guard.getCurrentClearing().addEntity(guard);

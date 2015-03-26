@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.game.combat;
 
+import ca.carleton.magicrealm.GUI.board.BoardModel;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
@@ -19,13 +21,12 @@ public class MeleeSheet implements Serializable {
 
     private static final int NUMBER_ATTACKERS = 3;
 
-    private final Player player;
+    private Entity entity;
+
+    private Player player;
 
     // The move or fight chit used during the encounter step. If encounter, allow the player to alert a weapon. If move, run away to another clearing.
     private ActionChit encounterStepChit;
-
-    // The target of the combat.
-    private Entity target;
 
     // Chits used when planning an "Attack" are the weapon, a FIGHT chit for the timing, and a direction.
     private AbstractWeapon attackWeapon;
@@ -42,16 +43,72 @@ public class MeleeSheet implements Serializable {
     // Armor. Can only use "active" armor.
     private AbstractArmor armor;
 
-    MeleeSheet(final Player player) {
+    /**
+     * Creates a melee sheet for an entity, and optionally a related player.
+     *
+     * @param entity the entity.
+     * @param player the player.
+     */
+    MeleeSheet(final Entity entity, final Player player) {
+        this.entity = entity;
         this.player = player;
     }
 
+    /**
+     * Reset the sheet if this sheet is for a player. If its for a denizen, we'll just always use the same stuff for simplicity.
+     */
     public void resetSheet() {
-        this.attackChit = null;
-        this.encounterStepChit = null;
-        this.attackWeapon = null;
-        this.attackDirection = null;
-        this.maneuver = null;
+        if (this.player != null) {
+            this.attackChit = null;
+            this.encounterStepChit = null;
+            this.attackWeapon = null;
+            this.attackDirection = null;
+            this.maneuver = null;
+        }
+    }
+
+    /**
+     * Update applicable references after being sent to and from the server.
+     */
+    public void updateFromServer(final BoardModel boardModel) {
+
+        // Update player object if needed
+        if (this.player != null) {
+            boardModel.getPlayers().stream().filter(player -> player.getCharacter().equals(this.player.getCharacter())).forEach(player -> {
+                this.player = player;
+                this.entity = this.player.getCharacter();
+            });
+
+            // Only need to update player chits, since it really doesn't matter with denizens, we only want their values. We don't wound them.
+            if (this.encounterStepChit != null) {
+                this.player.getCharacter().getActionChits().stream().filter(this.encounterStepChit::equals).forEach(actionChit -> this.encounterStepChit = actionChit);
+            }
+            if (this.attackChit != null) {
+                this.player.getCharacter().getActionChits().stream().filter(this.attackChit::equals).forEach(actionChit -> this.attackChit = actionChit);
+            }
+            if (this.maneuverChit != null) {
+                this.player.getCharacter().getActionChits().stream().filter(this.maneuverChit::equals).forEach(actionChit -> this.maneuverChit = actionChit);
+            }
+
+            // update player and armor from items
+            if (this.attackWeapon != null) {
+                this.player.getCharacter().getItems().stream().filter(this.attackWeapon::equals).forEach(weapon -> this.attackWeapon = (AbstractWeapon) weapon);
+            }
+
+            if (this.armor != null) {
+                this.player.getCharacter().getItems().stream().filter(this.armor::equals).forEach(armor -> this.armor = (AbstractArmor) armor);
+            }
+
+        } else {
+            // Update denizens (owner)
+            boardModel.getDenizens().stream().filter(this.entity::equals).forEach(entity -> this.entity = entity);
+            this.attackWeapon =  ((Denizen)this.entity).getWeapon();
+        }
+
+    }
+
+    public Entity getOwner() {
+        return this.entity;
     }
 
     public Player getPlayer() {
@@ -104,14 +161,6 @@ public class MeleeSheet implements Serializable {
 
     public void setManeuver(final Maneuver maneuver) {
         this.maneuver = maneuver;
-    }
-
-    public Entity getTarget() {
-        return this.target;
-    }
-
-    public void setTarget(final Entity target) {
-        this.target = target;
     }
 
     public AbstractArmor getArmor() {

@@ -18,6 +18,7 @@ public class ShortSwordsman extends AbstractNative {
         this.basicGoldWage = 2;
 
         this.faction = nativeType;
+        this.moveStrength = Harm.MEDIUM;
     }
 
     @Override

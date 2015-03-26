@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Relationship;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
@@ -186,10 +187,10 @@ public class Combat {
     }
 
     /**
-     * Resolve a round of combat between two characters. This assumes playerOne is attacking player two (who is defending).
+     * Resolve a round of combat between two entities. This assumes playerOne is attacking player two (who is defending).
      *
-     * @param attacker the first player melee sheet.
-     * @param defender the second player melee sheet.
+     * @param attacker the first melee sheet.
+     * @param defender the second melee sheet.
      */
     private static void resolveCombat(final MeleeSheet attacker, final MeleeSheet defender) {
 
@@ -240,32 +241,32 @@ public class Combat {
                 if (attackStrength == armor.getWeight()) {
                     if (armor.isDamaged()) {
                         // Armor that is already damaged is destroyed (removed from inventory).
-                        defender.getPlayer().getCharacter().getItems().remove(armor);
-                        LOG.info("Armor was already damaged and has been destroyed! Removed from inventory of {}.", defender.getPlayer().getCharacter());
+                        defender.getOwner().getItems().remove(armor);
+                        LOG.info("Armor was already damaged and has been destroyed! Removed from inventory of {}.", defender.getOwner());
                     } else {
                         armor.setDamaged(true);
                         LOG.info("Armor has been damaged by the hit.");
                     }
                 } else if (attackStrength.greaterThan(armor.getWeight())) {
                     // Any attack greater than the armor weight instantly destroys it
-                    defender.getPlayer().getCharacter().getItems().remove(armor);
-                    LOG.info("Armor was destroyed by an attack greater than the weight of the armor!. Removed from inventory of {}.", defender.getPlayer().getCharacter());
+                    defender.getOwner().getItems().remove(armor);
+                    LOG.info("Armor was destroyed by an attack greater than the weight of the armor!. Removed from inventory of {}.", defender.getOwner());
                 }
                 // Only MEDIUM and higher makes us wound stuff.
                 if (attackStrength.greaterThan(Harm.LIGHT)) {
                     LOG.info("Attack strength was greater than LIGHT. Player is wounded and must wound a chit.");
-                    defender.getPlayer().getCharacter().setWounded(true);
+                    ((AbstractCharacter) defender.getOwner()).setWounded(true);
                 } else {
                     LOG.info("Attack strength was LIGHT or less. No further duties required.");
                 }
 
             } else {
                 // Target is killed if the strength of the attack >= the players health.
-                if (attackStrength.greaterThan(defender.getPlayer().getCharacter().getVulnerability()) || attackStrength == defender.getPlayer().getCharacter().getVulnerability()) {
-                    defender.getPlayer().getCharacter().setDead(true);
+                if (attackStrength.greaterThan(defender.getOwner().getVulnerability()) || attackStrength == defender.getOwner().getVulnerability()) {
+                    ((AbstractCharacter) defender.getOwner()).setDead(true);
                     LOG.info("Attack strength was greater than or equal to vulnerability and has died.");
                 } else {
-                    defender.getPlayer().getCharacter().setWounded(true);
+                    ((AbstractCharacter) defender.getOwner()).setWounded(true);
                     LOG.info("Player took a wound and must wound a chit.");
                 }
             }

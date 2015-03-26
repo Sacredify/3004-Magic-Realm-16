@@ -18,6 +18,7 @@ public class Raider extends AbstractNative {
         this.basicGoldWage = 2;
 
         this.faction = nativeType;
+        this.moveStrength = Harm.LIGHT;
     }
 
     @Override

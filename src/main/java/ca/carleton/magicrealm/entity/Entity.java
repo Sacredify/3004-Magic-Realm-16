@@ -32,7 +32,7 @@ public abstract class Entity implements Serializable {
      * The list of items the entity is currently holding.
      * TODO Is this relevant for all entities? Or only characters?
      */
-    private List<Item> items = new ArrayList<Item>();
+    private final List<Item> items = new ArrayList<Item>();
 
     public abstract EntityInformation getEntityInformation();
 

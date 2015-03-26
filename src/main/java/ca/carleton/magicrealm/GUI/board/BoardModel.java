@@ -419,4 +419,8 @@ public class BoardModel implements Serializable {
     public void createNewMeleeSheet(final Player player) {
         this.meleeSheets.createNewMeleeSheetForPlayer(player);
     }
+
+    public void createNewMeleeSheet(final Denizen denizen) {
+        this.meleeSheets.createNewMeleeSheetForDenizen(denizen);
+    }
 }

@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.game.combat.Harm;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Random;
 
 /**
  * Used to do actions within the game (move, etc.)
@@ -43,11 +44,14 @@ public class ActionChit implements Serializable {
 
     private boolean wounded = false;
 
+    private final long random;
+
     private ActionChit(final ActionChitBuilder builder) {
         this.time = builder.time;
         this.strength = builder.strength;
         this.fatigueAsterisks = builder.fatigueAsterisks;
         this.action = builder.action;
+        this.random = builder.random;
     }
 
     public ActionType getAction() {
@@ -65,6 +69,11 @@ public class ActionChit implements Serializable {
 
     public int getTime() {
         return this.time;
+    }
+
+    // For equality checks.
+    public long getRandom() {
+        return this.random;
     }
 
     @Override
@@ -102,10 +111,29 @@ public class ActionChit implements Serializable {
         this.fatigued = fatigued;
     }
 
+    @Override
+    public boolean equals(final Object rhs) {
+        if (!(rhs instanceof ActionChit)) {
+            return false;
+        }
+
+        ActionChit other = (ActionChit) rhs;
+
+        return this.time == other.time
+                && this.strength == other.strength
+                && this.fatigueAsterisks == other.fatigueAsterisks
+                && this.fatigued == other.fatigued
+                && this.wounded == other.wounded
+                && this.random == other.random;
+
+    }
+
     /**
      * Builder class for action chits.
      */
     public static class ActionChitBuilder {
+
+        private static final Random RANDOM = new Random();
 
         private int time;
 
@@ -115,8 +143,11 @@ public class ActionChit implements Serializable {
 
         private final ActionType action;
 
+        private final long random;
+
         public ActionChitBuilder(final ActionType action) {
             this.action = action;
+            this.random = RANDOM.nextLong();
         }
 
         public ActionChitBuilder withTime(final int time) {

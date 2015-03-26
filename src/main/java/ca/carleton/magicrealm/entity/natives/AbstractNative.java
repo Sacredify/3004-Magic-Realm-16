@@ -2,7 +2,6 @@ package ca.carleton.magicrealm.entity.natives;
 
 import ca.carleton.magicrealm.entity.BountyCarrier;
 import ca.carleton.magicrealm.entity.Denizen;
-import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 /**
  * Represents one of the many natives within the magic Realm.
@@ -16,8 +15,6 @@ public abstract class AbstractNative extends Denizen implements BountyCarrier {
     protected NativeFaction faction;
 
     protected int basicGoldWage;
-
-    protected AbstractWeapon weapon;
 
     protected boolean leader = false;
 
@@ -37,15 +34,6 @@ public abstract class AbstractNative extends Denizen implements BountyCarrier {
      */
     public int getBasicGoldWage() {
         return this.basicGoldWage;
-    }
-
-    /**
-     * The weapon the native is using.
-     *
-     * @return the weapon.
-     */
-    public AbstractWeapon getWeapon() {
-        return this.weapon;
     }
 
     /**

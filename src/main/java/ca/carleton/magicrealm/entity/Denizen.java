@@ -1,6 +1,8 @@
 package ca.carleton.magicrealm.entity;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.game.combat.Harm;
+import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 /**
  * An AI character within the magic realm.
@@ -19,6 +21,19 @@ public abstract class Denizen extends Entity {
     protected Clearing startingClearing;
 
     protected Clearing currentClearing;
+
+    protected Harm moveStrength;
+
+    protected AbstractWeapon weapon;
+
+    /**
+     * The weapon the native is using.
+     *
+     * @return the weapon.
+     */
+    public AbstractWeapon getWeapon() {
+        return this.weapon;
+    }
 
     public boolean isProwling() {
         return this.prowling;
@@ -43,4 +58,9 @@ public abstract class Denizen extends Entity {
     public void setCurrentClearing(Clearing currentClearing) {
         this.currentClearing = currentClearing;
     }
+
+    public Harm getMoveStrength() {
+        return this.moveStrength;
+    }
+
 }

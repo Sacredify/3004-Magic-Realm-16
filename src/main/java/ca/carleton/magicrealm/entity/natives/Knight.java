@@ -18,6 +18,7 @@ public class Knight extends AbstractNative {
         this.basicGoldWage = 8;
 
         this.faction = nativeType;
+        this.moveStrength = Harm.TREMENDOUS;
     }
 
     @Override

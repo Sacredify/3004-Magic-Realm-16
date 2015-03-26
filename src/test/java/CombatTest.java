@@ -52,7 +52,6 @@ public class CombatTest {
         attackerSheet.setAttackWeapon(new Crossbow());
         attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
         attackerSheet.setAttackDirection(AttackDirection.THRUST);
-        attackerSheet.setTarget(defender.getCharacter());
 
         // Defender melee sheet
         boardModel.createNewMeleeSheet(defender);
@@ -84,7 +83,6 @@ public class CombatTest {
         attackerSheet.setAttackWeapon(new Crossbow());
         attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
         attackerSheet.setAttackDirection(AttackDirection.THRUST);
-        attackerSheet.setTarget(defender.getCharacter());
 
         // Defender melee sheet
         boardModel.createNewMeleeSheet(defender);
@@ -120,7 +118,6 @@ public class CombatTest {
         attackerSheet.setAttackWeapon(new ThrustingSword());
         attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(2).build());
         attackerSheet.setAttackDirection(AttackDirection.THRUST);
-        attackerSheet.setTarget(defender.getCharacter());
 
         // Defender melee sheet
         boardModel.createNewMeleeSheet(defender);
@@ -179,7 +176,6 @@ public class CombatTest {
         });
         attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(2).build());
         attackerSheet.setAttackDirection(AttackDirection.THRUST);
-        attackerSheet.setTarget(defender.getCharacter());
 
         // Defender melee sheet
         boardModel.createNewMeleeSheet(defender);
