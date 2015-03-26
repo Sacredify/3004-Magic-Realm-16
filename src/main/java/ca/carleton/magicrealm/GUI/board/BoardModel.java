@@ -423,4 +423,8 @@ public class BoardModel implements Serializable {
     public void createNewMeleeSheet(final Denizen denizen) {
         this.meleeSheets.createNewMeleeSheetForDenizen(denizen);
     }
+
+    public List<MeleeSheet> getAllSheets() {
+        return this.meleeSheets.getAllSheets();
+    }
 }

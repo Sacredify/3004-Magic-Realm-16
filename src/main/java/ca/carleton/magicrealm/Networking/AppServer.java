@@ -5,6 +5,7 @@ import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.control.Sunrise;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,6 +174,11 @@ public class AppServer implements Runnable {
                 client.setPlayer(player);
                 LOG.info("Updated client thread player with board version [{}].", client.getPlayer().getCharacter());
             });
+        }
+
+        for (final MeleeSheet sheet : this.boardModel.getAllSheets()) {
+            sheet.updateFromServer(this.boardModel);
+            LOG.info("Successfully updated melee sheet for {} from the board.", sheet.getOwner());
         }
     }
 

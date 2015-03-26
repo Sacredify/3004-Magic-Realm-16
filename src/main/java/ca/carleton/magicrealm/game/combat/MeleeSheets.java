@@ -8,8 +8,10 @@ import ca.carleton.magicrealm.game.combat.chit.ActionType;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -86,6 +88,10 @@ public class MeleeSheets implements Serializable {
      */
     public MeleeSheet getMeleeSheetForPlayer(final Player player) {
         return this.meleeSheets.get(player.getCharacter());
+    }
+
+    public List<MeleeSheet> getAllSheets() {
+        return this.meleeSheets.values().stream().collect(Collectors.toList());
     }
 
 }
