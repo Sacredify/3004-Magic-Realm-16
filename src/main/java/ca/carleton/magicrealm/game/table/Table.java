@@ -91,6 +91,7 @@ public abstract class Table {
 
             // Amazon special, AIM. Subtract one.
             if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON && roll != 1) {
+                LOG.info("Amazon AIM ability used: reduced roll value by one.");
                 roll = roll - 1;
             }
 
