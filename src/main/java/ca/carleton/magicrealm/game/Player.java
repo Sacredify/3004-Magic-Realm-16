@@ -32,6 +32,8 @@ public class Player implements Serializable {
      */
     private Dwelling startingLocation;
 
+    private int restarts = 0;
+
     public Player() {
         this.victoryCondition = new VictoryCondition();
     }
@@ -43,6 +45,7 @@ public class Player implements Serializable {
     public AbstractCharacter getCharacter() {
         return this.character;
     }
+
 
     public void setCharacter(final AbstractCharacter character) {
         this.character = character;
@@ -68,5 +71,13 @@ public class Player implements Serializable {
 
     public void setStartingLocation(final Dwelling startingLocation) {
         this.startingLocation = startingLocation;
+    }
+
+    public int getRestarts() {
+        return this.restarts;
+    }
+
+    public void restartNewLife() {
+        this.restarts += 1;
     }
 }
