@@ -132,68 +132,69 @@ public class Combat {
      * Initiate combat between two players.
      *
      * @param boardModel the board.
-     * @param attacker   the first player.
-     * @param defender   the second player.
+     * @param playerOne   the first player.
+     * @param playerTwo   the second player.
      */
-    public static void doCombat(final BoardModel boardModel, final Player attacker, final Player defender) {
+    public static void doCombat(final BoardModel boardModel, final Player playerOne, final Player playerTwo) {
 
-        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
-        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
+        final MeleeSheet playerOneSheet = boardModel.getMeleeSheet(playerOne);
+        final MeleeSheet playerTwoSheet = boardModel.getMeleeSheet(playerTwo);
 
         // Determine who would go first, based on their weapon length.
-        int attackerLength = 0;
-        int defenderLength = 0;
-        if (attackerSheet.getAttackWeapon() != null) {
-            attackerLength = attackerSheet.getAttackWeapon().getLength();
+        int playerOneWeaponLength = 0;
+        int playerTwoWeaponLength = 0;
+        if (playerOneSheet.getAttackWeapon() != null) {
+            playerOneWeaponLength = playerOneSheet.getAttackWeapon().getLength();
         }
-        if (defenderSheet.getAttackWeapon() != null) {
-            defenderLength = defenderSheet.getAttackWeapon().getLength();
+        if (playerTwoSheet.getAttackWeapon() != null) {
+            playerTwoWeaponLength = playerTwoSheet.getAttackWeapon().getLength();
         }
 
-        // Attacker goes first if their weapon is longer...
-        if (attackerLength >= defenderLength) {
-            // "Round" of combat... attacker attacks, then gets attacked by defender, assuming  the defender isn't dead.
-            LOG.info("Beginning round one of combat. {} is attacking {}.", attacker.getCharacter(), defender.getCharacter());
-            resolveRound(attackerSheet, defenderSheet);
-            if (!defender.getCharacter().isDead()) {
-                LOG.info("Beginning round two of combat. {} is attacking {}.", defender.getCharacter(), attacker.getCharacter());
-                resolveRound(defenderSheet, attackerSheet);
+        // Player one goes first if their weapon is longer...
+        if (playerOneWeaponLength >= playerTwoWeaponLength) {
+            // "Round" of combat... attacker attacks, then gets attacked by defender, assuming the defender isn't dead.
+            LOG.info("Beginning round one of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
+            resolveRound(playerOneSheet, playerTwoSheet);
+            if (!playerTwo.getCharacter().isDead()) {
+                LOG.info("Beginning round two of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
+                resolveRound(playerTwoSheet, playerOneSheet);
             }
         } else {
-            LOG.info("Beginning round one of combat. {} is attacking {}.", defender.getCharacter(), attacker.getCharacter());
-            resolveRound(defenderSheet, attackerSheet);
-            if (!attacker.getCharacter().isDead()) {
-                LOG.info("Beginning round two of combat. {} is attacking {}.", attacker.getCharacter(), defender.getCharacter());
-                resolveRound(attackerSheet, defenderSheet);
+            LOG.info("Beginning round one of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
+            resolveRound(playerTwoSheet, playerOneSheet);
+            if (!playerOne.getCharacter().isDead()) {
+                LOG.info("Beginning round two of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
+                resolveRound(playerOneSheet, playerTwoSheet);
             }
         }
+
         // Check for dead players and fatigue step.
-        if (attacker.getCharacter().isDead()) {
-            LOG.info("{} died. Beginning transfer of items.", attacker.getCharacter());
-            resolveDeadPlayers(defender, attacker, boardModel);
+        if (playerOne.getCharacter().isDead()) {
+            LOG.info("{} died. Beginning transfer of items.", playerOne.getCharacter());
+            resolveDeadPlayers(playerTwo, playerOne, boardModel);
         } else {
-            LOG.info("{} is not dead. Beginning fatigue step calculations.", attacker.getCharacter());
-            int attackerAsterisk = attackerSheet.getManeuverChit().getFatigueAsterisks() + attackerSheet.getAttackChit().getFatigueAsterisks();
+            LOG.info("{} is not dead. Beginning fatigue step calculations.", playerOne.getCharacter());
+            int attackerAsterisk = playerOneSheet.getManeuverChit().getFatigueAsterisks() + playerOneSheet.getAttackChit().getFatigueAsterisks();
             if (attackerAsterisk >= 2) {
-                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", attacker.getCharacter());
-                attacker.getCharacter().setFatigued(true);
+                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", playerOne.getCharacter());
+                playerOne.getCharacter().setFatigued(true);
             }
-            if (attacker.getCharacter().isWounded()) {
-                LOG.info("{} has been wounded and must wound a chit.", attacker.getCharacter());
+            if (playerOne.getCharacter().isWounded()) {
+                LOG.info("{} has been wounded and must wound a chit.", playerOne.getCharacter());
             }
         }
-        if (defender.getCharacter().isDead()) {
-            LOG.info("{} died. Beginning transfer of items.", defender.getCharacter());
-            resolveDeadPlayers(attacker, defender, boardModel);
+        if (playerTwo.getCharacter().isDead()) {
+            LOG.info("{} died. Beginning transfer of items.", playerTwo.getCharacter());
+            resolveDeadPlayers(playerOne, playerTwo, boardModel);
         } else {
-            LOG.info("{} is not dead. Beginning fatigue step calculations.", defender.getCharacter());
-            int defenderAsterisk = defenderSheet.getManeuverChit().getFatigueAsterisks() + defenderSheet.getAttackChit().getFatigueAsterisks();
+            LOG.info("{} is not dead. Beginning fatigue step calculations.", playerTwo.getCharacter());
+            int defenderAsterisk = playerTwoSheet.getManeuverChit().getFatigueAsterisks() + playerTwoSheet.getAttackChit().getFatigueAsterisks();
             if (defenderAsterisk >= 2) {
-                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", defender.getCharacter());
-                defender.getCharacter().setFatigued(true);
+                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", playerTwo.getCharacter());
+                playerTwo.getCharacter().setFatigued(true);
             }
-            if (attacker.getCharacter().isWounded()) {
-                LOG.info("{} has been wounded and must wound a chit.", defender.getCharacter());
+            if (playerOne.getCharacter().isWounded()) {
+                LOG.info("{} has been wounded and must wound a chit.", playerTwo.getCharacter());
             }
         }
 
