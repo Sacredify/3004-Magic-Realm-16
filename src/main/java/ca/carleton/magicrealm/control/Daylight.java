@@ -46,6 +46,7 @@ public class Daylight {
         for (final AbstractPhase phase : phasesToExecute) {
             for (final PhaseStrategy strategy : phaseStrategies) {
                 if (strategy.appliesTo(phase)) {
+                    LOG.info("Executing phase {}.", phase);
                     strategy.doPhase(player, phase);
                     LOG.info("Executed phase {}.", phase);
                     LOG.info("Checking to see if the character is blocked...");

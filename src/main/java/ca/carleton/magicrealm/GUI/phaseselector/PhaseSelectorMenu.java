@@ -11,6 +11,8 @@ import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -21,6 +23,8 @@ import java.util.List;
  * Created by Tony on 20/02/2015.
  */
 public class PhaseSelectorMenu extends JDialog {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PhaseSelectorMenu.class);
 
     public static final String PHASE_SELECTOR_WINDOW = "Birdsong - Action Selection Menu";
 
@@ -76,12 +80,12 @@ public class PhaseSelectorMenu extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
+                LOG.info("Adding {} to list of phases.", selectedPhase);
                 if (selectedPhase.equals(PhaseType.MOVE)) {
                     PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getBoardModel());
                     PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForMoveSelectButton());
                 } else if (selectedPhase.equals(PhaseType.HIDE)) {
                     PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase();
-                    ((JButton) e.getSource()).setEnabled(false);
                 } else if (selectedPhase.equals(PhaseType.TRADE)) {
                     PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(PhaseSelectorMenu.this.player, PhaseSelectorMenu.this.controller.getBoardModel().getTradableTargets());
                     PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getConfirmTradeButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForTradeConfirmButton());
