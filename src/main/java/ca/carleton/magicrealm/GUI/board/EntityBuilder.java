@@ -30,13 +30,6 @@ public class EntityBuilder {
     private static final List<AbstractNative> guardNatives = new ArrayList<AbstractNative>();
 
     /**
-     * Test runner.
-     */
-    public static void main(String[] args) {
-        EntityBuilder.placeEntities(new BoardModel());
-    }
-
-    /**
      * Places the entities on the given board.
      *
      * @param board the board.

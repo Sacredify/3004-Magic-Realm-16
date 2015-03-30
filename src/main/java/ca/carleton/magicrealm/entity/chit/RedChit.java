@@ -18,4 +18,9 @@ public class RedChit extends ColoredChit {
     public ChitColor getChitColor() {
         return ChitColor.RED;
     }
+
+    @Override
+    public String toString() {
+        return this.description + " " + this.clearingNumber + " : hidden --> " + this.hidden;
+    }
 }

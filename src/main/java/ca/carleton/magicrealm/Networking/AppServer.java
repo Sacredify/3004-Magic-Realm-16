@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.Networking;
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
+import ca.carleton.magicrealm.Launcher;
 import ca.carleton.magicrealm.control.Sunrise;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
@@ -50,8 +51,9 @@ public class AppServer implements Runnable {
             this.turnController = new TurnController();
             this.buildMap();
             this.start();
-        } catch (IOException e) {
-            LOG.error("Exception during server initialization.", e);
+        } catch (final Exception exception) {
+            LOG.error("Exception during server initialization.", exception);
+            System.exit(-1);
         }
     }
 
@@ -61,7 +63,13 @@ public class AppServer implements Runnable {
     private void buildMap() {
         LOG.info("Beginning map build process.");
         this.boardModel = new BoardModel();
-        ChitBuilder.placeChits(this.boardModel);
+
+        if (Launcher.CHEAT_MODE) {
+            LOG.info("Starting cheat build.");
+            ChitBuilder.cheatMode(this.boardModel);
+        } else {
+            ChitBuilder.placeChits(this.boardModel);
+        }
         EntityBuilder.placeEntities(this.boardModel);
         LOG.info("Finished map build process.");
     }

@@ -37,4 +37,9 @@ public class GoldChit extends ColoredChit {
     public ChitColor getChitColor() {
         return ChitColor.GOLD;
     }
+
+    @Override
+    public String toString() {
+        return this.description + " " + this.clearingNumber + " : hidden --> " + this.hidden;
+    }
 }

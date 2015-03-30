@@ -64,7 +64,7 @@ public class Launcher {
                 }
             }
         } catch (final Exception exception) {
-            LOG.error("Error with options parse. {}", exception.getMessage());
+            LOG.error("Error with options parse. {}", exception);
             formatter.printHelp(LAUNCH_COMMAND, options);
         }
     }
