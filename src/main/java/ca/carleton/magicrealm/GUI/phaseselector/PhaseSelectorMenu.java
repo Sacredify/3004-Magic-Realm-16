@@ -6,6 +6,7 @@ import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.TradeSelectionMenu
 import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.item.Item;
@@ -22,8 +23,12 @@ import java.util.List;
 public class PhaseSelectorMenu extends JDialog {
 
     public static final String PHASE_SELECTOR_WINDOW = "Birdsong - Action Selection Menu";
+
     public static final int PHASE_WINDOW_WIDTH = 300;
+
     public static final int PHASE_WINDOW_HEIGHT = 200;
+
+    private static final long serialVersionUID = -5375929478122288444L;
 
     PhaseSelectorPanel phaseSelectorPanel;
 
@@ -77,14 +82,24 @@ public class PhaseSelectorMenu extends JDialog {
                 } else if (selectedPhase.equals(PhaseType.HIDE)) {
                     PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase();
                     ((JButton) e.getSource()).setEnabled(false);
-                }
-                else if (selectedPhase.equals(PhaseType.TRADE)) {
+                } else if (selectedPhase.equals(PhaseType.TRADE)) {
                     PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(PhaseSelectorMenu.this.player, PhaseSelectorMenu.this.controller.getBoardModel().getTradableTargets());
                     PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getConfirmTradeButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForTradeConfirmButton());
-                }
-                else if (selectedPhase.equals(PhaseType.ALERT)) {
-                    PhaseSelectorMenu.this.alertSelectionMenu = new AlertSelectionMenu(player);
+                } else if (selectedPhase.equals(PhaseType.ALERT)) {
+                    PhaseSelectorMenu.this.alertSelectionMenu = new AlertSelectionMenu(PhaseSelectorMenu.this.player);
                     PhaseSelectorMenu.this.alertSelectionMenu.getAlertSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForAlertConfirmButton());
+                } else if (selectedPhase.equals(PhaseType.REST)) {
+                    // For now just use a dialog... much easier.
+                    final List<ActionChit> chits = PhaseSelectorMenu.this.player.getCharacter().getActionChits();
+                    ActionChit theChit = (ActionChit) JOptionPane.showInputDialog(
+                            null,
+                            "Choose a chit to rest: ",
+                            "Rest action",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            chits.toArray(),
+                            chits.get(0));
+                    PhaseSelectorMenu.this.phaseSelectorModel.addRestPhase(theChit);
                 }
             }
         };

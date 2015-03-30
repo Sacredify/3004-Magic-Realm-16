@@ -7,10 +7,7 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
-import ca.carleton.magicrealm.game.phase.strategy.impl.AlertPhaseStrategy;
-import ca.carleton.magicrealm.game.phase.strategy.impl.HidePhaseStrategy;
-import ca.carleton.magicrealm.game.phase.strategy.impl.MovePhaseStrategy;
-import ca.carleton.magicrealm.game.phase.strategy.impl.TradePhaseStrategy;
+import ca.carleton.magicrealm.game.phase.strategy.impl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +31,7 @@ public class Daylight {
             this.add(new HidePhaseStrategy());
             this.add(new TradePhaseStrategy());
             this.add(new AlertPhaseStrategy());
+            this.add(new RestPhaseStrategy());
         }
     };
 

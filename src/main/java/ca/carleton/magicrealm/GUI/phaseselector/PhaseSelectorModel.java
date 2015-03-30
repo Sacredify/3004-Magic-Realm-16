@@ -2,11 +2,9 @@ package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
-import ca.carleton.magicrealm.game.phase.impl.AlertPhase;
-import ca.carleton.magicrealm.game.phase.impl.HidePhase;
-import ca.carleton.magicrealm.game.phase.impl.MovePhase;
-import ca.carleton.magicrealm.game.phase.impl.TradePhase;
+import ca.carleton.magicrealm.game.phase.impl.*;
 import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
@@ -54,6 +52,12 @@ public class PhaseSelectorModel {
         final AlertPhase alertPhase = new AlertPhase();
         alertPhase.setWeapon(weapon);
         this.phases.add(alertPhase);
+    }
+
+    public void addRestPhase(final ActionChit chit) {
+        final RestPhase restPhase = new RestPhase();
+        restPhase.setSelectedChit(chit);
+        this.phases.add(restPhase);
     }
 
     public void done() {
