@@ -1,6 +1,7 @@
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.control.Combat;
+import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
@@ -273,5 +274,8 @@ public class CombatTest {
         Combat.doCombat(boardModel, attacker, defender);
 
         assertThat(defender.getRestarts(), is(1));
+        assertThat(defender.getCharacter().getEntityInformation(), is(EntityInformation.CHARACTER_CAPTAIN));
+        assertThat(defender.getCharacter().getCurrentGold(), is(10));
+        assertThat(attacker.getCharacter().getCurrentGold(), is(20));
     }
 }

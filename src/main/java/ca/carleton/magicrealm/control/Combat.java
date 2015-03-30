@@ -208,7 +208,7 @@ public class Combat {
      * @param boardModel the board.
      */
     private static void resolveDeadPlayers(final Player killer, final Player killed, final BoardModel boardModel) {
-        LOG.info("Transferring items, gold, notoriety from {} to {}.", killer, killed);
+        LOG.info("Transferring items, gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
         killer.getCharacter().getItems().addAll(killed.getCharacter().getItems());
         killed.getCharacter().getItems().clear();
         killer.getCharacter().addGold(killed.getCharacter().getCurrentGold());
