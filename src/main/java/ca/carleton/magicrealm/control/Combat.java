@@ -157,12 +157,24 @@ public class Combat {
             boardModel.getClearingForPlayer(defender).removeEntity(defender.getCharacter());
             defender.setCharacter(CharacterFactory.createCharacter(defender.getCharacter().getEntityInformation().convertToCharacterType()));
             boardModel.getStartingLocation().addEntity(defender.getCharacter());
-        }
+        } else {
+            LOG.info("Begin fatigue step for both attacker and defender.");
 
-        LOG.info("Begin fatigue step for both attacker and defender.");
+            // Check for fatigue asterisk cap of 2* for both attacker and defender.
+            int attackerAsterisk = attackerSheet.getManeuverChit().getFatigueAsterisks() + attackerSheet.getAttackChit().getFatigueAsterisks();
+            if (attackerAsterisk >= 2) {
+                LOG.info("Attacker played 2 or more fatigue asterisks this round and must fatigue a chit.");
+                attacker.getCharacter().setFatigued(true);
+            }
+            int defenderAsterisk = defenderSheet.getManeuverChit().getFatigueAsterisks() + defenderSheet.getAttackChit().getFatigueAsterisks();
+            if (defenderAsterisk >= 2) {
+                LOG.info("Defender played 2 or more fatigue asterisks this round and must fatigue a chit.");
+                defender.getCharacter().setFatigued(true);
+            }
 
-        if (defender.getCharacter().isWounded()) {
-            LOG.info("Defender has been wounded and must wound a chit.");
+            if (defender.getCharacter().isWounded()) {
+                LOG.info("Defender has been wounded and must wound a chit.");
+            }
         }
     }
 
@@ -180,8 +192,10 @@ public class Combat {
 
         LOG.info("Resetting wounded status at the end of the day.");
         attacker.getCharacter().setWounded(false);
+        attacker.getCharacter().setFatigued(false);
         attackerSheet.resetSheet();
         defender.getCharacter().setWounded(false);
+        defender.getCharacter().setFatigued(false);
         defenderSheet.resetSheet();
     }
 

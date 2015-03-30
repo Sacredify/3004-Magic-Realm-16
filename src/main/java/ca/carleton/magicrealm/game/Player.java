@@ -52,10 +52,6 @@ public class Player implements Serializable {
         this.victoryCondition = victoryCondition;
     }
 
-    public boolean isSamePlayer(final Player player) {
-        return this.getCharacter().getEntityInformation().convertToCharacterType() == player.getCharacter().getEntityInformation().convertToCharacterType();
-    }
-
     @Override
     public boolean equals(Object rhs) {
         return rhs instanceof Player && this.getCharacter().getEntityInformation() == ((Player) rhs).getCharacter().getEntityInformation();
