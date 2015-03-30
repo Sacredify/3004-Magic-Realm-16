@@ -4,11 +4,10 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
-import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
-import ca.carleton.magicrealm.entity.monster.AbstractMonster;
+import ca.carleton.magicrealm.entity.monster.Denizen;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
@@ -34,7 +33,7 @@ public class BoardModel implements Serializable {
 
     private final ArrayList<Player> players = new ArrayList<Player>();
 
-    private final ArrayList<AbstractMonster> monsters = new ArrayList<AbstractMonster>();
+    private final ArrayList<Denizen> denizens = new ArrayList<Denizen>();
 
     private final MeleeSheets meleeSheets = new MeleeSheets();
 
@@ -409,8 +408,8 @@ public class BoardModel implements Serializable {
         return this.players;
     }
 
-    public ArrayList<AbstractMonster> getMonsters() {
-        return this.monsters;
+    public ArrayList<Denizen> getDenizens() {
+        return this.denizens;
     }
 
     public MeleeSheet getMeleeSheet(final Player player) {
@@ -421,7 +420,7 @@ public class BoardModel implements Serializable {
         this.meleeSheets.createNewMeleeSheetForPlayer(player);
     }
 
-    public void createNewMeleeSheet(final Denizen denizen) {
+    public void createNewMeleeSheet(final ca.carleton.magicrealm.entity.Denizen denizen) {
         this.meleeSheets.createNewMeleeSheetForDenizen(denizen);
     }
 

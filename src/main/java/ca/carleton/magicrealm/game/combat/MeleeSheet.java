@@ -101,7 +101,7 @@ public class MeleeSheet implements Serializable {
 
         } else {
             // Update denizens (owner)
-            boardModel.getMonsters().stream().filter(this.entity::equals).forEach(entity -> this.entity = entity);
+            boardModel.getDenizens().stream().filter(this.entity::equals).forEach(entity -> this.entity = entity);
             this.attackWeapon =  ((Denizen)this.entity).getWeapon();
         }
 
