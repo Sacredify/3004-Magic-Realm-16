@@ -158,6 +158,13 @@ public class AppServer implements Runnable {
                 this.updateFromBoard();
                 // If all players have sent the message (done with combat), start a new day.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+
+                    if (this.isGameOver()) {
+                        LOG.info("A month has been reached and the game is now over! Calculating the winner...");
+                        final Player winner = this.calculateWinner();
+                        LOG.info("{} is the winner! Sending messages to clients.", winner);
+                    }
+
                     this.currentDay++;
                     Sunrise.doSunrise(this.boardModel, this.currentDay);
                     Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
@@ -188,6 +195,14 @@ public class AppServer implements Runnable {
             sheet.updateFromServer(this.boardModel);
             LOG.info("Successfully updated melee sheet for {} from the board.", sheet.getOwner());
         }
+    }
+
+    private boolean isGameOver() {
+        return this.currentDay == MAX_ROUNDS;
+    }
+
+    private Player calculateWinner() {
+        return null;
     }
 
     private ServerThread getClientWithID(int ID) {
