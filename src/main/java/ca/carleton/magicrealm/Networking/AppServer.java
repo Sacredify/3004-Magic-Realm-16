@@ -220,10 +220,7 @@ public class AppServer implements Runnable {
     public void broadcastMessage(int ID, Object message) {
         Message m = (Message) message;
         LOG.info("Broadcasting message {} to connected clients from ID {}.", m.getMessageType(), ID);
-        for (ServerThread client : this.clients) {
-            if (client.getID() != ID)
-                client.send(m);
-        }
+        this.clients.stream().filter(client -> client.getID() != ID).forEach(client -> client.send(m));
     }
 
 }

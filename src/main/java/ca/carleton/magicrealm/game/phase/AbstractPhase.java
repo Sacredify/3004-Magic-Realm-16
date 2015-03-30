@@ -16,4 +16,9 @@ public abstract class AbstractPhase {
 
     public abstract void updateFromBoard(final Player player, final BoardModel board);
 
+    @Override
+    public String toString() {
+             return this.getPhaseType().toString();
+    }
+
 }

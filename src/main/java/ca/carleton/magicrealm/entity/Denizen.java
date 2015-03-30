@@ -4,6 +4,8 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
+import java.util.Random;
+
 /**
  * An AI character within the magic realm.
  * <p/>
@@ -13,6 +15,8 @@ import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
  * Time: 5:36 AM
  */
 public abstract class Denizen extends Entity {
+
+    protected static final Random RANDOM = new Random();
 
     private static final long serialVersionUID = 2673653273387082308L;
 
@@ -25,6 +29,8 @@ public abstract class Denizen extends Entity {
     protected Harm moveStrength;
 
     protected AbstractWeapon weapon;
+
+    protected long random = RANDOM.nextLong();
 
     /**
      * The weapon the native is using.
@@ -52,7 +58,7 @@ public abstract class Denizen extends Entity {
     }
 
     public Clearing getCurrentClearing() {
-        return currentClearing;
+        return this.currentClearing;
     }
 
     public void setCurrentClearing(Clearing currentClearing) {
@@ -61,6 +67,11 @@ public abstract class Denizen extends Entity {
 
     public Harm getMoveStrength() {
         return this.moveStrength;
+    }
+
+    @Override
+    public boolean equals(final Object rhs) {
+        return rhs instanceof Denizen && this.getEntityInformation() == ((Denizen) rhs).getEntityInformation() && this.random == ((Denizen) rhs).random;
     }
 
 }

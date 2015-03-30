@@ -65,4 +65,9 @@ public abstract class Entity implements Serializable {
         return this.getEntityInformation().toString();
     }
 
+    @Override
+    public boolean equals(final Object rhs) {
+        return rhs instanceof Entity && this.getEntityInformation() == ((Entity) rhs).getEntityInformation();
+    }
+
 }

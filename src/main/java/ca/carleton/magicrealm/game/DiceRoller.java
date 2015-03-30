@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.game;
 
-import ca.carleton.magicrealm.ClientMain;
+import ca.carleton.magicrealm.Launcher;
 
 import javax.swing.*;
 import java.util.Random;
@@ -24,7 +24,7 @@ public final class DiceRoller {
     }
 
     public static int rollTwiceTakeHigher() {
-        if (!ClientMain.CHEAT_MODE) {
+        if (!Launcher.CHEAT_MODE) {
             return Math.max(rollOnce(), rollOnce());
         } else {
             return Integer.parseInt(JOptionPane.showInputDialog(null, "Enter cheat roll. Warning: No validation will occur. Use at your own risk."));
@@ -32,7 +32,7 @@ public final class DiceRoller {
     }
 
     public static int rollTwiceTakeLower() {
-        if (!ClientMain.CHEAT_MODE) {
+        if (!Launcher.CHEAT_MODE) {
             return Math.min(rollOnce(), rollOnce());
         } else {
             return Integer.parseInt(JOptionPane.showInputDialog(null, "Enter cheat roll. Warning: No validation will occur. Use at your own risk."));

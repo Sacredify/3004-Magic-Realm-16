@@ -75,19 +75,20 @@
                             <appendAssemblyId>false</appendAssemblyId>
                             <archive>
                                 <manifest>
-                                    <mainClass>ca.carleton.magicrealm.ClientMain</mainClass>
+                                    <mainClass>ca.carleton.magicrealm.Launcher</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            <finalName>Magic_Realm_Client</finalName>
+                            <finalName>Magic_Realm</finalName>
                         </configuration>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
+                    <!-- Don't need this one anymore.
                     <execution>
                         <id>build-server</id>
                         <configuration>
@@ -107,6 +108,7 @@
                             <goal>single</goal>
                         </goals>
                     </execution>
+                    -->
                 </executions>
             </plugin>
         </plugins>
