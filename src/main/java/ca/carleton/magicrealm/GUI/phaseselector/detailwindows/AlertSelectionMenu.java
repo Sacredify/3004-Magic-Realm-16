@@ -15,6 +15,8 @@ public class AlertSelectionMenu extends JDialog{
 
     public static final int WINDOW_HEIGHT = 200;
 
+    private static final long serialVersionUID = -9178154483569437487L;
+
     AlertSelectionPanel alertSelectionPanel;
 
     public AlertSelectionMenu(Player player) {
@@ -22,11 +24,12 @@ public class AlertSelectionMenu extends JDialog{
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
         this.alertSelectionPanel = new AlertSelectionPanel(player);
-        this.add(alertSelectionPanel);
+        this.alertSelectionPanel.getAlertableWeapons().addListSelectionListener(this.alertSelectionPanel.weaponSelectedListListener());
+        this.add(this.alertSelectionPanel);
         this.setVisible(true);
     }
 
     public AlertSelectionPanel getAlertSelectionPanel() {
-        return alertSelectionPanel;
+        return this.alertSelectionPanel;
     }
 }
