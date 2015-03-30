@@ -60,7 +60,7 @@ public class Launcher {
                new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG))).start();
             } else {
                 if (!cmd.hasOption(IP_ADDRESS_ARG) || !cmd.hasOption(PORT_ARG)) {
-                    formatter.printHelp(LAUNCH_COMMAND, options);
+                   throw new Exception("Attempted to start with missing parameters.");
                 } else {
                     GameController game = new GameController();
                     LOG.info("Connecting to {}:{}.", cmd.getOptionValue(IP_ADDRESS_ARG), cmd.getOptionValue(PORT_ARG));
