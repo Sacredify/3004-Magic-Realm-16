@@ -39,10 +39,10 @@ public class Launcher {
         Options options = new Options();
         HelpFormatter formatter = new HelpFormatter();
 
-        options.addOption(HOST_ARG, false, "Whether or not to start as a server host.");
-        options.addOption(IP_ADDRESS_ARG, true, "The ip address to connect to.");
-        options.addOption(PORT_ARG, true, "The port to use.");
-        options.addOption(CHEAT_ARG, false, "Optional. Whether or not to use cheat mode.");
+        options.addOption(HOST_ARG, false, "Whether or not to start as a server host. [used by -> host]");
+        options.addOption(IP_ADDRESS_ARG, true, "The ip address to connect to. [used by -> client]");
+        options.addOption(PORT_ARG, true, "The port to use. [used by -> client/host]");
+        options.addOption(CHEAT_ARG, false, "Optional. Whether or not to use cheat mode. [used by -> client/host]");
 
         try {
             CommandLineParser parser = new BasicParser();
