@@ -87,10 +87,20 @@ public abstract class Table {
          * @param baseStrength the base harm of the weapon.
          */
         public static Harm roll(final Player player, final Harm baseStrength) {
-            int roll = DiceRoller.rollTwiceTakeHigher();
 
-            // Amazon special, AIM. Subtract one.
-            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON && roll != 1) {
+            int roll;
+
+            // ELF special, ARCHER. only roll once.
+            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_ELF) {
+                roll = DiceRoller.rollOnce();
+            } else {
+                roll = DiceRoller.rollTwiceTakeHigher();
+            }
+
+            // Amazon, Black Knight, Captain special, AIM. Subtract one.
+            if ((player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON
+                    || player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_BLACK_KNIGHT
+                    || player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN) && roll != 1) {
                 LOG.info("Amazon AIM ability used: reduced roll value by one.");
                 roll = roll - 1;
             }
