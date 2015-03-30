@@ -101,7 +101,7 @@ public abstract class Table {
             if ((player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON
                     || player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_BLACK_KNIGHT
                     || player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN) && roll != 1) {
-                LOG.info("Amazon AIM ability used: reduced roll value by one.");
+                LOG.info("{}'s AIM ability used: reduced roll value by one.", player.getCharacter());
                 roll = roll - 1;
             }
 

@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Main class for the application. Serves as the launcher for both the client and server.
+ * Provides help information for the usage of the app (for both server and client.)
+ *
+ * @author Mike
+ *
  * Created with IntelliJ IDEA.
  * Date: 03/02/15
  * Time: 4:45 PM
@@ -34,10 +39,10 @@ public class Launcher {
         Options options = new Options();
         HelpFormatter formatter = new HelpFormatter();
 
-        options.addOption(HOST_ARG, false, "Whether or not to start as a server host.");
-        options.addOption(IP_ADDRESS_ARG, true, "The ip address to connect to.");
-        options.addOption(PORT_ARG, true, "The port to use.");
-        options.addOption(CHEAT_ARG, false, "Optional. Whether or not to use cheat mode.");
+        options.addOption(HOST_ARG, false, "Whether or not to start as a server host. [used by -> host]");
+        options.addOption(IP_ADDRESS_ARG, true, "The ip address to connect to. [used by -> client]");
+        options.addOption(PORT_ARG, true, "The port to use. [used by -> client/host]");
+        options.addOption(CHEAT_ARG, false, "Optional. Whether or not to use cheat mode. [used by -> client/host]");
 
         try {
             CommandLineParser parser = new BasicParser();
@@ -55,7 +60,7 @@ public class Launcher {
                new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG))).start();
             } else {
                 if (!cmd.hasOption(IP_ADDRESS_ARG) || !cmd.hasOption(PORT_ARG)) {
-                    formatter.printHelp(LAUNCH_COMMAND, options);
+                   throw new Exception("Attempted to start with missing parameters.");
                 } else {
                     GameController game = new GameController();
                     LOG.info("Connecting to {}:{}.", cmd.getOptionValue(IP_ADDRESS_ARG), cmd.getOptionValue(PORT_ARG));
@@ -64,7 +69,7 @@ public class Launcher {
                 }
             }
         } catch (final Exception exception) {
-            LOG.error("Error with options parse. {}", exception);
+            LOG.error("Error with options parse. Cause: --> {}", exception.getMessage() == null ? "Invalid parse." : exception.getMessage());
             formatter.printHelp(LAUNCH_COMMAND, options);
         }
     }

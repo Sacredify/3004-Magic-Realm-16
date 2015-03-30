@@ -34,8 +34,10 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
 
     private boolean blocked;
 
-    // Used by combat. Dead resets the character, wounded makes them wound chits. Reset after combat.
+    // Used by combat. Dead resets the character, wounded makes them wound chits. Fatigued if they fatigued themselves. Reset after combat.
     private boolean dead;
+
+    private boolean isFatigued;
 
     private boolean wounded;
 
@@ -149,5 +151,13 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
 
     public void setWounded(final boolean wounded) {
         this.wounded = wounded;
+    }
+
+    public boolean isFatigued() {
+        return this.isFatigued;
+    }
+
+    public void setFatigued(final boolean isFatigued) {
+        this.isFatigued = isFatigued;
     }
 }

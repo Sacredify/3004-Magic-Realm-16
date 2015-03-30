@@ -32,6 +32,8 @@ public class Player implements Serializable {
      */
     private Dwelling startingLocation;
 
+    private int restarts = 0;
+
     public Player() {
         this.victoryCondition = new VictoryCondition();
     }
@@ -44,16 +46,13 @@ public class Player implements Serializable {
         return this.character;
     }
 
+
     public void setCharacter(final AbstractCharacter character) {
         this.character = character;
     }
 
     public void setVictoryCondition(final VictoryCondition victoryCondition) {
         this.victoryCondition = victoryCondition;
-    }
-
-    public boolean isSamePlayer(final Player player) {
-        return this.getCharacter().getEntityInformation().convertToCharacterType() == player.getCharacter().getEntityInformation().convertToCharacterType();
     }
 
     @Override
@@ -72,5 +71,13 @@ public class Player implements Serializable {
 
     public void setStartingLocation(final Dwelling startingLocation) {
         this.startingLocation = startingLocation;
+    }
+
+    public int getRestarts() {
+        return this.restarts;
+    }
+
+    public void restartNewLife() {
+        this.restarts += 1;
     }
 }

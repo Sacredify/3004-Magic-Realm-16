@@ -132,38 +132,96 @@ public class Combat {
      * Initiate combat between two players.
      *
      * @param boardModel the board.
-     * @param attacker   the first player.
-     * @param defender   the second player.
+     * @param playerOne   the first player.
+     * @param playerTwo   the second player.
      */
-    public static void doCombat(final BoardModel boardModel, final Player attacker, final Player defender) {
+    public static void doCombat(final BoardModel boardModel, final Player playerOne, final Player playerTwo) {
 
-        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
-        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
+        final MeleeSheet playerOneSheet = boardModel.getMeleeSheet(playerOne);
+        final MeleeSheet playerTwoSheet = boardModel.getMeleeSheet(playerTwo);
 
-        resolveCombat(attackerSheet, defenderSheet);
-
-        // Player two died. Transfer results to other player.
-        if (defender.getCharacter().isDead()) {
-            LOG.info("Defender died. Transferring items, gold, notoriety to other player.");
-            attacker.getCharacter().getItems().addAll(defender.getCharacter().getItems());
-            defender.getCharacter().getItems().clear();
-            attacker.getCharacter().addGold(defender.getCharacter().getCurrentGold());
-            defender.getCharacter().addGold(-defender.getCharacter().getCurrentGold());
-            attacker.getCharacter().addNotoriety(defender.getCharacter().getCurrentNotoriety());
-            defender.getCharacter().addNotoriety(-defender.getCharacter().getCurrentNotoriety());
-
-            LOG.info("AUTO REINCARNATION. Giving player a new start.");
-            LOG.info("Creating a new character and Setting location to starting location (inn).");
-            boardModel.getClearingForPlayer(defender).removeEntity(defender.getCharacter());
-            defender.setCharacter(CharacterFactory.createCharacter(defender.getCharacter().getEntityInformation().convertToCharacterType()));
-            boardModel.getStartingLocation().addEntity(defender.getCharacter());
+        // Determine who would go first, based on their weapon length.
+        int playerOneWeaponLength = 0;
+        int playerTwoWeaponLength = 0;
+        if (playerOneSheet.getAttackWeapon() != null) {
+            playerOneWeaponLength = playerOneSheet.getAttackWeapon().getLength();
+        }
+        if (playerTwoSheet.getAttackWeapon() != null) {
+            playerTwoWeaponLength = playerTwoSheet.getAttackWeapon().getLength();
         }
 
-        LOG.info("Begin fatigue step for both attacker and defender.");
-
-        if (defender.getCharacter().isWounded()) {
-            LOG.info("Defender has been wounded and must wound a chit.");
+        // Player one goes first if their weapon is longer...
+        if (playerOneWeaponLength >= playerTwoWeaponLength) {
+            // "Round" of combat... attacker attacks, then gets attacked by defender, assuming the defender isn't dead.
+            LOG.info("Beginning round one of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
+            resolveRound(playerOneSheet, playerTwoSheet);
+            if (!playerTwo.getCharacter().isDead()) {
+                LOG.info("Beginning round two of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
+                resolveRound(playerTwoSheet, playerOneSheet);
+            }
+        } else {
+            LOG.info("Beginning round one of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
+            resolveRound(playerTwoSheet, playerOneSheet);
+            if (!playerOne.getCharacter().isDead()) {
+                LOG.info("Beginning round two of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
+                resolveRound(playerOneSheet, playerTwoSheet);
+            }
         }
+
+        // Check for dead players and fatigue step.
+        if (playerOne.getCharacter().isDead()) {
+            LOG.info("{} died. Beginning transfer of items.", playerOne.getCharacter());
+            resolveDeadPlayers(playerTwo, playerOne, boardModel);
+        } else {
+            LOG.info("{} is not dead. Beginning fatigue step calculations.", playerOne.getCharacter());
+            int attackerAsterisk = playerOneSheet.getManeuverChit().getFatigueAsterisks() + playerOneSheet.getAttackChit().getFatigueAsterisks();
+            if (attackerAsterisk >= 2) {
+                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", playerOne.getCharacter());
+                playerOne.getCharacter().setFatigued(true);
+            }
+            if (playerOne.getCharacter().isWounded()) {
+                LOG.info("{} has been wounded and must wound a chit.", playerOne.getCharacter());
+            }
+        }
+        if (playerTwo.getCharacter().isDead()) {
+            LOG.info("{} died. Beginning transfer of items.", playerTwo.getCharacter());
+            resolveDeadPlayers(playerOne, playerTwo, boardModel);
+        } else {
+            LOG.info("{} is not dead. Beginning fatigue step calculations.", playerTwo.getCharacter());
+            int defenderAsterisk = playerTwoSheet.getManeuverChit().getFatigueAsterisks() + playerTwoSheet.getAttackChit().getFatigueAsterisks();
+            if (defenderAsterisk >= 2) {
+                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", playerTwo.getCharacter());
+                playerTwo.getCharacter().setFatigued(true);
+            }
+            if (playerOne.getCharacter().isWounded()) {
+                LOG.info("{} has been wounded and must wound a chit.", playerTwo.getCharacter());
+            }
+        }
+
+    }
+
+    /**
+     * Handle logic for when a player kills another.
+     *
+     * @param killer     the victor.
+     * @param killed     the person who died.
+     * @param boardModel the board.
+     */
+    private static void resolveDeadPlayers(final Player killer, final Player killed, final BoardModel boardModel) {
+        LOG.info("Transferring items, gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
+        killer.getCharacter().getItems().addAll(killed.getCharacter().getItems());
+        killed.getCharacter().getItems().clear();
+        killer.getCharacter().addGold(killed.getCharacter().getCurrentGold());
+        killed.getCharacter().addGold(-killed.getCharacter().getCurrentGold());
+        killer.getCharacter().addNotoriety(killed.getCharacter().getCurrentNotoriety());
+        killed.getCharacter().addNotoriety(-killed.getCharacter().getCurrentNotoriety());
+
+        LOG.info("AUTO REINCARNATION. Giving player a new start.");
+        LOG.info("Creating a new character and Setting location to starting location (inn).");
+        boardModel.getClearingForPlayer(killed).removeEntity(killed.getCharacter());
+        killed.setCharacter(CharacterFactory.createCharacter(killed.getCharacter().getEntityInformation().convertToCharacterType()));
+        killed.restartNewLife();
+        boardModel.getStartingLocation().addEntity(killed.getCharacter());
     }
 
     /**
@@ -180,8 +238,10 @@ public class Combat {
 
         LOG.info("Resetting wounded status at the end of the day.");
         attacker.getCharacter().setWounded(false);
+        attacker.getCharacter().setFatigued(false);
         attackerSheet.resetSheet();
         defender.getCharacter().setWounded(false);
+        defender.getCharacter().setFatigued(false);
         defenderSheet.resetSheet();
     }
 
@@ -191,11 +251,11 @@ public class Combat {
      * @param attacker the first melee sheet.
      * @param defender the second melee sheet.
      */
-    private static void resolveCombat(final MeleeSheet attacker, final MeleeSheet defender) {
+    private static void resolveRound(final MeleeSheet attacker, final MeleeSheet defender) {
 
         // Determine if attackers attack hits through defenders maneuver
         boolean attackHit = attacker.getAttackDirection().matches(defender.getManeuver());
-        LOG.info("Attacker attacked with {}. Defender maneuvered with {}. Attack landed result: {}", attacker.getAttackDirection(), defender.getManeuver(), attackHit);
+        LOG.info("{} attacked with {}. Defender maneuvered with {}. Attack landed result: {}", attacker.getOwner(), attacker.getAttackDirection(), defender.getManeuver(), attackHit);
         // The attack can still hit even if they don't match if the attack time is faster than the maneuver time.
         if (!attackHit) {
             LOG.info("Attack did not land. Checking weapon times for modification...");
@@ -210,10 +270,10 @@ public class Combat {
             // No weapon (using only a fight chit) means they use a dagger.
             if (weapon == null) {
                 weapon = new Dagger();
-                LOG.info("Attacker had no weapon equipped. Using a dagger.");
+                LOG.info("{} had no weapon equipped. Using a dagger.", attacker.getOwner());
             }
 
-            LOG.info("Attacker weapon strength: {}", weapon.getStrength());
+            LOG.info("{} weapon strength: {}", attacker.getOwner(), weapon.getStrength());
             // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
             // than the power of the weapon. For missile attacks, roll on the table.
             Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
@@ -232,8 +292,8 @@ public class Combat {
             final AbstractArmor armor = defender.getArmor();
             if (armor != null) {
                 intercepted = armor.getProtectsAgainst().intercepts(attacker.getAttackDirection());
+                LOG.info("{}'s armor protects against {}. Attack intercepted: {}", defender.getOwner(), armor.getProtectsAgainst(), intercepted);
             }
-            LOG.info("Defender armor protects against {}. Attack intercepted: {}", armor.getProtectsAgainst(), intercepted);
             if (intercepted) {
                 LOG.info("Armor weight is {}.", armor.getWeight());
                 attackStrength = attackStrength.decrease();
@@ -261,10 +321,11 @@ public class Combat {
                 }
 
             } else {
+                LOG.info("{} either wasn't wearing armor or the attack wasn't intercepted.", defender.getOwner());
                 // Target is killed if the strength of the attack >= the players health.
                 if (attackStrength.greaterThan(defender.getOwner().getVulnerability()) || attackStrength == defender.getOwner().getVulnerability()) {
                     ((AbstractCharacter) defender.getOwner()).setDead(true);
-                    LOG.info("Attack strength was greater than or equal to vulnerability and has died.");
+                    LOG.info("Attack strength was greater than or equal to {}'s vulnerability! {} has died!", defender.getOwner(), defender.getOwner());
                 } else {
                     ((AbstractCharacter) defender.getOwner()).setWounded(true);
                     LOG.info("Player took a wound and must wound a chit.");
