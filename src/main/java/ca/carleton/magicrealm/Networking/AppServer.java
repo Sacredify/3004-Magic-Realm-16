@@ -5,6 +5,7 @@ import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.Launcher;
 import ca.carleton.magicrealm.control.Sunrise;
+import ca.carleton.magicrealm.control.Sunset;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import org.slf4j.Logger;
@@ -134,6 +135,7 @@ public class AppServer implements Runnable {
                 break;
             // Clients send the DAYLIGHT_DONE message when they are done executing their phases client-side.
             case (Message.DAYLIGHT_DONE):
+                Sunset.doSunset(boardModel);
                 // Update the board.
                 this.boardModel = (BoardModel) message.getPayload();
                 this.updateFromBoard();
