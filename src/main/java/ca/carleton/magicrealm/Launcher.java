@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Main class for the application. Serves as the launcher for both the client and server.
+ * Provides help information for the usage of the app (for both server and client.)
+ *
+ * @author Mike
+ *
  * Created with IntelliJ IDEA.
  * Date: 03/02/15
  * Time: 4:45 PM
@@ -64,7 +69,7 @@ public class Launcher {
                 }
             }
         } catch (final Exception exception) {
-            LOG.error("Error with options parse. {}", exception);
+            LOG.error("Error with options parse. Cause: --> {}", exception.getMessage() == null ? "Invalid parse." : exception.getMessage());
             formatter.printHelp(LAUNCH_COMMAND, options);
         }
     }
