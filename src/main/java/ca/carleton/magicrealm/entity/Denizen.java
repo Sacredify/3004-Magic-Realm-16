@@ -30,6 +30,8 @@ public abstract class Denizen extends Entity {
 
     protected AbstractWeapon weapon;
 
+    protected boolean isArmored;
+
     protected long random = RANDOM.nextLong();
 
     /**
@@ -67,6 +69,10 @@ public abstract class Denizen extends Entity {
 
     public Harm getMoveStrength() {
         return this.moveStrength;
+    }
+
+    public boolean isArmored() {
+        return isArmored;
     }
 
     @Override
