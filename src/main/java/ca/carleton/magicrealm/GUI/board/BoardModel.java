@@ -9,6 +9,7 @@ import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.entity.monster.Denizen;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
+import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import ca.carleton.magicrealm.game.combat.MeleeSheets;
@@ -395,6 +396,18 @@ public class BoardModel implements Serializable {
 
         return entities;
     }
+
+    public List<NativeFaction> getNativeFactionsInClearing(final Clearing clearing) {
+        final List<NativeFaction> factions = new ArrayList<NativeFaction>();
+        clearing.getEntities().stream().filter(entity -> entity instanceof AbstractNative).forEach(entity -> {
+            final NativeFaction faction = ((AbstractNative) entity).getFaction();
+            if (!factions.contains(faction)) {
+                factions.add(faction);
+            }
+        });
+        return factions;
+    }
+
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {
         return this.board;
