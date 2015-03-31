@@ -19,4 +19,8 @@ public class PhaseTreasure extends Treasure {
         this.fame = -5 + random.nextInt(36);
     }
 
+    public String getPhase(){
+        return phase;
+    }
+
 }
