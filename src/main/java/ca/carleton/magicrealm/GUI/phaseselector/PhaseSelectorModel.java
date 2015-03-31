@@ -2,12 +2,14 @@ package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.impl.*;
 import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +20,12 @@ import java.util.List;
 public class PhaseSelectorModel {
 
     private final List<AbstractPhase> phases;
+    private final ArrayList<String> extraPhases;
 
     private final PhaseSelectorMenu menu;
 
-    public PhaseSelectorModel(final PhaseSelectorMenu menu, final List<AbstractPhase> phases) {
+    public PhaseSelectorModel(final PhaseSelectorMenu menu, final List<AbstractPhase> phases, Player player) {
+        this.extraPhases = player.getCharacter().getExtraPhases();
         this.phases = phases;
         this.menu = menu;
     }

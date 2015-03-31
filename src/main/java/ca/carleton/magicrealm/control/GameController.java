@@ -106,6 +106,7 @@ public class GameController {
     public void selectPhasesForDay() {
         LOG.info("Displayed birdsong action menu.");
         new PhaseSelectorMenu(this.currentPlayer, this.recordedPhasesForDay, 1, this).setVisible(true);
+
     }
 
     /**

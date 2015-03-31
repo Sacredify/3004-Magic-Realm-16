@@ -10,6 +10,7 @@ import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.item.Item;
+import ca.carleton.magicrealm.item.treasure.Treasure;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,7 +59,7 @@ public class PhaseSelectorMenu extends JDialog {
         this.phaseSelectorPanel.getConfirmButton().addActionListener(this.createActionListenerForPhaseSelectButton());
         this.phaseSelectorPanel.getDoneEnteringPhasesButton().addActionListener(this.createActionListenerForDoneButton());
 
-        this.phaseSelectorModel = new PhaseSelectorModel(this, phases);
+        this.phaseSelectorModel = new PhaseSelectorModel(this, phases,player);
         this.controller = gameController;
 
         this.setSize(PHASE_WINDOW_WIDTH, PHASE_WINDOW_HEIGHT);
