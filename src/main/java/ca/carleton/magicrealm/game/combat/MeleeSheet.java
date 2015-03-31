@@ -45,6 +45,9 @@ public class MeleeSheet implements Serializable {
     // Armor. Can only use "active" armor.
     private AbstractArmor armor;
 
+    // Whether or not they have already fought (to prevent multiple engagements... say A --> B and B --> A on their sheets.
+    private boolean hasFought;
+
     /**
      * Creates a melee sheet for an entity, and optionally a related player.
      *
@@ -68,12 +71,13 @@ public class MeleeSheet implements Serializable {
             this.maneuver = null;
         }
         this.target = null;
+        this.hasFought = false;
     }
 
     /**
      * Update applicable references after being sent to and from the server.
      */
-    public void updateFromServer(final BoardModel boardModel) {
+    public void synchronize(final BoardModel boardModel) {
 
         // Update player object if needed
         if (this.player != null) {
@@ -180,5 +184,13 @@ public class MeleeSheet implements Serializable {
 
     public void setTarget(final Entity target) {
         this.target = target;
+    }
+
+    public void markFought() {
+        this.hasFought = true;
+    }
+
+    public boolean hasFoughtToday() {
+        return this.hasFought;
     }
 }

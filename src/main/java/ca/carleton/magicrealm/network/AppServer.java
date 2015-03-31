@@ -4,8 +4,12 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.Launcher;
+import ca.carleton.magicrealm.control.Combat;
 import ca.carleton.magicrealm.control.Sunrise;
 import ca.carleton.magicrealm.control.Sunset;
+import ca.carleton.magicrealm.entity.Denizen;
+import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import org.slf4j.Logger;
@@ -15,6 +19,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AppServer implements Runnable {
 
@@ -22,7 +28,7 @@ public class AppServer implements Runnable {
 
     public static final int MAX_ROUNDS = 28;
 
-    public static final int MAX_PLAYERS = 1;
+    public static final int MAX_PLAYERS = 2;
 
     private static final int SERVER_ID = 0;
 
@@ -130,9 +136,9 @@ public class AppServer implements Runnable {
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting DAYLIGHT phase.");
                     this.turnController.createNewTurnOrder(this.clients);
-                    int nextID = this.turnController.getNextPlayer();
-                    ServerThread nextClient = this.getClientWithID(nextID);
-                    Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
+                    final int nextID = this.turnController.getNextPlayer();
+                    final ServerThread nextClient = this.getClientWithID(nextID);
+                    final Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
                     nextClient.send(toSend);
                 }
                 break;
@@ -140,26 +146,56 @@ public class AppServer implements Runnable {
             case (Message.DAYLIGHT_DONE):
                 // Update the board.
                 this.boardModel = (BoardModel) message.getPayload();
-                this.updateFromBoard();
+                this.synchronize();
                 // If all players have sent the message, start filling out melee sheets in clearings.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting SUNSET phase [server only].");
                     Sunset.doSunset(this.boardModel);
                     LOG.info("Starting COMBAT phase.");
-                    Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
-                    this.broadcastMessage(SERVER_ID, toSend);
+                    this.turnController.createNewTurnOrder(this.clients);
+                    final int nextID = this.turnController.getNextPlayer();
+                    final ServerThread nextClient = this.getClientWithID(nextID);
+                    final Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
+                    nextClient.send(toSend);
                 } else {
-                    // Send the next client to go that it is their turn to go.
-                    int nextID = this.turnController.getNextPlayer();
-                    ServerThread nextClient = this.getClientWithID(nextID);
-                    Message msg = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
-                    nextClient.send(msg);
+                    // Send the next client that it is their turn to go.
+                    final int nextID = this.turnController.getNextPlayer();
+                    final ServerThread nextClient = this.getClientWithID(nextID);
+                    final Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
+                    nextClient.send(toSend);
                 }
                 break;
             // Clients send the COMBAT_SEND_MELEE_SHEET when they are done filling out their melee sheets.
             case (Message.COMBAT_SEND_MELEE_SHEET):
                 this.boardModel = (BoardModel) message.getPayload();
-                this.updateFromBoard();
+                this.synchronize();
+                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                    LOG.info("Starting COMBAT_RESOLUTION phase.");
+                    this.processCombatsForPlayers();
+                    this.currentDay += 1;
+                    LOG.info("Starting GAME_OVER phase.");
+
+                    if (this.isGameOver()) {
+                        LOG.info("A month has passed. Game over.");
+                        final ServerThread winnerThread = this.calculateWinner();
+                        // TODO do winner stuff here...
+                        this.shutDown();
+                    } else {
+                        LOG.info("Game is not yet over. Starting day {}.", this.currentDay);
+                        LOG.info("Starting SUNRISE phase.");
+                        Sunrise.doSunrise(this.boardModel, this.currentDay);
+                        LOG.info("Starting BIRDSONG phase.");
+                        final Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
+                        this.broadcastMessage(SERVER_ID, toSend);
+                    }
+
+                } else {
+                    // Send the next client the message its their turn to do combat
+                    final int nextID = this.turnController.getNextPlayer();
+                    final ServerThread nextClient = this.getClientWithID(nextID);
+                    final Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
+                    nextClient.send(toSend);
+                }
                 break;
             default:
                 LOG.error("No matching message type found... we done borked it good...");
@@ -167,7 +203,42 @@ public class AppServer implements Runnable {
         }
     }
 
-    private void updateFromBoard() {
+    private void processCombatsForPlayers() {
+        final List<Player> players = this.clients.stream().map(ServerThread::getPlayer).collect(Collectors.toList());
+
+        for (final Player player : players) {
+            LOG.info("Starting combat resolution for {}.", player.getCharacter());
+            final MeleeSheet playerSheet = this.boardModel.getMeleeSheet(player);
+            final Entity target = playerSheet.getTarget();
+            final MeleeSheet targetSheet = this.boardModel.getMeleeSheet(target);
+
+            if (playerSheet.hasFoughtToday() || targetSheet.hasFoughtToday()) {
+                LOG.info("Assumption that people can't fight twice. Skipping because either {} or {} has fought today.", playerSheet.getOwner(), targetSheet.getOwner());
+                continue;
+            }
+
+            if (target instanceof AbstractCharacter) {
+                // Combat between two characters
+                final Player otherPlayer = this.boardModel.getPlayerForCharacter((AbstractCharacter) target);
+                Combat.doCombat(this.boardModel, player, otherPlayer);
+                Combat.cleanup(player, otherPlayer);
+
+            } else if (target instanceof Denizen) {
+                // Combat between a character and a native.
+                throw new IllegalArgumentException("Combat versus denizens has not been implemented yet!");
+            }
+        }
+
+        // After combat is done
+        LOG.info("Resetting melee sheets after combat.");
+        this.boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
+
+    }
+
+    /**
+     *  Update references to the current ones stored by the board (which may be scrambled through serialization. Object graphs are hard man).
+     */
+    private void synchronize() {
         for (final ServerThread client : this.clients) {
             this.boardModel.getPlayers().stream().filter(player -> client.getPlayer().equals(player)).forEach(player -> {
                 client.setPlayer(player);
@@ -176,7 +247,7 @@ public class AppServer implements Runnable {
         }
 
         for (final MeleeSheet sheet : this.boardModel.getAllSheets()) {
-            sheet.updateFromServer(this.boardModel);
+            sheet.synchronize(this.boardModel);
             LOG.debug("Successfully updated melee sheet for {} from the board.", sheet.getOwner());
         }
     }
@@ -185,8 +256,17 @@ public class AppServer implements Runnable {
         return this.currentDay == MAX_ROUNDS;
     }
 
-    private Player calculateWinner() {
+    private ServerThread calculateWinner() {
+
+
         return null;
+    }
+
+    /**
+     * End the current game gracefully.
+     */
+    private void shutDown() {
+
     }
 
     private ServerThread getClientWithID(int ID) {
@@ -209,9 +289,10 @@ public class AppServer implements Runnable {
                     this.clients.get(this.clientCount).open();
                     this.clients.get(this.clientCount).start();
                     this.clientCount++;
-                } else
+                } else {
                     this.server.close();
-
+                    break;
+                }
             }
         } catch (IOException e) {
             LOG.error("Exception during server accept process.", e);
@@ -219,7 +300,7 @@ public class AppServer implements Runnable {
     }
 
     /**
-     * Broad a message to other clients on behalf of the given ID. The ID does not receieve this message.
+     * Broad a message to other clients on behalf of the given ID. The ID does not receive this message.
      *
      * @param ID      the id of the sender (0 is server)..
      * @param message the message to send.

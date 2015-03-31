@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.entity.character;
 
+
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
@@ -145,6 +146,11 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     @Override
     public boolean equals(final Object rhs) {
         return rhs instanceof AbstractCharacter && this.getEntityInformation() == ((AbstractCharacter) rhs).getEntityInformation();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getEntityInformation().hashCode();
     }
 
     public boolean isBlocked() {

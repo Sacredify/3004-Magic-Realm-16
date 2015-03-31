@@ -408,6 +408,9 @@ public class BoardModel implements Serializable {
         return factions;
     }
 
+    public Player getPlayerForCharacter(final AbstractCharacter character) {
+        return this.players.stream().filter(player -> player.getCharacter().getEntityInformation() == character.getEntityInformation()).collect(Collectors.toList()).get(0);
+    }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {
         return this.board;
@@ -426,7 +429,11 @@ public class BoardModel implements Serializable {
     }
 
     public MeleeSheet getMeleeSheet(final Player player) {
-        return this.meleeSheets.getMeleeSheetForPlayer(player);
+        return this.meleeSheets.getMeleeSheet(player.getCharacter());
+    }
+
+    public MeleeSheet getMeleeSheet(final Entity entity) {
+        return this.meleeSheets.getMeleeSheet(entity);
     }
 
     public void createNewMeleeSheet(final Player player) {

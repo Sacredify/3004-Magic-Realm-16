@@ -90,6 +90,10 @@ public class MeleeSheets implements Serializable {
         return this.meleeSheets.get(player.getCharacter());
     }
 
+    public MeleeSheet getMeleeSheet(final Entity entity) {
+        return this.meleeSheets.get(entity);
+    }
+
     public List<MeleeSheet> getAllSheets() {
         return this.meleeSheets.values().stream().collect(Collectors.toList());
     }
