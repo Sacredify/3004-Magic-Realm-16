@@ -22,6 +22,7 @@ public class Sunset {
                 for (Clearing clearing : abstractMonster.getCurrentClearing().getParentTile().getClearings()) {
                     for (Entity entity: clearing.getEntities()) {
                         if (entity instanceof AbstractCharacter) {
+                            LOG.debug("Monster moved to player clearing");
                             abstractMonster.setCurrentClearing(clearing);
                         }
                     }

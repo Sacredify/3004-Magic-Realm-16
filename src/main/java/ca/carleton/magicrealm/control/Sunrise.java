@@ -44,6 +44,7 @@ public class Sunrise {
                     switch (chit.getDescription()) {
                         case "BONES":
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
+                                LOG.debug("Giant created in Mountain from Bones chit");
                                 final Clearing startForGiants = tile.getClearings()[tile.getClearings().length - 1];
                                 final Giant giant = new Giant();
                                 giant.setStartingClearing(startForGiants);
@@ -53,6 +54,7 @@ public class Sunrise {
                                 break;
                             }
                             else if (tile.getTileType().equals(TileType.CAVE)) {
+                                LOG.debug("Troll created in Cave from Bones chit");
                                 final Clearing startForTrolls = tile.getClearings()[tile.getClearings().length - 1];
                                 final Troll troll = new Troll();
                                 troll.setStartingClearing(startForTrolls);
@@ -63,6 +65,7 @@ public class Sunrise {
                             }
                         case "DANK":
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
+                                LOG.debug("Spider created in Mountain from Dank chit");
                                 final Clearing startForSpiders = tile.getClearings()[tile.getClearings().length - 1];
                                 final Spider spider = new Spider();
                                 spider.setStartingClearing(startForSpiders);
@@ -72,6 +75,7 @@ public class Sunrise {
                                 break;
                             }
                             else if (tile.getTileType().equals(TileType.CAVE)) {
+                                LOG.debug("Serpent created in Cave from Dank chit");
                                 final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
                                 final Serpent serpent = new Serpent();
                                 serpent.setStartingClearing(startForSerpents);
@@ -81,6 +85,7 @@ public class Sunrise {
                                 break;
                             }
                         case "SLITHER":
+                            LOG.debug("Dragon created from Slither chit");
                             final Clearing startForDragons = tile.getClearings()[tile.getClearings().length - 1];
                             final Dragon dragon = new Dragon();
                             dragon.setStartingClearing(startForDragons);
@@ -88,6 +93,7 @@ public class Sunrise {
                             startForDragons.addEntity(dragon);
                             boardModel.getAbstractMonsters().add(dragon);
 
+                            LOG.debug("Serpent created from Slither chit");
                             final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
                             final Serpent serpent = new Serpent();
                             serpent.setStartingClearing(startForSerpents);
@@ -96,6 +102,7 @@ public class Sunrise {
                             boardModel.getAbstractMonsters().add(serpent);
                             break;
                         case "RUINS":
+                            LOG.debug("Giant bat created from Ruins chit");
                             final Clearing startForBats = tile.getClearings()[tile.getClearings().length - 1];
                             final GiantBat giantBat = new GiantBat();
                             giantBat.setStartingClearing(startForBats);
