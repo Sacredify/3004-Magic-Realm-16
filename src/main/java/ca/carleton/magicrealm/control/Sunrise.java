@@ -46,6 +46,7 @@ public class Sunrise {
                             final Clearing startForGiants = tile.getClearings()[tile.getClearings().length - 1];
                             final Giant giant = new Giant();
                             giant.setStartingClearing(startForGiants);
+                            giant.setCurrentClearing(startForGiants);
                             startForGiants.addEntity(giant);
                             boardModel.getMonsters().add(giant);
                             break;
