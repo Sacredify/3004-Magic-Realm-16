@@ -47,14 +47,14 @@ public class Sunrise {
                             final Giant giant = new Giant();
                             giant.setStartingClearing(startForGiants);
                             startForGiants.addEntity(giant);
-                            boardModel.getDenizens().add(giant);
+                            boardModel.getMonsters().add(giant);
                             break;
                     }
                 }
             }
         }
 
-        for (Denizen denizen: boardModel.getDenizens()) {
+        for (Denizen denizen: boardModel.getMonsters()) {
             /** Reset prowling monsters/natives **/
             if (currentDay % 7 == 0) {
                 denizen.setCurrentClearing(denizen.getStartingClearing());

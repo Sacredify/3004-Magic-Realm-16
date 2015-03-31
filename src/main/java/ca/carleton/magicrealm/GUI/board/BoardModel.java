@@ -7,7 +7,7 @@ import ca.carleton.magicrealm.GUI.tile.impl.*;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
-import ca.carleton.magicrealm.entity.monster.Denizen;
+import ca.carleton.magicrealm.entity.monster.Monster;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.game.Player;
@@ -34,7 +34,7 @@ public class BoardModel implements Serializable {
 
     private final ArrayList<Player> players = new ArrayList<Player>();
 
-    private final ArrayList<Denizen> denizens = new ArrayList<Denizen>();
+    private final ArrayList<Monster> monsters = new ArrayList<Monster>();
 
     private final MeleeSheets meleeSheets = new MeleeSheets();
 
@@ -421,8 +421,8 @@ public class BoardModel implements Serializable {
         return this.players;
     }
 
-    public ArrayList<Denizen> getDenizens() {
-        return this.denizens;
+    public ArrayList<Monster> getMonsters() {
+        return this.monsters;
     }
 
     public MeleeSheet getMeleeSheet(final Player player) {
