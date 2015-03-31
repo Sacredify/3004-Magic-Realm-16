@@ -4,12 +4,12 @@ import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.game.Player;
 
 /**
- * Created by Tony on 22/03/2015.
+ * Created by Tony on 31/03/2015.
  */
-public class Giant extends AbstractMonster {
+public class Troll extends AbstractMonster {
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.GIANT;
+        return EntityInformation.TROLL;
     }
 
     @Override
