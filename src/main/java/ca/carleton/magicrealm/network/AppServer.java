@@ -177,7 +177,7 @@ public class AppServer implements Runnable {
 
         for (final MeleeSheet sheet : this.boardModel.getAllSheets()) {
             sheet.updateFromServer(this.boardModel);
-            LOG.info("Successfully updated melee sheet for {} from the board.", sheet.getOwner());
+            LOG.debug("Successfully updated melee sheet for {} from the board.", sheet.getOwner());
         }
     }
 
