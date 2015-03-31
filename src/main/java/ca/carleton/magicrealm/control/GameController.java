@@ -128,9 +128,10 @@ public class GameController {
     /**
      * Processes combat for the clearing of the current player.
      */
+    @Deprecated
     private void processCombat() {
         LOG.info("Starting combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
-        Combat.doCombat(this.boardModel, this.currentPlayer, this.boardWindow);
+        //Combat.doCombat(this.boardModel, this.currentPlayer, this.boardWindow);
         this.updatePlayerInMap();
         this.refreshBoard();
         LOG.info("Executed combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));

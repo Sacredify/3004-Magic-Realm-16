@@ -108,7 +108,7 @@ public class Combat {
         final List<Item> armors = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractArmor).collect(Collectors.toList());
         // Handle the possibility they don't have any armor.
         final List<Object> armorsWithNone = new ArrayList<Object>(armors);
-        armorsWithNone.add("None (dagger)");
+        armorsWithNone.add("None");
         final Object armor = JOptionPane.showInputDialog(parent, "Combat Step 7: Select armor to wear (if any):", "Combat",
                 JOptionPane.QUESTION_MESSAGE, null, armorsWithNone.toArray(), armorsWithNone.get(0));
         // Set the armor if they actually chose a armor.
@@ -127,7 +127,9 @@ public class Combat {
      * @param currentPlayer the current player.
      * @param parent        the parent frame to attach any messages to.
      */
-    public static void doCombat(final BoardModel boardModel, final Player currentPlayer, final Component parent) {
+    @SuppressWarnings("unused")
+    @Deprecated
+    private static void doCombat(final BoardModel boardModel, final Player currentPlayer, final Component parent) {
 
         final Clearing combatSite = boardModel.getClearingForPlayer(currentPlayer);
 
@@ -227,6 +229,8 @@ public class Combat {
             }
         }
 
+        playerOneSheet.markFought();
+        playerTwoSheet.markFought();
     }
 
     /**
@@ -256,22 +260,16 @@ public class Combat {
     /**
      * Cleanup after combat. This includes resetting the sheets and wound status.
      *
-     * @param boardModel the board.
      * @param attacker   the attacker.
      * @param defender   the defender.
      */
-    public static void cleanup(final BoardModel boardModel, final Player attacker, final Player defender) {
-
-        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
-        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
+    public static void cleanup(final Player attacker, final Player defender) {
 
         LOG.info("Resetting wounded status at the end of the day.");
         attacker.getCharacter().setWounded(false);
         attacker.getCharacter().setFatigued(false);
-        attackerSheet.resetSheet();
         defender.getCharacter().setWounded(false);
         defender.getCharacter().setFatigued(false);
-        defenderSheet.resetSheet();
     }
 
     /**
