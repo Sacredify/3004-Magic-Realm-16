@@ -4,7 +4,7 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
-import ca.carleton.magicrealm.entity.monster.Denizen;
+import ca.carleton.magicrealm.entity.monster.Monster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ public class Sunset {
 
     public static void doSunset(final BoardModel boardModel) {
         /** Set all prowling monsters to whatever clearing a nearby player is on **/
-        for (Denizen monster : boardModel.getDenizens()) {
+        for (Monster monster : boardModel.getMonsters()) {
             if (monster.isProwling()) {
                 for (Clearing clearing : monster.getCurrentClearing().getParentTile().getClearings()) {
                     for (Entity entity: clearing.getEntities()) {

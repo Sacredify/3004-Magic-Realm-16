@@ -6,7 +6,7 @@ import ca.carleton.magicrealm.game.Player;
 /**
  * Created by Tony on 22/03/2015.
  */
-public class Giant extends Denizen {
+public class Giant extends Monster {
     @Override
     public EntityInformation getEntityInformation() {
         return EntityInformation.GIANT;
