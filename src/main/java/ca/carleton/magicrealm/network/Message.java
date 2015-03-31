@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.Networking;
+package ca.carleton.magicrealm.network;
 
 import java.io.Serializable;
 
@@ -17,9 +17,9 @@ public final class Message implements Serializable {
 
     public static final String SUNSET_START = "SUNSET_START";
 
-    public static final String START_COMBAT_IN_CLEARING = "COMBAT_START";
+    public static final String COMBAT_FILL_OUT_MELEE_SHEET = "COMBAT_MELEE_SHEET_START";
 
-    public static final String DONE_COMBAT_IN_CLEARING = "COMBAT_FINISH";
+    public static final String COMBAT_SEND_MELEE_SHEET = "COMBAT_MELEE_SHEET_FINISH";
 
     public static final String MIDNIGHT_START = "MIDNIGHT_START";
 

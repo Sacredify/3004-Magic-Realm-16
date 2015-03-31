@@ -1,7 +1,7 @@
 package ca.carleton.magicrealm;
 
-import ca.carleton.magicrealm.Networking.AppClient;
-import ca.carleton.magicrealm.Networking.AppServer;
+import ca.carleton.magicrealm.network.AppClient;
+import ca.carleton.magicrealm.network.AppServer;
 import ca.carleton.magicrealm.control.GameController;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;

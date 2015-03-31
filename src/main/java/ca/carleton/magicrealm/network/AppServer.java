@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.Networking;
+package ca.carleton.magicrealm.network;
 
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
@@ -114,7 +114,9 @@ public class AppServer implements Runnable {
                 // If all players have sent their characters, send the message to start birdsong. Else, forward
                 // the message to other players so they know who picked what.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                    LOG.info("Starting SUNRISE phase [server only].");
                     Sunrise.doSunrise(this.boardModel, this.currentDay);
+                    LOG.info("Starting BIRDSONG phase.");
                     Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
                     this.broadcastMessage(SERVER_ID, toSend);
                 } else {
@@ -126,6 +128,7 @@ public class AppServer implements Runnable {
                 // If all players have sent the message, send the message to the first randomly picked player to start
                 // daylight (execution of their phases).
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                    LOG.info("Starting DAYLIGHT phase.");
                     this.turnController.createNewTurnOrder(this.clients);
                     int nextID = this.turnController.getNextPlayer();
                     ServerThread nextClient = this.getClientWithID(nextID);
@@ -135,16 +138,16 @@ public class AppServer implements Runnable {
                 break;
             // Clients send the DAYLIGHT_DONE message when they are done executing their phases client-side.
             case (Message.DAYLIGHT_DONE):
-                Sunset.doSunset(boardModel);
                 // Update the board.
                 this.boardModel = (BoardModel) message.getPayload();
                 this.updateFromBoard();
-                // If all players have sent the message, start COMBAT in clearings.
+                // If all players have sent the message, start filling out melee sheets in clearings.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    this.turnController.createNewTurnOrder(this.clients);
-                    ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
-                    Message toSend = new Message(SERVER_ID, Message.START_COMBAT_IN_CLEARING, this.boardModel);
-                    nextClient.send(toSend);
+                    LOG.info("Starting SUNSET phase [server only].");
+                    Sunset.doSunset(this.boardModel);
+                    LOG.info("Starting COMBAT phase.");
+                    Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
+                    this.broadcastMessage(SERVER_ID, toSend);
                 } else {
                     // Send the next client to go that it is their turn to go.
                     int nextID = this.turnController.getNextPlayer();
@@ -153,31 +156,10 @@ public class AppServer implements Runnable {
                     nextClient.send(msg);
                 }
                 break;
-            // Clients send the DONE_COMBAT_IN_CLEARING message when they have resolved combat for their character in their clearing.
-            case (Message.DONE_COMBAT_IN_CLEARING):
-                // Update the board
+            // Clients send the COMBAT_SEND_MELEE_SHEET when they are done filling out their melee sheets.
+            case (Message.COMBAT_SEND_MELEE_SHEET):
                 this.boardModel = (BoardModel) message.getPayload();
                 this.updateFromBoard();
-                // If all players have sent the message (done with combat), start a new day.
-                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-
-                    if (this.isGameOver()) {
-                        LOG.info("A month has been reached and the game is now over! Calculating the winner...");
-                        final Player winner = this.calculateWinner();
-                        LOG.info("{} is the winner! Sending messages to clients.", winner);
-                    }
-
-                    this.currentDay++;
-                    Sunrise.doSunrise(this.boardModel, this.currentDay);
-                    Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
-                    this.broadcastMessage(SERVER_ID, toSend);
-                } else {
-                    // Send the next client to go that it is their turn to go.
-                    int nextID = this.turnController.getNextPlayer();
-                    ServerThread nextClient = this.getClientWithID(nextID);
-                    Message msg = new Message(SERVER_ID, Message.START_COMBAT_IN_CLEARING, this.boardModel);
-                    nextClient.send(msg);
-                }
                 break;
             default:
                 LOG.error("No matching message type found... we done borked it good...");

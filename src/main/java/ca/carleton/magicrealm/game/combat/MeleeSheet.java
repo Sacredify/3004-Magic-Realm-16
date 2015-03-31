@@ -23,6 +23,8 @@ public class MeleeSheet implements Serializable {
 
     private Entity entity;
 
+    private Entity target;
+
     private Player player;
 
     // The move or fight chit used during the encounter step. If encounter, allow the player to alert a weapon. If move, run away to another clearing.
@@ -65,6 +67,7 @@ public class MeleeSheet implements Serializable {
             this.attackDirection = null;
             this.maneuver = null;
         }
+        this.target = null;
     }
 
     /**
@@ -171,4 +174,11 @@ public class MeleeSheet implements Serializable {
         this.armor = armor;
     }
 
+    public Entity getTarget() {
+        return this.target;
+    }
+
+    public void setTarget(final Entity target) {
+        this.target = target;
+    }
 }

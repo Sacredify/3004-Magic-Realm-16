@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.Networking;
+package ca.carleton.magicrealm.network;
 
 public class Main {
 
