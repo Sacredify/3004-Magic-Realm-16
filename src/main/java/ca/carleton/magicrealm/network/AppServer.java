@@ -146,7 +146,7 @@ public class AppServer implements Runnable {
             case (Message.DAYLIGHT_DONE):
                 // Update the board.
                 this.boardModel = (BoardModel) message.getPayload();
-                this.updateFromBoard();
+                this.synchronize();
                 // If all players have sent the message, start filling out melee sheets in clearings.
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting SUNSET phase [server only].");
@@ -161,22 +161,39 @@ public class AppServer implements Runnable {
                     // Send the next client that it is their turn to go.
                     final int nextID = this.turnController.getNextPlayer();
                     final ServerThread nextClient = this.getClientWithID(nextID);
-                    final  Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
+                    final Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
                     nextClient.send(toSend);
                 }
                 break;
             // Clients send the COMBAT_SEND_MELEE_SHEET when they are done filling out their melee sheets.
             case (Message.COMBAT_SEND_MELEE_SHEET):
                 this.boardModel = (BoardModel) message.getPayload();
-                this.updateFromBoard();
+                this.synchronize();
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting COMBAT_RESOLUTION phase.");
                     this.processCombatsForPlayers();
+                    this.currentDay += 1;
+                    LOG.info("Starting GAME_OVER phase.");
+
+                    if (this.isGameOver()) {
+                        LOG.info("A month has passed. Game over.");
+                        final ServerThread winnerThread = this.calculateWinner();
+                        // TODO do winner stuff here...
+                        this.shutDown();
+                    } else {
+                        LOG.info("Game is not yet over. Starting day {}.", this.currentDay);
+                        LOG.info("Starting SUNRISE phase.");
+                        Sunrise.doSunrise(this.boardModel, this.currentDay);
+                        LOG.info("Starting BIRDSONG phase.");
+                        final Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
+                        this.broadcastMessage(SERVER_ID, toSend);
+                    }
+
                 } else {
                     // Send the next client the message its their turn to do combat
                     final int nextID = this.turnController.getNextPlayer();
                     final ServerThread nextClient = this.getClientWithID(nextID);
-                    final  Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
+                    final Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
                     nextClient.send(toSend);
                 }
                 break;
@@ -218,7 +235,10 @@ public class AppServer implements Runnable {
 
     }
 
-    private void updateFromBoard() {
+    /**
+     *  Update references to the current ones stored by the board (which may be scrambled through serialization. Object graphs are hard man).
+     */
+    private void synchronize() {
         for (final ServerThread client : this.clients) {
             this.boardModel.getPlayers().stream().filter(player -> client.getPlayer().equals(player)).forEach(player -> {
                 client.setPlayer(player);
@@ -236,8 +256,17 @@ public class AppServer implements Runnable {
         return this.currentDay == MAX_ROUNDS;
     }
 
-    private Player calculateWinner() {
+    private ServerThread calculateWinner() {
+
+
         return null;
+    }
+
+    /**
+     * End the current game gracefully.
+     */
+    private void shutDown() {
+
     }
 
     private ServerThread getClientWithID(int ID) {
@@ -260,9 +289,10 @@ public class AppServer implements Runnable {
                     this.clients.get(this.clientCount).open();
                     this.clients.get(this.clientCount).start();
                     this.clientCount++;
-                } else
+                } else {
                     this.server.close();
-
+                    break;
+                }
             }
         } catch (IOException e) {
             LOG.error("Exception during server accept process.", e);
@@ -270,7 +300,7 @@ public class AppServer implements Runnable {
     }
 
     /**
-     * Broad a message to other clients on behalf of the given ID. The ID does not receieve this message.
+     * Broad a message to other clients on behalf of the given ID. The ID does not receive this message.
      *
      * @param ID      the id of the sender (0 is server)..
      * @param message the message to send.
