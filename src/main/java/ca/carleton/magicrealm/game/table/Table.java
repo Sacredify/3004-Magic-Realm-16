@@ -225,7 +225,7 @@ public abstract class Table {
          * @param player the player.
          * @return the int result.
          */
-        public static int roll(final Player player, final Clearing location) {
+        public static int roll(final Player player) {
 
             int roll;
 
