@@ -50,6 +50,11 @@ public abstract class Table {
                 return DiceRoller.rollOnce();
             }
 
+            // If the character is a white knight, subtract 1.
+            if (player.getCharacter() instanceof WhiteKnight) {
+                return Math.max(DiceRoller.rollTwiceTakeHigher() - 1, 1);
+            }
+
             LOG.info("Rolled twice on the meeting table.");
             // The default is to roll twice for everything else.
             return DiceRoller.rollTwiceTakeHigher();

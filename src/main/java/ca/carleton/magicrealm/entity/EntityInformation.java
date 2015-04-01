@@ -18,6 +18,8 @@ public enum EntityInformation {
     CHARACTER_DWARF("image/character/dwarf.png"),
     CHARACTER_ELF("image/character/elf.png"),
     CHARACTER_SWORDSMAN("image/character/swordsman.png"),
+    CHARACTER_BERSERKER("image/character/berserker.png"),
+    CHARACTER_WHITE_KNIGHT("image/character/white_knight.png"),
 
     // Native types
     NATIVE_KNIGHT("image/natives/knight_o.png"),
