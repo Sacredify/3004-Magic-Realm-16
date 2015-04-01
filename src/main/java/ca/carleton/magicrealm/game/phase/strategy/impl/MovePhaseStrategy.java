@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.game.phase.strategy.impl;
 
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.GUI.tile.Path;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
@@ -29,12 +30,15 @@ public class MovePhaseStrategy implements PhaseStrategy {
         final MovePhase move = (MovePhase) phase;
         final Clearing temp = move.getOrigin();
 
-        if (temp.getAdjacentClearings().contains(((MovePhase) phase).getMoveTarget())) {
-            temp.removeEntity(player.getCharacter());
-            move.getMoveTarget().addEntity(player.getCharacter());
-            LOG.info("Moved player from {} to {}.", temp, move.getMoveTarget());
-        } else {
-            LOG.info("Played entered invalid location for his move phase. Not executed. (Tried {}).", ((MovePhase) phase).getMoveTarget());
+        for (Path path : temp.getAdjacentPaths()) {
+            if (path.getFromClearing().equals(((MovePhase) phase).getMoveTarget())
+                    || path.getToClearing().equals(((MovePhase) phase).getMoveTarget())) {
+                temp.removeEntity(player.getCharacter());
+                move.getMoveTarget().addEntity(player.getCharacter());
+                LOG.info("Moved player from {} to {}.", temp, move.getMoveTarget());
+            } else {
+                LOG.info("Played entered invalid location for his move phase. Not executed. (Tried {}).", ((MovePhase) phase).getMoveTarget());
+            }
         }
     }
 }

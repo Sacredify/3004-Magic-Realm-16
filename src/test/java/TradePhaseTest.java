@@ -118,7 +118,7 @@ public class TradePhaseTest {
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
         tradePhase.setCurrentClearing(boardModel.getClearingForPlayer(player));
-        ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardModel.getStartingLocation().getAdjacentClearings().get(0));
+        ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardModel.getStartingLocation().getAdjacentPaths().get(0).getToClearing());
         ((Denizen) tradePhase.getTradeTarget()).getCurrentClearing().addEntity(tradePhase.getTradeTarget());
         tradePhase.override = 5; // price x 4
 

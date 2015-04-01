@@ -37,7 +37,7 @@ public class MovePhaseTest {
         boardModel.getStartingLocation().addEntity(player.getCharacter());
 
         // Take an adjacent value
-        final Clearing moveTarget = boardModel.getStartingLocation().getAdjacentClearings().get(0);
+        final Clearing moveTarget = boardModel.getStartingLocation().getAdjacentPaths().get(0).getToClearing();
 
         final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
         final MovePhase movePhase = new MovePhase();
