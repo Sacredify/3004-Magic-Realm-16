@@ -52,6 +52,9 @@ public class Berserker extends AbstractCharacter {
     /**
      * The berserker's vulnerability is TREMENDOUS if they have played a fatigued berserk chit.
      *
+     * ASSUMPTION: This isn't quite the rule, they're supposed to reset during the day. However, we'll change it so
+     * they are tremendous until they re-set their chit. Why? who knows.
+     *
      * @return their health.
      */
     @Override
