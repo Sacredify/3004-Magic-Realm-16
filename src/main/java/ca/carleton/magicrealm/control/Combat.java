@@ -5,7 +5,6 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
-import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.AttackDirection;
 import ca.carleton.magicrealm.game.combat.Harm;
@@ -25,9 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -57,9 +54,14 @@ public class Combat {
         LOG.info("Starting attack options.");
         LOG.info("Showing target select.");
         final List<Entity> potentialTargets = clearingOfCombat.getEntities().stream().filter(entity -> !entity.equals(player.getCharacter())).collect(Collectors.toList());
-        final Entity target = (Entity) JOptionPane.showInputDialog(parent, "Combat Step 1: Select a target:", "Combat",
+        final Entity target = (Entity) JOptionPane.showInputDialog(parent, "Combat Step 1: Select a target (Cancel for NO target - You don't want to fight):", "Combat",
                 JOptionPane.QUESTION_MESSAGE, null, potentialTargets.toArray(), potentialTargets.get(0));
         playerSheet.setTarget(target);
+
+        if (target == null) {
+            LOG.info("Player opted to not fight. Stopping rest of melee sheet fill out.");
+            JOptionPane.showMessageDialog(parent, "You must still out the melee sheet, as you may be targeted by other players.");
+        }
 
         LOG.info("Showing attack direction select.");
         final AttackDirection attackDirection = (AttackDirection) JOptionPane.showInputDialog(parent, "Combat Step 2: Select an attack direction", "Combat",
@@ -93,7 +95,6 @@ public class Combat {
                 JOptionPane.QUESTION_MESSAGE, null, Maneuver.values(), Maneuver.values()[0]);
         playerSheet.setManeuver(maneuver);
 
-
         LOG.info("Showing maneuver chit.");
         // Lambda issue... need to use final variables, wat?
         final int finalNumberOfAsterisksRemaining = numberOfAsterisksRemaining;
@@ -117,45 +118,6 @@ public class Combat {
         }
 
         LOG.info("Done filling out {}'s melee sheet.", player.getCharacter());
-
-    }
-
-    /**
-     * Starts combat in the clearing for the given player.
-     *
-     * @param boardModel    the board data.
-     * @param currentPlayer the current player.
-     * @param parent        the parent frame to attach any messages to.
-     */
-    @SuppressWarnings("unused")
-    @Deprecated
-    private static void doCombat(final BoardModel boardModel, final Player currentPlayer, final Component parent) {
-
-        final Clearing combatSite = boardModel.getClearingForPlayer(currentPlayer);
-
-        LOG.info("Step 1: Checking to see if player is battling any unhired native groups in the clearing this day.");
-        final Map<NativeFaction, Boolean> nativeCombat = new HashMap<NativeFaction, Boolean>();
-        final List<NativeFaction> nativesInClearing = boardModel.getNativeFactionsInClearing(combatSite);
-        nativesInClearing.stream().forEach(nativeFaction -> nativeCombat.put(nativeFaction, CombatUtils.isDoingCombatWithNativeFaction(currentPlayer, combatSite, nativeFaction, parent)));
-        LOG.info("Done checking to if doing native combat.");
-
-        final Map<Entity, Entity> battleAssignments = new HashMap<Entity, Entity>();
-
-        LOG.info("Step 2: Assign natives that will be fighting player.");
-        CombatUtils.assignNativeFactionsToPlayer(currentPlayer, nativeCombat, battleAssignments, combatSite);
-        LOG.info("Done assigning valid natives.");
-
-        LOG.info("Step 3: Luring. Begin voluntary assignment of enemies to character.");
-        // TODO need to throw in a GUI into a dialog that will return a list of entities that the user wishes to fight.
-        LOG.info("Done luring for player.");
-
-        LOG.info("Step 4: Random Assignment. Begin assigning all remaining unassigned natives to player..");
-        // TODO
-        LOG.info("Done random assignment.");
-
-        LOG.info("Step 5: Deployment and Charging. Begin asking user is they want to charge other characters in clearing...");
-        // TODO
-        LOG.info("Done charging options.");
 
     }
 
@@ -234,6 +196,87 @@ public class Combat {
     }
 
     /**
+     * Fatigue or wound chits for a player after combat.
+     *
+     * @param board  the board.
+     * @param player the player.
+     * @param parent parent component.
+     */
+    public static void doFatigueStep(final BoardModel board, final Player player, final Component parent) {
+
+        LOG.info("Starting fatigue a chit step.");
+        if (player.getCharacter().isFatigued()) {
+            LOG.info("{} is fatigued and must fatigue a chit.", player.getCharacter());
+            List<ActionChit> actionChits = player.getCharacter().getActionChits().stream().filter(chit -> chit.getFatigueAsterisks() >= 1).collect(Collectors.toList());
+            final ActionChit fatigueChit = (ActionChit) JOptionPane.showInputDialog(parent, "You were fatigued by combat and must fatigue a chit!", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, actionChits.toArray(), actionChits.get(0));
+
+            if (fatigueChit.getFatigueAsterisks() > 1) {
+                fatigueChit.setFatigued(true);
+                LOG.info("Because a fight chit with more than one asterisk was chosen, user may un-fatigue a one asterisk one if possible.");
+                final List<ActionChit> fatiguedOneAsterisksChits = player.getCharacter().getActionChits().stream().filter(chit ->
+                        chit.isFatigued() && chit.getFatigueAsterisks() == 1).collect(Collectors.toList());
+                if (!fatiguedOneAsterisksChits.isEmpty()) {
+                    LOG.info("Found more than one fatigued 1 asterisk chits... user may un-fatigue one.");
+                    final ActionChit unFatigueChit = (ActionChit) JOptionPane.showInputDialog(parent, "Because you fatigued a 2 asterisk chit, you may un-fatigue one.", "Combat",
+                            JOptionPane.QUESTION_MESSAGE, null, fatiguedOneAsterisksChits.toArray(), fatiguedOneAsterisksChits.get(0));
+                    unFatigueChit.setFatigued(false);
+                }
+            }
+            LOG.info("Successfully fatigued {}'s {}.", player.getCharacter(), fatigueChit);
+        }
+
+        LOG.info("Starting wound a chit step.");
+        if (player.getCharacter().isWounded()) {
+            LOG.info("{} is wounded and must wound a chit.", player.getCharacter());
+            List<ActionChit> actionChits = player.getCharacter().getActionChits().stream().filter(chit -> !chit.isFatigued() && !chit.isWounded()).collect(Collectors.toList());
+
+            if (actionChits.isEmpty()) {
+                LOG.info("Found no available chits to wound... Trying again with fatigued chits.");
+                actionChits = player.getCharacter().getActionChits().stream().filter(chit -> !chit.isWounded()).collect(Collectors.toList());
+                if (actionChits.isEmpty()) {
+                    LOG.info("No chits to wound... {} has died of his wounds.", player.getCharacter());
+                    player.getCharacter().setDead(true);
+                }
+            }
+            if (!player.getCharacter().isDead()) {
+                final ActionChit woundedChit = (ActionChit) JOptionPane.showInputDialog(parent, "You were wounded in combat and must wound a chit!", "Combat",
+                        JOptionPane.QUESTION_MESSAGE, null, actionChits.toArray(), actionChits.get(0));
+                woundedChit.setWounded(true);
+
+                LOG.info("Successfully wounded {}'s {}.", player.getCharacter(), woundedChit);
+                if (player.getCharacter().getActionChits().stream().filter(chit -> !chit.isWounded()).count() == 0) {
+                    LOG.info("After wounding a chit, player no longer has any un-wounded chits and has died.");
+                    player.getCharacter().setDead(true);
+                }
+
+            }
+        }
+
+        LOG.info("Done fatigue step.");
+
+        if (player.getCharacter().isDead()) {
+            LOG.info("AUTO REINCARNATION. Giving player a new start.");
+            LOG.info("Creating a new character and Setting location to starting location (inn).");
+            board.getClearingForPlayer(player).removeEntity(player.getCharacter());
+            player.setCharacter(CharacterFactory.createCharacter(player.getCharacter().getEntityInformation().convertToCharacterType()));
+            player.restartNewLife();
+            board.getStartingLocation().addEntity(player.getCharacter());
+        }
+    }
+
+    /**
+     * Cleanup after combat. This includes resetting the sheets and wound status.
+     *
+     * @param player the player.
+     */
+    public static void cleanup(final Player player) {
+        player.getCharacter().setWounded(false);
+        player.getCharacter().setFatigued(false);
+        LOG.info("Cleaned up {} after combat.", player.getCharacter());
+    }
+
+    /**
      * Handle logic for when a player kills another.
      *
      * @param killer     the victor.
@@ -255,21 +298,6 @@ public class Combat {
         killed.setCharacter(CharacterFactory.createCharacter(killed.getCharacter().getEntityInformation().convertToCharacterType()));
         killed.restartNewLife();
         boardModel.getStartingLocation().addEntity(killed.getCharacter());
-    }
-
-    /**
-     * Cleanup after combat. This includes resetting the sheets and wound status.
-     *
-     * @param attacker   the attacker.
-     * @param defender   the defender.
-     */
-    public static void cleanup(final Player attacker, final Player defender) {
-
-        LOG.info("Resetting wounded status at the end of the day.");
-        attacker.getCharacter().setWounded(false);
-        attacker.getCharacter().setFatigued(false);
-        defender.getCharacter().setWounded(false);
-        defender.getCharacter().setFatigued(false);
     }
 
     /**

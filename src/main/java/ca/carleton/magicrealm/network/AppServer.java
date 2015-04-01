@@ -123,8 +123,7 @@ public class AppServer implements Runnable {
                     LOG.info("Starting SUNRISE phase [server only].");
                     Sunrise.doSunrise(this.boardModel, this.currentDay);
                     LOG.info("Starting BIRDSONG phase.");
-                    Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
-                    this.broadcastMessage(SERVER_ID, toSend);
+                    this.broadcastMessage(SERVER_ID, new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel));
                 } else {
                     this.broadcastMessage(SERVER_ID, message);
                 }
@@ -136,10 +135,8 @@ public class AppServer implements Runnable {
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting DAYLIGHT phase.");
                     this.turnController.createNewTurnOrder(this.clients);
-                    final int nextID = this.turnController.getNextPlayer();
-                    final ServerThread nextClient = this.getClientWithID(nextID);
-                    final Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
-                    nextClient.send(toSend);
+                    final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
+                    nextClient.send(new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel));
                 }
                 break;
             // Clients send the DAYLIGHT_DONE message when they are done executing their phases client-side.
@@ -153,16 +150,12 @@ public class AppServer implements Runnable {
                     Sunset.doSunset(this.boardModel);
                     LOG.info("Starting COMBAT phase.");
                     this.turnController.createNewTurnOrder(this.clients);
-                    final int nextID = this.turnController.getNextPlayer();
-                    final ServerThread nextClient = this.getClientWithID(nextID);
-                    final Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
-                    nextClient.send(toSend);
+                    final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
+                    nextClient.send(new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel));
                 } else {
                     // Send the next client that it is their turn to go.
-                    final int nextID = this.turnController.getNextPlayer();
-                    final ServerThread nextClient = this.getClientWithID(nextID);
-                    final Message toSend = new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel);
-                    nextClient.send(toSend);
+                    final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
+                    nextClient.send(new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel));
                 }
                 break;
             // Clients send the COMBAT_SEND_MELEE_SHEET when they are done filling out their melee sheets.
@@ -172,9 +165,30 @@ public class AppServer implements Runnable {
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting COMBAT_RESOLUTION phase.");
                     this.processCombatsForPlayers();
+                    LOG.info("Starting FATIGUE_STEP phase.");
+                    this.turnController.createNewTurnOrder(this.clients);
+                    final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
+                    // Only send the message if the player actually needs to.
+                    if (nextClient.getPlayer().getCharacter().isWounded() || nextClient.getPlayer().getCharacter().isFatigued()) {
+                        LOG.info("Player was wounded and must be sent fill out fatigue step.");
+                        nextClient.send(new Message(SERVER_ID, Message.FATIGUE_FATIGUE_CHITS, this.boardModel));
+                    } else {
+                        // skip to next by forcing another call to this method
+                        LOG.info("Skipping to next player, as the player wasn't wounded.");
+                        this.handleMessage(new Message(SERVER_ID, Message.FATIGUE_SUBMIT_UPDATED, this.boardModel));
+                    }
+                } else {
+                    // Send the next client the message its their turn to do combat
+                    final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
+                    nextClient.send(new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel));
+                }
+                break;
+            case (Message.FATIGUE_SUBMIT_UPDATED):
+                this.boardModel = (BoardModel) message.getPayload();
+                this.synchronize();
+                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     this.currentDay += 1;
                     LOG.info("Starting GAME_OVER phase.");
-
                     if (this.isGameOver()) {
                         LOG.info("A month has passed. Game over.");
                         final ServerThread winnerThread = this.calculateWinner();
@@ -185,16 +199,20 @@ public class AppServer implements Runnable {
                         LOG.info("Starting SUNRISE phase.");
                         Sunrise.doSunrise(this.boardModel, this.currentDay);
                         LOG.info("Starting BIRDSONG phase.");
-                        final Message toSend = new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel);
-                        this.broadcastMessage(SERVER_ID, toSend);
+                        this.broadcastMessage(SERVER_ID, new Message(SERVER_ID, Message.BIRDSONG_START, this.boardModel));
                     }
-
                 } else {
                     // Send the next client the message its their turn to do combat
-                    final int nextID = this.turnController.getNextPlayer();
-                    final ServerThread nextClient = this.getClientWithID(nextID);
-                    final Message toSend = new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel);
-                    nextClient.send(toSend);
+                    final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
+                    // Only send the message if the player actually needs to.
+                    if (nextClient.getPlayer().getCharacter().isWounded() || nextClient.getPlayer().getCharacter().isFatigued()) {
+                        LOG.info("Player was wounded and must be sent fill out fatigue step.");
+                        nextClient.send(new Message(SERVER_ID, Message.FATIGUE_FATIGUE_CHITS, this.boardModel));
+                    } else {
+                        // skip to next by forcing another call to this method
+                        LOG.info("Skipping to next player, as the player wasn't wounded.");
+                        this.handleMessage(message);
+                    }
                 }
                 break;
             default:
@@ -210,6 +228,10 @@ public class AppServer implements Runnable {
             LOG.info("Starting combat resolution for {}.", player.getCharacter());
             final MeleeSheet playerSheet = this.boardModel.getMeleeSheet(player);
             final Entity target = playerSheet.getTarget();
+            if (target == null) {
+                LOG.info("Player opted to not fight. Skipping their combat.");
+                continue;
+            }
             final MeleeSheet targetSheet = this.boardModel.getMeleeSheet(target);
 
             if (playerSheet.hasFoughtToday() || targetSheet.hasFoughtToday()) {
@@ -221,8 +243,6 @@ public class AppServer implements Runnable {
                 // Combat between two characters
                 final Player otherPlayer = this.boardModel.getPlayerForCharacter((AbstractCharacter) target);
                 Combat.doCombat(this.boardModel, player, otherPlayer);
-                Combat.cleanup(player, otherPlayer);
-
             } else if (target instanceof Denizen) {
                 // Combat between a character and a native.
                 throw new IllegalArgumentException("Combat versus denizens has not been implemented yet!");
@@ -230,13 +250,13 @@ public class AppServer implements Runnable {
         }
 
         // After combat is done
-        LOG.info("Resetting melee sheets after combat.");
+        LOG.info("Resetting melee sheets and player wound statuses after combat.");
         this.boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
-
+        players.stream().forEach(Combat::cleanup);
     }
 
     /**
-     *  Update references to the current ones stored by the board (which may be scrambled through serialization. Object graphs are hard man).
+     * Update references to the current ones stored by the board (which may be scrambled through serialization. Object graphs are hard man).
      */
     private void synchronize() {
         for (final ServerThread client : this.clients) {
@@ -245,11 +265,10 @@ public class AppServer implements Runnable {
                 LOG.info("Updated client thread player with board version [{}].", client.getPlayer().getCharacter());
             });
         }
-
         for (final MeleeSheet sheet : this.boardModel.getAllSheets()) {
             sheet.synchronize(this.boardModel);
-            LOG.debug("Successfully updated melee sheet for {} from the board.", sheet.getOwner());
         }
+        LOG.debug("Successfully synchronized melee sheets from the board.");
     }
 
     private boolean isGameOver() {

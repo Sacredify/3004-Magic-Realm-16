@@ -15,21 +15,17 @@ public final class Message implements Serializable {
 
     public static final String DAYLIGHT_START = "DAYLIGHT_START";
 
-    public static final String SUNSET_START = "SUNSET_START";
-
     public static final String COMBAT_FILL_OUT_MELEE_SHEET = "COMBAT_MELEE_SHEET_START";
 
     public static final String COMBAT_SEND_MELEE_SHEET = "COMBAT_MELEE_SHEET_FINISH";
 
-    public static final String MIDNIGHT_START = "MIDNIGHT_START";
+    public static final String FATIGUE_FATIGUE_CHITS = "FATIGUE_START";
+
+    public static final String FATIGUE_SUBMIT_UPDATED = "FATIGUE_END";
 
     public static final String BIRDSONG_DONE = "BIRDSONG_DONE";
 
     public static final String DAYLIGHT_DONE = "DAYLIGHT_DONE";
-
-    public static final String SUNSET_DONE = "SUNSET_DONE";
-
-    public static final String MIDNIGHT_DONE = "MIDNIGHT_DONE";
 
     /**
      * The ID of the sender of the message (client(s)/server).
@@ -37,7 +33,7 @@ public final class Message implements Serializable {
     private final int senderID;
 
     /**
-     * The type of message sent. Used to direct gameflow.
+     * The type of message sent. Used to direct game flow.
      */
     private final String messageType;
 

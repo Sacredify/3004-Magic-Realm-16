@@ -4,12 +4,12 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
-import ca.carleton.magicrealm.network.AppClient;
-import ca.carleton.magicrealm.network.Message;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.network.AppClient;
+import ca.carleton.magicrealm.network.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,10 +18,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
+ * Main logic class for the client application. Contains the main game loop and supporting methods.
+ *
  * Created by Tony on 19/02/2015.
  */
 public class GameController {
@@ -63,22 +65,28 @@ public class GameController {
                     this.characterCreateMenu.updateAvailableCharacters();
                     break;
                 case (Message.BIRDSONG_START):
-                    this.updateFromBoard(m.getPayload());
+                    this.updateFromServer(m.getPayload());
                     this.refreshBoard();
                     // Process birdsong
                     this.selectPhasesForDay();
                     break;
                 case (Message.DAYLIGHT_START):
-                    this.updateFromBoard(m.getPayload());
+                    this.updateFromServer(m.getPayload());
                     // Process daylight
                     this.processUpdatedPhasesFromBoard();
                     this.processDaylight();
                     break;
                 case (Message.COMBAT_FILL_OUT_MELEE_SHEET):
                     // Set new data
-                    this.updateFromBoard(m.getPayload());
+                    this.updateFromServer(m.getPayload());
                     this.refreshBoard();
                     this.selectOptionsForCombat();
+                    break;
+                case (Message.FATIGUE_FATIGUE_CHITS):
+                    // Set new data
+                    this.updateFromServer(m.getPayload());
+                    this.refreshBoard();
+                    this.selectChitsToFatigue();
                 default:
                     break;
             }
@@ -126,26 +134,23 @@ public class GameController {
     }
 
     /**
-     * Processes combat for the clearing of the current player.
-     */
-    @Deprecated
-    private void processCombat() {
-        LOG.info("Starting combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
-        //Combat.doCombat(this.boardModel, this.currentPlayer, this.boardWindow);
-        this.updatePlayerInMap();
-        this.refreshBoard();
-        LOG.info("Executed combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
-        this.networkConnection.sendMessage(Message.COMBAT_SEND_MELEE_SHEET, this.boardModel);
-    }
-
-    /**
      * Fills out the melee sheet for the user for combat.
      */
     private void selectOptionsForCombat() {
         LOG.info("Starting combat melee sheet step.");
         Combat.fillOutMeleeSheet(this.boardModel, this.currentPlayer, this.boardWindow);
         this.updatePlayerInMap();
-       this.networkConnection.sendMessage(Message.COMBAT_SEND_MELEE_SHEET, this.boardModel);
+        this.networkConnection.sendMessage(Message.COMBAT_SEND_MELEE_SHEET, this.boardModel);
+    }
+
+    /**
+     * Figure out what chits to fatigue or wound.
+     */
+    private void selectChitsToFatigue() {
+        LOG.info("Starting combat fatigue melee sheet step.");
+        Combat.doFatigueStep(this.boardModel, this.currentPlayer, this.boardWindow);
+        this.updatePlayerInMap();
+        this.networkConnection.sendMessage(Message.FATIGUE_SUBMIT_UPDATED, this.boardModel);
     }
 
     /**
@@ -153,7 +158,7 @@ public class GameController {
      *
      * @param boardModel the board.
      */
-    private void updateFromBoard(final Object boardModel) {
+    private void updateFromServer(final Object boardModel) {
         this.boardModel = (BoardModel) boardModel;
         this.updateCurrentPlayer();
     }
@@ -270,20 +275,12 @@ public class GameController {
         this.boardModel = model;
     }
 
-    public void setStatusText(final String text) {
-        this.boardWindow.setStatusText(text);
-    }
-
     public BoardWindow getParentWindow() {
         return this.boardWindow;
     }
 
     public BoardModel getBoardModel() {
         return this.boardModel;
-    }
-
-    public Player getCurrentPlayer() {
-        return this.currentPlayer;
     }
 
     public void setNetworkConnection(AppClient nC) {
