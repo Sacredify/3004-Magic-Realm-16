@@ -21,4 +21,12 @@ public class TableTreasure extends Treasure {
         this.notoriety = 1 + random.nextInt(20);
         this.fame = -5 + random.nextInt(36);
     }
+    public String getAffectedTable(){
+      return affectedTable;
+    }
+
+    public String getEffect(){
+        return effect;
+    }
+
 }
