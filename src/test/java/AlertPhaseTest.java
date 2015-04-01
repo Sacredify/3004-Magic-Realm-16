@@ -4,11 +4,12 @@ import ca.carleton.magicrealm.control.Daylight;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.impl.AlertPhase;
+import ca.carleton.magicrealm.item.ItemInformation;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,12 +39,8 @@ public class AlertPhaseTest {
         final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
         final AlertPhase alertPhase = new AlertPhase();
 
-        final AbstractWeapon playerWeapon = (AbstractWeapon) CollectionUtils.find(player.getCharacter().getItems(), new Predicate() {
-            @Override
-            public boolean evaluate(final Object object) {
-                return object instanceof AbstractWeapon;
-            }
-        });
+        final AbstractWeapon playerWeapon = (AbstractWeapon) CollectionUtils.find(player.getCharacter().getItems(),
+                object -> object instanceof AbstractWeapon);
 
         alertPhase.setWeapon(playerWeapon);
         phases.add(alertPhase);
@@ -51,5 +48,31 @@ public class AlertPhaseTest {
         Daylight.processPhasesForPlayer(boardModel, player, phases);
         assertThat(playerWeapon.isAlert(), is(true));
 
+    }
+
+    @Test
+    public void canAlertBerserkerChit() {
+
+        // Create the board and player
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.BERSERKER));
+
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
+
+        final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
+        final AlertPhase alertPhase = new AlertPhase();
+
+        alertPhase.setWeapon(new AbstractWeapon() {
+            @Override
+            public ItemInformation getItemInformation() {
+                return ItemInformation.BERSERKER_BERSERK;
+            }
+        });
+        phases.add(alertPhase);
+
+        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        assertThat(player.getCharacter().getVulnerability(), is(Harm.TREMENDOUS));
     }
 }

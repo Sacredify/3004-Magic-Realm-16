@@ -49,6 +49,20 @@ public class Berserker extends AbstractCharacter {
 
     }
 
+    /**
+     * The berserker's vulnerability is TREMENDOUS if they have played a fatigued berserk chit.
+     *
+     * @return their health.
+     */
+    @Override
+    public Harm getVulnerability() {
+        if (this.actionChits.stream().filter(chit -> chit.getAction() == ActionType.BERSERK && chit.isFatigued()).count() > 0) {
+            return Harm.TREMENDOUS;
+        } else {
+            return this.vulnerability;
+        }
+    }
+
     @Override
     public EntityInformation getEntityInformation() {
         return EntityInformation.CHARACTER_BERSERKER;

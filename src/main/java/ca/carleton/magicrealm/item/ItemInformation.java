@@ -59,7 +59,10 @@ public enum ItemInformation {
     FLOWERS_OF_REST(null, null, "Flowers of Rest"),
     POULTICE_OF_HEALTH(null, null, "Poultice of Health"),
     TIMELESS_JEWEL(null, null, "Timeless Jewel"),
-    GOLD(null, null, "Extra Gold");
+    GOLD(null, null, "Extra Gold"),
+
+    // HACK for BERSERKER alert phase
+    BERSERKER_BERSERK(null, null, "Play berserk chit!");
 
     private final String activeImageFilePath;
 
