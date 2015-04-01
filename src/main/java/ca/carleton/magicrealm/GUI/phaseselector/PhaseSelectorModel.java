@@ -21,7 +21,6 @@ public class PhaseSelectorModel {
 
     private final List<AbstractPhase> phases;
     private final ArrayList<String> extraPhases;
-
     private final PhaseSelectorMenu menu;
 
     public PhaseSelectorModel(final PhaseSelectorMenu menu, final List<AbstractPhase> phases, Player player) {

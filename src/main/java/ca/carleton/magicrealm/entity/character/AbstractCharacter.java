@@ -6,6 +6,7 @@ import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
 import ca.carleton.magicrealm.item.treasure.Treasure;
+import ca.carleton.magicrealm.item.treasure.TableTreasure;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 
 import java.io.Serializable;
@@ -73,6 +74,18 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
             }
         }
         return extraPhases;
+    }
+
+
+    public ArrayList<TableTreasure> getTableTreasures(){
+        ArrayList<TableTreasure> tableTreasures = new ArrayList<TableTreasure>();
+        for(int i = 0 ; i < treasures.size(); i++){
+            if(treasures.get(i).getClass().getName()=="TableTreasure"){
+                TableTreasure p = (TableTreasure) treasures.get(i);
+                tableTreasures.add(p);
+            }
+        }
+        return tableTreasures;
     }
 
     protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
