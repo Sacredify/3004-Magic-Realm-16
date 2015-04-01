@@ -31,6 +31,19 @@ public class PhaseSelectorModel {
         this.menu = menu;
     }
 
+    public void updateInfoText() {
+        String infoText = String.format("<html>Number of phases available: %s.<br/>", this.extraPhases.getNumberOfPhasesFOrDay());
+
+        final StringBuilder extraPhases = new StringBuilder();
+        extraPhases.append("Extras through treasure or traits:<br/>");
+
+        this.extraPhases.getExtraPhases().stream().forEach(phase -> extraPhases.append(" ").append(phase).append("<br/></html>"));
+
+        infoText += extraPhases.toString();
+
+        this.menu.phaseSelectorPanel.updateInfoText(infoText);
+    }
+
     public void addMovementPhase(final Clearing clearing, final Clearing origin) {
         final MovePhase movePhase = new MovePhase();
         movePhase.setMoveTarget(clearing);
@@ -68,6 +81,10 @@ public class PhaseSelectorModel {
 
     public void done() {
         this.menu.disposeWindow();
+    }
+
+    public PhaseCountBean getPhaseCount() {
+        return this.extraPhases;
     }
 
 }

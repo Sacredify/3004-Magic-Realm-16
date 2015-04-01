@@ -1,15 +1,12 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
-import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
-import ca.carleton.magicrealm.game.phase.impl.MovePhase;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 /**
+ * The panel.
+ *
  * Created by Tony on 20/02/2015.
  */
 public class PhaseSelectorPanel extends JPanel {
@@ -21,11 +18,7 @@ public class PhaseSelectorPanel extends JPanel {
 
     private final JComboBox<PhaseType> firstPhaseBox;
 
-    private JComboBox secondPhaseBox;
-
-    private JComboBox thirdPhaseBox;
-
-    private JComboBox fourthPhaseBox;
+    private final JLabel infoLabel;
 
     private final JButton confirmButton;
 
@@ -49,6 +42,10 @@ public class PhaseSelectorPanel extends JPanel {
         this.doneEnteringPhases.setLocation(250, 200);
         this.add(this.doneEnteringPhases);
 
+        this.infoLabel = new JLabel();
+        this.infoLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+        this.add(this.infoLabel);
+
     }
 
     public JComboBox<PhaseType> getFirstPhaseBox() {
@@ -61,5 +58,9 @@ public class PhaseSelectorPanel extends JPanel {
 
     public JButton getDoneEnteringPhasesButton() {
         return this.doneEnteringPhases;
+    }
+
+    public void updateInfoText(final String newText) {
+        this.infoLabel.setText(newText);
     }
 }

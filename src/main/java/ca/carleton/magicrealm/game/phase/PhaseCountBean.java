@@ -32,4 +32,12 @@ public class PhaseCountBean {
         this.numberOfPhasesFOrDay = numberOfPhasesFOrDay;
     }
 
+    public boolean hasMorePhases() {
+        return this.numberOfPhasesFOrDay + this.extraPhases.size() > 0;
+    }
+
+    public void removeOne() {
+        this.numberOfPhasesFOrDay -= 1;
+    }
+
 }

@@ -16,11 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
+ * Menu for birdsong phase.
+ * <p>
  * Created by Tony on 20/02/2015.
  */
 public class PhaseSelectorMenu extends JDialog {
@@ -59,6 +60,7 @@ public class PhaseSelectorMenu extends JDialog {
         this.phaseSelectorPanel.getDoneEnteringPhasesButton().addActionListener(this.createActionListenerForDoneButton());
 
         this.phaseSelectorModel = new PhaseSelectorModel(this, phases, numberOfPhases);
+        this.phaseSelectorModel.updateInfoText();
         this.controller = gameController;
 
         this.setSize(PHASE_WINDOW_WIDTH, PHASE_WINDOW_HEIGHT);
@@ -77,10 +79,21 @@ public class PhaseSelectorMenu extends JDialog {
     }
 
     public ActionListener createActionListenerForPhaseSelectButton() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
+        return e -> {
+            PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
+
+            LOG.info("Checking against number of remaining phases...");
+
+            if (this.phaseSelectorModel.getPhaseCount().getExtraPhases().contains(selectedPhase)) {
+                LOG.info("Removing from list of extra phases...");
+                this.phaseSelectorModel.getPhaseCount().getExtraPhases().remove(selectedPhase);
+            } else if (this.phaseSelectorModel.getPhaseCount().getNumberOfPhasesFOrDay() > 0) {
+                LOG.info("Removing from number of remaining phases...");
+                this.phaseSelectorModel.getPhaseCount().removeOne();
+            }
+
+            if (this.phaseSelectorModel.getPhaseCount().hasMorePhases()) {
+
                 LOG.info("Adding {} to list of phases.", selectedPhase);
                 if (selectedPhase.equals(PhaseType.MOVE)) {
                     PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getBoardModel());
@@ -106,53 +119,44 @@ public class PhaseSelectorMenu extends JDialog {
                             chits.get(0));
                     PhaseSelectorMenu.this.phaseSelectorModel.addRestPhase(theChit);
                 }
+            } else {
+                LOG.info("User has no more phases to enter...disabling button.");
+                this.phaseSelectorPanel.getConfirmButton().setEnabled(false);
             }
+
+            this.phaseSelectorModel.updateInfoText();
         };
     }
 
     public ActionListener createActionListenerForMoveSelectButton() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PhaseSelectorMenu.this.phaseSelectorModel.addMovementPhase(PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue(),
-                        PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(PhaseSelectorMenu.this.player));
-                PhaseSelectorMenu.this.moveSelectionMenu.dispose();
-            }
+        return e -> {
+            PhaseSelectorMenu.this.phaseSelectorModel.addMovementPhase(PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue(),
+                    PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(PhaseSelectorMenu.this.player));
+            PhaseSelectorMenu.this.moveSelectionMenu.dispose();
         };
     }
 
     public ActionListener createActionListenerForDoneButton() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                PhaseSelectorMenu.this.phaseSelectorModel.done();
-            }
-        };
+        return e -> PhaseSelectorMenu.this.phaseSelectorModel.done();
     }
 
     public ActionListener createActionListenerForTradeConfirmButton() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Entity tradeTarget = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getEntitiesAvailableList().getSelectedValue();
-                Item tradedItem = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getItemsAvailableList().getSelectedValue();
-                boolean isSelling = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getSellRadioButton().isSelected();
-                boolean isBuyingDrinks = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getBuyDrinksCheckBox().isSelected();
+        return e -> {
+            Entity tradeTarget = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getEntitiesAvailableList().getSelectedValue();
+            Item tradedItem = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getItemsAvailableList().getSelectedValue();
+            boolean isSelling = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getSellRadioButton().isSelected();
+            boolean isBuyingDrinks = PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getBuyDrinksCheckBox().isSelected();
 
-                PhaseSelectorMenu.this.phaseSelectorModel.addTradePhase(tradeTarget, tradedItem, isSelling, isBuyingDrinks, PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(player));
-                PhaseSelectorMenu.this.tradeSelectionMenu.dispose();
-            }
+            PhaseSelectorMenu.this.phaseSelectorModel.addTradePhase(tradeTarget, tradedItem, isSelling, isBuyingDrinks, PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(this.player));
+            PhaseSelectorMenu.this.tradeSelectionMenu.dispose();
         };
     }
 
     public ActionListener createActionListenerForAlertConfirmButton() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AbstractWeapon alertedWeapon = PhaseSelectorMenu.this.alertSelectionMenu.getAlertSelectionPanel().getAlertableWeapons().getSelectedValue();
-                PhaseSelectorMenu.this.phaseSelectorModel.addAlertPhase(alertedWeapon);
-                PhaseSelectorMenu.this.alertSelectionMenu.dispose();
-            }
+        return e -> {
+            AbstractWeapon alertedWeapon = PhaseSelectorMenu.this.alertSelectionMenu.getAlertSelectionPanel().getAlertableWeapons().getSelectedValue();
+            PhaseSelectorMenu.this.phaseSelectorModel.addAlertPhase(alertedWeapon);
+            PhaseSelectorMenu.this.alertSelectionMenu.dispose();
         };
     }
 }
