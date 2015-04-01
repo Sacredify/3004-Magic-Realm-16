@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.entity;
 
 import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.Item;
+import ca.carleton.magicrealm.item.ItemInformation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,6 +59,16 @@ public abstract class Entity implements Serializable {
 
     public void setHidden(final boolean hidden) {
         this.hidden = hidden;
+    }
+
+    /**
+     * Whether or not the player has a given item (by the info).
+     *
+     * @param itemInformation the item information.
+     * @return true if they do.
+     */
+    public boolean hasItem(final ItemInformation itemInformation) {
+        return this.items.stream().filter(item -> item.getItemInformation() == itemInformation).count() > 0;
     }
 
     @Override

@@ -93,15 +93,8 @@ public class PhaseUtils {
         return count;
     }
 
-    /**
-     * Whether or not the player has a given item (by the info).
-     *
-     * @param player          the player.
-     * @param itemInformation the item information.
-     * @return true if they do.
-     */
-    public static boolean hasItem(final Player player, final ItemInformation itemInformation) {
-        return player.getCharacter().getItems().stream().filter(item -> item.getItemInformation() == itemInformation).count() > 0;
+    private static boolean hasItem(final Player player, final ItemInformation itemInformation) {
+        return player.getCharacter().hasItem(itemInformation);
     }
 
 }
