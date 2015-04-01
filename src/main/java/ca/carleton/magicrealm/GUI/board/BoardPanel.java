@@ -7,15 +7,13 @@ import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
  * Created by Tony on 18/02/2015.
- * <p/>
+ * <p>
  * The view for the game board
  */
 public class BoardPanel extends JLayeredPane {
@@ -25,18 +23,12 @@ public class BoardPanel extends JLayeredPane {
     public static final int TILE_X_OFFSET = 150;
     public static final int TILE_DELTA_X = 300;
     public static final int TILE_DELTA_Y = 85;
-    public static final int CHIT_WIDTH = 44;
-    public static final int CHIT_HEIGHT = 44;
-    public static final int GAME_INFO_PANEL_WIDTH = 300;
-    public static final int GAME_INFO_PANEL_HEIGHT = 500;
+    public static final int GAME_INFO_PANEL_WIDTH = 400;
+    public static final int GAME_INFO_PANEL_HEIGHT = 600;
 
     public static final String CHARACTER_INFO_BUTTON_TEXT = "Character Info";
 
-    private BoardServices boardServices;
-
-    private ArrayList<JLabel> characterIcons;
-
-    private ArrayList<JLabel> nativeIcons;
+    private final BoardServices boardServices;
 
     private JLabel statusLabel;
 
@@ -46,10 +38,8 @@ public class BoardPanel extends JLayeredPane {
 
     private int maximumX;
 
-    private JButton displayCharacterInformationButton;
-
     public BoardPanel() {
-        firstDraw = true;
+        this.firstDraw = true;
         this.boardServices = new BoardServices();
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -66,7 +56,7 @@ public class BoardPanel extends JLayeredPane {
      */
     public void drawBoard(final BoardModel boardModel, final AbstractCharacter character) {
         this.removeAll();
-        maximumX = 0;
+        this.maximumX = 0;
 
         int y = 0;
         for (ArrayList<AbstractTile> row : boardModel.getBoard()) {
@@ -74,7 +64,7 @@ public class BoardPanel extends JLayeredPane {
             for (final AbstractTile tile : row) {
                 if (tile != null) {
                     /** create the tile **/
-                    JLabel newTile = this.boardServices.createTileIcon(tile, firstDraw);
+                    JLabel newTile = this.boardServices.createTileIcon(tile, this.firstDraw);
                     int tileX = x * TILE_DELTA_X;
                     int tileY = y * TILE_DELTA_Y;
                     if (y % 2 == 0) {
@@ -91,8 +81,8 @@ public class BoardPanel extends JLayeredPane {
                     });
                     this.add(newTile, JLayeredPane.DEFAULT_LAYER);
 
-                    if (tileX + BoardServices.TILE_WIDTH > maximumX) {
-                        maximumX = tileX + BoardServices.TILE_WIDTH;
+                    if (tileX + BoardServices.TILE_WIDTH > this.maximumX) {
+                        this.maximumX = tileX + BoardServices.TILE_WIDTH;
                     }
 
                     /** create the chits **/
@@ -103,7 +93,6 @@ public class BoardPanel extends JLayeredPane {
             y++;
         }
 
-        //this.setupCharacterIcons(boardGUIModel.getPlayers());
         this.setupGameInfoLabel();
         this.setupCharacterInfoButton(character);
         this.firstDraw = false;
@@ -115,16 +104,12 @@ public class BoardPanel extends JLayeredPane {
     }
 
     public void setupCharacterInfoButton(final AbstractCharacter character) {
-        this.displayCharacterInformationButton = new JButton(CHARACTER_INFO_BUTTON_TEXT);
-        this.displayCharacterInformationButton.setSize(150, 30);
-        this.displayCharacterInformationButton.setLocation(maximumX, 0);
-        this.displayCharacterInformationButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CharacterInfoDialog characterInfoDialog = new CharacterInfoDialog(character);
-            }
-        });
-        this.add(this.displayCharacterInformationButton, PALETTE_LAYER);
+        final JButton displayCharacterInformationButton = new JButton(CHARACTER_INFO_BUTTON_TEXT);
+        displayCharacterInformationButton.setSize(150, 30);
+        displayCharacterInformationButton.setLocation(this.maximumX, 0);
+        displayCharacterInformationButton.addActionListener(e ->
+                new CharacterInfoDialog(character));
+        this.add(displayCharacterInformationButton, DEFAULT_LAYER);
     }
 
     /**
@@ -133,8 +118,8 @@ public class BoardPanel extends JLayeredPane {
     public void setupGameInfoLabel() {
         this.gameInformationLabel = new JLabel();
         this.gameInformationLabel.setSize(GAME_INFO_PANEL_WIDTH, GAME_INFO_PANEL_HEIGHT);
-        this.gameInformationLabel.setLocation(maximumX, 0);
-        this.add(gameInformationLabel);
+        this.gameInformationLabel.setLocation(this.maximumX, 25);
+        this.add(this.gameInformationLabel, DEFAULT_LAYER);
     }
 
     public void setGameInfoText(final String text) {
