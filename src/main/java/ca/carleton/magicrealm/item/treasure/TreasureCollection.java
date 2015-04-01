@@ -19,10 +19,10 @@ public class TreasureCollection {
         this.treasures[4] = new Treasure(ItemInformation.MAP_OF_LOST_CASTLE);
         this.treasures[5] = new Treasure(ItemInformation.MAP_OF_RUINS);
         this.treasures[6] = new Treasure(ItemInformation.SHOES_OF_STEALTH);
-        this.treasures[7] = new PhaseTreasure(PhaseType.SEARCH_PEER, ItemInformation.CRYSTAL_BALL);
-        this.treasures[8] = new PhaseTreasure(PhaseType.SEARCH_PEER, ItemInformation.ANCIENT_TELESCOPE);
+        this.treasures[7] = new Treasure(ItemInformation.CRYSTAL_BALL);
+        this.treasures[8] = new PhaseTreasure(PhaseType.SEARCH, ItemInformation.ANCIENT_TELESCOPE);
         this.treasures[9] = new PhaseTreasure(PhaseType.HIDE, ItemInformation.CLOAK_OF_MIST);
-        this.treasures[10] = new PhaseTreasure(PhaseType.SEARCH_LOCATE, ItemInformation.MAGIC_SPECTACLES);
+        this.treasures[10] = new PhaseTreasure(PhaseType.SEARCH, ItemInformation.MAGIC_SPECTACLES);
         this.treasures[11] = new PhaseTreasure(PhaseType.TRADE, ItemInformation.REGENT_OF_JEWELS);
         this.treasures[12] = new PhaseTreasure(null, ItemInformation.ROYAL_SCEPTRE);
         this.treasures[13] = new PhaseTreasure(PhaseType.MOVE, ItemInformation.LEAGUE_BOOTS);

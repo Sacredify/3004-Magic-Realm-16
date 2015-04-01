@@ -5,6 +5,8 @@ import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.item.ItemInformation;
+import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
 
 /**
  * Created with IntelliJ IDEA.
@@ -58,15 +60,48 @@ public class PhaseUtils {
             count.addExtraPhase(PhaseType.REST);
         }
 
-        // Treasures
+        // Add extra phase treasures for specific ones. Filter out the ones with conditions and ones aren't specific to a phase (null phase).
+        player.getCharacter().getItems().stream()
+                .filter(item -> item instanceof PhaseTreasure)
+                .filter(treasure -> treasure.getItemInformation() != ItemInformation.ANCIENT_TELESCOPE || treasure.getItemInformation() != ItemInformation.SHIELDED_LANTERN)
+                .filter(treasure -> ((PhaseTreasure) treasure).getPhaseAffected() != null)
+                .forEach(treasure -> count.addExtraPhase(((PhaseTreasure) treasure).getPhaseAffected()));
 
+        // Ancient telescope allows an extra search phase if in mountain clearing.
+        if (hasItem(player, ItemInformation.ANCIENT_TELESCOPE)
+                && board.getClearingForPlayer(player).getParentTile().getTileType() == TileType.MOUNTAIN) {
+            count.addExtraPhase(PhaseType.SEARCH);
+        }
+        // Shielded lantern adds an extra phase if they are in a cave.
+        if (hasItem(player, ItemInformation.SHIELDED_LANTERN)
+                && board.getClearingForPlayer(player).getParentTile().getTileType() == TileType.CAVE) {
+            numberOfPhases += 1;
+        }
 
+        // ASSUMPTION: These have special effects, but we don't support them. Instead, just give the user another phase.
+        if (hasItem(player, ItemInformation.ROYAL_SCEPTRE)) {
+            numberOfPhases += 1;
+        }
+        if (hasItem(player, ItemInformation.FLOWERS_OF_REST)) {
+            numberOfPhases += 1;
+        }
+        if (hasItem(player, ItemInformation.DRAGON_ESSENCE)) {
+            numberOfPhases += 1;
+        }
 
         count.setNumberOfPhasesFOrDay(numberOfPhases);
-
         return count;
+    }
 
-
+    /**
+     * Whether or not the player has a given item (by the info).
+     *
+     * @param player          the player.
+     * @param itemInformation the item information.
+     * @return true if they do.
+     */
+    public static boolean hasItem(final Player player, final ItemInformation itemInformation) {
+        return player.getCharacter().getItems().stream().filter(item -> item.getItemInformation() == itemInformation).count() > 0;
     }
 
 }
