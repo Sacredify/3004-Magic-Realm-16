@@ -31,8 +31,7 @@ public class MovePhaseStrategy implements PhaseStrategy {
         final Clearing temp = move.getOrigin();
 
         for (Path path : temp.getAdjacentPaths()) {
-            if (path.getFromClearing().equals(((MovePhase) phase).getMoveTarget())
-                    || path.getToClearing().equals(((MovePhase) phase).getMoveTarget())) {
+            if (path.checkIfClearingIsConnectedToPath(((MovePhase) phase).getMoveTarget())) {
                 temp.removeEntity(player.getCharacter());
                 move.getMoveTarget().addEntity(player.getCharacter());
                 LOG.info("Moved player from {} to {}.", temp, move.getMoveTarget());
