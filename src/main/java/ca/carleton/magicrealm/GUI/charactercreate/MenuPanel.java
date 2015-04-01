@@ -35,7 +35,7 @@ public class MenuPanel extends JPanel {
 
     JList<Dwelling> dwellingList;
 
-    private DefaultListModel<Dwelling> data =  new DefaultListModel<Dwelling>();
+    private DefaultListModel<Dwelling> data = new DefaultListModel<Dwelling>();
 
     private final MenuModel model;
 
@@ -54,9 +54,7 @@ public class MenuPanel extends JPanel {
 
         DefaultListModel<CharacterType> dataModel = new DefaultListModel<>();
 
-        for (final CharacterType characterType : this.model.availableCharacters) {
-            dataModel.addElement(characterType);
-        }
+        this.model.availableCharacters.forEach(dataModel::addElement);
 
         this.characterSelectList.setModel(dataModel);
     }
@@ -131,11 +129,11 @@ public class MenuPanel extends JPanel {
 
     private void initializeList() {
         this.characterSelectList = new JList<CharacterType>(this.model.availableCharacters.toArray(new CharacterType[this.model.availableCharacters.size()]));
-        this.characterSelectList.setLocation(20, 40);
-        this.characterSelectList.setSize(new Dimension(150, 110));
-        this.characterSelectList.setToolTipText("Select a character.");
-        this.characterSelectList.setVisible(true);
-        this.add(this.characterSelectList);
+        final JScrollPane scrollPane = new JScrollPane(this.characterSelectList);
+        scrollPane.setVisible(true);
+        scrollPane.setLocation(20, 40);
+        scrollPane.setSize(new Dimension(150, 110));
+        this.add(scrollPane);
 
         this.dwellingList = new JList<Dwelling>(this.data);
         this.dwellingList.setLocation(475, 40);
