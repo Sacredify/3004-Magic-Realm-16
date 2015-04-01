@@ -8,6 +8,7 @@ import ca.carleton.magicrealm.entity.character.*;
 import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.Harm;
+import ca.carleton.magicrealm.item.ItemInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,7 @@ public abstract class Table {
 
             // If the character is a white knight, subtract 1.
             if (player.getCharacter() instanceof WhiteKnight) {
+                LOG.info("White knight subtracted one from the meeting table.");
                 return Math.max(DiceRoller.rollTwiceTakeHigher() - 1, 1);
             }
 
@@ -175,21 +177,94 @@ public abstract class Table {
     }
 
     public static class LocateTable {
-        public static int roll(Player p) {
-            return 0;
+
+        /**
+         * Rolls on the locate table to try and find hidden things.
+         *
+         * @param player   the player rolling.
+         * @param location the location of the player.
+         * @return the roll value.
+         */
+        public static int roll(final Player player, final Clearing location) {
+
+            int roll;
+
+            // If the character is a dwarf and in a cave, only roll once.
+            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_DWARF && location.getParentTile().getTileType() == TileType.CAVE) {
+                LOG.info("Dwarf rolled on the locate table and only had to roll once.");
+                roll = DiceRoller.rollOnce();
+            } else {
+                roll = DiceRoller.rollTwiceTakeHigher();
+            }
+
+            if (player.getCharacter().hasItem(ItemInformation.MAP_OF_LOST_CASTLE)) {
+                LOG.info("Player has the map of the lost castle. Roll reduced by 1.");
+                roll -= 1;
+            }
+
+            if (player.getCharacter().hasItem(ItemInformation.MAP_OF_LOST_CITY)) {
+                LOG.info("Player has the map of the lost city. Roll reduced by 1.");
+                roll -= 1;
+            }
+
+            if (player.getCharacter().hasItem(ItemInformation.MAP_OF_RUINS)) {
+                LOG.info("Player has the map of the ruins. Roll reduced by 1.");
+                roll -= 1;
+            }
+
+            return Math.max(roll, 1);
         }
 
     }
 
     public static class HideTable {
-        public static int roll(Player p) {
-            return 0;
+
+        /**
+         * Rolls on the hide table to see if they are hidden or not.
+         *
+         * @param player the player.
+         * @return the int result.
+         */
+        public static int roll(final Player player, final Clearing location) {
+
+            int roll;
+
+            // If the character is a dwarf or if they have the shoes of stealth, only roll once.
+            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_DWARF
+                    || player.getCharacter().hasItem(ItemInformation.SHOES_OF_STEALTH)) {
+                LOG.info("Either the player is a dwarf or has the shoes of stealth and rolled on the hide table and only had to roll once.");
+                roll = DiceRoller.rollOnce();
+            } else {
+                roll = DiceRoller.rollTwiceTakeHigher();
+            }
+
+            return roll;
         }
+
     }
 
     public static class LootTable {
-        public static int roll(Player p) {
-            return 0;
+
+        /**
+         * Rolls on the loot table to see what loot they can get.
+         *
+         * @param player the player.
+         * @return the roll value.
+         */
+        public static int roll(final Player player) {
+
+            int roll;
+
+            // If the character is a dwarf or if they have the shoes of stealth, only roll once.
+            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_DWARF
+                    || player.getCharacter().hasItem(ItemInformation.DEFT_GLOVES)) {
+                LOG.info("Either the player is a dwarf or has deft gloves and rolled on the loot table and only had to roll once.");
+                roll = DiceRoller.rollOnce();
+            } else {
+                roll = DiceRoller.rollTwiceTakeHigher();
+            }
+
+            return roll;
         }
     }
 }
