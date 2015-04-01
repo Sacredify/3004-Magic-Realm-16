@@ -69,6 +69,10 @@ public enum EntityInformation {
                 return CharacterType.ELF;
             case CHARACTER_SWORDSMAN:
                 return CharacterType.SWORDSMAN;
+            case CHARACTER_BERSERKER:
+                return CharacterType.BERSERKER;
+            case CHARACTER_WHITE_KNIGHT:
+                return CharacterType.WHITE_KNIGHT;
             default:
                 return null;
         }
