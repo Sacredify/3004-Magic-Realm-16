@@ -51,73 +51,78 @@ public class Combat {
 
         JOptionPane.showMessageDialog(parent, "Now starting combat functions. Please fill out your melee sheet with the following dialogs.", "Combat", JOptionPane.INFORMATION_MESSAGE);
 
-        LOG.info("Starting attack options.");
-        LOG.info("Showing target select.");
-        final List<Entity> potentialTargets = clearingOfCombat.getEntities().stream().filter(entity -> !entity.equals(player.getCharacter())).collect(Collectors.toList());
-        final Entity target = (Entity) JOptionPane.showInputDialog(parent, "Combat Step 1: Select a target (Cancel for NO target - You don't want to fight):", "Combat",
-                JOptionPane.QUESTION_MESSAGE, null, potentialTargets.toArray(), potentialTargets.get(0));
-        playerSheet.setTarget(target);
+        try {
+            LOG.info("Starting attack options.");
+            LOG.info("Showing target select.");
+            final List<Entity> potentialTargets = clearingOfCombat.getEntities().stream().filter(entity -> !entity.equals(player.getCharacter())).collect(Collectors.toList());
+            final Entity target = (Entity) JOptionPane.showInputDialog(parent, "Combat Step 1: Select a target (Cancel for NO target - You don't want to fight):", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, potentialTargets.toArray(), potentialTargets.get(0));
+            playerSheet.setTarget(target);
 
-        if (target == null) {
-            LOG.info("Player opted to not fight. Stopping rest of melee sheet fill out.");
-            JOptionPane.showMessageDialog(parent, "You must still out the melee sheet, as you may be targeted by other players.");
+            if (target == null) {
+                LOG.info("Player opted to not fight. Stopping rest of melee sheet fill out.");
+                JOptionPane.showMessageDialog(parent, "You must still out the melee sheet, as you may be targeted by other players.");
+            }
+
+            LOG.info("Showing attack direction select.");
+            final AttackDirection attackDirection = (AttackDirection) JOptionPane.showInputDialog(parent, "Combat Step 2: Select an attack direction", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, AttackDirection.values(), AttackDirection.values()[0]);
+            playerSheet.setAttackDirection(attackDirection);
+
+            LOG.info("Showing weapon select.");
+            final List<Item> weapons = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractWeapon).collect(Collectors.toList());
+            // Handle the possibility they don't have any weapons.
+            final List<Object> weaponsWithNone = new ArrayList<Object>(weapons);
+            weaponsWithNone.add("None (dagger)");
+            final Object weapon = JOptionPane.showInputDialog(parent, "Combat Step 3: Select a weapon:", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, weaponsWithNone.toArray(), weaponsWithNone.get(0));
+            // Set the weapon if they actually chose a weapon.
+            if (!(weapon instanceof String)) {
+                playerSheet.setAttackWeapon((AbstractWeapon) weapon);
+            }
+
+            int numberOfAsterisksRemaining = 2;
+
+            LOG.info("Showing fight chit select.");
+            final List<ActionChit> fightChits = player.getCharacter().getActionChits().stream().filter(chit -> chit.getAction() == ActionType.FIGHT).collect(Collectors.toList());
+            final ActionChit fightChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 4: Select a fight chit to attack:", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, fightChits.toArray(), fightChits.get(0));
+            playerSheet.setAttackChit(fightChit);
+            numberOfAsterisksRemaining -= fightChit.getFatigueAsterisks();
+
+            LOG.info("Starting defense options");
+            LOG.info("Showing maneuver select.");
+            final Maneuver maneuver = (Maneuver) JOptionPane.showInputDialog(parent, "Combat Step 5: Select a maneuver (dodge) direction:", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, Maneuver.values(), Maneuver.values()[0]);
+            playerSheet.setManeuver(maneuver);
+
+            LOG.info("Showing maneuver chit.");
+            // Lambda issue... need to use final variables, wat?
+            final int finalNumberOfAsterisksRemaining = numberOfAsterisksRemaining;
+            final List<ActionChit> moveChits = player.getCharacter().getActionChits().stream().filter(
+                    chit -> (chit.getAction() == ActionType.MOVE || chit.getAction() == ActionType.DUCK) && finalNumberOfAsterisksRemaining - chit.getFatigueAsterisks() >= 0
+            ).collect(Collectors.toList());
+            final ActionChit moveChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 6: Select a move chit to dodge:", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, moveChits.toArray(), moveChits.get(0));
+            playerSheet.setManeuverChit(moveChit);
+
+            LOG.info("Showing armor select.");
+            final List<Item> armors = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractArmor).collect(Collectors.toList());
+            // Handle the possibility they don't have any armor.
+            final List<Object> armorsWithNone = new ArrayList<Object>(armors);
+            armorsWithNone.add("None");
+            final Object armor = JOptionPane.showInputDialog(parent, "Combat Step 7: Select armor to wear (if any):", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, armorsWithNone.toArray(), armorsWithNone.get(0));
+            // Set the armor if they actually chose a armor.
+            if (!(armor instanceof String)) {
+                playerSheet.setArmor((AbstractArmor) armor);
+            }
+
+            LOG.info("Done filling out {}'s melee sheet.", player.getCharacter());
+
+        } catch (final NullPointerException exception) {
+            LOG.error("User didn't enter a required value in combat. This won't necessary fail, continuing execution.", exception);
         }
-
-        LOG.info("Showing attack direction select.");
-        final AttackDirection attackDirection = (AttackDirection) JOptionPane.showInputDialog(parent, "Combat Step 2: Select an attack direction", "Combat",
-                JOptionPane.QUESTION_MESSAGE, null, AttackDirection.values(), AttackDirection.values()[0]);
-        playerSheet.setAttackDirection(attackDirection);
-
-        LOG.info("Showing weapon select.");
-        final List<Item> weapons = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractWeapon).collect(Collectors.toList());
-        // Handle the possibility they don't have any weapons.
-        final List<Object> weaponsWithNone = new ArrayList<Object>(weapons);
-        weaponsWithNone.add("None (dagger)");
-        final Object weapon = JOptionPane.showInputDialog(parent, "Combat Step 3: Select a weapon:", "Combat",
-                JOptionPane.QUESTION_MESSAGE, null, weaponsWithNone.toArray(), weaponsWithNone.get(0));
-        // Set the weapon if they actually chose a weapon.
-        if (!(weapon instanceof String)) {
-            playerSheet.setAttackWeapon((AbstractWeapon) weapon);
-        }
-
-        int numberOfAsterisksRemaining = 2;
-
-        LOG.info("Showing fight chit select.");
-        final List<ActionChit> fightChits = player.getCharacter().getActionChits().stream().filter(chit -> chit.getAction() == ActionType.FIGHT).collect(Collectors.toList());
-        final ActionChit fightChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 4: Select a fight chit to attack:", "Combat",
-                JOptionPane.QUESTION_MESSAGE, null, fightChits.toArray(), fightChits.get(0));
-        playerSheet.setAttackChit(fightChit);
-        numberOfAsterisksRemaining -= fightChit.getFatigueAsterisks();
-
-        LOG.info("Starting defense options");
-        LOG.info("Showing maneuver select.");
-        final Maneuver maneuver = (Maneuver) JOptionPane.showInputDialog(parent, "Combat Step 5: Select a maneuver (dodge) direction:", "Combat",
-                JOptionPane.QUESTION_MESSAGE, null, Maneuver.values(), Maneuver.values()[0]);
-        playerSheet.setManeuver(maneuver);
-
-        LOG.info("Showing maneuver chit.");
-        // Lambda issue... need to use final variables, wat?
-        final int finalNumberOfAsterisksRemaining = numberOfAsterisksRemaining;
-        final List<ActionChit> moveChits = player.getCharacter().getActionChits().stream().filter(
-                chit -> (chit.getAction() == ActionType.MOVE || chit.getAction() == ActionType.DUCK) && finalNumberOfAsterisksRemaining - chit.getFatigueAsterisks() >= 0
-        ).collect(Collectors.toList());
-        final ActionChit moveChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 6: Select a move chit to dodge:", "Combat",
-                JOptionPane.QUESTION_MESSAGE, null, moveChits.toArray(), moveChits.get(0));
-        playerSheet.setManeuverChit(moveChit);
-
-        LOG.info("Showing armor select.");
-        final List<Item> armors = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractArmor).collect(Collectors.toList());
-        // Handle the possibility they don't have any armor.
-        final List<Object> armorsWithNone = new ArrayList<Object>(armors);
-        armorsWithNone.add("None");
-        final Object armor = JOptionPane.showInputDialog(parent, "Combat Step 7: Select armor to wear (if any):", "Combat",
-                JOptionPane.QUESTION_MESSAGE, null, armorsWithNone.toArray(), armorsWithNone.get(0));
-        // Set the armor if they actually chose a armor.
-        if (!(armor instanceof String)) {
-            playerSheet.setArmor((AbstractArmor) armor);
-        }
-
-        LOG.info("Done filling out {}'s melee sheet.", player.getCharacter());
 
     }
 
