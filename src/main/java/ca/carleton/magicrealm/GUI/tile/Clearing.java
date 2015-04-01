@@ -25,7 +25,7 @@ public class Clearing implements Serializable {;
 
     private final int index;
 
-    private final List<Clearing> adjacentClearings;
+    private final List<Path> adjacentPaths;
 
     private final List<Entity> entities;
 
@@ -34,7 +34,7 @@ public class Clearing implements Serializable {;
     public Clearing(final AbstractTile parentTile, int index) {
         this.parentTile = parentTile;
         this.index = index;
-        this.adjacentClearings = new ArrayList<Clearing>();
+        this.adjacentPaths = new ArrayList<Path>();
         this.entities = new ArrayList<Entity>();
     }
 
@@ -50,8 +50,8 @@ public class Clearing implements Serializable {;
      *                 ,but with self added to the clearings possible paths list
      */
     public void connectTo(Clearing clearing) {
-        this.adjacentClearings.add(clearing);
-        clearing.adjacentClearings.add(this);
+        this.adjacentPaths.add(new Path(this, clearing));
+        clearing.adjacentPaths.add(new Path(clearing, this));
     }
 
     /**
@@ -59,8 +59,8 @@ public class Clearing implements Serializable {;
      *
      * @return the adjacent clearings one may move to.
      */
-    public List<Clearing> getAdjacentClearings() {
-        return this.adjacentClearings;
+    public List<Path> getAdjacentPaths() {
+        return this.adjacentPaths;
     }
 
     /**
