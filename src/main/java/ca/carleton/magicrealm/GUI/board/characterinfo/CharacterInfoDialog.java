@@ -20,6 +20,8 @@ public class CharacterInfoDialog extends JDialog {
     public static String DWARF_DETAIL_PATH = "image/characterdetail/dwarf.jpg";
     public static String ELF_DETAIL_PATH = "image/characterdetail/elf.jpg";
     public static String SWORDSMAN_DETAIL_PATH = "image/characterdetail/swordsman.jpg";
+    public static String BERSERKER_DETAIL_PATH = "image/characterdetail/berserker.jpg";
+    public static String WHITE_KNIGHT_PATH = "image/characterdetail/white_knight.jpg";
 
     BoardServices boardServices = new BoardServices();
 
@@ -32,29 +34,28 @@ public class CharacterInfoDialog extends JDialog {
 
         this.characterInfoLabel = new JLabel();
         this.characterInfoLabel.setSize(CHARACTER_INFO_DIALOG_WIDTH, CHARACTER_INFO_DIALOG_HEIGHT);
-        this.characterInfoLabel.setLocation(0,0);
+        this.characterInfoLabel.setLocation(0, 0);
         ImageIcon imageIcon = new ImageIcon();
 
         if (character.getEntityInformation() == EntityInformation.CHARACTER_AMAZON) {
             imageIcon = this.boardServices.createImageIcon(AMAZON_DETAIL_PATH);
-        }
-        else if (character.getEntityInformation() == EntityInformation.CHARACTER_BLACK_KNIGHT) {
+        } else if (character.getEntityInformation() == EntityInformation.CHARACTER_BLACK_KNIGHT) {
             imageIcon = this.boardServices.createImageIcon(BLACK_KNIGHT_DETAIL_PATH);
-        }
-        else if (character.getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN) {
+        } else if (character.getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN) {
             imageIcon = this.boardServices.createImageIcon(CAPTAIN_DETAIL_PATH);
-        }
-        else if (character.getEntityInformation() == EntityInformation.CHARACTER_DWARF) {
+        } else if (character.getEntityInformation() == EntityInformation.CHARACTER_DWARF) {
             imageIcon = this.boardServices.createImageIcon(DWARF_DETAIL_PATH);
-        }
-        else if (character.getEntityInformation() == EntityInformation.CHARACTER_ELF) {
+        } else if (character.getEntityInformation() == EntityInformation.CHARACTER_ELF) {
             imageIcon = this.boardServices.createImageIcon(ELF_DETAIL_PATH);
-        }
-        else if (character.getEntityInformation() == EntityInformation.CHARACTER_SWORDSMAN) {
+        } else if (character.getEntityInformation() == EntityInformation.CHARACTER_SWORDSMAN) {
             imageIcon = this.boardServices.createImageIcon(SWORDSMAN_DETAIL_PATH);
+        } else if (character.getEntityInformation() == EntityInformation.CHARACTER_BERSERKER) {
+            imageIcon = this.boardServices.createImageIcon(BERSERKER_DETAIL_PATH);
+        } else if (character.getEntityInformation() == EntityInformation.CHARACTER_WHITE_KNIGHT) {
+            imageIcon = this.boardServices.createImageIcon(WHITE_KNIGHT_PATH);
         }
         this.characterInfoLabel.setIcon(imageIcon);
-        this.add(characterInfoLabel);
+        this.add(this.characterInfoLabel);
         this.setVisible(true);
     }
 }

@@ -8,7 +8,9 @@ public enum CharacterType {
     CAPTAIN("Captain", new Dwelling[] {Dwelling.INN, Dwelling.GUARD, Dwelling.HOUSE}),
     DWARF("Dwarf", new Dwelling[] {Dwelling.INN, Dwelling.GUARD}),
     ELF("Elf", new Dwelling[] {Dwelling.INN}),
-    SWORDSMAN("Swordsman", new Dwelling[] {Dwelling.INN});
+    SWORDSMAN("Swordsman", new Dwelling[] {Dwelling.INN}),
+    BERSERKER("Berserker", new Dwelling[] {Dwelling.INN}),
+    WHITE_KNIGHT("White Knight", new Dwelling[] {Dwelling.INN, Dwelling.CHAPEL});
 
     private final String displayName;
 

@@ -22,6 +22,10 @@ public class CharacterFactory {
                 return new Elf();
             case SWORDSMAN:
                 return new Swordsman();
+            case BERSERKER:
+                return new Berserker();
+            case WHITE_KNIGHT:
+            return new WhiteKnight();
             default:
                 throw new IllegalArgumentException("Couldn't create character of type " + characterType + ".");
         }
