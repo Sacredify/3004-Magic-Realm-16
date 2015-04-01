@@ -211,8 +211,8 @@ public class Combat {
             final ActionChit fatigueChit = (ActionChit) JOptionPane.showInputDialog(parent, "You were fatigued by combat and must fatigue a chit!", "Combat",
                     JOptionPane.QUESTION_MESSAGE, null, actionChits.toArray(), actionChits.get(0));
 
+            fatigueChit.setFatigued(true);
             if (fatigueChit.getFatigueAsterisks() > 1) {
-                fatigueChit.setFatigued(true);
                 LOG.info("Because a fight chit with more than one asterisk was chosen, user may un-fatigue a one asterisk one if possible.");
                 final List<ActionChit> fatiguedOneAsterisksChits = player.getCharacter().getActionChits().stream().filter(chit ->
                         chit.isFatigued() && chit.getFatigueAsterisks() == 1).collect(Collectors.toList());
@@ -249,7 +249,6 @@ public class Combat {
                     LOG.info("After wounding a chit, player no longer has any un-wounded chits and has died.");
                     player.getCharacter().setDead(true);
                 }
-
             }
         }
 
