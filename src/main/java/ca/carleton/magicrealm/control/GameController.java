@@ -8,6 +8,7 @@ import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.PhaseUtils;
 import ca.carleton.magicrealm.network.AppClient;
 import ca.carleton.magicrealm.network.Message;
 import org.slf4j.Logger;
@@ -110,7 +111,7 @@ public class GameController {
      */
     private void selectPhasesForDay() {
         LOG.info("Displayed birdsong action menu.");
-        new PhaseSelectorMenu(this.currentPlayer, this.recordedPhasesForDay, 1, this).setVisible(true);
+        new PhaseSelectorMenu(this.currentPlayer, this.recordedPhasesForDay, PhaseUtils.getNumberOfPhasesForPlayer(this.currentPlayer, this.boardModel), this).setVisible(true);
 
     }
 

@@ -299,7 +299,7 @@ public class ChitBuilder {
                 chitIndex = random.nextInt(treasureChits.size());
                 if (treasureChits.get(chitIndex).getTreasure().size() < 6) {
                     treasureChits.get(chitIndex).addTreasure(treasureCollection.treasures[i]);
-                    LOG.debug("Placed treasure {} in {}. Number of current treasures: {}.", treasureCollection.treasures[i].getName(), treasureChits.get(chitIndex).getDescription(), treasureChits.get(chitIndex).getTreasure().size());
+                    LOG.debug("Placed treasure {} in {}. Number of current treasures: {}.", treasureCollection.treasures[i], treasureChits.get(chitIndex).getDescription(), treasureChits.get(chitIndex).getTreasure().size());
                     break;
                 }
             }

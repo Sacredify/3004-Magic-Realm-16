@@ -8,16 +8,13 @@ import ca.carleton.magicrealm.entity.character.*;
 import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.Harm;
-import ca.carleton.magicrealm.item.treasure.TableTreasure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * An attempt to separate dice rolling utility from game logic for rolling on the tables. Here we can check character special
  * values, as well as treasures that may modify these outcomes.
- * <p/>
+ * <p>
  * Created with IntelliJ IDEA.
  * Date: 16/03/15
  * Time: 5:14 PM
@@ -178,71 +175,21 @@ public abstract class Table {
     }
 
     public static class LocateTable {
-
         public static int roll(Player p) {
-
-            List<TableTreasure> treasures = p.getCharacter().getTableTreasures();
-            if (treasures.size() == 0) {
-                return DiceRoller.rollTwiceTakeHigher();
-            } else {
-                for (TableTreasure treasure : treasures) {
-                    if (treasure.getAffectedTable().equals("ALL")) {
-                        if (treasure.getEffect().equals("ADD_ONE")) {
-                            return DiceRoller.rollTwiceTakeHigher() + 1;
-                        } else {
-                            return DiceRoller.rollOnce();
-                        }
-                    }
-                }
-                return DiceRoller.rollTwiceTakeHigher();
-            }
+            return 0;
         }
+
     }
 
     public static class HideTable {
         public static int roll(Player p) {
-
-            List<TableTreasure> treasures = p.getCharacter().getTableTreasures();
-            if (treasures.size() == 0) {
-                return DiceRoller.rollTwiceTakeHigher();
-            } else {
-                for (TableTreasure treasure : treasures) {
-                    if (treasure.getAffectedTable().equals("ALL")) {
-                        if (treasure.getEffect().equals("ADD_ONE")) {
-                            return DiceRoller.rollTwiceTakeHigher() + 1;
-                        } else {
-                            return DiceRoller.rollOnce();
-                        }
-                    } else if (treasure.getAffectedTable().equals("HIDE")) {
-                        return DiceRoller.rollOnce();
-                    }
-                }
-                return DiceRoller.rollTwiceTakeHigher();
-            }
+            return 0;
         }
     }
 
     public static class LootTable {
         public static int roll(Player p) {
-
-            List<TableTreasure> treasures = p.getCharacter().getTableTreasures();
-            if (treasures.size() == 0) {
-                return DiceRoller.rollTwiceTakeHigher();
-            } else {
-                for (TableTreasure treasure : treasures) {
-                    if (treasure.getAffectedTable().equals("ALL")) {
-                        if (treasure.getEffect().equals("ADD_ONE")) {
-                            return DiceRoller.rollTwiceTakeHigher() + 1;
-                        } else {
-                            return  DiceRoller.rollOnce();
-                        }
-                    } else if (treasure.getAffectedTable().equals("LOOT")) {
-                        return DiceRoller.rollOnce();
-                    }
-
-                }
-                return DiceRoller.rollTwiceTakeHigher();
-            }
+            return 0;
         }
     }
 }

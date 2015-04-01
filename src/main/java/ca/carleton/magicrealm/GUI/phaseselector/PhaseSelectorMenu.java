@@ -8,6 +8,7 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.PhaseCountBean;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
@@ -48,7 +49,7 @@ public class PhaseSelectorMenu extends JDialog {
 
     private final Player player;
 
-    public PhaseSelectorMenu(final Player player, final List<AbstractPhase> phases, int numberOfPhases, final GameController gameController) {
+    public PhaseSelectorMenu(final Player player, final List<AbstractPhase> phases, final PhaseCountBean numberOfPhases, final GameController gameController) {
         this.player = player;
         this.setTitle(PHASE_SELECTOR_WINDOW);
         this.setLocationRelativeTo(gameController.getParentWindow());
@@ -57,7 +58,7 @@ public class PhaseSelectorMenu extends JDialog {
         this.phaseSelectorPanel.getConfirmButton().addActionListener(this.createActionListenerForPhaseSelectButton());
         this.phaseSelectorPanel.getDoneEnteringPhasesButton().addActionListener(this.createActionListenerForDoneButton());
 
-        this.phaseSelectorModel = new PhaseSelectorModel(this, phases,player);
+        this.phaseSelectorModel = new PhaseSelectorModel(this, phases, numberOfPhases);
         this.controller = gameController;
 
         this.setSize(PHASE_WINDOW_WIDTH, PHASE_WINDOW_HEIGHT);

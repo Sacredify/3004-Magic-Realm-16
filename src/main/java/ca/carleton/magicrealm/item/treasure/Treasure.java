@@ -5,28 +5,39 @@ import ca.carleton.magicrealm.item.ItemInformation;
 
 import java.util.Random;
 
-/**
- * Created by anvargazizov on 2015-03-19.
- */
+
 public class Treasure extends Item {
 
     private static final long serialVersionUID = -7160719805476333887L;
 
-    protected static final Random random = new Random();
+    private static final Random random = new Random();
 
-    private String name;
+    protected int notoriety;
+
+    protected int fame;
+
+    protected ItemInformation treasureInformation;
+
+    public Treasure(final ItemInformation treasureInformation) {
+        this.treasureInformation = treasureInformation;
+        this.goldValue = 10 + random.nextInt(41);
+
+        if (this.treasureInformation != ItemInformation.GOLD) {
+            this.notoriety = 1 + random.nextInt(20);
+            this.fame = -5 + random.nextInt(36);
+        }
+    }
 
     @Override
     public ItemInformation getItemInformation() {
-        return null;
+        return this.treasureInformation;
     }
 
-    public Treasure(String name){
-        this.name = name;
-        this.goldValue = 10 + random.nextInt(41);
+    public int getNotoriety() {
+        return this.notoriety;
     }
 
-    public String getName() {
-        return this.name;
+    public int getFame() {
+        return this.fame;
     }
 }

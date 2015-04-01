@@ -9,6 +9,7 @@ import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
+import ca.carleton.magicrealm.game.phase.PhaseUtils;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,7 @@ public class PhaseSelectorTest {
         player.setStartingLocation(Dwelling.INN);
         player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
 
-        new PhaseSelectorMenu(player, new ArrayList<AbstractPhase>(), 4, controller).setVisible(true);
+        new PhaseSelectorMenu(player, new ArrayList<AbstractPhase>(), PhaseUtils.getNumberOfPhasesForPlayer(player, controller.getBoardModel()), controller).setVisible(true);
     }
 
 }

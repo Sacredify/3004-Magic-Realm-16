@@ -4,9 +4,6 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
-import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
-import ca.carleton.magicrealm.item.treasure.TableTreasure;
-import ca.carleton.magicrealm.item.treasure.Treasure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,8 +34,6 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
 
     private boolean blocked;
 
-    private final List<Treasure> treasures = new ArrayList<Treasure>();
-
     // Used by combat. Dead resets the character, wounded makes them wound chits. Fatigued if they fatigued themselves. Reset after combat.
     private boolean dead;
 
@@ -56,29 +51,6 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     /**
      * The relationships this entity has with other entities.
      */
-
-    public void pickUpTreasure(Treasure T){
-        this.treasures.add(T);
-    }
-
-    public List<String> getExtraPhases(){
-        final ArrayList<String> extraPhases = new ArrayList<String>();
-        this.treasures.stream().filter(treasure -> treasure instanceof PhaseTreasure).forEach(treasure -> {
-            PhaseTreasure p = (PhaseTreasure) treasure;
-            extraPhases.add(p.getPhase());
-        });
-        return extraPhases;
-    }
-
-    public List<TableTreasure> getTableTreasures(){
-        final ArrayList<TableTreasure> tableTreasures = new ArrayList<TableTreasure>();
-        this.treasures.stream().filter(treasure -> treasure instanceof TableTreasure).forEach(treasure -> {
-            TableTreasure p = (TableTreasure) treasure;
-            tableTreasures.add(p);
-        });
-        return tableTreasures;
-    }
-
     protected Map<Interactable, Relationship> relationships = new HashMap<Interactable, Relationship>();
 
     protected List<ActionChit> actionChits = new ArrayList<ActionChit>();

@@ -15,18 +15,8 @@ public abstract class Item implements Serializable {
 
     protected int goldValue;
 
-    protected boolean active = false;
-
     public int getGoldValue() {
         return this.goldValue;
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public void setActive(final boolean active) {
-        this.active = active;
     }
 
     public abstract ItemInformation getItemInformation();
@@ -38,7 +28,7 @@ public abstract class Item implements Serializable {
 
     @Override
     public String toString() {
-        return getItemInformation().getItemName();
+        return this.getItemInformation().getItemName();
     }
 
 }
