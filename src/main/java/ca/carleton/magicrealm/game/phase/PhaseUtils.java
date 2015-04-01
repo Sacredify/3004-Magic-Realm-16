@@ -7,6 +7,8 @@ import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.item.ItemInformation;
 import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +16,8 @@ import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
  * Time: 4:59 PM
  */
 public class PhaseUtils {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PhaseUtils.class);
 
     /**
      * Return the bean with info on how many phases the user has.
@@ -29,12 +33,16 @@ public class PhaseUtils {
         // Everyone gets two as a default.
         int numberOfPhases = 2;
 
+        LOG.info("Added base number of 2 phases.");
+
         // If the player isn't currently in a cave, and isn't a dwarf, they get their sunlight phase.
         if (board.getClearingForPlayer(player).getParentTile().getTileType() != TileType.CAVE &&
                 player.getCharacter().getEntityInformation() != EntityInformation.CHARACTER_DWARF) {
             numberOfPhases += 2;
+            LOG.info("Added 2 sunlight phases.");
         }
 
+        LOG.info("Starting character and treasure modifications check...");
 
         // Begin checking for extra phases by treasures, or character traits.
         final AbstractCharacter character = player.getCharacter();
@@ -90,6 +98,9 @@ public class PhaseUtils {
         }
 
         count.setNumberOfPhasesFOrDay(numberOfPhases);
+
+        LOG.info("Final number of phases: {}. Extra phases: {}.", count.getNumberOfPhasesFOrDay(), count.getExtraPhases().size());
+
         return count;
     }
 
