@@ -10,7 +10,6 @@ import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.item.Item;
-import ca.carleton.magicrealm.item.treasure.Treasure;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,7 +85,7 @@ public class PhaseSelectorMenu extends JDialog {
                     PhaseSelectorMenu.this.moveSelectionMenu = new MoveSelectionMenu(PhaseSelectorMenu.this.controller.getBoardModel());
                     PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getConfirmButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForMoveSelectButton());
                 } else if (selectedPhase.equals(PhaseType.HIDE)) {
-                    PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase();
+                    PhaseSelectorMenu.this.phaseSelectorModel.addHidePhase(PhaseSelectorMenu.this.player);
                 } else if (selectedPhase.equals(PhaseType.TRADE)) {
                     PhaseSelectorMenu.this.tradeSelectionMenu = new TradeSelectionMenu(PhaseSelectorMenu.this.player, PhaseSelectorMenu.this.controller.getBoardModel().getTradableTargets());
                     PhaseSelectorMenu.this.tradeSelectionMenu.getTradeSelectionPanel().getConfirmTradeButton().addActionListener(PhaseSelectorMenu.this.createActionListenerForTradeConfirmButton());

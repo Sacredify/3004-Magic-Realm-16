@@ -9,7 +9,6 @@ import ca.carleton.magicrealm.game.phase.impl.*;
 import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
 public class PhaseSelectorModel {
 
     private final List<AbstractPhase> phases;
-    private final ArrayList<String> extraPhases;
+    private final List<String> extraPhases;
     private final PhaseSelectorMenu menu;
 
     public PhaseSelectorModel(final PhaseSelectorMenu menu, final List<AbstractPhase> phases, Player player) {
@@ -46,8 +45,9 @@ public class PhaseSelectorModel {
         this.phases.add(tradePhase);
     }
 
-    public void addHidePhase() {
+    public void addHidePhase(final Player player) {
         final HidePhase hidePhase = new HidePhase();
+        hidePhase.setPlayer(player);
         this.phases.add(hidePhase);
     }
 

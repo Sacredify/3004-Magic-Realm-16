@@ -28,7 +28,7 @@ public class AppServer implements Runnable {
 
     public static final int MAX_ROUNDS = 28;
 
-    public static final int MAX_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 1;
 
     private static final int SERVER_ID = 0;
 

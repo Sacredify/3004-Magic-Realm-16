@@ -34,6 +34,7 @@ public class HidePhaseTest {
 
         final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
         final HidePhase hidePhase = new HidePhase();
+        hidePhase.setPlayer(player);
         phases.add(hidePhase);
 
         Daylight.processPhasesForPlayer(boardModel, player, phases);

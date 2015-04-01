@@ -3,18 +3,16 @@ package ca.carleton.magicrealm.entity.character;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
-import ca.carleton.magicrealm.game.phase.AbstractPhase;
-import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
-import ca.carleton.magicrealm.item.treasure.Treasure;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
-import ca.carleton.magicrealm.item.treasure.*;
+import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
+import ca.carleton.magicrealm.item.treasure.TableTreasure;
+import ca.carleton.magicrealm.item.treasure.Treasure;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static jdk.internal.dynalink.support.Guards.isInstance;
 
 /**
  * Represents a playable character within the Magic Realm.
@@ -39,7 +37,7 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
 
     private boolean blocked;
 
-    private ArrayList<Treasure> treasures;
+    private final List<Treasure> treasures = new ArrayList<Treasure>();
 
     // Used by combat. Dead resets the character, wounded makes them wound chits. Fatigued if they fatigued themselves. Reset after combat.
     private boolean dead;
@@ -60,30 +58,24 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
      */
 
     public void pickUpTreasure(Treasure T){
-        treasures.add(T);
+        this.treasures.add(T);
     }
 
-    public ArrayList<String> getExtraPhases(){
-        ArrayList<String> extraPhases = new ArrayList<String>();
-        for(int i = 0 ; i < treasures.size(); i++){
-
-            if(treasures.get(i).getClass().getName()=="PhaseTreasure"){
-                PhaseTreasure p = (PhaseTreasure) treasures.get(i);
-                extraPhases.add(p.getPhase());
-            }
-        }
+    public List<String> getExtraPhases(){
+        final ArrayList<String> extraPhases = new ArrayList<String>();
+        this.treasures.stream().filter(treasure -> treasure instanceof PhaseTreasure).forEach(treasure -> {
+            PhaseTreasure p = (PhaseTreasure) treasure;
+            extraPhases.add(p.getPhase());
+        });
         return extraPhases;
     }
 
-
-    public ArrayList<TableTreasure> getTableTreasures(){
-        ArrayList<TableTreasure> tableTreasures = new ArrayList<TableTreasure>();
-        for(int i = 0 ; i < treasures.size(); i++){
-            if(treasures.get(i).getClass().getName()=="TableTreasure"){
-                TableTreasure p = (TableTreasure) treasures.get(i);
-                tableTreasures.add(p);
-            }
-        }
+    public List<TableTreasure> getTableTreasures(){
+        final ArrayList<TableTreasure> tableTreasures = new ArrayList<TableTreasure>();
+        this.treasures.stream().filter(treasure -> treasure instanceof TableTreasure).forEach(treasure -> {
+            TableTreasure p = (TableTreasure) treasure;
+            tableTreasures.add(p);
+        });
         return tableTreasures;
     }
 
