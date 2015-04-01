@@ -51,10 +51,10 @@ public class ServerThread extends Thread {
                 obj = this.objInputStream.readObject();
                 this.server.handle(this.ID, obj);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Error: A user closed the connection. TODO: Handle this gracefully!", e);
                 System.exit(-1);
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                LOG.error("If we seriously ever get this, I'll eat my hat.");
             }
         } while (obj != null);
     }
