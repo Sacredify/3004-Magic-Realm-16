@@ -1,6 +1,8 @@
-package ca.carleton.magicrealm.Networking;
+package ca.carleton.magicrealm.network;
 
 import ca.carleton.magicrealm.game.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,6 +11,8 @@ import java.net.Socket;
 
 
 public class ServerThread extends Thread {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ServerThread.class);
 
     private int ID = -1;
 
@@ -28,7 +32,6 @@ public class ServerThread extends Thread {
         this.socket = socket;
         this.ID = socket.getPort();
     }
-
 
     public void send(Message msg) {
         try {
@@ -58,20 +61,10 @@ public class ServerThread extends Thread {
 
 
     public void open() throws IOException {
-        System.out.println(this.ID + ":Opening buffer streams");
+        LOG.info("Opening buffer streams for client {}", this.ID);
         this.objOutStream = new ObjectOutputStream(this.socket.getOutputStream());
         this.objInputStream = new ObjectInputStream(this.socket.getInputStream());
         this.objOutStream.flush();
-        if (this.objInputStream == null) {
-            System.out.println("Unable to Open Object Input Stream on Thread:" + this.ID);
-        } else {
-            System.out.println("Able to Open Object Input Stream on Thread:" + this.ID);
-        }
-        if (this.objOutStream == null) {
-            System.out.println("Unable to Open Object Output Stream on Thread:" + this.ID);
-        } else {
-            System.out.println("Able to Open Object Output Stream on Thread:" + this.ID);
-        }
     }
 
     public int getID() {

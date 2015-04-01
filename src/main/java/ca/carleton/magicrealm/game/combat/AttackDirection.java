@@ -25,7 +25,7 @@ public enum AttackDirection {
             case SMASH:
                 return maneuver == Maneuver.DUCK;
             default:
-                return false;
+                return true;
         }
     }
 

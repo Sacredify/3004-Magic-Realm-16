@@ -4,8 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.Relationship;
-import ca.carleton.magicrealm.entity.character.BlackKnight;
-import ca.carleton.magicrealm.entity.character.Dwarf;
+import ca.carleton.magicrealm.entity.character.*;
 import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.Harm;
@@ -38,9 +37,9 @@ public abstract class Table {
          */
         public static int roll(final Player player, final Clearing location) {
 
-            // If the character is the black knight, they only roll once.
-            if (player.getCharacter() instanceof BlackKnight) {
-                LOG.info("Black knight rolled once on the meeting table.");
+            // If the character is the black knight or swordsman, they only roll once.
+            if (player.getCharacter() instanceof BlackKnight || player.getCharacter() instanceof Swordsman) {
+                LOG.info("Black knight/swordsman rolled once on the meeting table.");
                 return DiceRoller.rollOnce();
             }
 
@@ -100,9 +99,8 @@ public abstract class Table {
             }
 
             // Amazon, Black Knight, Captain special, AIM. Subtract one.
-            if ((player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_AMAZON
-                    || player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_BLACK_KNIGHT
-                    || player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN) && roll != 1) {
+            if ((player.getCharacter() instanceof Amazon || player.getCharacter() instanceof BlackKnight
+                    || player.getCharacter() instanceof Captain) && roll != 1) {
                 LOG.info("{}'s AIM ability used: reduced roll value by one.", player.getCharacter());
                 roll = roll - 1;
             }

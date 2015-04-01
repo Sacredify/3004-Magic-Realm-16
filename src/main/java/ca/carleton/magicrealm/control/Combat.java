@@ -7,9 +7,14 @@ import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.AttackDirection;
 import ca.carleton.magicrealm.game.combat.Harm;
+import ca.carleton.magicrealm.game.combat.Maneuver;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
+import ca.carleton.magicrealm.game.combat.chit.ActionType;
 import ca.carleton.magicrealm.game.table.Table;
+import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.armor.AbstractArmor;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 import ca.carleton.magicrealm.item.weapon.AttackType;
@@ -17,10 +22,13 @@ import ca.carleton.magicrealm.item.weapon.Dagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -33,13 +41,95 @@ public class Combat {
     private static final Logger LOG = LoggerFactory.getLogger(Combat.class);
 
     /**
+     * Fill out the melee sheet for a given player.
+     *
+     * @param boardModel the board.
+     * @param player     the player.
+     * @param parent     the parent UI to hook with.
+     */
+    public static void fillOutMeleeSheet(final BoardModel boardModel, final Player player, final Component parent) {
+        final MeleeSheet playerSheet = boardModel.getMeleeSheet(player);
+
+        final Clearing clearingOfCombat = boardModel.getClearingForPlayer(player);
+
+        JOptionPane.showMessageDialog(parent, "Now starting combat functions. Please fill out your melee sheet with the following dialogs.", "Combat", JOptionPane.INFORMATION_MESSAGE);
+
+        LOG.info("Starting attack options.");
+        LOG.info("Showing target select.");
+        final List<Entity> potentialTargets = clearingOfCombat.getEntities().stream().filter(entity -> !entity.equals(player.getCharacter())).collect(Collectors.toList());
+        final Entity target = (Entity) JOptionPane.showInputDialog(parent, "Combat Step 1: Select a target:", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, potentialTargets.toArray(), potentialTargets.get(0));
+        playerSheet.setTarget(target);
+
+        LOG.info("Showing attack direction select.");
+        final AttackDirection attackDirection = (AttackDirection) JOptionPane.showInputDialog(parent, "Combat Step 2: Select an attack direction", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, AttackDirection.values(), AttackDirection.values()[0]);
+        playerSheet.setAttackDirection(attackDirection);
+
+        LOG.info("Showing weapon select.");
+        final List<Item> weapons = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractWeapon).collect(Collectors.toList());
+        // Handle the possibility they don't have any weapons.
+        final List<Object> weaponsWithNone = new ArrayList<Object>(weapons);
+        weaponsWithNone.add("None (dagger)");
+        final Object weapon = JOptionPane.showInputDialog(parent, "Combat Step 3: Select a weapon:", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, weaponsWithNone.toArray(), weaponsWithNone.get(0));
+        // Set the weapon if they actually chose a weapon.
+        if (!(weapon instanceof String)) {
+            playerSheet.setAttackWeapon((AbstractWeapon) weapon);
+        }
+
+        int numberOfAsterisksRemaining = 2;
+
+        LOG.info("Showing fight chit select.");
+        final List<ActionChit> fightChits = player.getCharacter().getActionChits().stream().filter(chit -> chit.getAction() == ActionType.FIGHT).collect(Collectors.toList());
+        final ActionChit fightChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 4: Select a fight chit to attack:", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, fightChits.toArray(), fightChits.get(0));
+        playerSheet.setAttackChit(fightChit);
+        numberOfAsterisksRemaining -= fightChit.getFatigueAsterisks();
+
+        LOG.info("Starting defense options");
+        LOG.info("Showing maneuver select.");
+        final Maneuver maneuver = (Maneuver) JOptionPane.showInputDialog(parent, "Combat Step 5: Select a maneuver (dodge) direction:", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, Maneuver.values(), Maneuver.values()[0]);
+        playerSheet.setManeuver(maneuver);
+
+
+        LOG.info("Showing maneuver chit.");
+        // Lambda issue... need to use final variables, wat?
+        final int finalNumberOfAsterisksRemaining = numberOfAsterisksRemaining;
+        final List<ActionChit> moveChits = player.getCharacter().getActionChits().stream().filter(
+                chit -> (chit.getAction() == ActionType.MOVE || chit.getAction() == ActionType.DUCK) && finalNumberOfAsterisksRemaining - chit.getFatigueAsterisks() >= 0
+        ).collect(Collectors.toList());
+        final ActionChit moveChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 6: Select a move chit to dodge:", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, moveChits.toArray(), moveChits.get(0));
+        playerSheet.setManeuverChit(moveChit);
+
+        LOG.info("Showing armor select.");
+        final List<Item> armors = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractArmor).collect(Collectors.toList());
+        // Handle the possibility they don't have any armor.
+        final List<Object> armorsWithNone = new ArrayList<Object>(armors);
+        armorsWithNone.add("None");
+        final Object armor = JOptionPane.showInputDialog(parent, "Combat Step 7: Select armor to wear (if any):", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, armorsWithNone.toArray(), armorsWithNone.get(0));
+        // Set the armor if they actually chose a armor.
+        if (!(armor instanceof String)) {
+            playerSheet.setArmor((AbstractArmor) armor);
+        }
+
+        LOG.info("Done filling out {}'s melee sheet.", player.getCharacter());
+
+    }
+
+    /**
      * Starts combat in the clearing for the given player.
      *
      * @param boardModel    the board data.
      * @param currentPlayer the current player.
      * @param parent        the parent frame to attach any messages to.
      */
-    public static void doCombat(final BoardModel boardModel, final Player currentPlayer, final Component parent) {
+    @SuppressWarnings("unused")
+    @Deprecated
+    private static void doCombat(final BoardModel boardModel, final Player currentPlayer, final Component parent) {
 
         final Clearing combatSite = boardModel.getClearingForPlayer(currentPlayer);
 
@@ -73,8 +163,8 @@ public class Combat {
      * Initiate combat between two players.
      *
      * @param boardModel the board.
-     * @param playerOne   the first player.
-     * @param playerTwo   the second player.
+     * @param playerOne  the first player.
+     * @param playerTwo  the second player.
      */
     public static void doCombat(final BoardModel boardModel, final Player playerOne, final Player playerTwo) {
 
@@ -139,6 +229,8 @@ public class Combat {
             }
         }
 
+        playerOneSheet.markFought();
+        playerTwoSheet.markFought();
     }
 
     /**
@@ -168,22 +260,16 @@ public class Combat {
     /**
      * Cleanup after combat. This includes resetting the sheets and wound status.
      *
-     * @param boardModel the board.
      * @param attacker   the attacker.
      * @param defender   the defender.
      */
-    public static void cleanup(final BoardModel boardModel, final Player attacker, final Player defender) {
-
-        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
-        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
+    public static void cleanup(final Player attacker, final Player defender) {
 
         LOG.info("Resetting wounded status at the end of the day.");
         attacker.getCharacter().setWounded(false);
         attacker.getCharacter().setFatigued(false);
-        attackerSheet.resetSheet();
         defender.getCharacter().setWounded(false);
         defender.getCharacter().setFatigued(false);
-        defenderSheet.resetSheet();
     }
 
     /**
@@ -275,6 +361,7 @@ public class Combat {
 
             // Weapons automatically get un-alerted.
             weapon.setAlert(false);
+            LOG.info("Weapon un-alerted.");
 
         } else {
             LOG.info("Attacker missed. Ending round of combat.");

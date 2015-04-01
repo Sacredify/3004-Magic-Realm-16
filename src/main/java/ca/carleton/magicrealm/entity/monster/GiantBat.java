@@ -2,20 +2,14 @@ package ca.carleton.magicrealm.entity.monster;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.item.weapon.GreatSword;
 
 /**
- * Created by Tony on 22/03/2015.
+ * Created by Tony on 31/03/2015.
  */
-public class Giant extends AbstractMonster {
-
-    public Giant() {
-        this.weapon = new GreatSword();
-    }
-
+public class GiantBat extends AbstractMonster {
     @Override
     public EntityInformation getEntityInformation() {
-        return EntityInformation.GIANT;
+        return EntityInformation.GIANTBAT;
     }
 
     @Override

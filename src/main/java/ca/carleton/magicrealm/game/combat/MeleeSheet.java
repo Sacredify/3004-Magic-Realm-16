@@ -23,6 +23,8 @@ public class MeleeSheet implements Serializable {
 
     private Entity entity;
 
+    private Entity target;
+
     private Player player;
 
     // The move or fight chit used during the encounter step. If encounter, allow the player to alert a weapon. If move, run away to another clearing.
@@ -42,6 +44,9 @@ public class MeleeSheet implements Serializable {
 
     // Armor. Can only use "active" armor.
     private AbstractArmor armor;
+
+    // Whether or not they have already fought (to prevent multiple engagements... say A --> B and B --> A on their sheets.
+    private boolean hasFought;
 
     /**
      * Creates a melee sheet for an entity, and optionally a related player.
@@ -65,12 +70,14 @@ public class MeleeSheet implements Serializable {
             this.attackDirection = null;
             this.maneuver = null;
         }
+        this.target = null;
+        this.hasFought = false;
     }
 
     /**
      * Update applicable references after being sent to and from the server.
      */
-    public void updateFromServer(final BoardModel boardModel) {
+    public void synchronize(final BoardModel boardModel) {
 
         // Update player object if needed
         if (this.player != null) {
@@ -101,7 +108,7 @@ public class MeleeSheet implements Serializable {
 
         } else {
             // Update denizens (owner)
-            boardModel.getMonsters().stream().filter(this.entity::equals).forEach(entity -> this.entity = entity);
+            boardModel.getAbstractMonsters().stream().filter(this.entity::equals).forEach(entity -> this.entity = entity);
             this.attackWeapon =  ((Denizen)this.entity).getWeapon();
         }
 
@@ -171,4 +178,19 @@ public class MeleeSheet implements Serializable {
         this.armor = armor;
     }
 
+    public Entity getTarget() {
+        return this.target;
+    }
+
+    public void setTarget(final Entity target) {
+        this.target = target;
+    }
+
+    public void markFought() {
+        this.hasFought = true;
+    }
+
+    public boolean hasFoughtToday() {
+        return this.hasFought;
+    }
 }

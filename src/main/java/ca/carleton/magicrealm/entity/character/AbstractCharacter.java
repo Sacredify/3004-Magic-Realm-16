@@ -6,7 +6,6 @@ import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
 import ca.carleton.magicrealm.item.treasure.Treasure;
-import ca.carleton.magicrealm.item.treasure.TableTreasure;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 
 import java.io.Serializable;
@@ -164,6 +163,11 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
     @Override
     public boolean equals(final Object rhs) {
         return rhs instanceof AbstractCharacter && this.getEntityInformation() == ((AbstractCharacter) rhs).getEntityInformation();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getEntityInformation().hashCode();
     }
 
     public boolean isBlocked() {

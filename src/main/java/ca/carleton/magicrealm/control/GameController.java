@@ -4,8 +4,8 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
-import ca.carleton.magicrealm.Networking.AppClient;
-import ca.carleton.magicrealm.Networking.Message;
+import ca.carleton.magicrealm.network.AppClient;
+import ca.carleton.magicrealm.network.Message;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by Tony on 19/02/2015.
@@ -60,28 +63,22 @@ public class GameController {
                     this.characterCreateMenu.updateAvailableCharacters();
                     break;
                 case (Message.BIRDSONG_START):
-                    // Set new data
-                    this.setBoardModel(((BoardModel) m.getPayload()));
-                    this.updateCurrentPlayer();
+                    this.updateFromBoard(m.getPayload());
                     this.refreshBoard();
                     // Process birdsong
                     this.selectPhasesForDay();
                     break;
                 case (Message.DAYLIGHT_START):
-                    // Set new data
-                    this.setBoardModel(((BoardModel) m.getPayload()));
-                    this.updateCurrentPlayer();
+                    this.updateFromBoard(m.getPayload());
                     // Process daylight
                     this.processUpdatedPhasesFromBoard();
                     this.processDaylight();
                     break;
-                case (Message.START_COMBAT_IN_CLEARING):
+                case (Message.COMBAT_FILL_OUT_MELEE_SHEET):
                     // Set new data
-                    this.setBoardModel(((BoardModel) m.getPayload()));
-                    this.updateCurrentPlayer();
+                    this.updateFromBoard(m.getPayload());
                     this.refreshBoard();
-                    // Process combat in the current clearing of the player
-                    this.processCombat();
+                    this.selectOptionsForCombat();
                 default:
                     break;
             }
@@ -103,7 +100,7 @@ public class GameController {
     /**
      * Opens up phase selector dialog.
      */
-    public void selectPhasesForDay() {
+    private void selectPhasesForDay() {
         LOG.info("Displayed birdsong action menu.");
         new PhaseSelectorMenu(this.currentPlayer, this.recordedPhasesForDay, 1, this).setVisible(true);
 
@@ -120,7 +117,7 @@ public class GameController {
     /**
      * Processes the daylight phases for this client.
      */
-    public void processDaylight() {
+    private void processDaylight() {
         Daylight.processPhasesForPlayer(this.boardModel, this.currentPlayer, this.recordedPhasesForDay);
         this.updatePlayerInMap();
         this.refreshBoard();
@@ -131,19 +128,40 @@ public class GameController {
     /**
      * Processes combat for the clearing of the current player.
      */
-    public void processCombat() {
+    @Deprecated
+    private void processCombat() {
         LOG.info("Starting combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
-        Combat.doCombat(this.boardModel, this.currentPlayer, this.boardWindow);
+        //Combat.doCombat(this.boardModel, this.currentPlayer, this.boardWindow);
         this.updatePlayerInMap();
         this.refreshBoard();
         LOG.info("Executed combat for clearing {}", this.boardModel.getClearingForPlayer(this.currentPlayer));
-        this.networkConnection.sendMessage(Message.DONE_COMBAT_IN_CLEARING, this.boardModel);
+        this.networkConnection.sendMessage(Message.COMBAT_SEND_MELEE_SHEET, this.boardModel);
+    }
+
+    /**
+     * Fills out the melee sheet for the user for combat.
+     */
+    private void selectOptionsForCombat() {
+        LOG.info("Starting combat melee sheet step.");
+        Combat.fillOutMeleeSheet(this.boardModel, this.currentPlayer, this.boardWindow);
+        this.updatePlayerInMap();
+       this.networkConnection.sendMessage(Message.COMBAT_SEND_MELEE_SHEET, this.boardModel);
+    }
+
+    /**
+     * Perform updates necessary when receiving data from the board.
+     *
+     * @param boardModel the board.
+     */
+    private void updateFromBoard(final Object boardModel) {
+        this.boardModel = (BoardModel) boardModel;
+        this.updateCurrentPlayer();
     }
 
     /**
      * Because we send the entire board, we need to update the phases, since the references are now garbled.
      */
-    public void processUpdatedPhasesFromBoard() {
+    private void processUpdatedPhasesFromBoard() {
         for (final AbstractPhase phase : this.recordedPhasesForDay) {
             phase.updateFromBoard(this.currentPlayer, this.boardModel);
         }
@@ -153,7 +171,7 @@ public class GameController {
     /**
      * Updates the current player status for use in the client's various methods after the board has been received from the server.
      */
-    public void updateCurrentPlayer() {
+    private void updateCurrentPlayer() {
         for (final Player player : this.boardModel.getPlayers()) {
             if (this.currentPlayer.getCharacter().getEntityInformation() == player.getCharacter().getEntityInformation()) {
                 this.currentPlayer = player;
@@ -168,7 +186,7 @@ public class GameController {
      * Replaces the current player stored on the board with the updated one.
      * IMPORTANT This needs to be called before sending sending the map, as it updates the board.
      */
-    public void updatePlayerInMap() {
+    private void updatePlayerInMap() {
         final Iterator<Player> iterator = this.boardModel.getPlayers().iterator();
 
         final int sanityCheck = this.boardModel.getPlayers().size();
@@ -179,17 +197,11 @@ public class GameController {
             }
         }
         // Sanity check - check that we actually removed someone.
-        assert (this.boardModel.getPlayers().size() == (sanityCheck - 1));
+        assertThat(this.boardModel.getPlayers().size(), is(sanityCheck - 1));
 
         this.boardModel.getPlayers().add(this.currentPlayer);
 
         LOG.info("Model has been updated with client player information.");
-    }
-
-    public void setNetworkConnection(AppClient nC) {
-        this.networkConnection = nC;
-        LOG.info("Set controller network connection successfully.");
-        this.showCharacterCreate();
     }
 
     /**
@@ -215,12 +227,20 @@ public class GameController {
         LOG.info("Removed {} from the list of available characters for character select, another user has chosen it.", removed);
     }
 
-    public void refreshBoard() {
+    /**
+     * Refresh the board (re-draw).
+     */
+    private void refreshBoard() {
         this.boardWindow.refresh(this.boardModel, this.currentPlayer.getCharacter());
         this.boardWindow.setGameInfoText(this.createGameInfoString());
         LOG.info("Board refreshed.");
     }
 
+    /**
+     * Create the info display string.
+     *
+     * @return the string.
+     */
     private String createGameInfoString() {
         String gameInfoText = "<html>";
         gameInfoText = gameInfoText.concat("Character: " + this.currentPlayer.getCharacter().toString() + "<br/>" +
@@ -264,5 +284,11 @@ public class GameController {
 
     public Player getCurrentPlayer() {
         return this.currentPlayer;
+    }
+
+    public void setNetworkConnection(AppClient nC) {
+        this.networkConnection = nC;
+        LOG.info("Set controller network connection successfully.");
+        this.showCharacterCreate();
     }
 }

@@ -7,7 +7,7 @@ import ca.carleton.magicrealm.GUI.tile.impl.*;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
-import ca.carleton.magicrealm.entity.monster.Monster;
+import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.game.Player;
@@ -34,7 +34,7 @@ public class BoardModel implements Serializable {
 
     private final ArrayList<Player> players = new ArrayList<Player>();
 
-    private final ArrayList<Monster> monsters = new ArrayList<Monster>();
+    private final ArrayList<AbstractMonster> abstractMonsters = new ArrayList<AbstractMonster>();
 
     private final MeleeSheets meleeSheets = new MeleeSheets();
 
@@ -408,6 +408,9 @@ public class BoardModel implements Serializable {
         return factions;
     }
 
+    public Player getPlayerForCharacter(final AbstractCharacter character) {
+        return this.players.stream().filter(player -> player.getCharacter().getEntityInformation() == character.getEntityInformation()).collect(Collectors.toList()).get(0);
+    }
 
     public ArrayList<ArrayList<AbstractTile>> getBoard() {
         return this.board;
@@ -421,12 +424,16 @@ public class BoardModel implements Serializable {
         return this.players;
     }
 
-    public ArrayList<Monster> getMonsters() {
-        return this.monsters;
+    public ArrayList<AbstractMonster> getAbstractMonsters() {
+        return this.abstractMonsters;
     }
 
     public MeleeSheet getMeleeSheet(final Player player) {
-        return this.meleeSheets.getMeleeSheetForPlayer(player);
+        return this.meleeSheets.getMeleeSheet(player.getCharacter());
+    }
+
+    public MeleeSheet getMeleeSheet(final Entity entity) {
+        return this.meleeSheets.getMeleeSheet(entity);
     }
 
     public void createNewMeleeSheet(final Player player) {

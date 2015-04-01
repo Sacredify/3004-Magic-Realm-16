@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.Networking;
+package ca.carleton.magicrealm.network;
 
 import ca.carleton.magicrealm.control.GameController;
 import org.slf4j.Logger;
@@ -102,17 +102,5 @@ public class AppClient implements Runnable {
     public int getId() {
         return this.ID;
     }
-
-/*
-    public static void main(String[] args) throws IOException {
-        // TODO Auto-generated method stub
-        AppClient clnt = new AppClient(Config.DEFAULT_HOST, Config.DEFAULT_HOST_PORT);
-        AwfulValley a = new AwfulValley();
-        Clearing c;
-        c = new Clearing(a, 1);
-        clnt.write(c);
-        clnt.write("Elo dalin");
-
-    }*/
 
 }

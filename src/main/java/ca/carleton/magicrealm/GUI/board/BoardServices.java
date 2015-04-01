@@ -4,6 +4,8 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,9 @@ import java.awt.image.BufferedImage;
  * Service class to store methods used by a view
  */
 public class BoardServices {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BoardServices.class);
+
     public static final int ORIGINAL_TILE_WIDTH = 500;
     public static final int ORIGINAL_TILE_HEIGHT = 430;
 
@@ -40,7 +45,7 @@ public class BoardServices {
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
-            System.err.println("Couldn't find file: " + path);
+            LOG.error("Couldn't find file: " + path);
             return null;
         }
     }
@@ -107,13 +112,12 @@ public class BoardServices {
                     newIcon.setImage(newImage);
                     newChit.setIcon(newIcon);
                     newChit.setEnabled(true);
-                    newChit.setLocation(applyTileXOffset(clearingX, tileOffsetX), applyTileYOffset(clearingY, tileOffsetY));
+                    newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
                     panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                 }
             }
             if (!clearing.getEntities().isEmpty()) {
                 for (Entity drawable : clearing.getEntities()) {
-                    //TODO figure out why abstract characters aren't being added to the list of entities properly.
                     if (drawable instanceof AbstractNative) {
                         continue;
                     }
@@ -127,7 +131,7 @@ public class BoardServices {
                         newIcon.setImage(newImage);
                         newChit.setIcon(newIcon);
                         newChit.setEnabled(true);
-                        newChit.setLocation(applyTileXOffset(clearingX, tileOffsetX), applyTileYOffset(clearingY, tileOffsetY));
+                        newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
                         panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                     }
                 }

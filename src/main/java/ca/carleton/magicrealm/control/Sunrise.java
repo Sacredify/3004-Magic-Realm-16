@@ -7,7 +7,7 @@ import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.chit.ColoredChit;
-import ca.carleton.magicrealm.entity.monster.Giant;
+import ca.carleton.magicrealm.entity.monster.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,18 +43,78 @@ public class Sunrise {
                     final ColoredChit chit = iter.next();
                     switch (chit.getDescription()) {
                         case "BONES":
-                            final Clearing startForGiants = tile.getClearings()[tile.getClearings().length - 1];
-                            final Giant giant = new Giant();
-                            giant.setStartingClearing(startForGiants);
-                            startForGiants.addEntity(giant);
-                            boardModel.getMonsters().add(giant);
+                            if (tile.getTileType().equals(TileType.MOUNTAIN)) {
+                                LOG.debug("Giant created in Mountain from Bones chit");
+                                final Clearing startForGiants = tile.getClearings()[tile.getClearings().length - 1];
+                                final Giant giant = new Giant();
+                                giant.setStartingClearing(startForGiants);
+                                giant.setCurrentClearing(startForGiants);
+                                startForGiants.addEntity(giant);
+                                boardModel.getAbstractMonsters().add(giant);
+                                break;
+                            }
+                            else if (tile.getTileType().equals(TileType.CAVE)) {
+                                LOG.debug("Troll created in Cave from Bones chit");
+                                final Clearing startForTrolls = tile.getClearings()[tile.getClearings().length - 1];
+                                final Troll troll = new Troll();
+                                troll.setStartingClearing(startForTrolls);
+                                troll.setCurrentClearing(startForTrolls);
+                                startForTrolls.addEntity(troll);
+                                boardModel.getAbstractMonsters().add(troll);
+                                break;
+                            }
+                        case "DANK":
+                            if (tile.getTileType().equals(TileType.MOUNTAIN)) {
+                                LOG.debug("Spider created in Mountain from Dank chit");
+                                final Clearing startForSpiders = tile.getClearings()[tile.getClearings().length - 1];
+                                final Spider spider = new Spider();
+                                spider.setStartingClearing(startForSpiders);
+                                spider.setCurrentClearing(startForSpiders);
+                                startForSpiders.addEntity(spider);
+                                boardModel.getAbstractMonsters().add(spider);
+                                break;
+                            }
+                            else if (tile.getTileType().equals(TileType.CAVE)) {
+                                LOG.debug("Serpent created in Cave from Dank chit");
+                                final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
+                                final Serpent serpent = new Serpent();
+                                serpent.setStartingClearing(startForSerpents);
+                                serpent.setCurrentClearing(startForSerpents);
+                                startForSerpents.addEntity(serpent);
+                                boardModel.getAbstractMonsters().add(serpent);
+                                break;
+                            }
+                        case "SLITHER":
+                            LOG.debug("Dragon created from Slither chit");
+                            final Clearing startForDragons = tile.getClearings()[tile.getClearings().length - 1];
+                            final Dragon dragon = new Dragon();
+                            dragon.setStartingClearing(startForDragons);
+                            dragon.setCurrentClearing(startForDragons);
+                            startForDragons.addEntity(dragon);
+                            boardModel.getAbstractMonsters().add(dragon);
+
+                            LOG.debug("Serpent created from Slither chit");
+                            final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
+                            final Serpent serpent = new Serpent();
+                            serpent.setStartingClearing(startForSerpents);
+                            serpent.setCurrentClearing(startForSerpents);
+                            startForSerpents.addEntity(serpent);
+                            boardModel.getAbstractMonsters().add(serpent);
                             break;
+                        case "RUINS":
+                            LOG.debug("Giant bat created from Ruins chit");
+                            final Clearing startForBats = tile.getClearings()[tile.getClearings().length - 1];
+                            final GiantBat giantBat = new GiantBat();
+                            giantBat.setStartingClearing(startForBats);
+                            giantBat.setCurrentClearing(startForBats);
+                            startForBats.addEntity(giantBat);
+                            boardModel.getAbstractMonsters().add(giantBat);
                     }
                 }
             }
         }
 
-        for (Denizen denizen: boardModel.getMonsters()) {
+        for (Denizen denizen: boardModel.getAbstractMonsters()) {
             /** Reset prowling monsters/natives **/
             if (currentDay % 7 == 0) {
                 denizen.setCurrentClearing(denizen.getStartingClearing());
