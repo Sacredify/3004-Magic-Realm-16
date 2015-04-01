@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.entity.chit;
 
+import ca.carleton.magicrealm.GUI.tile.Discoverable;
 import ca.carleton.magicrealm.item.treasure.Treasure;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
  * Date: 21/02/15
  * Time: 12:02 PM
  */
-public class GoldChit extends ColoredChit {
+public class GoldChit extends ColoredChit implements Discoverable {
 
     private static final long serialVersionUID = 345563872761671359L;
 
