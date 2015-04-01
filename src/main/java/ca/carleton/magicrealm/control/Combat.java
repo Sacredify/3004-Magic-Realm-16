@@ -54,11 +54,13 @@ public class Combat {
         try {
             LOG.info("Starting attack options.");
             LOG.info("Showing target select.");
-            final List<Entity> potentialTargets = clearingOfCombat.getEntities().stream().filter(entity -> !entity.equals(player.getCharacter())).collect(Collectors.toList());
-            final Entity target = (Entity) JOptionPane.showInputDialog(parent, "Combat Step 1: Select a target (Cancel for NO target - You don't want to fight):", "Combat",
+            final List<Object> potentialTargets = clearingOfCombat.getEntities().stream().filter(entity -> !entity.equals(player.getCharacter())).collect(Collectors.toList());
+            potentialTargets.add("None");
+            final Object target = JOptionPane.showInputDialog(parent, "Combat Step 1: Select a target (Cancel for NO target or click None - You don't want to fight):", "Combat",
                     JOptionPane.QUESTION_MESSAGE, null, potentialTargets.toArray(), potentialTargets.get(0));
-            playerSheet.setTarget(target);
-
+            if (target instanceof Entity) {
+                playerSheet.setTarget((Entity) target);
+            }
             if (target == null) {
                 LOG.info("Player opted to not fight. Stopping rest of melee sheet fill out.");
                 JOptionPane.showMessageDialog(parent, "You must still out the melee sheet, as you may be targeted by other players.");
