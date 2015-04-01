@@ -7,7 +7,7 @@ import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.item.treasure.PhaseTreasure;
 import ca.carleton.magicrealm.item.treasure.Treasure;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
-
+import ca.carleton.magicrealm.item.treasure.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
