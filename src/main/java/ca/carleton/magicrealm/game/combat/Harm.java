@@ -6,43 +6,27 @@ package ca.carleton.magicrealm.game.combat;
  * Time: 2:36 PM
  */
 public enum Harm {
-    NEGLIGIBLE,
+    NEGLIGIBLE {
+        public Harm decrease() {
+            return this;
+        }
+    },
     LIGHT,
     MEDIUM,
     HEAVY,
-    TREMENDOUS,
+    TREMENDOUS {
+        public Harm increase() {
+            return this;
+        }
+    },
     LETHAL; // only used by missile table. We won't ever get it, but we can say we wrote the logic in.
 
     public Harm increase() {
-        switch (this) {
-            case NEGLIGIBLE:
-                return LIGHT;
-            case LIGHT:
-                return MEDIUM;
-            case MEDIUM:
-                return HEAVY;
-            case HEAVY:
-                return TREMENDOUS;
-            default:
-                return TREMENDOUS;
-        }
+        return values()[this.ordinal() + 1];
     }
 
     public Harm decrease() {
-        switch (this) {
-            case NEGLIGIBLE:
-                return NEGLIGIBLE;
-            case LIGHT:
-                return NEGLIGIBLE;
-            case MEDIUM:
-                return LIGHT;
-            case HEAVY:
-                return MEDIUM;
-            case TREMENDOUS:
-                return HEAVY;
-            default:
-                return HEAVY;
-        }
+        return values()[this.ordinal() - 1];
     }
 
     public boolean greaterThan(final Harm harm) {

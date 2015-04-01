@@ -62,19 +62,8 @@ public abstract class Table {
          * @return the next highest, if applicable.
          */
         public static Relationship getBoughtDrinksRelationship(final Relationship relationship) {
-            final Relationship toReturn;
             LOG.info("Old relationship: {}.", relationship);
-            if (relationship == Relationship.ENEMY) {
-                toReturn = Relationship.UNFRIENDLY;
-            } else if (relationship == Relationship.UNFRIENDLY) {
-                toReturn = Relationship.NEUTRAL;
-            } else if (relationship == Relationship.NEUTRAL) {
-                toReturn = Relationship.FRIENDLY;
-            } else if (relationship == Relationship.FRIENDLY) {
-                toReturn = Relationship.ALLY;
-            } else {
-                toReturn = relationship;
-            }
+            final Relationship toReturn = relationship.getRelationshipAfterDrinksBought();
             LOG.info("New relationship (because of drinks): {}.", toReturn);
             return toReturn;
         }
