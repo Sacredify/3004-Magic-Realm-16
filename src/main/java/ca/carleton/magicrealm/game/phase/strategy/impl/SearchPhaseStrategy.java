@@ -13,6 +13,7 @@ import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.game.phase.impl.SearchPhase;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
+import ca.carleton.magicrealm.game.table.Table;
 import ca.carleton.magicrealm.item.treasure.Treasure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,13 +33,14 @@ public class SearchPhaseStrategy implements PhaseStrategy {
     public void doPhase(final Player player, final AbstractPhase phase) {
         final SearchPhase searchPhase = (SearchPhase) phase;
 
-        int roll = DiceRoller.rollOnce();
-        searchPhase.setRoll(roll);
+        int roll;
 
         Clearing currentClearing = searchPhase.getBoard().getClearingForPlayer(player);
 
         switch (((SearchPhase) phase).getAction()) {
             case SearchSelectionPanel.LOCATE_TEXT:
+                roll = Table.LocateTable.roll(player, currentClearing);
+                searchPhase.setRoll(roll);
                 if (roll == 1 || roll == 4) {
                     for (ColoredChit chit : currentClearing.getParentTile().getChits()) {
                         if (chit.getClearingNumber() == Integer.parseInt(currentClearing.getName()))
@@ -50,6 +52,8 @@ public class SearchPhaseStrategy implements PhaseStrategy {
                 }
                 break;
             case SearchSelectionPanel.PEER_TEXT:
+                roll = Table.LocateTable.roll(player, currentClearing);
+                searchPhase.setRoll(roll);
                 if (roll == 1 || roll == 2 || roll == 3) {
                     this.discoverPath(currentClearing, player);
                 }
@@ -59,9 +63,10 @@ public class SearchPhaseStrategy implements PhaseStrategy {
                             player.getDiscoveredThings().add(entity);
                     }
                 }
-
                 break;
             case SearchSelectionPanel.LOOT_TEXT:
+                roll = Table.LootTable.roll(player);
+                searchPhase.setRoll(roll);
                 for (ColoredChit chit : currentClearing.getParentTile().getChits()) {
                     if (chit.getChitColor().equals(ChitColor.GOLD)
                             && player.getDiscoveredThings().contains(chit)) {

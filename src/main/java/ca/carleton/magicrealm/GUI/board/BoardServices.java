@@ -130,7 +130,11 @@ public class BoardServices {
                         newIcon.setImage(newImage);
                         newChit.setIcon(newIcon);
                         newChit.setEnabled(true);
-                        newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
+                        if (chit.getClearingNumber() == -1) {
+                            newChit.setLocation(this.applyTileXOffset(TILE_WIDTH / 2, tileOffsetX), this.applyTileYOffset(TILE_HEIGHT / 2, tileOffsetY));
+                        } else {
+                            newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
+                        }
                         panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                     }
                 }
