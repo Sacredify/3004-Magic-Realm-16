@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+import ca.carleton.magicrealm.entity.chit.ColoredChit;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,7 @@ public class BoardServices {
      * @param tileOffsetY offset Y.
      * @param character   the client character.
      */
-    public void createChitIconsForTile(AbstractTile tile, final BoardPanel panel, final int tileOffsetX, final int tileOffsetY, final AbstractCharacter character) {
+    public void createChitIconsForTile(AbstractTile tile, final BoardPanel panel, final BoardModel boardModel, final int tileOffsetX, final int tileOffsetY, final AbstractCharacter character, final boolean isSunset) {
 
         for (Clearing clearing : tile.getClearings()) {
             JLabel newChit;
@@ -115,6 +116,23 @@ public class BoardServices {
                     newChit.setEnabled(true);
                     newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
                     panel.add(newChit, JLayeredPane.PALETTE_LAYER);
+                }
+            }
+            if (isSunset && boardModel.getClearingForCharacter(character).getParentTile().equals(tile)) {
+                for (ColoredChit chit : tile.getChits()) {
+                    newChit = new JLabel();
+                    newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
+                    newIcon = this.createImageIcon(chit.getChitColor().getImageFilePath());
+
+                    if (newChit != null && newIcon != null) {
+                        BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
+                        newImage = resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
+                        newIcon.setImage(newImage);
+                        newChit.setIcon(newIcon);
+                        newChit.setEnabled(true);
+                        newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
+                        panel.add(newChit, JLayeredPane.PALETTE_LAYER);
+                    }
                 }
             }
             if (!clearing.getEntities().isEmpty()) {

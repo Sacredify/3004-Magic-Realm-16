@@ -4,13 +4,16 @@ import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.SearchSelectionPan
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.Path;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.chit.ChitColor;
 import ca.carleton.magicrealm.entity.chit.ColoredChit;
+import ca.carleton.magicrealm.entity.chit.GoldChit;
 import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
 import ca.carleton.magicrealm.game.phase.impl.SearchPhase;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
+import ca.carleton.magicrealm.item.treasure.Treasure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +62,27 @@ public class SearchPhaseStrategy implements PhaseStrategy {
 
                 break;
             case SearchSelectionPanel.LOOT_TEXT:
+                for (ColoredChit chit : currentClearing.getParentTile().getChits()) {
+                    if (chit.getChitColor().equals(ChitColor.GOLD)
+                            && player.getDiscoveredThings().contains(chit)) {
+                        GoldChit goldChit = (GoldChit) chit;
+                        if (!goldChit.getTreasure().isEmpty()) {
+                            if (roll == 1) {
+                                player.getCharacter().addItem(goldChit.getTreasure().get(0));
+                            }
+                            else {
+                                if (roll > goldChit.getTreasure().size()) {
+                                    // Get the last treasure in the pile
+                                    player.getCharacter().addItem(goldChit.getTreasure().get(goldChit.getTreasure().size()-1));
+                                }
+                                else {
+                                    // If not, get the treasure from the index of the roll-1
+                                    player.getCharacter().addItem(goldChit.getTreasure().get(roll-1));
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
         }
     }

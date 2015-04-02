@@ -35,9 +35,9 @@ public class BoardWindow extends JFrame {
         this.setVisible(true);
     }
 
-    public void refresh(final BoardModel model, final AbstractCharacter character) {
+    public void refresh(final BoardModel model, final AbstractCharacter character, final boolean isSunset) {
         this.boardModel = model;
-        this.boardPanel.drawBoard(this.boardModel, character);
+        this.boardPanel.drawBoard(this.boardModel, character, isSunset);
         this.add(this.boardPanel);
     }
 

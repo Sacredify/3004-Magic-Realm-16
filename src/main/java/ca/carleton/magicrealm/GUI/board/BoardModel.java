@@ -361,10 +361,14 @@ public class BoardModel implements Serializable {
      * @return the clearing.
      */
     public Clearing getClearingForPlayer(final Player player) {
+        return this.getClearingForCharacter(player.getCharacter());
+    }
+
+
+    public Clearing getClearingForCharacter(final AbstractCharacter character) {
         for (final AbstractTile tile : this.tiles) {
             for (final Clearing clearing : tile.getClearings()) {
-                final AbstractCharacter playerCharacter = player.getCharacter();
-                if (clearing.getEntities().contains(playerCharacter)) {
+                if (clearing.getEntities().contains(character)) {
                     return clearing;
                 }
             }

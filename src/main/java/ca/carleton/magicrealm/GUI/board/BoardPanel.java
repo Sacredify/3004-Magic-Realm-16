@@ -54,7 +54,7 @@ public class BoardPanel extends JLayeredPane {
      *
      * @param boardModel board to draw
      */
-    public void drawBoard(final BoardModel boardModel, final AbstractCharacter character) {
+    public void drawBoard(final BoardModel boardModel, final AbstractCharacter character, final boolean isSunset) {
         this.removeAll();
         this.maximumX = 0;
 
@@ -86,7 +86,7 @@ public class BoardPanel extends JLayeredPane {
                     }
 
                     /** create the chits **/
-                    this.boardServices.createChitIconsForTile(tile, this, tileX, tileY, character);
+                    this.boardServices.createChitIconsForTile(tile, this, boardModel, tileX, tileY, character, isSunset);
                 }
                 x++;
             }

@@ -73,7 +73,7 @@ public class GameController {
                 break;
             case (Message.BIRDSONG_START):
                 this.updateFromServer(message.getPayload());
-                this.refreshBoard();
+                this.refreshBoard(false);
                 // Process birdsong
                 this.selectPhasesForDay();
                 break;
@@ -85,13 +85,13 @@ public class GameController {
             case (Message.COMBAT_FILL_OUT_MELEE_SHEET):
                 // Set new data
                 this.updateFromServer(message.getPayload());
-                this.refreshBoard();
+                this.refreshBoard(true);
                 this.selectOptionsForCombat();
                 break;
             case (Message.FATIGUE_FATIGUE_CHITS):
                 // Set new data
                 this.updateFromServer(message.getPayload());
-                this.refreshBoard();
+                this.refreshBoard(false);
                 this.selectChitsToFatigue();
             default:
                 break;
@@ -130,7 +130,7 @@ public class GameController {
     private void processDaylight() {
         Daylight.doDaylight(this.boardModel, this.currentPlayer, this.recordedPhasesForDay);
         this.updatePlayerInMap();
-        this.refreshBoard();
+        this.refreshBoard(true);
         LOG.info("Executed daylight phase for player.");
         this.networkConnection.sendMessage(Message.DAYLIGHT_DONE, this.boardModel);
     }
@@ -227,8 +227,8 @@ public class GameController {
     /**
      * Refresh the board (re-draw).
      */
-    private void refreshBoard() {
-        this.boardWindow.refresh(this.boardModel, this.currentPlayer.getCharacter());
+    private void refreshBoard(final boolean isSunset) {
+        this.boardWindow.refresh(this.boardModel, this.currentPlayer.getCharacter(), isSunset);
         this.boardWindow.setGameInfoText(this.createGameInfoString());
         LOG.info("Board refreshed.");
     }
