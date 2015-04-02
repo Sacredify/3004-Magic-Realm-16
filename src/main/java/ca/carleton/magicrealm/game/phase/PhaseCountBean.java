@@ -5,12 +5,16 @@ import java.util.List;
 
 /**
  * Bean class for the number of phases user gets.
- *
+ * <p>
  * Created with IntelliJ IDEA.
  * Date: 01/04/2015
  * Time: 4:55 PM
  */
 public class PhaseCountBean {
+
+    private boolean refundExtraPhase;
+
+    private PhaseType lastUsed;
 
     private int numberOfPhasesFOrDay;
 
@@ -36,8 +40,26 @@ public class PhaseCountBean {
         return this.numberOfPhasesFOrDay + this.extraPhases.size() > 0;
     }
 
-    public void removeOne() {
-        this.numberOfPhasesFOrDay -= 1;
+    public boolean canMakeMountainMove() {
+        return this.numberOfPhasesFOrDay + this.extraPhases.size() >= 2;
     }
 
+    public void refundLast() {
+        if (this.refundExtraPhase) {
+            this.extraPhases.add(this.lastUsed);
+        } else {
+            this.numberOfPhasesFOrDay += 1;
+        }
+    }
+
+    public void removeOne() {
+        this.numberOfPhasesFOrDay -= 1;
+        this.refundExtraPhase = false;
+    }
+
+    public void removeExtraPhase(final PhaseType selectedPhase) {
+        this.extraPhases.remove(selectedPhase);
+        this.lastUsed = selectedPhase;
+        this.refundExtraPhase = true;
+    }
 }
