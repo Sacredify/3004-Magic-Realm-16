@@ -224,29 +224,33 @@ public class AppServer implements Runnable {
     private void processCombatsForPlayers() {
         final List<Player> players = this.clients.stream().map(ServerThread::getPlayer).collect(Collectors.toList());
 
-        for (final Player player : players) {
-            LOG.info("Starting combat resolution for {}.", player.getCharacter());
-            final MeleeSheet playerSheet = this.boardModel.getMeleeSheet(player);
-            final Entity target = playerSheet.getTarget();
-            if (target == null) {
-                LOG.info("Player opted to not fight. Skipping their combat.");
-                continue;
-            }
-            final MeleeSheet targetSheet = this.boardModel.getMeleeSheet(target);
+        try {
+            for (final Player player : players) {
+                LOG.info("Starting combat resolution for {}.", player.getCharacter());
+                final MeleeSheet playerSheet = this.boardModel.getMeleeSheet(player);
+                final Entity target = playerSheet.getTarget();
+                if (target == null) {
+                    LOG.info("Player opted to not fight. Skipping their combat.");
+                    continue;
+                }
+                final MeleeSheet targetSheet = this.boardModel.getMeleeSheet(target);
 
-            if (playerSheet.hasFoughtToday() || targetSheet.hasFoughtToday()) {
-                LOG.info("Assumption that people can't fight twice. Skipping because either {} or {} has fought today.", playerSheet.getOwner(), targetSheet.getOwner());
-                continue;
-            }
+                if (playerSheet.hasFoughtToday() || targetSheet.hasFoughtToday()) {
+                    LOG.info("Assumption that people can't fight twice. Skipping because either {} or {} has fought today.", playerSheet.getOwner(), targetSheet.getOwner());
+                    continue;
+                }
 
-            if (target instanceof AbstractCharacter) {
-                // Combat between two characters
-                final Player otherPlayer = this.boardModel.getPlayerForCharacter((AbstractCharacter) target);
-                Combat.doCombat(this.boardModel, player, otherPlayer);
-            } else if (target instanceof Denizen) {
-                // Combat between a character and a native or monster.
-                Combat.doCombat(this.boardModel, player, (Denizen) target);
+                if (target instanceof AbstractCharacter) {
+                    // Combat between two characters
+                    final Player otherPlayer = this.boardModel.getPlayerForCharacter((AbstractCharacter) target);
+                    Combat.doCombat(this.boardModel, player, otherPlayer);
+                } else if (target instanceof Denizen) {
+                    // Combat between a character and a native or monster.
+                    Combat.doCombat(this.boardModel, player, (Denizen) target);
+                }
             }
+        } catch (final NullPointerException exception) {
+            LOG.error("Error with combat resolution. Something may have not been set. Instead of failing, we'll continue and hope it works.", exception);
         }
 
         // After combat is done
@@ -258,6 +262,7 @@ public class AppServer implements Runnable {
     /**
      * Update references to the current ones stored by the board (which may be scrambled through serialization. Object graphs are hard man).
      */
+
     private void synchronize() {
         for (final ServerThread client : this.clients) {
             this.boardModel.getPlayers().stream().filter(player -> client.getPlayer().equals(player)).forEach(player -> {
