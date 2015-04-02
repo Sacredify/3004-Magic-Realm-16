@@ -5,6 +5,8 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.chit.GoldChit;
+import ca.carleton.magicrealm.entity.chit.LostCastle;
+import ca.carleton.magicrealm.entity.chit.LostCity;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,20 +53,33 @@ public class InfoPanel extends JPanel {
 
         final java.util.List<Object> chitsAndTreasures = new ArrayList<Object>();
         info.getChits().stream().forEach(chit -> {
+            chitsAndTreasures.add(chit);
             if (chit instanceof GoldChit) {
-                chitsAndTreasures.add(chit);
                 ((GoldChit) chit).getTreasure().stream().forEach(treasure -> chitsAndTreasures.add("    " + treasure));
-            } else {
-                chitsAndTreasures.add(chit);
+            } else if (chit instanceof LostCity) {
+                ((LostCity) chit).soundChits.forEach(sound -> chitsAndTreasures.add("    " + sound));
+                ((LostCity) chit).treasureChits.forEach(treasure ->
+                {
+                    chitsAndTreasures.add("    " + treasure);
+                    treasure.getTreasure().stream().forEach(item -> chitsAndTreasures.add("        " + item));
+                });
+            } else if (chit instanceof LostCastle) {
+                ((LostCastle) chit).soundChits.forEach(sound -> chitsAndTreasures.add("    " + sound));
+                ((LostCastle) chit).treasureChits.forEach(treasure ->
+                {
+                    chitsAndTreasures.add("    " + treasure);
+                    treasure.getTreasure().stream().forEach(item -> chitsAndTreasures.add("        " + item));
+                });
             }
         });
 
         final JList<Object> chits = new JList<Object>(chitsAndTreasures.toArray(new Object[chitsAndTreasures.size()]));
-        chits.setLocation(20, 40);
-        chits.setSize(new Dimension(250, 200));
-        chits.setEnabled(false);
-        chits.setVisible(true);
-        this.add(chits);
+        final JScrollPane scrollPane = new JScrollPane(chits);
+        scrollPane.setLocation(20, 40);
+        scrollPane.setSize(new Dimension(250, 200));
+        scrollPane.setEnabled(false);
+        scrollPane.setVisible(true);
+        this.add(scrollPane);
 
         this.clearingList = new JList<>(info.getClearings());
         this.clearingList.setLocation(300, 40);
