@@ -32,10 +32,23 @@ public class MovePhaseStrategy implements PhaseStrategy {
 
         for (Path path : origin.getAdjacentPaths()) {
             if (path.checkIfClearingIsConnectedToPath(((MovePhase) phase).getMoveTarget())) {
-                origin.removeEntity(player.getCharacter());
-                move.getMoveTarget().addEntity(player.getCharacter());
-                LOG.info("Moved player from {} to {}.", origin, move.getMoveTarget());
-                return;
+                if (path.isHidden()) {
+                    if (player.getDiscoveredThings().contains(path)) {
+                        origin.removeEntity(player.getCharacter());
+                        move.getMoveTarget().addEntity(player.getCharacter());
+                        LOG.info("Moved player from {} to {}.", origin, move.getMoveTarget());
+                        return;
+                    }
+                    else {
+                        LOG.info("Player tried to take hidden path, but did not discover it. (Tried {})", path);
+                    }
+                }
+                else {
+                    origin.removeEntity(player.getCharacter());
+                    move.getMoveTarget().addEntity(player.getCharacter());
+                    LOG.info("Moved player from {} to {}.", origin, move.getMoveTarget());
+                    return;
+                }
             }
         }
         LOG.info("Played entered invalid location for his move phase. Not executed. (Tried {}).", ((MovePhase) phase).getMoveTarget());
