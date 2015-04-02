@@ -39,7 +39,7 @@ public enum TileInformation {
     }
 
     public String getEnchantedPath() {
-        return this.imageFilePath.replace(".png", "") + "-e1.png";
+        return this.imageFilePath.replace("1.png", "") + "-e1.png";
     }
 
 }

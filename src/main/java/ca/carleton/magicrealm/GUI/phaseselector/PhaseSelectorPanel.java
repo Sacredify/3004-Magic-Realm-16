@@ -11,7 +11,7 @@ import javax.swing.*;
  */
 public class PhaseSelectorPanel extends JPanel {
 
-    public static final String CONFIRM_TEXT = "Enter details";
+    public static final String CONFIRM_TEXT = "Submit";
 
     public static final int PHASE_PANEL_WIDTH = 500;
     public static final int PHASE_PANEL_HEIGHT = 300;

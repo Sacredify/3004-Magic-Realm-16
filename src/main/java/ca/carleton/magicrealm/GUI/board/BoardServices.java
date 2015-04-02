@@ -54,7 +54,7 @@ public class BoardServices {
     public JLabel createTileIcon(AbstractTile tile, final boolean firstDraw) {
         JLabel newTile = new JLabel();
         newTile.setSize(TILE_WIDTH, TILE_HEIGHT);
-        ImageIcon newIcon = this.createImageIcon(tile.getTileInformation().getPath());
+        ImageIcon newIcon = this.createImageIcon(tile.isEnchanted() ? tile.getTileInformation().getEnchantedPath() : tile.getTileInformation().getPath());
         BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
         newImage = this.applyTransformations(newImage, newTile, tile, firstDraw);
 

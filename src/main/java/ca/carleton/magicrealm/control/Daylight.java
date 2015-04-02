@@ -4,13 +4,13 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
-import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
 import ca.carleton.magicrealm.game.phase.strategy.impl.*;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +32,7 @@ public class Daylight {
             this.add(new TradePhaseStrategy());
             this.add(new AlertPhaseStrategy());
             this.add(new RestPhaseStrategy());
+            this.add(new SpellPhaseStrategy());
         }
     };
 
@@ -85,9 +86,9 @@ public class Daylight {
 
         if (!player.getCharacter().isHidden()) {
             for (final Entity entity : playerClearing.getEntities()) {
-                // Only natives, monsters and ghosts block for now.
-                // ASSUMPTION automatic blocking, why the hell not.
-                if (entity instanceof Denizen || entity instanceof AbstractCharacter) {
+                // ASSUMPTION automatic blocking by all entities., why the hell not.
+                if (entity instanceof Denizen && !player.getCharacter().equals(entity)) {
+                    LOG.info("Blocked by {}.", entity.getEntityInformation());
                     return true;
                 }
             }

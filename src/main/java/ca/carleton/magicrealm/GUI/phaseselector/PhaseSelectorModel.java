@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
+import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
@@ -77,6 +78,12 @@ public class PhaseSelectorModel {
         final RestPhase restPhase = new RestPhase();
         restPhase.setSelectedChit(chit);
         this.phases.add(restPhase);
+    }
+
+    public void addSpellEnchantPhase(final AbstractTile tile) {
+        final SpellPhase spellPhase = new SpellPhase();
+        spellPhase.setTileToEnchant(tile);
+        this.phases.add(spellPhase);
     }
 
     public void done() {

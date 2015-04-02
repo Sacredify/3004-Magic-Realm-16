@@ -17,6 +17,8 @@ public abstract class AbstractTile implements Serializable {
 
     protected Clearing[] clearings;
 
+    protected boolean enchanted;
+
     private final List<ColoredChit> chits = new ArrayList<ColoredChit>();
 
     public abstract TileInformation getTileInformation();
@@ -28,6 +30,14 @@ public abstract class AbstractTile implements Serializable {
 
     public Clearing[] getClearings() {
         return this.clearings;
+    }
+
+    public boolean isEnchanted() {
+        return this.enchanted;
+    }
+
+    public void toggleEnchanted() {
+        this.enchanted = !this.enchanted;
     }
 
     public int getAngle() {
@@ -44,5 +54,10 @@ public abstract class AbstractTile implements Serializable {
 
     public void addChit(final ColoredChit chit) {
         this.chits.add(chit);
+    }
+
+    @Override
+    public String toString() {
+        return this.getTileInformation().toString();
     }
 }

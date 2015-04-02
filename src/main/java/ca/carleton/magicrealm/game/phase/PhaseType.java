@@ -17,5 +17,5 @@ public enum PhaseType {
     //HIRE,
     //FOLLOW,
     //FLY,
-    //SPELL
+    SPELL
 }
