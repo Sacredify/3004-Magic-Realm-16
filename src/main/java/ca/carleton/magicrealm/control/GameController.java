@@ -285,7 +285,7 @@ public class GameController {
         this.output = new JFrame("Logging output (See console for more detailed information).");
         this.output.setPreferredSize(new Dimension(550, 1000));
         this.output.setResizable(false);
-        this.output.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.output.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         JTextArea area = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(area);
         scrollPane.setSize(new Dimension(550, 1000));
@@ -304,7 +304,7 @@ public class GameController {
 
     private void organizeDesktop() {
         this.output.setLocation(0, 0);
-        this.boardWindow.setLocation(this.output.getX() + (int) this.output.getSize().getWidth(),
+        this.boardWindow.setLocation(this.output.getX() + (int) this.output.getSize().getWidth() + this.output.getInsets().left + this.output.getInsets().right,
                 this.output.getY());
     }
 
