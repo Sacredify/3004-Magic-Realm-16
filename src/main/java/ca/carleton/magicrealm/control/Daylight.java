@@ -4,6 +4,7 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.strategy.PhaseStrategy;
@@ -85,8 +86,8 @@ public class Daylight {
         if (!player.getCharacter().isHidden()) {
             for (final Entity entity : playerClearing.getEntities()) {
                 // Only natives, monsters and ghosts block for now.
-                // TODO Add visitors and characters when required.
-                if (entity instanceof Denizen) {
+                // ASSUMPTION automatic blocking, why the hell not.
+                if (entity instanceof Denizen || entity instanceof AbstractCharacter) {
                     return true;
                 }
             }
