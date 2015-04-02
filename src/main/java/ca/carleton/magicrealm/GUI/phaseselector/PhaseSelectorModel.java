@@ -52,6 +52,12 @@ public class PhaseSelectorModel {
     }
 
     public void addMovementPhase(final Clearing clearing) {
+
+        if (clearing == null) {
+            LOG.error("User entered null for their move target. Discarding.");
+            return;
+        }
+
         final MovePhase movePhase = new MovePhase();
         movePhase.setMoveTarget(clearing);
 
