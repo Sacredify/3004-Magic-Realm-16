@@ -45,6 +45,8 @@ public class GameController {
 
     private AppClient networkConnection = null;
 
+    private JFrame output;
+
     private final List<AbstractPhase> recordedPhasesForDay = new ArrayList<AbstractPhase>();
 
     private final List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
@@ -52,22 +54,8 @@ public class GameController {
     public GameController() {
         this.boardWindow = new BoardWindow();
         this.currentPlayer = new Player();
-
-        JFrame newFrame = new JFrame();
-        newFrame.setPreferredSize(new Dimension(550, 1000));
-        JTextArea area = new JTextArea();
-        area.setSize(new Dimension(550, 1000));
-        area.setEditable(false);
-        area.setVisible(true);
-        newFrame.add(area);
-        newFrame.pack();
-
-        LogWriter writer = new LogWriter();
-
-        Timer timer = new Timer(100, e -> writer.output(area));
-        timer.start();
-
-        newFrame.setVisible(true);
+        this.startOutputLogging();
+        this.organizeDesktop();
     }
 
     /**
@@ -290,6 +278,34 @@ public class GameController {
                 });
 
         return notorietyAndFame;
+    }
+
+    private void startOutputLogging() {
+
+        this.output = new JFrame("Logging output (See console for more detailed information).");
+        this.output.setPreferredSize(new Dimension(550, 1000));
+        this.output.setResizable(false);
+        this.output.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        JTextArea area = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(area);
+        scrollPane.setSize(new Dimension(550, 1000));
+        area.setEditable(false);
+        scrollPane.setVisible(true);
+        this.output.add(scrollPane);
+        this.output.pack();
+
+        LogWriter writer = new LogWriter();
+        Timer timer = new Timer(100, e -> writer.output(area));
+        timer.start();
+
+        this.output.setVisible(true);
+        LOG.info("Started logging timer and displayed logging output window.");
+    }
+
+    private void organizeDesktop() {
+        this.output.setLocation(0, 0);
+        this.boardWindow.setLocation(this.output.getX() + (int) this.output.getSize().getWidth(),
+                this.output.getY());
     }
 
     public void setBoardModel(BoardModel model) {
