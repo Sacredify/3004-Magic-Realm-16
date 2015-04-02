@@ -10,11 +10,14 @@ import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseUtils;
 import ca.carleton.magicrealm.item.treasure.Treasure;
+import ca.carleton.magicrealm.log.LogWriter;
 import ca.carleton.magicrealm.network.AppClient;
 import ca.carleton.magicrealm.network.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -49,6 +52,22 @@ public class GameController {
     public GameController() {
         this.boardWindow = new BoardWindow();
         this.currentPlayer = new Player();
+
+        JFrame newFrame = new JFrame();
+        newFrame.setPreferredSize(new Dimension(550, 1000));
+        JTextArea area = new JTextArea();
+        area.setSize(new Dimension(550, 1000));
+        area.setEditable(false);
+        area.setVisible(true);
+        newFrame.add(area);
+        newFrame.pack();
+
+        LogWriter writer = new LogWriter();
+
+        Timer timer = new Timer(100, e -> writer.output(area));
+        timer.start();
+
+        newFrame.setVisible(true);
     }
 
     /**
@@ -267,7 +286,7 @@ public class GameController {
     }
 
     private int[] getVictoryConditionValues() {
-        final int[] notorietyAndFame = { this.currentPlayer.getCharacter().getCurrentNotoriety(), this.currentPlayer.getCharacter().getCurrentFame()};
+        final int[] notorietyAndFame = {this.currentPlayer.getCharacter().getCurrentNotoriety(), this.currentPlayer.getCharacter().getCurrentFame()};
 
         this.currentPlayer.getCharacter().getItems().stream()
                 .filter(item -> item instanceof Treasure)
