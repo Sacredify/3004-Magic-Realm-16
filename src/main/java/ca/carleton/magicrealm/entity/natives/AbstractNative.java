@@ -54,7 +54,7 @@ public abstract class AbstractNative extends Denizen implements BountyCarrier {
 
     @Override
     public String toString() {
-        return super.toString() + " [" + this.faction + "] " + this.isLeaderString();
+        return super.toString() + " [" + this.faction + "]" + this.isLeaderString();
     }
 
     private String isLeaderString() {

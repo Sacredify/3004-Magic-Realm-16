@@ -15,7 +15,7 @@ public class Ghost extends Denizen implements BountyCarrier {
 
     public Ghost() {
         this.setProwling(true);
-        this.vulnerability = Harm.LIGHT;
+        this.vulnerability = Harm.MEDIUM;
     }
 
     @Override

@@ -244,8 +244,8 @@ public class AppServer implements Runnable {
                 final Player otherPlayer = this.boardModel.getPlayerForCharacter((AbstractCharacter) target);
                 Combat.doCombat(this.boardModel, player, otherPlayer);
             } else if (target instanceof Denizen) {
-                // Combat between a character and a native.
-                throw new IllegalArgumentException("Combat versus denizens has not been implemented yet!");
+                // Combat between a character and a native or monster.
+                Combat.doCombat(this.boardModel, player, (Denizen) target);
             }
         }
 

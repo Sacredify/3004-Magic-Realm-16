@@ -8,11 +8,11 @@ import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.chit.ColoredChit;
 import ca.carleton.magicrealm.entity.monster.*;
+import ca.carleton.magicrealm.game.DiceRoller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
-import java.util.Random;
 
 /**
  * Groupings of methods to handle sunrise operations.
@@ -51,6 +51,7 @@ public class Sunrise {
                                 giant.setCurrentClearing(startForGiants);
                                 startForGiants.addEntity(giant);
                                 boardModel.getAbstractMonsters().add(giant);
+                                boardModel.createNewMeleeSheet(giant);
                                 break;
                             }
                             else if (tile.getTileType().equals(TileType.CAVE)) {
@@ -61,6 +62,7 @@ public class Sunrise {
                                 troll.setCurrentClearing(startForTrolls);
                                 startForTrolls.addEntity(troll);
                                 boardModel.getAbstractMonsters().add(troll);
+                                boardModel.createNewMeleeSheet(troll);
                                 break;
                             }
                         case "DANK":
@@ -72,6 +74,7 @@ public class Sunrise {
                                 spider.setCurrentClearing(startForSpiders);
                                 startForSpiders.addEntity(spider);
                                 boardModel.getAbstractMonsters().add(spider);
+                                boardModel.createNewMeleeSheet(spider);
                                 break;
                             }
                             else if (tile.getTileType().equals(TileType.CAVE)) {
@@ -82,6 +85,7 @@ public class Sunrise {
                                 serpent.setCurrentClearing(startForSerpents);
                                 startForSerpents.addEntity(serpent);
                                 boardModel.getAbstractMonsters().add(serpent);
+                                boardModel.createNewMeleeSheet(serpent);
                                 break;
                             }
                         case "SLITHER":
@@ -92,6 +96,7 @@ public class Sunrise {
                             dragon.setCurrentClearing(startForDragons);
                             startForDragons.addEntity(dragon);
                             boardModel.getAbstractMonsters().add(dragon);
+                            boardModel.createNewMeleeSheet(dragon);
 
                             LOG.debug("Serpent created from Slither chit");
                             final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
@@ -100,6 +105,7 @@ public class Sunrise {
                             serpent.setCurrentClearing(startForSerpents);
                             startForSerpents.addEntity(serpent);
                             boardModel.getAbstractMonsters().add(serpent);
+                            boardModel.createNewMeleeSheet(serpent);
                             break;
                         case "RUINS":
                             LOG.debug("Giant bat created from Ruins chit");
@@ -109,19 +115,20 @@ public class Sunrise {
                             giantBat.setCurrentClearing(startForBats);
                             startForBats.addEntity(giantBat);
                             boardModel.getAbstractMonsters().add(giantBat);
+                            boardModel.createNewMeleeSheet(giantBat);
                     }
                 }
             }
         }
+
+        /** determine which monsters are prowling **/
+        int monsterRoll = DiceRoller.rollOnce();
 
         for (Denizen denizen: boardModel.getAbstractMonsters()) {
             /** Reset prowling monsters/natives **/
             if (currentDay % 7 == 0) {
                 denizen.setCurrentClearing(denizen.getStartingClearing());
             }
-            /** determine which monsters are prowling **/
-            Random monsterDice = new Random();
-            int monsterRoll = monsterDice.nextInt(6) + 1;
 
             // Denizens that weren't rolled are not prowling by default
             denizen.setProwling(false);

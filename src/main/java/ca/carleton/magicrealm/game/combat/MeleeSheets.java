@@ -5,6 +5,8 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.combat.chit.ActionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
  * Time: 5:55 PM
  */
 public class MeleeSheets implements Serializable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MeleeSheets.class);
 
     private static final long serialVersionUID = 1945181772117961369L;
 
@@ -63,7 +67,7 @@ public class MeleeSheets implements Serializable {
 
         denizenSheet.setAttackChit(
                 new ActionChit.ActionChitBuilder(ActionType.FIGHT)
-                        .withStrength(denizen.getWeapon().getStrength())
+                        .withStrength(denizen.getVulnerability())
                         .withFatigueAsterisks(RANDOM.nextInt(3))
                         .withTime(RANDOM.nextInt(4) + 2)
                         .build()
@@ -78,6 +82,7 @@ public class MeleeSheets implements Serializable {
         );
 
         this.meleeSheets.putIfAbsent(denizen, denizenSheet);
+        LOG.info("Created new melee sheet for denizen {}.", denizen);
     }
 
     /**

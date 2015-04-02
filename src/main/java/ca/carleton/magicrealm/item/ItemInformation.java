@@ -27,6 +27,7 @@ public enum ItemInformation {
     SHORT_SWORD("image/weapon/short_sword.gif", null, "Short sword"),
     AXE("image/weapon/axe.gif", null, "Axe"),
     MACE("image/weapon/mace.gif", null, "Mace"),
+    MONSTER(null, null, "Monster tooth/claw"),
 
     // Armor
     SUIT_OF_ARMOR("image/armor/suitofarmor.gif", null, "Suit of armor"),

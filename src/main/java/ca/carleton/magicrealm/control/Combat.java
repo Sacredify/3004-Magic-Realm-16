@@ -2,9 +2,11 @@ package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
+import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.AttackDirection;
 import ca.carleton.magicrealm.game.combat.Harm;
@@ -154,17 +156,17 @@ public class Combat {
         if (playerOneWeaponLength >= playerTwoWeaponLength) {
             // "Round" of combat... attacker attacks, then gets attacked by defender, assuming the defender isn't dead.
             LOG.info("Beginning round one of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
-            resolveRound(playerOneSheet, playerTwoSheet);
+            resolveRoundForPlayers(playerOneSheet, playerTwoSheet);
             if (!playerTwo.getCharacter().isDead()) {
                 LOG.info("Beginning round two of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
-                resolveRound(playerTwoSheet, playerOneSheet);
+                resolveRoundForPlayers(playerTwoSheet, playerOneSheet);
             }
         } else {
             LOG.info("Beginning round one of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
-            resolveRound(playerTwoSheet, playerOneSheet);
+            resolveRoundForPlayers(playerTwoSheet, playerOneSheet);
             if (!playerOne.getCharacter().isDead()) {
                 LOG.info("Beginning round two of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
-                resolveRound(playerOneSheet, playerTwoSheet);
+                resolveRoundForPlayers(playerOneSheet, playerTwoSheet);
             }
         }
 
@@ -200,6 +202,26 @@ public class Combat {
 
         playerOneSheet.markFought();
         playerTwoSheet.markFought();
+    }
+
+    /**
+     * Initiate combat between a player and denizen.
+     *
+     * @param boardModel the board.
+     * @param player     the first player.
+     * @param denizen    the second player.
+     */
+    public static void doCombat(final BoardModel boardModel, final Player player, final Denizen denizen) {
+
+        if (denizen instanceof AbstractMonster) {
+            LOG.info("Target {} is a monster! Fighting as normal 1v1.", denizen);
+
+
+        } else {
+            LOG.info("Target {} is a native! Fighting as native group if possible.", denizen);
+        }
+
+
     }
 
     /**
@@ -307,12 +329,12 @@ public class Combat {
     }
 
     /**
-     * Resolve a round of combat between two entities. This assumes playerOne is attacking player two (who is defending).
+     * Resolve a round of combat between two players. This assumes playerOne is attacking player two (who is defending).
      *
      * @param attacker the first melee sheet.
      * @param defender the second melee sheet.
      */
-    private static void resolveRound(final MeleeSheet attacker, final MeleeSheet defender) {
+    private static void resolveRoundForPlayers(final MeleeSheet attacker, final MeleeSheet defender) {
 
         // Determine if attackers attack hits through defenders maneuver
         boolean attackHit = attacker.getAttackDirection().matches(defender.getManeuver());

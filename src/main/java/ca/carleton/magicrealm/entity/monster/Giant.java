@@ -2,6 +2,7 @@ package ca.carleton.magicrealm.entity.monster;
 
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.weapon.GreatSword;
 
 /**
@@ -10,6 +11,7 @@ import ca.carleton.magicrealm.item.weapon.GreatSword;
 public class Giant extends AbstractMonster {
 
     public Giant() {
+        this.vulnerability = Harm.TREMENDOUS;
         this.weapon = new GreatSword();
     }
 
