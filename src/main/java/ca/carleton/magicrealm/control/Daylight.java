@@ -33,6 +33,7 @@ public class Daylight {
             this.add(new AlertPhaseStrategy());
             this.add(new RestPhaseStrategy());
             this.add(new SpellPhaseStrategy());
+            this.add(new SearchPhaseStrategy());
         }
     };
 

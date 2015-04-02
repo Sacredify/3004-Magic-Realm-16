@@ -140,10 +140,16 @@ public class Sunrise {
             // Denizens that weren't rolled are not prowling by default
             denizen.setProwling(false);
             if (monsterRoll == 1) {
-
+                if (denizen.getEntityInformation().equals(EntityInformation.DRAGON)) {
+                    denizen.setProwling(true);
+                    denizen.setHidden(false);
+                }
             }
             else if (monsterRoll == 2) {
-
+                if (denizen.getEntityInformation().equals(EntityInformation.SERPENT)) {
+                    denizen.setProwling(true);
+                    denizen.setHidden(false);
+                }
             }
             else if (monsterRoll == 3) {
 
@@ -155,10 +161,16 @@ public class Sunrise {
                 }
             }
             else if (monsterRoll == 5) {
-
+                if (denizen.getEntityInformation().equals(EntityInformation.SPIDER)) {
+                    denizen.setProwling(true);
+                    denizen.setHidden(false);
+                }
             }
             else if (monsterRoll == 6) {
-
+                if (denizen.getEntityInformation().equals(EntityInformation.GIANTBAT)) {
+                    denizen.setProwling(true);
+                    denizen.setHidden(false);
+                }
             }
         }
     }

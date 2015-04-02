@@ -54,6 +54,11 @@ public class Clearing implements Serializable {;
         clearing.adjacentPaths.add(new Path(clearing, this));
     }
 
+    public void connectToHidden(Clearing clearing) {
+        this.adjacentPaths.add(new Path(this, clearing, true));
+        clearing.adjacentPaths.add(new Path(clearing, this, true));
+    }
+
     /**
      * Return the list of adjacent clearings.
      *

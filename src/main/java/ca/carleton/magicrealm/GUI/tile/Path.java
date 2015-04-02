@@ -18,6 +18,13 @@ public class Path implements Serializable, Discoverable {
     public Path(final Clearing fromClearing, final Clearing toClearing) {
         this.fromClearing = fromClearing;
         this.toClearing = toClearing;
+        this.isHidden = false;
+    }
+
+    public Path(final Clearing fromClearing, final Clearing toClearing, final boolean isHidden) {
+        this.fromClearing = fromClearing;
+        this.toClearing = toClearing;
+        this.isHidden = isHidden;
     }
 
     public boolean checkIfClearingIsConnectedToPath(final Clearing clearing) {
