@@ -82,17 +82,16 @@ public class PhaseSelectorMenu extends JDialog {
         return e -> {
             PhaseType selectedPhase = (PhaseType) PhaseSelectorMenu.this.phaseSelectorPanel.getFirstPhaseBox().getSelectedItem();
 
-            LOG.info("Checking against number of remaining phases...");
-
-            if (this.phaseSelectorModel.getPhaseCount().getExtraPhases().contains(selectedPhase)) {
-                LOG.info("Removing from list of extra phases...");
-                this.phaseSelectorModel.getPhaseCount().getExtraPhases().remove(selectedPhase);
-            } else if (this.phaseSelectorModel.getPhaseCount().getNumberOfPhasesFOrDay() > 0) {
-                LOG.info("Removing from number of remaining phases...");
-                this.phaseSelectorModel.getPhaseCount().removeOne();
-            }
-
             if (this.phaseSelectorModel.getPhaseCount().hasMorePhases()) {
+
+                LOG.info("Checking against number of remaining phases...");
+                if (this.phaseSelectorModel.getPhaseCount().getExtraPhases().contains(selectedPhase)) {
+                    LOG.info("There was an extra phase matching the selected phase. Removing from list of extra phases.");
+                    this.phaseSelectorModel.getPhaseCount().removeExtraPhase(selectedPhase);
+                } else if (this.phaseSelectorModel.getPhaseCount().getNumberOfPhasesFOrDay() > 0) {
+                    LOG.info("Subtracting one from the number of phases.");
+                    this.phaseSelectorModel.getPhaseCount().removeOne();
+                }
 
                 LOG.info("Adding {} to list of phases.", selectedPhase);
                 if (selectedPhase.equals(PhaseType.MOVE)) {
@@ -125,8 +124,10 @@ public class PhaseSelectorMenu extends JDialog {
                     PhaseSelectorMenu.this.searchSelectionMenu = new SearchSelectionMenu();
                     PhaseSelectorMenu.this.searchSelectionMenu.getSearchSelectionPanel().getConfirmButton().addActionListener(this.createActionListenerForSearchConfirmButton());
                 }
-            } else {
-                LOG.info("User has no more phases to enter...disabling button.");
+            }
+
+            if (!this.phaseSelectorModel.getPhaseCount().hasMorePhases()) {
+                LOG.info("User has no more phases to enter. Disabling button.");
                 this.phaseSelectorPanel.getConfirmButton().setEnabled(false);
             }
 
