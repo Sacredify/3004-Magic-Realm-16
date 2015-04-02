@@ -87,7 +87,7 @@ public class AppClient implements Runnable {
         do {
             try {
                 obj = this.objInputStream.readObject();
-                this.gameController.handleMessage(obj);
+                this.gameController.handleMessage((Message) obj);
             } catch (IOException | ClassNotFoundException e) {
                 LOG.error("Error with reading the object from the stream.", e);
                 System.exit(-1);
