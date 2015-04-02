@@ -25,6 +25,8 @@ public class SearchPhase extends AbstractPhase {
 
     private String action;
 
+    private BoardModel board;
+
     @Override
     public PhaseType getPhaseType() {
         return PhaseType.SEARCH;
@@ -32,45 +34,16 @@ public class SearchPhase extends AbstractPhase {
 
     @Override
     public void updateFromBoard(final Player player, final BoardModel board) {
-        int roll = DiceRoller.rollOnce();
+        this.board = board;
 
-        Clearing currentClearing = board.getClearingForPlayer(player);
-
-        switch (action) {
-            case SearchSelectionPanel.LOCATE_TEXT:
-                if (roll == 1 || roll == 4) {
-                    for (ColoredChit chit : currentClearing.getParentTile().getChits()) {
-                        if (chit.getClearingNumber() == Integer.parseInt(currentClearing.getName()))
-                            player.getDiscoveredThings().add(chit);
-                    }
-                }
-                if (roll == 1 || roll == 2 || roll == 3) {
-                    this.discoverPath(currentClearing, player);
-                }
-                break;
-            case SearchSelectionPanel.PEER_TEXT:
-                if (roll == 1 || roll == 2 || roll == 3) {
-                    this.discoverPath(currentClearing, player);
-                }
-                if (roll == 1 || roll == 3 || roll == 4) {
-                    for (Entity entity : currentClearing.getEntities()) {
-                        if (entity.isHidden())
-                            player.getDiscoveredThings().add(entity);
-                    }
-                }
-
-                break;
-            case SearchSelectionPanel.LOOT_TEXT:
-                break;
-        }
     }
 
-    private void discoverPath(final Clearing clearing, final Player player) {
-        for (Path path : clearing.getAdjacentPaths()) {
-            if (path.isHidden())
-                player.getDiscoveredThings().add(path);
+    public BoardModel getBoard() {
+        return board;
+    }
 
-        }
+    public String getAction() {
+        return action;
     }
 
     public void setAction(String action) {

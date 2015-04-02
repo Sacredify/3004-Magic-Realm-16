@@ -159,8 +159,8 @@ public class BoardModel implements Serializable {
 
         Clearing[] cliff = this.tiles.get(0).getClearings();
         cliff[3].connectTo(cliff[5]);
-        cliff[4].connectTo(cliff[2]);
-        cliff[5].connectTo(cliff[2]);
+        cliff[4].connectToHidden(cliff[2]);
+        cliff[5].connectToHidden(cliff[2]);
         cliff[5].connectTo(cliff[0]);
         cliff[2].connectTo(cliff[1]);
 
@@ -180,9 +180,9 @@ public class BoardModel implements Serializable {
         ledge[2].connectTo(cliff[1]);
         ledge[2].connectTo(ledge[5]);
         ledge[5].connectTo(ledge[0]);
-        ledge[0].connectTo(ledge[2]);
+        ledge[0].connectToHidden(ledge[2]);
         ledge[0].connectTo(ledge[3]);
-        ledge[5].connectTo(ledge[3]);
+        ledge[5].connectToHidden(ledge[3]);
         ledge[1].connectTo(evil[2]);
         ledge[1].connectTo(ledge[4]);
 
@@ -202,7 +202,7 @@ public class BoardModel implements Serializable {
         crag[0].connectTo(crag[3]);
         crag[3].connectTo(crag[5]);
         crag[5].connectTo(crag[2]);
-        crag[2].connectTo(crag[1]);
+        crag[2].connectToHidden(crag[1]);
         crag[2].connectTo(crag[4]);
         crag[4].connectTo(crag[1]);
 
@@ -213,7 +213,7 @@ public class BoardModel implements Serializable {
         cavern[5].connectTo(cavern[2]);
         cavern[2].connectTo(cavern[5]);
         cavern[5].connectTo(cavern[3]);
-        cavern[3].connectTo(cavern[0]);
+        cavern[3].connectToHidden(cavern[0]);
         cavern[2].connectTo(cavern[1]);
         cavern[1].connectTo(borderland[4]);
         cavern[2].connectTo(cavern[0]);
@@ -237,7 +237,7 @@ public class BoardModel implements Serializable {
         Clearing[] deepWoods = this.tiles.get(10).getClearings();
         deepWoods[0].connectTo(oakWoods[1]);
         deepWoods[0].connectTo(crag[1]);
-        deepWoods[0].connectTo(deepWoods[3]);
+        deepWoods[0].connectToHidden(deepWoods[3]);
         deepWoods[0].connectTo(deepWoods[5]);
         deepWoods[3].connectTo(deepWoods[5]);
         deepWoods[3].connectTo(deepWoods[4]);
@@ -247,7 +247,7 @@ public class BoardModel implements Serializable {
         deepWoods[1].connectTo(darkValley[3]);
 
         Clearing[] mountain = this.tiles.get(11).getClearings();
-        mountain[3].connectTo(mountain[5]);
+        mountain[3].connectToHidden(mountain[5]);
         mountain[3].connectTo(mountain[1]);
         mountain[1].connectTo(mountain[4]);
         mountain[4].connectTo(mountain[5]);
@@ -291,7 +291,7 @@ public class BoardModel implements Serializable {
         ruins[2].connectTo(ruins[5]);
         ruins[5].connectTo(ruins[3]);
         ruins[3].connectTo(ruins[0]);
-        ruins[0].connectTo(ruins[4]);
+        ruins[0].connectToHidden(ruins[4]);
         ruins[0].connectTo(nutWoods[1]);
         ruins[0].connectTo(ruins[1]);
 

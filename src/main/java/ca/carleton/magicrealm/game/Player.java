@@ -6,6 +6,7 @@ import ca.carleton.magicrealm.entity.chit.Dwelling;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +38,7 @@ public class Player implements Serializable {
     /**
      * List of things that the player has found
      */
-    private List<Discoverable> discoveredThings;
+    private List<Discoverable> discoveredThings = new ArrayList<>();
 
     private int restarts = 0;
 
