@@ -44,10 +44,9 @@ public class PhaseSelectorModel {
         this.menu.phaseSelectorPanel.updateInfoText(infoText);
     }
 
-    public void addMovementPhase(final Clearing clearing, final Clearing origin) {
+    public void addMovementPhase(final Clearing clearing) {
         final MovePhase movePhase = new MovePhase();
         movePhase.setMoveTarget(clearing);
-        movePhase.setOrigin(origin);
         this.phases.add(movePhase);
     }
 

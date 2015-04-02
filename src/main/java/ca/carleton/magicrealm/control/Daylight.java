@@ -37,7 +37,17 @@ public class Daylight {
     };
 
     public static void processPhasesForPlayer(final BoardModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
+        LOG.info("Starting daylight process.");
+        updateFromBoard(board, player, phasesToExecute);
+        process(board, player, phasesToExecute);
+    }
 
+    private static void updateFromBoard(final BoardModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
+        phasesToExecute.stream().forEach(phase -> phase.updateFromBoard(player, board));
+        LOG.info("Updated {} phases' data from the board before beginning daylight.", phasesToExecute);
+    }
+
+    private static void process(final BoardModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
         LOG.info("Setting character status to unhidden/unblocked.");
         player.getCharacter().setHidden(false);
         player.getCharacter().setBlocked(false);
@@ -62,7 +72,6 @@ public class Daylight {
         }
         LOG.info("Done executing phases.");
         phasesToExecute.clear();
-
     }
 
     /**
@@ -77,7 +86,7 @@ public class Daylight {
      * @param board  the board.
      * @return true if the player is now BLOCKED.
      */
-    public static boolean characterNowBlocked(final Player player, final BoardModel board) {
+    private static boolean characterNowBlocked(final Player player, final BoardModel board) {
         final Clearing playerClearing = board.getClearingForPlayer(player);
 
         if (player.getCharacter().isBlocked()) {

@@ -20,7 +20,7 @@ public class MovePhase extends AbstractPhase {
 
     private Clearing moveTarget;
 
-    private Clearing origin;
+    private BoardModel board;
 
     @Override
     public PhaseType getPhaseType() {
@@ -35,12 +35,11 @@ public class MovePhase extends AbstractPhase {
                     this.moveTarget = clearing;
                     LOG.info("Updated move target from board.");
                 }
-                if (this.origin.equals(clearing)) {
-                    this.origin = clearing;
-                    LOG.info("Updated origin from board.");
-                }
             }
         }
+
+        this.board = board;
+        LOG.info("Updated board for move.");
     }
 
     public Clearing getMoveTarget() {
@@ -51,11 +50,8 @@ public class MovePhase extends AbstractPhase {
         this.moveTarget = moveTarget;
     }
 
-    public Clearing getOrigin() {
-        return this.origin;
+    public BoardModel getBoard() {
+        return this.board;
     }
 
-    public void setOrigin(final Clearing origin) {
-        this.origin = origin;
-    }
 }

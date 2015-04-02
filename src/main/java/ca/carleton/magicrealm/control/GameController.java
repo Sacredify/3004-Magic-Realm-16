@@ -75,7 +75,6 @@ public class GameController {
                 case (Message.DAYLIGHT_START):
                     this.updateFromServer(m.getPayload());
                     // Process daylight
-                    this.processUpdatedPhasesFromBoard();
                     this.processDaylight();
                     break;
                 case (Message.COMBAT_FILL_OUT_MELEE_SHEET):
@@ -163,16 +162,6 @@ public class GameController {
     private void updateFromServer(final Object boardModel) {
         this.boardModel = (BoardModel) boardModel;
         this.updateCurrentPlayer();
-    }
-
-    /**
-     * Because we send the entire board, we need to update the phases, since the references are now garbled.
-     */
-    private void processUpdatedPhasesFromBoard() {
-        for (final AbstractPhase phase : this.recordedPhasesForDay) {
-            phase.updateFromBoard(this.currentPlayer, this.boardModel);
-        }
-        LOG.info("Updated {} phases' data from the board before beginning daylight.", this.recordedPhasesForDay.size());
     }
 
     /**

@@ -133,8 +133,7 @@ public class PhaseSelectorMenu extends JDialog {
 
     public ActionListener createActionListenerForMoveSelectButton() {
         return e -> {
-            PhaseSelectorMenu.this.phaseSelectorModel.addMovementPhase(PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue(),
-                    PhaseSelectorMenu.this.controller.getBoardModel().getClearingForPlayer(PhaseSelectorMenu.this.player));
+            PhaseSelectorMenu.this.phaseSelectorModel.addMovementPhase(PhaseSelectorMenu.this.moveSelectionMenu.getMoveSelectionPanel().getClearingJList().getSelectedValue());
             PhaseSelectorMenu.this.moveSelectionMenu.dispose();
         };
     }

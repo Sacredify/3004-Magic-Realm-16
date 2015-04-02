@@ -41,7 +41,6 @@ public class MovePhaseTest {
 
         final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
         final MovePhase movePhase = new MovePhase();
-        movePhase.setOrigin(boardModel.getClearingForPlayer(player));
         movePhase.setMoveTarget(moveTarget);
 
         phases.add(movePhase);
@@ -69,7 +68,6 @@ public class MovePhaseTest {
 
         final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
         final MovePhase movePhase = new MovePhase();
-        movePhase.setOrigin(boardModel.getClearingForPlayer(player));
         movePhase.setMoveTarget(moveTarget);
 
         phases.add(movePhase);

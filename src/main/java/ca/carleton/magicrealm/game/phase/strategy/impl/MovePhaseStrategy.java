@@ -28,13 +28,13 @@ public class MovePhaseStrategy implements PhaseStrategy {
     public void doPhase(final Player player, final AbstractPhase phase) {
 
         final MovePhase move = (MovePhase) phase;
-        final Clearing temp = move.getOrigin();
+        final Clearing origin =  move.getBoard().getClearingForPlayer(player);
 
-        for (Path path : temp.getAdjacentPaths()) {
+        for (Path path : origin.getAdjacentPaths()) {
             if (path.checkIfClearingIsConnectedToPath(((MovePhase) phase).getMoveTarget())) {
-                temp.removeEntity(player.getCharacter());
+                origin.removeEntity(player.getCharacter());
                 move.getMoveTarget().addEntity(player.getCharacter());
-                LOG.info("Moved player from {} to {}.", temp, move.getMoveTarget());
+                LOG.info("Moved player from {} to {}.", origin, move.getMoveTarget());
                 return;
             }
         }
