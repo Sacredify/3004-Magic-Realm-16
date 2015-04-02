@@ -42,4 +42,8 @@ public class Path implements Serializable, Discoverable {
     public boolean isHidden() {
         return isHidden;
     }
+
+    public void setHidden(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
 }

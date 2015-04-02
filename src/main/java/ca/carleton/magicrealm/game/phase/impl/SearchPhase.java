@@ -27,6 +27,8 @@ public class SearchPhase extends AbstractPhase {
 
     private BoardModel board;
 
+    private int roll;
+
     @Override
     public PhaseType getPhaseType() {
         return PhaseType.SEARCH;
@@ -48,5 +50,13 @@ public class SearchPhase extends AbstractPhase {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public int getRoll() {
+        return roll;
+    }
+
+    public void setRoll(int roll) {
+        this.roll = roll;
     }
 }

@@ -51,6 +51,57 @@ public class MovePhaseTest {
     }
 
     @Test
+    public void cannotMoveByHiddenPath() {
+        // Create the board and player
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+
+        // Set starting location.
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
+
+        // Take an adjacent value
+        final Clearing moveTarget = boardModel.getStartingLocation().getAdjacentPaths().get(0).getToClearing();
+        boardModel.getStartingLocation().getAdjacentPaths().get(0).setHidden(true);
+
+        final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
+        final MovePhase movePhase = new MovePhase();
+        movePhase.setMoveTarget(moveTarget);
+
+        phases.add(movePhase);
+
+        Daylight.doDaylight(boardModel, player, phases);
+        assertThat(boardModel.getClearingForPlayer(player), is(boardModel.getStartingLocation()));
+    }
+
+    @Test
+    public void canMoveToFoundHiddenPath() {
+        // Create the board and player
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+
+        // Set starting location.
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
+
+        // Take an adjacent value
+        final Clearing moveTarget = boardModel.getStartingLocation().getAdjacentPaths().get(0).getToClearing();
+        boardModel.getStartingLocation().getAdjacentPaths().get(0).setHidden(true);
+        player.getDiscoveredThings().add(boardModel.getStartingLocation().getAdjacentPaths().get(0));
+
+        final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
+        final MovePhase movePhase = new MovePhase();
+        movePhase.setMoveTarget(moveTarget);
+
+        phases.add(movePhase);
+
+        Daylight.doDaylight(boardModel, player, phases);
+        assertThat(boardModel.getClearingForPlayer(player), is(moveTarget));
+    }
+
+    @Test
     public void canIgnoreMoveToInvalidLocation() {
 
         // Create the board and player

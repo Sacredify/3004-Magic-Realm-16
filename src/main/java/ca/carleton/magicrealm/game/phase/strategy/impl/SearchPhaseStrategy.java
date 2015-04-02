@@ -30,6 +30,7 @@ public class SearchPhaseStrategy implements PhaseStrategy {
         final SearchPhase searchPhase = (SearchPhase) phase;
 
         int roll = DiceRoller.rollOnce();
+        searchPhase.setRoll(roll);
 
         Clearing currentClearing = searchPhase.getBoard().getClearingForPlayer(player);
 
@@ -65,7 +66,8 @@ public class SearchPhaseStrategy implements PhaseStrategy {
     private void discoverPath(final Clearing clearing, final Player player) {
         for (Path path : clearing.getAdjacentPaths()) {
             if (path.isHidden())
-                player.getDiscoveredThings().add(path);
+                if (!player.getDiscoveredThings().contains(path))
+                    player.getDiscoveredThings().add(path);
 
         }
     }
