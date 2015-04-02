@@ -7,7 +7,7 @@ import java.awt.*;
 
 /**
  * Created by Tony on 12/02/2015.
- * <p/>
+ * <p>
  * Window to display the game board
  */
 public class BoardWindow extends JFrame {
@@ -16,7 +16,7 @@ public class BoardWindow extends JFrame {
     final static public int WINDOW_HEIGHT = 1000;
     final static public int WINDOW_WIDTH = 1200;
 
-    private BoardPanel boardPanel;
+    private final BoardPanel boardPanel;
 
     private BoardModel boardModel;
 
@@ -35,9 +35,9 @@ public class BoardWindow extends JFrame {
         this.setVisible(true);
     }
 
-    public void refresh(final BoardModel model, AbstractCharacter character) {
+    public void refresh(final BoardModel model, final AbstractCharacter character) {
         this.boardModel = model;
-        this.boardPanel.drawBoard( this.boardModel, character);
+        this.boardPanel.drawBoard(this.boardModel, character);
         this.add(this.boardPanel);
     }
 

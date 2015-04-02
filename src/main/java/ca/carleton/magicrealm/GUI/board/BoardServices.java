@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.GUI.board;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * Created by Tony on 14/02/2015.
- * <p/>
+ * <p>
  * Service class to store methods used by a view
  */
 public class BoardServices {
@@ -65,16 +66,18 @@ public class BoardServices {
     /**
      * Method to create the chits on the board.
      * This is called from the drawBoard method in BoardPanel
-     * @param tile
-     * @param panel
-     * @param tileOffsetX
-     * @param tileOffsetY
+     *
+     * @param tile        the tile we're going to draw on.
+     * @param panel       the parent panel.
+     * @param tileOffsetX offset X.
+     * @param tileOffsetY offset Y.
+     * @param character   the client character.
      */
-    public void createChitIconsForTile(AbstractTile tile, final BoardPanel panel, final int tileOffsetX, final int tileOffsetY) {
+    public void createChitIconsForTile(AbstractTile tile, final BoardPanel panel, final int tileOffsetX, final int tileOffsetY, final AbstractCharacter character) {
 
         for (Clearing clearing : tile.getClearings()) {
-            JLabel newChit = null;
-            ImageIcon newIcon = null;
+            JLabel newChit;
+            ImageIcon newIcon;
             int clearingX;
             int clearingY;
 
@@ -86,8 +89,7 @@ public class BoardServices {
 
                 clearingX = this.getScaledXAngled((int) Math.round(point[0]));
                 clearingY = this.getScaledYAngled((int) Math.round(point[1]));
-            }
-            else if (tile.getAngle() % 180 == 0) {
+            } else if (tile.getAngle() % 180 == 0) {
                 double[] point = new double[2];
                 point[0] = clearing.getX();
                 point[1] = clearing.getY();
@@ -95,8 +97,7 @@ public class BoardServices {
 
                 clearingX = this.getScaledXRegular((int) Math.round(point[0]));
                 clearingY = this.getScaledYRegular((int) Math.round(point[1]));
-            }
-            else {
+            } else {
                 clearingX = this.getScaledXRegular(clearing.getX());
                 clearingY = this.getScaledYRegular(clearing.getY());
             }
@@ -121,6 +122,17 @@ public class BoardServices {
                     if (drawable instanceof AbstractNative) {
                         continue;
                     }
+
+                    if (drawable instanceof AbstractCharacter) {
+                        // Let's hide people from others if they're hidden...
+                        final AbstractCharacter drawableCharacter = (AbstractCharacter) drawable;
+                        // Only skip if the entity is hidden and the character isn't the client's.
+                        if (drawable.isHidden() && !(drawableCharacter.getEntityInformation() == character.getEntityInformation())) {
+                            LOG.info("Skipping draw of {} because they are hidden.", drawable.getEntityInformation());
+                            continue;
+                        }
+                    }
+
                     newChit = new JLabel();
                     newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
                     newIcon = this.createImageIcon(drawable.getEntityInformation().getPath());

@@ -86,7 +86,7 @@ public class BoardPanel extends JLayeredPane {
                     }
 
                     /** create the chits **/
-                    this.boardServices.createChitIconsForTile(tile, this, tileX, tileY);
+                    this.boardServices.createChitIconsForTile(tile, this, tileX, tileY, character);
                 }
                 x++;
             }
