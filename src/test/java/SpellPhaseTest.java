@@ -36,9 +36,6 @@ public class SpellPhaseTest {
         final SpellPhase enchant = new SpellPhase();
         final SpellPhase disenchant = new SpellPhase();
 
-        enchant.setTileToEnchant(boardModel.getStartingLocation().getParentTile());
-        disenchant.setTileToEnchant(boardModel.getStartingLocation().getParentTile());
-
         // Enchant first.
         phases.add(enchant);
         Daylight.processPhasesForPlayer(boardModel, player, phases);

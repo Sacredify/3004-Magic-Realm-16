@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.game.phase.strategy.impl;
 
+import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
@@ -27,7 +28,8 @@ public class SpellPhaseStrategy implements PhaseStrategy {
     @Override
     public void doPhase(final Player player, final AbstractPhase phase) {
         final SpellPhase spellPhase = (SpellPhase) phase;
-        spellPhase.getTileToEnchant().toggleEnchanted();
-        LOG.info("{} now enchanted: {}.", spellPhase.getTileToEnchant(), spellPhase.getTileToEnchant().isEnchanted());
+        final AbstractTile toEnchant = spellPhase.getBoard().getClearingForPlayer(player).getParentTile();
+        toEnchant.toggleEnchanted();
+        LOG.info("{} now enchanted: {}.", toEnchant, toEnchant.isEnchanted());
     }
 }

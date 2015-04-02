@@ -1,7 +1,6 @@
 package ca.carleton.magicrealm.game.phase.impl;
 
 import ca.carleton.magicrealm.GUI.board.BoardModel;
-import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseType;
@@ -17,7 +16,7 @@ public class SpellPhase extends AbstractPhase {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpellPhase.class);
 
-    private AbstractTile tileToEnchant;
+    private BoardModel board;
 
     @Override
     public PhaseType getPhaseType() {
@@ -26,17 +25,12 @@ public class SpellPhase extends AbstractPhase {
 
     @Override
     public void updateFromBoard(final Player player, final BoardModel board) {
-        board.getAllTiles().stream().filter(tile -> tile.getTileInformation() == this.tileToEnchant.getTileInformation()).forEach(tile -> {
-            this.tileToEnchant = tile;
-            LOG.info("Updated tile to enchant from board.");
-        });
+        this.board = board;
+        LOG.info("Updated board from server for enchant.");
     }
 
-    public AbstractTile getTileToEnchant() {
-        return this.tileToEnchant;
+    public BoardModel getBoard() {
+        return this.board;
     }
 
-    public void setTileToEnchant(final AbstractTile tile) {
-        this.tileToEnchant = tile;
-    }
 }

@@ -120,7 +120,7 @@ public class PhaseSelectorMenu extends JDialog {
                     PhaseSelectorMenu.this.phaseSelectorModel.addRestPhase(theChit);
                 } else if (selectedPhase.equals(PhaseType.SPELL)) {
                     LOG.info("Player's current tile marked for enchantment.");
-                    this.phaseSelectorModel.addSpellEnchantPhase(this.controller.getBoardModel().getClearingForPlayer(this.player).getParentTile());
+                    this.phaseSelectorModel.addSpellEnchantPhase();
                 }
             } else {
                 LOG.info("User has no more phases to enter...disabling button.");
