@@ -167,6 +167,7 @@ public class ChitBuilder {
 
         for (final AbstractTile tile : board.getTilesOfType(TileType.CAVE)) {
             tile.addChit(cavesChits.remove(random.nextInt(cavesChits.size())));
+            LOG.debug("Added {} to {}.", tile.getChits().get(tile.getChits().size() -1), tile);
         }
 
         final List<ColoredChit> mountainsChits = new ArrayList<ColoredChit>();
@@ -175,6 +176,7 @@ public class ChitBuilder {
 
         for (final AbstractTile tile : board.getTilesOfType(TileType.MOUNTAIN)) {
             tile.addChit(mountainsChits.remove(random.nextInt(mountainsChits.size())));
+            LOG.debug("Added {} to {}.", tile.getChits().get(tile.getChits().size() -1), tile);
         }
 
         LOG.debug("Starting valley chit replacement.");
@@ -331,6 +333,7 @@ public class ChitBuilder {
                 lostCityChit.soundChits.add((RedChit) takenChit);
                 soundChits.remove(takenChit);
             }
+            LOG.debug("Added {} to lost city.", takenChit);
         }
 
         LOG.debug("Built lost city.");
@@ -347,6 +350,7 @@ public class ChitBuilder {
                 lostCastleChit.soundChits.add((RedChit) takenChit);
                 soundChits.remove(takenChit);
             }
+            LOG.debug("Added {} to lost city.", takenChit);
         }
 
         LOG.debug("Built lost castle.");
