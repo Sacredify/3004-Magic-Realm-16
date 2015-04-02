@@ -73,46 +73,40 @@ public class GameController {
     /**
      * Handles a message from the server.
      *
-     * @param obj the message.
+     * @param message the message.
      */
-    public void handleMessage(Object obj) {
+    public void handleMessage(Message message) {
 
-        if (obj instanceof Message) {
-            Message m = (Message) obj;
-            LOG.info("Received {} message from server. Payload: {}.", m.getMessageType(), m.getPayload());
-            switch (m.getMessageType()) {
-                case (Message.SELECT_CHARACTER):
-                    this.removeFromAvailableCharacters(m.getPayload());
-                    this.characterCreateMenu.updateAvailableCharacters();
-                    break;
-                case (Message.BIRDSONG_START):
-                    this.updateFromServer(m.getPayload());
-                    this.refreshBoard();
-                    // Process birdsong
-                    this.selectPhasesForDay();
-                    break;
-                case (Message.DAYLIGHT_START):
-                    this.updateFromServer(m.getPayload());
-                    // Process daylight
-                    this.processDaylight();
-                    break;
-                case (Message.COMBAT_FILL_OUT_MELEE_SHEET):
-                    // Set new data
-                    this.updateFromServer(m.getPayload());
-                    this.refreshBoard();
-                    this.selectOptionsForCombat();
-                    break;
-                case (Message.FATIGUE_FATIGUE_CHITS):
-                    // Set new data
-                    this.updateFromServer(m.getPayload());
-                    this.refreshBoard();
-                    this.selectChitsToFatigue();
-                default:
-                    break;
-            }
-
-        } else if (obj instanceof String) {
-            System.out.println("This is a string");
+        LOG.info("Received {} message from server. Payload: {}.", message.getMessageType(), message.getPayload());
+        switch (message.getMessageType()) {
+            case (Message.SELECT_CHARACTER):
+                this.removeFromAvailableCharacters(message.getPayload());
+                this.characterCreateMenu.updateAvailableCharacters();
+                break;
+            case (Message.BIRDSONG_START):
+                this.updateFromServer(message.getPayload());
+                this.refreshBoard();
+                // Process birdsong
+                this.selectPhasesForDay();
+                break;
+            case (Message.DAYLIGHT_START):
+                this.updateFromServer(message.getPayload());
+                // Process daylight
+                this.processDaylight();
+                break;
+            case (Message.COMBAT_FILL_OUT_MELEE_SHEET):
+                // Set new data
+                this.updateFromServer(message.getPayload());
+                this.refreshBoard();
+                this.selectOptionsForCombat();
+                break;
+            case (Message.FATIGUE_FATIGUE_CHITS):
+                // Set new data
+                this.updateFromServer(message.getPayload());
+                this.refreshBoard();
+                this.selectChitsToFatigue();
+            default:
+                break;
         }
     }
 
