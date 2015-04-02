@@ -1,10 +1,12 @@
 package ca.carleton.magicrealm.game;
 
+import ca.carleton.magicrealm.GUI.tile.Discoverable;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Represents the player and their various attributes and decisions made within the game..
@@ -31,6 +33,11 @@ public class Player implements Serializable {
      * Where the player starts. Set during character create..
      */
     private Dwelling startingLocation;
+
+    /**
+     * List of things that the player has found
+     */
+    private List<Discoverable> discoveredThings;
 
     private int restarts = 0;
 
@@ -79,5 +86,9 @@ public class Player implements Serializable {
 
     public void restartNewLife() {
         this.restarts += 1;
+    }
+
+    public List<Discoverable> getDiscoveredThings() {
+        return discoveredThings;
     }
 }

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm.entity;
 
+import ca.carleton.magicrealm.GUI.tile.Discoverable;
 import ca.carleton.magicrealm.game.combat.Harm;
 import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.ItemInformation;
@@ -15,7 +16,7 @@ import java.util.List;
  * Date: 09/02/15
  * Time: 5:45 PM
  */
-public abstract class Entity implements Serializable {
+public abstract class Entity implements Serializable, Discoverable {
 
     private static final long serialVersionUID = -2942027905717935113L;
 

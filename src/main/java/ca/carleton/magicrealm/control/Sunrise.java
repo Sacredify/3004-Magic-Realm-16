@@ -49,6 +49,7 @@ public class Sunrise {
                                 final Giant giant = new Giant();
                                 giant.setStartingClearing(startForGiants);
                                 giant.setCurrentClearing(startForGiants);
+                                giant.setHidden(true);
                                 startForGiants.addEntity(giant);
                                 boardModel.getAbstractMonsters().add(giant);
                                 boardModel.createNewMeleeSheet(giant);
@@ -60,6 +61,7 @@ public class Sunrise {
                                 final Troll troll = new Troll();
                                 troll.setStartingClearing(startForTrolls);
                                 troll.setCurrentClearing(startForTrolls);
+                                troll.setHidden(true);
                                 startForTrolls.addEntity(troll);
                                 boardModel.getAbstractMonsters().add(troll);
                                 boardModel.createNewMeleeSheet(troll);
@@ -72,6 +74,7 @@ public class Sunrise {
                                 final Spider spider = new Spider();
                                 spider.setStartingClearing(startForSpiders);
                                 spider.setCurrentClearing(startForSpiders);
+                                spider.setHidden(true);
                                 startForSpiders.addEntity(spider);
                                 boardModel.getAbstractMonsters().add(spider);
                                 boardModel.createNewMeleeSheet(spider);
@@ -83,6 +86,7 @@ public class Sunrise {
                                 final Serpent serpent = new Serpent();
                                 serpent.setStartingClearing(startForSerpents);
                                 serpent.setCurrentClearing(startForSerpents);
+                                serpent.setHidden(true);
                                 startForSerpents.addEntity(serpent);
                                 boardModel.getAbstractMonsters().add(serpent);
                                 boardModel.createNewMeleeSheet(serpent);
@@ -94,6 +98,7 @@ public class Sunrise {
                             final Dragon dragon = new Dragon();
                             dragon.setStartingClearing(startForDragons);
                             dragon.setCurrentClearing(startForDragons);
+                            dragon.setHidden(true);
                             startForDragons.addEntity(dragon);
                             boardModel.getAbstractMonsters().add(dragon);
                             boardModel.createNewMeleeSheet(dragon);
@@ -103,6 +108,7 @@ public class Sunrise {
                             final Serpent serpent = new Serpent();
                             serpent.setStartingClearing(startForSerpents);
                             serpent.setCurrentClearing(startForSerpents);
+                            serpent.setHidden(true);
                             startForSerpents.addEntity(serpent);
                             boardModel.getAbstractMonsters().add(serpent);
                             boardModel.createNewMeleeSheet(serpent);
@@ -113,6 +119,7 @@ public class Sunrise {
                             final GiantBat giantBat = new GiantBat();
                             giantBat.setStartingClearing(startForBats);
                             giantBat.setCurrentClearing(startForBats);
+                            giantBat.setHidden(true);
                             startForBats.addEntity(giantBat);
                             boardModel.getAbstractMonsters().add(giantBat);
                             boardModel.createNewMeleeSheet(giantBat);
@@ -121,14 +128,14 @@ public class Sunrise {
             }
         }
 
-        /** determine which monsters are prowling **/
-        int monsterRoll = DiceRoller.rollOnce();
-
         for (Denizen denizen: boardModel.getAbstractMonsters()) {
             /** Reset prowling monsters/natives **/
             if (currentDay % 7 == 0) {
                 denizen.setCurrentClearing(denizen.getStartingClearing());
+                denizen.setHidden(true);
             }
+            /** determine which monsters are prowling **/
+            int monsterRoll = DiceRoller.rollOnce();
 
             // Denizens that weren't rolled are not prowling by default
             denizen.setProwling(false);
@@ -144,6 +151,7 @@ public class Sunrise {
             else if (monsterRoll == 4) {
                 if (denizen.getEntityInformation().equals(EntityInformation.GIANT)) {
                     denizen.setProwling(true);
+                    denizen.setHidden(false);
                 }
             }
             else if (monsterRoll == 5) {

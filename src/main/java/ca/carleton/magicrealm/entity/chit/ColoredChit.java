@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.entity.chit;
 
+import ca.carleton.magicrealm.GUI.tile.Discoverable;
+
 import java.io.Serializable;
 
 /**
@@ -9,7 +11,7 @@ import java.io.Serializable;
  * Date: 21/02/15
  * Time: 12:00 PM
  */
-public abstract class ColoredChit implements Serializable {
+public abstract class ColoredChit implements Serializable, Discoverable{
 
     private static final long serialVersionUID = 6504002032717018780L;
 

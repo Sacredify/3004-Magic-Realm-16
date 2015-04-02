@@ -1,8 +1,6 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
-import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.AlertSelectionMenu;
-import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.MoveSelectionMenu;
-import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.TradeSelectionMenu;
+import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.*;
 import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
@@ -47,6 +45,8 @@ public class PhaseSelectorMenu extends JDialog {
     TradeSelectionMenu tradeSelectionMenu;
 
     AlertSelectionMenu alertSelectionMenu;
+
+    SearchSelectionMenu searchSelectionMenu;
 
     private final Player player;
 
@@ -121,6 +121,9 @@ public class PhaseSelectorMenu extends JDialog {
                 } else if (selectedPhase.equals(PhaseType.SPELL)) {
                     LOG.info("Player's current tile marked for enchantment.");
                     this.phaseSelectorModel.addSpellEnchantPhase();
+                } else if (selectedPhase.equals(PhaseType.SEARCH)) {
+                    PhaseSelectorMenu.this.searchSelectionMenu = new SearchSelectionMenu();
+                    PhaseSelectorMenu.this.searchSelectionMenu.getSearchSelectionPanel().getConfirmButton().addActionListener(this.createActionListenerForSearchConfirmButton());
                 }
             } else {
                 LOG.info("User has no more phases to enter...disabling button.");
@@ -159,6 +162,21 @@ public class PhaseSelectorMenu extends JDialog {
             AbstractWeapon alertedWeapon = PhaseSelectorMenu.this.alertSelectionMenu.getAlertSelectionPanel().getAlertableWeapons().getSelectedValue();
             PhaseSelectorMenu.this.phaseSelectorModel.addAlertPhase(alertedWeapon);
             PhaseSelectorMenu.this.alertSelectionMenu.dispose();
+        };
+    }
+
+    public ActionListener createActionListenerForSearchConfirmButton() {
+        return e -> {
+            String action;
+            if (PhaseSelectorMenu.this.searchSelectionMenu.getSearchSelectionPanel().getLocateRadioButton().isSelected())
+                action = SearchSelectionPanel.LOCATE_TEXT;
+            else if (PhaseSelectorMenu.this.searchSelectionMenu.getSearchSelectionPanel().getPeerRadioButton().isSelected())
+                action = SearchSelectionPanel.PEER_TEXT;
+            else
+                action = SearchSelectionPanel.LOOT_TEXT;
+
+            PhaseSelectorMenu.this.phaseSelectorModel.addSearchPhase(action);
+            PhaseSelectorMenu.this.searchSelectionMenu.dispose();
         };
     }
 }

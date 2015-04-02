@@ -119,6 +119,10 @@ public class Clearing implements Serializable {;
         this.dwelling = dwelling;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

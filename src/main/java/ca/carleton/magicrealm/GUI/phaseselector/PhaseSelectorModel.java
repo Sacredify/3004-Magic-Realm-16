@@ -83,6 +83,12 @@ public class PhaseSelectorModel {
         this.phases.add(spellPhase);
     }
 
+    public void addSearchPhase(final String action) {
+        final SearchPhase searchPhase = new SearchPhase();
+        searchPhase.setAction(action);
+        this.phases.add(searchPhase);
+    }
+
     public void done() {
         this.menu.disposeWindow();
     }

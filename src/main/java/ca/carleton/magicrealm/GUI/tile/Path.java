@@ -13,6 +13,8 @@ public class Path implements Serializable, Discoverable {
 
     private Clearing toClearing;
 
+    private boolean isHidden;
+
     public Path(final Clearing fromClearing, final Clearing toClearing) {
         this.fromClearing = fromClearing;
         this.toClearing = toClearing;
@@ -28,5 +30,9 @@ public class Path implements Serializable, Discoverable {
 
     public Clearing getToClearing() {
         return toClearing;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
     }
 }
