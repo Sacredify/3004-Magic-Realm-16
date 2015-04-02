@@ -38,12 +38,12 @@ public class SpellPhaseTest {
 
         // Enchant first.
         phases.add(enchant);
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(boardModel.getStartingLocation().getParentTile().isEnchanted(), is(true));
 
         // Then try and disenchant.
         phases.add(disenchant);
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(boardModel.getStartingLocation().getParentTile().isEnchanted(), is(false));
     }
 }

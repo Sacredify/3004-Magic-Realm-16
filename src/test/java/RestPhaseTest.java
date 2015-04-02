@@ -44,7 +44,7 @@ public class RestPhaseTest {
         restPhase.setSelectedChit(theChit);
         phases.add(restPhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(theChit.isFatigued(), is(true));
         assertThat(theChit.isWounded(), is(false));
     }
@@ -69,7 +69,7 @@ public class RestPhaseTest {
         restPhase.setSelectedChit(theChit);
         phases.add(restPhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(theChit.isFatigued(), is(false));
         assertThat(theChit.isWounded(), is(false));
     }

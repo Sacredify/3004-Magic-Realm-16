@@ -45,7 +45,7 @@ public class AlertPhaseTest {
         alertPhase.setWeapon(playerWeapon);
         phases.add(alertPhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(playerWeapon.isAlert(), is(true));
 
     }
@@ -72,7 +72,7 @@ public class AlertPhaseTest {
         });
         phases.add(alertPhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(player.getCharacter().getVulnerability(), is(Harm.TREMENDOUS));
     }
 }

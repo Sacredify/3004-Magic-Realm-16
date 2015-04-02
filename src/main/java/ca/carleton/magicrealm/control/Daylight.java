@@ -36,7 +36,7 @@ public class Daylight {
         }
     };
 
-    public static void processPhasesForPlayer(final BoardModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
+    public static void doDaylight(final BoardModel board, final Player player, final List<AbstractPhase> phasesToExecute) {
         LOG.info("Starting daylight process.");
         updateFromBoard(board, player, phasesToExecute);
         process(board, player, phasesToExecute);

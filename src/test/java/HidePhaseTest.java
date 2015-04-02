@@ -37,7 +37,7 @@ public class HidePhaseTest {
         hidePhase.setPlayer(player);
         phases.add(hidePhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
 
         // Only should fail on 6.
         if (hidePhase.getRollResult() == 6) {

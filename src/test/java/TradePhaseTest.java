@@ -55,7 +55,7 @@ public class TradePhaseTest {
 
         phases.add(tradePhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade - 1));
         assertThat(player.getCharacter().getCurrentGold(), is(10 + goldValueOfItem));
         assertThat(tradePhase.getTradeTarget().getItems().size(), is(1));
@@ -90,7 +90,7 @@ public class TradePhaseTest {
 
         phases.add(tradePhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade + 1));
         assertThat(player.getCharacter().getCurrentGold(), is(10 - (goldValueOfItem * 4)));
         assertThat(tradePhase.getTradeTarget().getItems().size(), is(0));
@@ -124,7 +124,7 @@ public class TradePhaseTest {
 
         phases.add(tradePhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade));
         assertThat(player.getCharacter().getCurrentGold(), is(10));
         assertThat(tradePhase.getTradeTarget().getItems().size(), is(0));

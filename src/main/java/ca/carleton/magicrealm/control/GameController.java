@@ -127,7 +127,7 @@ public class GameController {
      * Processes the daylight phases for this client.
      */
     private void processDaylight() {
-        Daylight.processPhasesForPlayer(this.boardModel, this.currentPlayer, this.recordedPhasesForDay);
+        Daylight.doDaylight(this.boardModel, this.currentPlayer, this.recordedPhasesForDay);
         this.updatePlayerInMap();
         this.refreshBoard();
         LOG.info("Executed daylight phase for player.");

@@ -45,7 +45,7 @@ public class MovePhaseTest {
 
         phases.add(movePhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(boardModel.getClearingForPlayer(player), is(moveTarget));
 
     }
@@ -72,7 +72,7 @@ public class MovePhaseTest {
 
         phases.add(movePhase);
 
-        Daylight.processPhasesForPlayer(boardModel, player, phases);
+        Daylight.doDaylight(boardModel, player, phases);
         assertThat(boardModel.getClearingForPlayer(player), is(startLocation));
 
     }
