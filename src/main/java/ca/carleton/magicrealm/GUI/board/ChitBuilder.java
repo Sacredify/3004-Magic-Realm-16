@@ -196,18 +196,23 @@ public class ChitBuilder {
                         ghost2.setCurrentClearing(startForGhosts);
                         startForGhosts.addEntity(ghost1);
                         startForGhosts.addEntity(ghost2);
+                        LOG.info("Replaced {} with ghosts.", chit);
                         break;
                     case "DANK":
                         tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.CHAPEL);
+                        LOG.info("Replaced {} with the chapel dwelling.", chit);
                         break;
                     case "RUINS":
                         tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.GUARD);
+                        LOG.info("Replaced {} with the guard dwelling.", chit);
                         break;
                     case "SMOKE":
                         tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.HOUSE);
+                        LOG.info("Replaced {} with the house dwelling.", chit);
                         break;
                     case "STINK":
                         tile.getClearings()[tile.getClearings().length - 1].setDwelling(Dwelling.INN);
+                        LOG.info("Replaced {} with the inn dwelling.", chit);
                         break;
                 }
                 iter.remove();
@@ -228,7 +233,7 @@ public class ChitBuilder {
         assertThat(mountainsChits.size(), is(0));
         assertThat(lostCityChit.treasureChits.size() + lostCityChit.soundChits.size(), is(5));
         assertThat(lostCastleChit.treasureChits.size() + lostCastleChit.soundChits.size(), is(5));
-        LOG.debug("Sanity checks complete. All chits assigned.");
+        LOG.debug("Sanity checks complete. All chits assigned. Done building chits.");
     }
 
     private static void buildWarningChits() {

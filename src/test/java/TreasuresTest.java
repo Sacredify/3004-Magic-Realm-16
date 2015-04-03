@@ -9,8 +9,8 @@ import ca.carleton.magicrealm.game.phase.PhaseUtils;
 import ca.carleton.magicrealm.item.treasure.TreasureCollection;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Testing various treasures, their effects... etc.
@@ -38,7 +38,7 @@ public class TreasuresTest {
 
         // Amazon has 4 phases, and 1 extra move phase.
         assertThat(phaseCountBeanAmazon.getNumberOfPhasesFOrDay(), is(4));
-        assertThat(phaseCountBeanAmazon.getExtraPhases().size() , is(1));
+        assertThat(phaseCountBeanAmazon.getExtraPhases().size(), is(1));
         assertThat(phaseCountBeanAmazon.getExtraPhases().contains(PhaseType.MOVE), is(true));
 
         // Dwarf has 2 phases, with no extras by default (he isn't in a cave).
@@ -62,9 +62,39 @@ public class TreasuresTest {
         final PhaseCountBean phaseCountBeanAmazon = PhaseUtils.getNumberOfPhasesForPlayer(player, boardModel);
 
         assertThat(phaseCountBeanAmazon.getNumberOfPhasesFOrDay(), is(4));
-        assertThat(phaseCountBeanAmazon.getExtraPhases().size() , is(2));
+        assertThat(phaseCountBeanAmazon.getExtraPhases().size(), is(2));
         assertThat(phaseCountBeanAmazon.getExtraPhases().contains(PhaseType.MOVE), is(true));
         assertThat(phaseCountBeanAmazon.getExtraPhases().contains(PhaseType.TRADE), is(true));
+    }
+
+    @Test
+    public void canAddAndRemoveWorthOfTreasureToCharacter() {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
+
+        // For testing, we'll just make a new treasure collection
+        TreasureCollection collection = new TreasureCollection();
+        // Add regent of jewels.
+        player.getCharacter().addItem(collection.treasures[11]);
+
+        final int goldValue = collection.treasures[11].getGoldValue();
+        final int fameValue = collection.treasures[11].getFame();
+        final int notorietyValue = collection.treasures[11].getNotoriety();
+        final boolean great = collection.treasures[11].isGreatTreasure();
+
+        assertThat(player.getCharacter().getCurrentGold(), is(10 + goldValue));
+        assertThat(player.getCharacter().getCurrentFame(), is(fameValue));
+        assertThat(player.getCharacter().getCurrentNotoriety(), is(notorietyValue));
+        assertThat(player.getCharacter().getCurrentGreatTreasuresCount(), great ? is(1) : is(0));
+
+        player.getCharacter().removeItem(collection.treasures[11]);
+        assertThat(player.getCharacter().getCurrentGold(), is(10));
+        assertThat(player.getCharacter().getCurrentFame(), is(0));
+        assertThat(player.getCharacter().getCurrentNotoriety(), is(0));
+        assertThat(player.getCharacter().getCurrentGreatTreasuresCount(), is(0));
     }
 
 }

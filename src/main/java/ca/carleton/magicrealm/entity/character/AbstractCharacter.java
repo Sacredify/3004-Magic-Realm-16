@@ -4,6 +4,8 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Interactable;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
+import ca.carleton.magicrealm.item.Item;
+import ca.carleton.magicrealm.item.treasure.Treasure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.Map;
 
 /**
  * Represents a playable character within the Magic Realm.
- * <p/>
+ * <p>
  * Created with IntelliJ IDEA.
  * Date: 10/02/15
  * Time: 8:25 AM
@@ -74,6 +76,22 @@ public abstract class AbstractCharacter extends Entity implements Serializable {
 
     public void addRelationship(final Interactable entity, final Relationship relationship) {
         this.relationships.putIfAbsent(entity, relationship);
+    }
+
+    @Override
+    public void addItem(final Item item) {
+        super.addItem(item);
+        if (item instanceof Treasure) {
+            ((Treasure) item).addWorthToCharacter(this);
+        }
+    }
+
+    @Override
+    public void removeItem(final Item item) {
+        super.removeItem(item);
+        if (item instanceof Treasure) {
+            ((Treasure) item).removeWorthFromCharacter(this);
+        }
     }
 
     public List<ActionChit> getActionChits() {

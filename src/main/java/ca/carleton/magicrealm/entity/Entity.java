@@ -32,7 +32,6 @@ public abstract class Entity implements Serializable, Discoverable {
 
     /**
      * The list of items the entity is currently holding.
-     * TODO Is this relevant for all entities? Or only characters?
      */
     private final List<Item> items = new ArrayList<Item>();
 

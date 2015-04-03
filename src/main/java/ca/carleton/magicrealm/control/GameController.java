@@ -9,7 +9,6 @@ import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseUtils;
-import ca.carleton.magicrealm.item.treasure.Treasure;
 import ca.carleton.magicrealm.log.LogWriter;
 import ca.carleton.magicrealm.network.AppClient;
 import ca.carleton.magicrealm.network.Message;
@@ -240,14 +239,12 @@ public class GameController {
      */
     private String createGameInfoString() {
 
-        int[] values = this.getVictoryConditionValues();
-
         String gameInfoText = "<html><br/>";
         gameInfoText = gameInfoText.concat("Character: " + this.currentPlayer.getCharacter().toString() + "<br/>" +
                 "Vulnerability: " + this.currentPlayer.getCharacter().getVulnerability() + "<br/>" +
                 "Current gold: " + this.currentPlayer.getCharacter().getCurrentGold() + "<br/>" +
-                "Current notoriety: " + values[0] + "<br/>" +
-                "Current fame: " + values[1] + "<br/>" +
+                "Current notoriety: " + this.currentPlayer.getCharacter().getCurrentNotoriety() + "<br/>" +
+                "Current fame: " + this.currentPlayer.getCharacter().getCurrentFame() + "<br/>" +
                 "Current spell count: " + this.currentPlayer.getCharacter().getCurrentSpellsCount() + "<br/>" +
                 "Current great treasures count: " + this.currentPlayer.getCharacter().getCurrentGreatTreasuresCount() + "<br/>" +
                 "Needed gold: " + this.currentPlayer.getVictoryCondition().getGold() * 30 + "<br/>" +
@@ -265,19 +262,6 @@ public class GameController {
         gameInfoText = gameInfoText.concat("</html>");
 
         return gameInfoText;
-    }
-
-    private int[] getVictoryConditionValues() {
-        final int[] notorietyAndFame = {this.currentPlayer.getCharacter().getCurrentNotoriety(), this.currentPlayer.getCharacter().getCurrentFame()};
-
-        this.currentPlayer.getCharacter().getItems().stream()
-                .filter(item -> item instanceof Treasure)
-                .forEach(treasure -> {
-                    notorietyAndFame[0] += ((Treasure) treasure).getNotoriety();
-                    notorietyAndFame[1] += ((Treasure) treasure).getFame();
-                });
-
-        return notorietyAndFame;
     }
 
     private void startOutputLogging() {
