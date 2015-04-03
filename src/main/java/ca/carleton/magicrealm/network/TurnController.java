@@ -43,10 +43,10 @@ public class TurnController {
     public int incrementTurnCount() {
         this.turnCount++;
         LOG.info("A player has made a turn. Number of turns made this round: {}.", this.turnCount);
-        if (this.turnCount == this.server.getMaxPlayers()) {
+        if (this.turnCount == this.server.getClientCount()) {
             LOG.info("All players have taken a turn. Resetting to 0.");
             this.turnCount = 0;
-            return this.server.getMaxPlayers();
+            return this.server.getClientCount();
         } else {
             return this.turnCount;
         }

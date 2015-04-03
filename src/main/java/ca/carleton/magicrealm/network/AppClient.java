@@ -81,9 +81,8 @@ public class AppClient implements Runnable {
         this.done = true;
     }
 
-    public void sendMessage(String messageType, Object messageObject) {
-
-        Message m = new Message(this.ID, messageType, messageObject);
+    public void sendMessage(String messageType, Object payload) {
+        Message m = new Message(this.ID, messageType, payload);
         this.write(m);
         LOG.info("[ID {}] Sent {} message to the server.", this.ID, messageType);
     }
