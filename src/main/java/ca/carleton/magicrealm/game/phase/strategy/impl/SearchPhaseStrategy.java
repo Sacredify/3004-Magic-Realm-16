@@ -105,7 +105,7 @@ public class SearchPhaseStrategy implements PhaseStrategy {
             else {
                 if (roll > goldChit.getTreasure().size()) {
                     // Get the last treasure in the pile
-                    player.getCharacter().addItem(goldChit.getTreasure().get(goldChit.getTreasure().size()-1));
+                    LOG.info("player failed to roll for a treasure on site {}", goldChit);
                 }
                 else {
                     // If not, get the treasure from the index of the roll-1
