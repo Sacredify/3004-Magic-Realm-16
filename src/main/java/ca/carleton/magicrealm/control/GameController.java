@@ -81,6 +81,11 @@ public class GameController {
                 // Process daylight
                 this.processDaylight();
                 break;
+            case (Message.SUNSET_UPDATE):
+                // Only want to update the map... do nothing else.
+                this.updateFromServer(message.getPayload());
+                this.refreshBoard(true);
+                break;
             case (Message.COMBAT_FILL_OUT_MELEE_SHEET):
                 // Set new data
                 this.updateFromServer(message.getPayload());
@@ -142,6 +147,7 @@ public class GameController {
         Combat.fillOutMeleeSheet(this.boardModel, this.currentPlayer, this.boardWindow);
         this.updatePlayerInMap();
         this.networkConnection.sendMessage(Message.COMBAT_SEND_MELEE_SHEET, this.boardModel);
+        LOG.info("WARNING: COMBAT WILL BE RESOLVED AUTOMATICALLY BY THE SERVER.");
     }
 
     /**
@@ -241,6 +247,7 @@ public class GameController {
 
         String gameInfoText = "<html><br/>";
         gameInfoText = gameInfoText.concat("Character: " + this.currentPlayer.getCharacter().toString() + "<br/>" +
+                "Number of deaths: " + this.currentPlayer.getRestarts() + "<br/>" +
                 "Vulnerability: " + this.currentPlayer.getCharacter().getVulnerability() + "<br/>" +
                 "Current gold: " + this.currentPlayer.getCharacter().getCurrentGold() + "<br/>" +
                 "Current notoriety: " + this.currentPlayer.getCharacter().getCurrentNotoriety() + "<br/>" +

@@ -148,6 +148,8 @@ public class AppServer implements Runnable {
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting SUNSET phase [server only].");
                     Sunset.doSunset(this.boardModel);
+                    this.broadcastMessage(SERVER_ID, new Message(SERVER_ID, Message.SUNSET_UPDATE, this.boardModel));
+                    LOG.info("Sent clients updated sunset map.");
                     LOG.info("Starting COMBAT phase.");
                     this.turnController.createNewTurnOrder(this.clients);
                     final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());

@@ -63,7 +63,7 @@ public class Combat {
             if (target instanceof Entity) {
                 playerSheet.setTarget((Entity) target);
             }
-            if (target == null) {
+            if (target == null || target.equals("None")) {
                 LOG.info("Player opted to not fight. Stopping rest of melee sheet fill out.");
                 JOptionPane.showMessageDialog(parent, "You must still out the melee sheet, as you may be targeted by other players.");
             }
@@ -92,7 +92,9 @@ public class Combat {
             final ActionChit fightChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 4: Select a fight chit to attack:", "Combat",
                     JOptionPane.QUESTION_MESSAGE, null, fightChits.toArray(), fightChits.get(0));
             playerSheet.setAttackChit(fightChit);
-            numberOfAsterisksRemaining -= fightChit.getFatigueAsterisks();
+            if (fightChit != null) {
+                numberOfAsterisksRemaining -= fightChit.getFatigueAsterisks();
+            }
 
             LOG.info("Starting defense options");
             LOG.info("Showing maneuver select.");
