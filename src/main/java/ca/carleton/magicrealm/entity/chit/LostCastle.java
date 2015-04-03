@@ -23,4 +23,8 @@ public class LostCastle extends ColoredChit {
     public ChitColor getChitColor() {
         return ChitColor.LOST_CASTLE;
     }
+
+    public List<GoldChit> getTreasureChits() {
+        return treasureChits;
+    }
 }
