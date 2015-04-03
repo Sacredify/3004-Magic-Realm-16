@@ -21,6 +21,12 @@ public class EndGame {
 
     private static final Logger LOG = LoggerFactory.getLogger(EndGame.class);
 
+    /**
+     * Calculate the final scores for the players.
+     *
+     * @param clients the clients.
+     * @return the client mapped to their result.
+     */
     public static Map<ServerThread, GameResult> calculateFinalScores(final List<ServerThread> clients) {
 
         final Map<ServerThread, Integer> scores = new HashMap<>();
@@ -45,7 +51,8 @@ public class EndGame {
         return results;
     }
 
-    private static Integer getTotalScore(final Player player) {
+    // Method is only public for testing purposes.
+    public static Integer getTotalScore(final Player player) {
 
         final VictoryCondition condition = player.getVictoryCondition();
         final AbstractCharacter character = player.getCharacter();
