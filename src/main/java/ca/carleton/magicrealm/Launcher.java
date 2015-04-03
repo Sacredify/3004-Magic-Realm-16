@@ -72,10 +72,8 @@ public class Launcher {
                     throw new Exception("Attempted to start with missing parameters.");
                 } else {
                     LOG.info("Started launcher as a game client.");
-                    GameController game = new GameController();
                     LOG.info("Connecting to {}:{}.", cmd.getOptionValue(IP_ADDRESS_ARG), cmd.getOptionValue(PORT_ARG));
-                    AppClient client = new AppClient(cmd.getOptionValue(IP_ADDRESS_ARG), Integer.parseInt(cmd.getOptionValue(PORT_ARG)), game);
-                    game.setNetworkConnection(client);
+                    new AppClient(cmd.getOptionValue(IP_ADDRESS_ARG), Integer.parseInt(cmd.getOptionValue(PORT_ARG)));
                 }
             }
         } catch (final Exception exception) {
