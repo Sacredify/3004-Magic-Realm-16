@@ -1,22 +1,16 @@
 package ca.carleton.magicrealm;
 
-import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.network.AppClient;
 import ca.carleton.magicrealm.network.AppServer;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Main class for the application. Serves as the launcher for both the client and server.
  * Provides help information for the usage of the app (for both server and client.)
  *
  * @author Mike
- *         <p>
- *         Created with IntelliJ IDEA.
- *         Date: 03/02/15
- *         Time: 4:45 PM
  */
 public class Launcher {
 
@@ -72,10 +66,8 @@ public class Launcher {
                     throw new Exception("Attempted to start with missing parameters.");
                 } else {
                     LOG.info("Started launcher as a game client.");
-                    GameController game = new GameController();
                     LOG.info("Connecting to {}:{}.", cmd.getOptionValue(IP_ADDRESS_ARG), cmd.getOptionValue(PORT_ARG));
-                    AppClient client = new AppClient(cmd.getOptionValue(IP_ADDRESS_ARG), Integer.parseInt(cmd.getOptionValue(PORT_ARG)), game);
-                    game.setNetworkConnection(client);
+                    new AppClient(cmd.getOptionValue(IP_ADDRESS_ARG), Integer.parseInt(cmd.getOptionValue(PORT_ARG)));
                 }
             }
         } catch (final Exception exception) {

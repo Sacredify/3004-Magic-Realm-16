@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.network;
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
+import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.Launcher;
 import ca.carleton.magicrealm.control.Combat;
 import ca.carleton.magicrealm.control.EndGame;
@@ -97,7 +98,7 @@ public class AppServer implements Runnable {
                 LOG.info("Added new player to the board.");
                 // If all players have sent their characters, send the message to start birdsong. Else, forward
                 // the message to other players so they know who picked what.
-                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
+                if (this.turnController.incrementTurnCount() == this.clientCount) {
                     LOG.info("Starting SUNRISE phase [server only].");
                     Sunrise.doSunrise(this.boardModel, this.currentDay);
                     LOG.info("Starting BIRDSONG phase.");
@@ -110,7 +111,7 @@ public class AppServer implements Runnable {
             case (Message.BIRDSONG_DONE):
                 // If all players have sent the message, send the message to the first randomly picked player to start
                 // daylight (execution of their phases).
-                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
+                if (this.turnController.incrementTurnCount() == this.clientCount) {
                     LOG.info("Starting DAYLIGHT phase.");
                     this.turnController.createNewTurnOrder(this.clients);
                     final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
@@ -123,7 +124,7 @@ public class AppServer implements Runnable {
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
                 // If all players have sent the message, start filling out melee sheets in clearings.
-                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
+                if (this.turnController.incrementTurnCount() == this.clientCount) {
                     LOG.info("Starting SUNSET phase [server only].");
                     Sunset.doSunset(this.boardModel);
                     this.broadcastMessage(SERVER_ID, new Message(SERVER_ID, Message.SUNSET_UPDATE, this.boardModel));
@@ -142,7 +143,7 @@ public class AppServer implements Runnable {
             case (Message.COMBAT_SEND_MELEE_SHEET):
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
-                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
+                if (this.turnController.incrementTurnCount() == this.clientCount) {
                     LOG.info("Starting COMBAT_RESOLUTION phase.");
                     Combat.process(this.clients, this.boardModel);
                     LOG.info("Starting FATIGUE_STEP phase.");
@@ -166,7 +167,7 @@ public class AppServer implements Runnable {
             case (Message.FATIGUE_SUBMIT_UPDATED):
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
-                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
+                if (this.turnController.incrementTurnCount() == this.clientCount) {
                     LOG.info("Starting GAME_OVER phase.");
                     if (this.isGameOver()) {
                         LOG.info("MAX_DAYS has been reached. Game over.");
@@ -280,6 +281,7 @@ public class AppServer implements Runnable {
                     this.clients.get(this.clientCount).open();
                     this.clients.get(this.clientCount).start();
                     this.clientCount++;
+                    LOG.info("Client-accept thread added new client.");
                 } else {
                     this.server.close();
                     break;
@@ -303,10 +305,16 @@ public class AppServer implements Runnable {
         this.clients.stream().filter(client -> client.getID() != ID).forEach(client -> client.send(m));
     }
 
+    /**
+     * Remove a client from the game.
+     *
+     * @param serverThread the client thread.
+     */
     public synchronized void closeFor(final ServerThread serverThread) {
-        LOG.info("Removing thread {}.", serverThread.getID());
-        final int index = this.findClient(serverThread.getID());
+        LOG.info("A player disconnected. Removing thread {}.", serverThread.getID());
+        final int index = this.findClientIndex(serverThread.getID());
         this.clients.remove(index);
+        this.cleanUpPlayer(serverThread.getPlayer());
         this.clientCount--;
 
         try {
@@ -315,10 +323,15 @@ public class AppServer implements Runnable {
             LOG.error("Error closing thread!", exception);
         }
         LOG.info("Removed thread. Remaining players: {}", this.clientCount);
-
     }
 
-    private synchronized int findClient(final int id) {
+    /**
+     * Find the index of the client in the list of clients.
+     *
+     * @param id the client ID.
+     * @return the index.
+     */
+    private synchronized int findClientIndex(final int id) {
         int index = 0;
         for (final ServerThread thread : this.clients) {
             if (thread.getID() == id) {
@@ -329,7 +342,26 @@ public class AppServer implements Runnable {
         return -1;
     }
 
-    public int getMaxPlayers() {
-        return this.maxPlayers;
+    /**
+     * Cleanup resources for a player from the game, effectively removing them
+     *
+     * @param player the player.
+     */
+    private void cleanUpPlayer(final Player player) {
+        if (player != null) {
+            if (player.getCharacter() != null) {
+                final Clearing clearing = this.boardModel.getClearingForPlayer(player);
+                clearing.getEntities().remove(player.getCharacter());
+                LOG.info("Removed player from their clearing.");
+            }
+            this.boardModel.getPlayers().remove(player);
+            LOG.info("Removed player from the list of players. Cleanup done.");
+        } else {
+            LOG.info("No player to cleanup.");
+        }
+    }
+
+    public int getClientCount() {
+        return this.clientCount;
     }
 }

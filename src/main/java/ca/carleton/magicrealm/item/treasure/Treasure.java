@@ -31,7 +31,7 @@ public class Treasure extends Item {
             this.notoriety = 1 + random.nextInt(20);
             this.fame = -5 + random.nextInt(36);
             // ASSUMPTION - A great treasure is simply a treasure with high notoriety or fame.
-            this.greatTreasure = this.notoriety > 15 || this.fame > 25;
+            this.greatTreasure = this.notoriety > 15 || this.fame > 25 || this.goldValue > 30;
         }
     }
 

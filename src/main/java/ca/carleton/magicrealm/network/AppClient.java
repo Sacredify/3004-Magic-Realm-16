@@ -28,19 +28,19 @@ public class AppClient implements Runnable {
 
     private boolean done;
 
-    public AppClient(String serverName, int serverPort, GameController gameController) {
+    public AppClient(final String serverName, final int serverPort) {
 
         try {
             this.socket = new Socket(serverName, serverPort);
             this.ID = this.socket.getLocalPort();
-            this.gameController = gameController;
             LOG.info("Successfully connected to the server. Details: {}.", this.socket.getInetAddress());
             this.open();
             this.start();
         } catch (IOException ioe) {
             LOG.error("Could not connect to the server. Please ensure the server is available. Reason --> {}.", ioe.getMessage());
-            System.exit(0);
         }
+
+
     }
 
     public void write(Object msg) {
@@ -54,6 +54,9 @@ public class AppClient implements Runnable {
     }
 
     private void start() {
+        LOG.info("Creating game controller and UI.");
+        this.gameController = new GameController();
+        this.gameController.setNetworkConnection(this);
         if (this.thread == null) {
             this.thread = new Thread(this);
             this.thread.start();
@@ -78,9 +81,8 @@ public class AppClient implements Runnable {
         this.done = true;
     }
 
-    public void sendMessage(String messageType, Object messageObject) {
-
-        Message m = new Message(this.ID, messageType, messageObject);
+    public void sendMessage(String messageType, Object payload) {
+        Message m = new Message(this.ID, messageType, payload);
         this.write(m);
         LOG.info("[ID {}] Sent {} message to the server.", this.ID, messageType);
     }
@@ -89,12 +91,6 @@ public class AppClient implements Runnable {
         LOG.info("Opening object streams...");
         this.objOutStream = new ObjectOutputStream(this.socket.getOutputStream());
         this.objInputStream = new ObjectInputStream(this.socket.getInputStream());
-        if (this.objInputStream == null) {
-            LOG.error("Error with opening the object input stream.");
-        }
-        if (this.objOutStream == null) {
-            LOG.error("Error with opening the object output stream.");
-        }
         LOG.info("Object streams opened.");
     }
 
