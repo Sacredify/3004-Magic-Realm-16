@@ -1,8 +1,8 @@
 package ca.carleton.magicrealm;
 
+import ca.carleton.magicrealm.control.GameController;
 import ca.carleton.magicrealm.network.AppClient;
 import ca.carleton.magicrealm.network.AppServer;
-import ca.carleton.magicrealm.control.GameController;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
  * Provides help information for the usage of the app (for both server and client.)
  *
  * @author Mike
- *
- * Created with IntelliJ IDEA.
- * Date: 03/02/15
- * Time: 4:45 PM
+ *         <p>
+ *         Created with IntelliJ IDEA.
+ *         Date: 03/02/15
+ *         Time: 4:45 PM
  */
 public class Launcher {
 
@@ -32,6 +32,8 @@ public class Launcher {
 
     private static final String HOST_ARG = "host";
 
+    private static final String NUMBER_CLIENTS_ARG = "max";
+
     private static final String LAUNCH_COMMAND = "java -jar Magic_Realm.jar";
 
     public static void main(String[] args) {
@@ -40,6 +42,7 @@ public class Launcher {
         HelpFormatter formatter = new HelpFormatter();
 
         options.addOption(HOST_ARG, false, "Whether or not to start as a server host. [used by -> host]");
+        options.addOption(NUMBER_CLIENTS_ARG, true, "Optional. How many clients to wait for. Default is 2. [used by -> host]");
         options.addOption(IP_ADDRESS_ARG, true, "The ip address to connect to. [used by -> client]");
         options.addOption(PORT_ARG, true, "The port to use. [used by -> client/host]");
         options.addOption(CHEAT_ARG, false, "Optional. Whether or not to use cheat mode. [used by -> client/host]");
@@ -57,11 +60,18 @@ public class Launcher {
                     LOG.error("No port specified for host.");
                     throw new Exception("Attempted to start as host with no port specified.");
                 }
-               new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG))).start();
+                if (cmd.hasOption(NUMBER_CLIENTS_ARG)) {
+                    LOG.info("Overwriting MAX_PLAYERS arg to user-specified value of {}.", cmd.getOptionValue(NUMBER_CLIENTS_ARG));
+                    new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), Integer.parseInt(cmd.getOptionValue(NUMBER_CLIENTS_ARG))).start();
+                } else {
+                    LOG.info("Starting with default max players [{}].", AppServer.DEFAULT_MAX_PLAYERS);
+                    new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), AppServer.DEFAULT_MAX_PLAYERS).start();
+                }
             } else {
                 if (!cmd.hasOption(IP_ADDRESS_ARG) || !cmd.hasOption(PORT_ARG)) {
-                   throw new Exception("Attempted to start with missing parameters.");
+                    throw new Exception("Attempted to start with missing parameters.");
                 } else {
+                    LOG.info("Started launcher as a game client.");
                     GameController game = new GameController();
                     LOG.info("Connecting to {}:{}.", cmd.getOptionValue(IP_ADDRESS_ARG), cmd.getOptionValue(PORT_ARG));
                     AppClient client = new AppClient(cmd.getOptionValue(IP_ADDRESS_ARG), Integer.parseInt(cmd.getOptionValue(PORT_ARG)), game);
@@ -69,7 +79,7 @@ public class Launcher {
                 }
             }
         } catch (final Exception exception) {
-            LOG.error("Error with options parse. Cause: --> {}", exception.getMessage() == null ? "Invalid parse." : exception.getMessage());
+            LOG.error("Error with options parse. Cause: --> {}", exception.getMessage() == null || exception.getMessage().equals("null") ? "Invalid parse." : exception.getMessage());
             formatter.printHelp(LAUNCH_COMMAND, options);
         }
     }

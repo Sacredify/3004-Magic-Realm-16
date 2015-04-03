@@ -24,9 +24,9 @@ public class AppServer implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppServer.class);
 
-    public static final int MAX_ROUNDS = 28;
+    public static final int DEFAULT_MAX_PLAYERS = 2;
 
-    public static final int MAX_PLAYERS = 1;
+    private static final int MAX_ROUNDS = 28;
 
     private static final int SERVER_ID = 0;
 
@@ -42,18 +42,22 @@ public class AppServer implements Runnable {
 
     private BoardModel boardModel;
 
+    // DO NOT set this here. Set through command or with the default_max above.
+    private int maxPlayers;
+
     /**
      * The number of days passed in the game. 28 is the max.
      */
     private int currentDay = 1;
 
-    public AppServer(int port) {
+    public AppServer(final int port, final int maxPlayers) {
         try {
+            this.maxPlayers = maxPlayers;
             this.server = new ServerSocket(port);
             this.server.setReuseAddress(true);
             this.clients = new ArrayList<ServerThread>();
             LOG.info("Starting game...");
-            this.turnController = new TurnController();
+            this.turnController = new TurnController(this);
             this.buildMap();
             this.start();
         } catch (final Exception exception) {
@@ -93,7 +97,7 @@ public class AppServer implements Runnable {
                 LOG.info("Added new player to the board.");
                 // If all players have sent their characters, send the message to start birdsong. Else, forward
                 // the message to other players so they know who picked what.
-                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
                     LOG.info("Starting SUNRISE phase [server only].");
                     Sunrise.doSunrise(this.boardModel, this.currentDay);
                     LOG.info("Starting BIRDSONG phase.");
@@ -106,7 +110,7 @@ public class AppServer implements Runnable {
             case (Message.BIRDSONG_DONE):
                 // If all players have sent the message, send the message to the first randomly picked player to start
                 // daylight (execution of their phases).
-                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
                     LOG.info("Starting DAYLIGHT phase.");
                     this.turnController.createNewTurnOrder(this.clients);
                     final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
@@ -119,7 +123,7 @@ public class AppServer implements Runnable {
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
                 // If all players have sent the message, start filling out melee sheets in clearings.
-                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
                     LOG.info("Starting SUNSET phase [server only].");
                     Sunset.doSunset(this.boardModel);
                     this.broadcastMessage(SERVER_ID, new Message(SERVER_ID, Message.SUNSET_UPDATE, this.boardModel));
@@ -138,7 +142,7 @@ public class AppServer implements Runnable {
             case (Message.COMBAT_SEND_MELEE_SHEET):
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
-                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
                     LOG.info("Starting COMBAT_RESOLUTION phase.");
                     Combat.process(this.clients, this.boardModel);
                     LOG.info("Starting FATIGUE_STEP phase.");
@@ -162,7 +166,7 @@ public class AppServer implements Runnable {
             case (Message.FATIGUE_SUBMIT_UPDATED):
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
-                if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
+                if (this.turnController.incrementTurnCount() == this.maxPlayers) {
                     LOG.info("Starting GAME_OVER phase.");
                     if (this.isGameOver()) {
                         LOG.info("MAX_DAYS has been reached. Game over.");
@@ -261,7 +265,7 @@ public class AppServer implements Runnable {
         if (this.thread == null) {
             this.thread = new Thread(this);
             this.thread.start();
-            LOG.info("Game started. - Waiting for connections.");
+            LOG.info("Game started. - Waiting for {} connections.", this.maxPlayers);
         }
     }
 
@@ -270,7 +274,7 @@ public class AppServer implements Runnable {
         try {
             while (true) {
                 //If there is room in the game add client socket to the list of clients
-                if (this.clientCount < MAX_PLAYERS) {
+                if (this.clientCount < this.maxPlayers) {
                     Socket clientSocket = this.server.accept();
                     this.clients.add(new ServerThread(this, clientSocket));
                     this.clients.get(this.clientCount).open();
@@ -323,5 +327,9 @@ public class AppServer implements Runnable {
             index++;
         }
         return -1;
+    }
+
+    public int getMaxPlayers() {
+        return this.maxPlayers;
     }
 }
