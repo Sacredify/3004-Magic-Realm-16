@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class LogWriter extends AppenderSkeleton {
 
-    public static final List<String> messages = new ArrayList<String>();
+    private static final List<String> messages = new ArrayList<String>();
 
     @Override
     protected void append(final LoggingEvent event) {

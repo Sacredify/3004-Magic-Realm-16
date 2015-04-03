@@ -11,17 +11,17 @@ import javax.swing.*;
  * Created by Tony on 23/02/2015.
  */
 public class CharacterInfoDialog extends JDialog {
-    public static int CHARACTER_INFO_DIALOG_WIDTH = 760;
-    public static int CHARACTER_INFO_DIALOG_HEIGHT = 600;
+    private static final int CHARACTER_INFO_DIALOG_WIDTH = 760;
+    private static final int CHARACTER_INFO_DIALOG_HEIGHT = 600;
 
-    public static String AMAZON_DETAIL_PATH = "image/characterdetail/amazon.jpg";
-    public static String BLACK_KNIGHT_DETAIL_PATH = "image/characterdetail/black_knight.jpg";
-    public static String CAPTAIN_DETAIL_PATH = "image/characterdetail/captain.jpg";
-    public static String DWARF_DETAIL_PATH = "image/characterdetail/dwarf.jpg";
-    public static String ELF_DETAIL_PATH = "image/characterdetail/elf.jpg";
-    public static String SWORDSMAN_DETAIL_PATH = "image/characterdetail/swordsman.jpg";
-    public static String BERSERKER_DETAIL_PATH = "image/characterdetail/berserker.jpg";
-    public static String WHITE_KNIGHT_PATH = "image/characterdetail/white_knight.jpg";
+    private static final String AMAZON_DETAIL_PATH = "image/characterdetail/amazon.jpg";
+    private static final String BLACK_KNIGHT_DETAIL_PATH = "image/characterdetail/black_knight.jpg";
+    private static final String CAPTAIN_DETAIL_PATH = "image/characterdetail/captain.jpg";
+    private static final String DWARF_DETAIL_PATH = "image/characterdetail/dwarf.jpg";
+    private static final String ELF_DETAIL_PATH = "image/characterdetail/elf.jpg";
+    private static final String SWORDSMAN_DETAIL_PATH = "image/characterdetail/swordsman.jpg";
+    private static final String BERSERKER_DETAIL_PATH = "image/characterdetail/berserker.jpg";
+    private static final String WHITE_KNIGHT_PATH = "image/characterdetail/white_knight.jpg";
 
     BoardServices boardServices = new BoardServices();
 

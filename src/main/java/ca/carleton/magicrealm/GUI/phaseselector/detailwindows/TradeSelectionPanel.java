@@ -5,9 +5,7 @@ import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.item.Item;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,23 +14,23 @@ import java.util.List;
  * Created by Tony on 11/03/2015.
  */
 public class TradeSelectionPanel extends JPanel {
-    public final String SELL = "Sell";
-    public final String BUY = "Buy";
-    public final String CONFIRM = "Confirm";
-    public final String BUY_DRINKS_TEXT = "Buy drinks";
+    private static final String SELL = "Sell";
+    private static final String BUY = "Buy";
+    private static final String CONFIRM = "Confirm";
+    private static final String BUY_DRINKS_TEXT = "Buy drinks";
 
-    private JList<Entity> entitiesAvailableList;
+    private final JList<Entity> entitiesAvailableList;
     private JList<Item> itemsAvailableList;
-    private JScrollPane itemsScrollPane;
+    private final JScrollPane itemsScrollPane;
 
-    private JRadioButton buyRadioButton;
-    private JRadioButton sellRadioButton;
+    private final JRadioButton buyRadioButton;
+    private final JRadioButton sellRadioButton;
 
-    private JCheckBox buyDrinksCheckBox;
+    private final JCheckBox buyDrinksCheckBox;
 
-    private JButton confirmTradeButton;
+    private final JButton confirmTradeButton;
 
-    private ArrayList<Item> playerItems;
+    private final ArrayList<Item> playerItems;
 
     public TradeSelectionPanel(final Player player, final List<Entity> tradeableEntities) {
         ArrayList<Entity> entitiesOnClearing = new ArrayList<>();
@@ -50,95 +48,82 @@ public class TradeSelectionPanel extends JPanel {
         this.buyRadioButton = new JRadioButton(BUY);
         this.buyRadioButton.addActionListener(this.radioButtonSelectedActionListener());
         this.buyRadioButton.setEnabled(false);
-        this.add(buyRadioButton);
+        this.add(this.buyRadioButton);
         this.sellRadioButton = new JRadioButton(SELL);
         this.sellRadioButton.addActionListener(this.radioButtonSelectedActionListener());
         this.sellRadioButton.setEnabled(false);
-        this.add(sellRadioButton);
+        this.add(this.sellRadioButton);
 
         ButtonGroup buyOrSellButtonGroup;
         buyOrSellButtonGroup = new ButtonGroup();
-        buyOrSellButtonGroup.add(buyRadioButton);
-        buyOrSellButtonGroup.add(sellRadioButton);
+        buyOrSellButtonGroup.add(this.buyRadioButton);
+        buyOrSellButtonGroup.add(this.sellRadioButton);
 
         this.playerItems = new ArrayList<>();
         this.playerItems.addAll(player.getCharacter().getItems());
 
         this.buyDrinksCheckBox = new JCheckBox();
         this.buyDrinksCheckBox.setText(BUY_DRINKS_TEXT);
-        this.add(buyDrinksCheckBox);
+        this.add(this.buyDrinksCheckBox);
 
         this.itemsAvailableList = new JList<>();
         this.itemsAvailableList.addListSelectionListener(this.itemListSelectionListener());
         this.itemsScrollPane = new JScrollPane();
         this.itemsScrollPane.setViewportView(this.itemsAvailableList);
-        this.add(itemsScrollPane);
+        this.add(this.itemsScrollPane);
 
         this.confirmTradeButton = new JButton(CONFIRM);
         this.confirmTradeButton.setSize(40, 30);
         this.confirmTradeButton.setEnabled(false);
-        this.add(confirmTradeButton);
+        this.add(this.confirmTradeButton);
     }
 
     private ListSelectionListener entitiesListSelectionListener() {
-        return new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                buyRadioButton.setEnabled(true);
-                sellRadioButton.setEnabled(true);
-            }
+        return e -> {
+            TradeSelectionPanel.this.buyRadioButton.setEnabled(true);
+            TradeSelectionPanel.this.sellRadioButton.setEnabled(true);
         };
     }
 
     private ListSelectionListener itemListSelectionListener() {
-        return new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                confirmTradeButton.setEnabled(true);
-            }
-        };
+        return e -> TradeSelectionPanel.this.confirmTradeButton.setEnabled(true);
     }
 
     private ActionListener radioButtonSelectedActionListener() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setupItemsToTradeList();
-            }
-        };
+        return e -> this.setupItemsToTradeList();
     }
 
     public void setupItemsToTradeList() {
         this.itemsAvailableList = new JList<>();
-        if (buyRadioButton.isSelected()) {
+        if (this.buyRadioButton.isSelected()) {
             ArrayList<Item> itemList = new ArrayList<>();
             itemList.addAll(this.entitiesAvailableList.getSelectedValue().getItems());
             this.itemsAvailableList.setListData(itemList.toArray(new Item[itemList.size()]));
         }
-        else if (sellRadioButton.isSelected()) {
-            this.itemsAvailableList.setListData(this.playerItems.toArray(new Item[playerItems.size()]));
+        else if (this.sellRadioButton.isSelected()) {
+            this.itemsAvailableList.setListData(this.playerItems.toArray(new Item[this.playerItems.size()]));
         }
         this.itemsAvailableList.addListSelectionListener(this.itemListSelectionListener());
         this.itemsScrollPane.setViewportView(this.itemsAvailableList);
     }
 
     public JList<Entity> getEntitiesAvailableList() {
-        return entitiesAvailableList;
+        return this.entitiesAvailableList;
     }
 
     public JList<Item> getItemsAvailableList() {
-        return itemsAvailableList;
+        return this.itemsAvailableList;
     }
 
     public JRadioButton getSellRadioButton() {
-        return sellRadioButton;
+        return this.sellRadioButton;
     }
 
     public JCheckBox getBuyDrinksCheckBox() {
-        return buyDrinksCheckBox;
+        return this.buyDrinksCheckBox;
     }
 
     public JButton getConfirmTradeButton() {
-        return confirmTradeButton;
+        return this.confirmTradeButton;
     }
 }

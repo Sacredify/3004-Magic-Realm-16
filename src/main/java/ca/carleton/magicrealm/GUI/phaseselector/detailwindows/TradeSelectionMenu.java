@@ -13,7 +13,7 @@ public class TradeSelectionMenu extends JDialog{
 
     private static final long serialVersionUID = 5904435545349887190L;
 
-    public final String TRADE_SELECTION_WINDOW_TITLE = "What would you like to trade";
+    private static final String TRADE_SELECTION_WINDOW_TITLE = "What would you like to trade";
 
     public static final int WINDOW_WIDTH = 600;
 
@@ -22,7 +22,7 @@ public class TradeSelectionMenu extends JDialog{
     TradeSelectionPanel tradeSelectionPanel;
 
     public TradeSelectionMenu(Player player, List<Entity> tradeableEntities) {
-        this.setTitle(this.TRADE_SELECTION_WINDOW_TITLE);
+        this.setTitle(TRADE_SELECTION_WINDOW_TITLE);
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
         this.tradeSelectionPanel = new TradeSelectionPanel(player, tradeableEntities);
@@ -31,6 +31,6 @@ public class TradeSelectionMenu extends JDialog{
     }
 
     public TradeSelectionPanel getTradeSelectionPanel() {
-        return tradeSelectionPanel;
+        return this.tradeSelectionPanel;
     }
 }

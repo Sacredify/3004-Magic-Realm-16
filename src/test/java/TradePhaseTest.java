@@ -68,6 +68,7 @@ public class TradePhaseTest {
         ChitBuilder.placeChits(boardModel);
         final Player player = new Player();
         player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        player.getCharacter().addGold(100);
 
         // Set starting location.
         boardModel.getStartingLocation().addEntity(player.getCharacter());
@@ -83,6 +84,7 @@ public class TradePhaseTest {
         tradePhase.setSelling(false);
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        tradePhase.getTradeTarget().addItem(tradePhase.getItemToTrade());
         tradePhase.setCurrentClearing(boardModel.getClearingForPlayer(player));
         ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardModel.getStartingLocation());
         ((Denizen) tradePhase.getTradeTarget()).getCurrentClearing().addEntity(tradePhase.getTradeTarget());
@@ -92,7 +94,7 @@ public class TradePhaseTest {
 
         Daylight.doDaylight(boardModel, player, phases);
         assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade + 1));
-        assertThat(player.getCharacter().getCurrentGold(), is(10 - (goldValueOfItem * 4)));
+        assertThat(player.getCharacter().getCurrentGold(), is(110 - (goldValueOfItem * 4)));
         assertThat(tradePhase.getTradeTarget().getItems().size(), is(0));
     }
 
@@ -117,6 +119,7 @@ public class TradePhaseTest {
         tradePhase.setSelling(false);
         tradePhase.setItemToTrade(itemSelling);
         tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        tradePhase.getTradeTarget().addItem(tradePhase.getItemToTrade());
         tradePhase.setCurrentClearing(boardModel.getClearingForPlayer(player));
         ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardModel.getStartingLocation().getAdjacentPaths().get(0).getToClearing());
         ((Denizen) tradePhase.getTradeTarget()).getCurrentClearing().addEntity(tradePhase.getTradeTarget());
@@ -127,6 +130,41 @@ public class TradePhaseTest {
         Daylight.doDaylight(boardModel, player, phases);
         assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade));
         assertThat(player.getCharacter().getCurrentGold(), is(10));
-        assertThat(tradePhase.getTradeTarget().getItems().size(), is(0));
+        assertThat(tradePhase.getTradeTarget().getItems().size(), is(1));
+    }
+
+    @Test
+    public void canIgnoreNoGoldForTrade() {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        player.getCharacter().addGold(-10);
+
+        // Set starting location.
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
+
+        final List<AbstractPhase> phases = new ArrayList<AbstractPhase>();
+        final TradePhase tradePhase = new TradePhase();
+
+        final Item itemSelling = player.getCharacter().getItems().get(0);
+        final int itemsBeforeTrade = player.getCharacter().getItems().size();
+
+        tradePhase.setDrinksBought(false);
+        tradePhase.setSelling(false);
+        tradePhase.setItemToTrade(itemSelling);
+        tradePhase.setTradeTarget(NativeFactory.createNative(NativeFaction.LANCERS, NativeType.KNIGHT));
+        tradePhase.getTradeTarget().addItem(tradePhase.getItemToTrade());
+        tradePhase.setCurrentClearing(boardModel.getClearingForPlayer(player));
+        ((Denizen) tradePhase.getTradeTarget()).setCurrentClearing(boardModel.getStartingLocation());
+        ((Denizen) tradePhase.getTradeTarget()).getCurrentClearing().addEntity(tradePhase.getTradeTarget());
+        tradePhase.override = 5; // price x 4
+
+        phases.add(tradePhase);
+
+        Daylight.doDaylight(boardModel, player, phases);
+        assertThat(player.getCharacter().getItems().size(), is(itemsBeforeTrade));
+        assertThat(player.getCharacter().getCurrentGold(), is(0));
+        assertThat(tradePhase.getTradeTarget().getItems().size(), is(1));
     }
 }

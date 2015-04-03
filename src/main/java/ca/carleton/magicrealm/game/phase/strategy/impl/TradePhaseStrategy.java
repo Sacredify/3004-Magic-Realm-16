@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Note that this does not do any error checking. That is, gold values are assumed to be correct. As with move phases,
  * it is up to the player to ensure they have the correct amount.
- * <p/>
+ * <p>
  * Created with IntelliJ IDEA.
  * Date: 11/03/15
  * Time: 4:43 PM
@@ -244,6 +244,12 @@ public class TradePhaseStrategy implements PhaseStrategy {
                 }
             }
             if (doTrade) {
+                LOG.info("Trade to native is allowed.");
+                LOG.info("Cost to buy item (modified by rolls): {} Base was {}.", goldValueOfItem, trade.getItemToTrade().getGoldValue());
+                if (player.getCharacter().getCurrentGold() - goldValueOfItem < 0) {
+                    LOG.info("Character didn't have enough gold to pay for item. Cancelling trade.");
+                    return;
+                }
                 trade.getTradeTarget().removeItem(trade.getItemToTrade());
                 if (trade.getTradeTarget() instanceof AbstractCharacter) {
                     ((AbstractCharacter) trade.getTradeTarget()).addGold(goldValueOfItem);
@@ -252,6 +258,8 @@ public class TradePhaseStrategy implements PhaseStrategy {
                 player.getCharacter().addGold(-goldValueOfItem);
                 LOG.info("Added {} to {}'s inventory.", trade.getItemToTrade(), player.getCharacter().getEntityInformation().convertToCharacterType());
                 LOG.info("Removed {} from {}'s inventory.", trade.getItemToTrade(), trade.getTradeTarget().getEntityInformation());
+            } else {
+                LOG.info("Meeting table result resulted in no trade.");
             }
         }
     }
