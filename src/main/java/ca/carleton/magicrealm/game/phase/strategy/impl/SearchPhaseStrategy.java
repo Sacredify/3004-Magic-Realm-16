@@ -71,13 +71,15 @@ public class SearchPhaseStrategy implements PhaseStrategy {
                         GoldChit goldChit = (GoldChit) chit;
                         this.rollForTreasure(goldChit, roll, player);
                     }
-                    else if (chit.getChitColor().equals(ChitColor.LOST_CITY)) {
+                    else if (chit.getChitColor().equals(ChitColor.LOST_CITY)
+                            && player.getDiscoveredThings().contains(chit)) {
                         LostCity lostCity = (LostCity)chit;
                         for (GoldChit goldChit : lostCity.getTreasureChits()) {
                             this.rollForTreasure(goldChit, roll, player);
                         }
                     }
-                    else if (chit.getChitColor().equals(ChitColor.LOST_CASTLE)) {
+                    else if (chit.getChitColor().equals(ChitColor.LOST_CASTLE)
+                            && player.getDiscoveredThings().contains(chit)) {
                         LostCastle lostCastle = (LostCastle)chit;
                         for (GoldChit goldChit : lostCastle.getTreasureChits()) {
                             this.rollForTreasure(goldChit, roll, player);
