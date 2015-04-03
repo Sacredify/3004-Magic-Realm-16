@@ -20,6 +20,7 @@ import ca.carleton.magicrealm.item.armor.AbstractArmor;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 import ca.carleton.magicrealm.item.weapon.AttackType;
 import ca.carleton.magicrealm.item.weapon.Dagger;
+import ca.carleton.magicrealm.network.ServerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,6 +134,50 @@ public class Combat {
     }
 
     /**
+     * Process combat on the server side.
+     *
+     * @param clients    the clients.
+     * @param boardModel the board.
+     */
+    public static void process(final List<ServerThread> clients, final BoardModel boardModel) {
+        final List<Player> players = clients.stream().map(ServerThread::getPlayer).collect(Collectors.toList());
+
+        try {
+            for (final Player player : players) {
+                LOG.info("Starting combat resolution for {}.", player.getCharacter());
+                final MeleeSheet playerSheet = boardModel.getMeleeSheet(player);
+                final Entity target = playerSheet.getTarget();
+                if (target == null) {
+                    LOG.info("Player opted to not fight. Skipping their combat.");
+                    continue;
+                }
+                final MeleeSheet targetSheet = boardModel.getMeleeSheet(target);
+
+                if (playerSheet.hasFoughtToday() || targetSheet.hasFoughtToday()) {
+                    LOG.info("Assumption that people can't fight twice. Skipping because either {} or {} has fought today.", playerSheet.getOwner(), targetSheet.getOwner());
+                    continue;
+                }
+
+                if (target instanceof AbstractCharacter) {
+                    // Combat between two characters
+                    final Player otherPlayer = boardModel.getPlayerForCharacter((AbstractCharacter) target);
+                    Combat.doCombat(boardModel, player, otherPlayer);
+                } else if (target instanceof Denizen) {
+                    // Combat between a character and a native or monster.
+                    Combat.doCombat(boardModel, player, (Denizen) target);
+                }
+            }
+        } catch (final NullPointerException exception) {
+            LOG.error("Error with combat resolution. Something may have not been set. Instead of failing, we'll continue and hope it works.", exception);
+        }
+
+        // After combat is done
+        LOG.info("Resetting melee sheets and player wound statuses after combat.");
+        boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
+        players.stream().forEach(Combat::cleanup);
+    }
+
+    /**
      * Initiate combat between two players.
      *
      * @param boardModel the board.
@@ -158,24 +203,24 @@ public class Combat {
         if (playerOneWeaponLength >= playerTwoWeaponLength) {
             // "Round" of combat... attacker attacks, then gets attacked by defender, assuming the defender isn't dead.
             LOG.info("Beginning round one of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
-            resolveRoundForPlayers(playerOneSheet, playerTwoSheet);
+            resolve(playerOneSheet, playerTwoSheet);
             if (!playerTwo.getCharacter().isDead()) {
                 LOG.info("Beginning round two of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
-                resolveRoundForPlayers(playerTwoSheet, playerOneSheet);
+                resolve(playerTwoSheet, playerOneSheet);
             }
         } else {
             LOG.info("Beginning round one of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
-            resolveRoundForPlayers(playerTwoSheet, playerOneSheet);
+            resolve(playerTwoSheet, playerOneSheet);
             if (!playerOne.getCharacter().isDead()) {
                 LOG.info("Beginning round two of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
-                resolveRoundForPlayers(playerOneSheet, playerTwoSheet);
+                resolve(playerOneSheet, playerTwoSheet);
             }
         }
 
         // Check for dead players and fatigue step.
         if (playerOne.getCharacter().isDead()) {
             LOG.info("{} died. Beginning transfer of items.", playerOne.getCharacter());
-            resolveDeadPlayers(playerTwo, playerOne, boardModel);
+            resolvePlayerKilledAnother(playerTwo, playerOne, boardModel);
         } else {
             LOG.info("{} is not dead. Beginning fatigue step calculations.", playerOne.getCharacter());
             int attackerAsterisk = playerOneSheet.getManeuverChit().getFatigueAsterisks() + playerOneSheet.getAttackChit().getFatigueAsterisks();
@@ -189,7 +234,7 @@ public class Combat {
         }
         if (playerTwo.getCharacter().isDead()) {
             LOG.info("{} died. Beginning transfer of items.", playerTwo.getCharacter());
-            resolveDeadPlayers(playerOne, playerTwo, boardModel);
+            resolvePlayerKilledAnother(playerOne, playerTwo, boardModel);
         } else {
             LOG.info("{} is not dead. Beginning fatigue step calculations.", playerTwo.getCharacter());
             int defenderAsterisk = playerTwoSheet.getManeuverChit().getFatigueAsterisks() + playerTwoSheet.getAttackChit().getFatigueAsterisks();
@@ -213,7 +258,7 @@ public class Combat {
      * @param player     the first player.
      * @param denizen    the second player.
      */
-    public static void doCombat(final BoardModel boardModel, final Player player, final Denizen denizen) {
+    private static void doCombat(final BoardModel boardModel, final Player player, final Denizen denizen) {
 
         if (denizen instanceof AbstractMonster) {
             LOG.info("Target {} is a monster! Fighting as normal 1v1.", denizen);
@@ -222,7 +267,6 @@ public class Combat {
         } else {
             LOG.info("Target {} is a native! Fighting as native group if possible.", denizen);
         }
-
 
     }
 
@@ -300,7 +344,7 @@ public class Combat {
      *
      * @param player the player.
      */
-    public static void cleanup(final Player player) {
+    private static void cleanup(final Player player) {
         player.getCharacter().setWounded(false);
         player.getCharacter().setFatigued(false);
         LOG.info("Cleaned up {} after combat.", player.getCharacter());
@@ -313,7 +357,7 @@ public class Combat {
      * @param killed     the person who died.
      * @param boardModel the board.
      */
-    private static void resolveDeadPlayers(final Player killer, final Player killed, final BoardModel boardModel) {
+    private static void resolvePlayerKilledAnother(final Player killer, final Player killed, final BoardModel boardModel) {
         LOG.info("Transferring items, gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
         killer.getCharacter().getItems().addAll(killed.getCharacter().getItems());
         killed.getCharacter().getItems().clear();
@@ -336,7 +380,7 @@ public class Combat {
      * @param attacker the first melee sheet.
      * @param defender the second melee sheet.
      */
-    private static void resolveRoundForPlayers(final MeleeSheet attacker, final MeleeSheet defender) {
+    private static void resolve(final MeleeSheet attacker, final MeleeSheet defender) {
 
         // Determine if attackers attack hits through defenders maneuver
         boolean attackHit = attacker.getAttackDirection().matches(defender.getManeuver());

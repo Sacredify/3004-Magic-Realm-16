@@ -26,6 +26,8 @@ public class ServerThread extends Thread {
 
     private Player player;
 
+    private boolean done;
+
     public ServerThread(AppServer server, Socket socket) {
         super();
         this.server = server;
@@ -34,6 +36,7 @@ public class ServerThread extends Thread {
     }
 
     public void send(Message msg) {
+        LOG.info("Sending {} message {}.", this.ID, msg.getMessageType());
         try {
             this.objOutStream.reset();
             this.objOutStream.writeObject(msg);
@@ -43,20 +46,39 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Close the socket and marks work done.
+     *
+     * @throws IOException
+     */
+    public void close() throws IOException {
+        this.done = true;
+        if (this.socket != null) {
+            this.socket.close();
+        }
+        if (this.objInputStream != null) {
+            this.objInputStream.close();
+        }
+        if (this.objOutStream != null) {
+            this.objOutStream.close();
+        }
+    }
 
+    @Override
     public void run() {
-        Object obj = null;
-        do {
+        LOG.info("Running network thread for client {}.", this.ID);
+        while (!this.done) {
             try {
-                obj = this.objInputStream.readObject();
-                this.server.handle(this.ID, obj);
-            } catch (IOException e) {
-                LOG.error("Error: A user closed the connection. TODO: Handle this gracefully!", e);
-                System.exit(-1);
+                this.server.handle(this.ID, this.objInputStream.readObject());
+            } catch (final IOException exception) {
+                LOG.warn("Client ID -- {}. Error reading input - connection closed. Message --> {}.", this.ID, exception.getMessage());
+                this.server.closeFor(this);
+                break;
             } catch (ClassNotFoundException e) {
                 LOG.error("If we seriously ever get this, I'll eat my hat.");
             }
-        } while (obj != null);
+        }
+        LOG.info("Networking thread for client {} completed.", this.ID);
     }
 
 
@@ -65,6 +87,7 @@ public class ServerThread extends Thread {
         this.objOutStream = new ObjectOutputStream(this.socket.getOutputStream());
         this.objInputStream = new ObjectInputStream(this.socket.getInputStream());
         this.objOutStream.flush();
+        LOG.info("Accepted client {} successfully.", this.ID);
     }
 
     public int getID() {

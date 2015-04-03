@@ -11,6 +11,8 @@ import java.io.Serializable;
  */
 public class VictoryCondition implements Serializable {
 
+    private static final long serialVersionUID = 7930283393149953235L;
+
     public enum Conditions {
         GOLD,
         NOTORIETY,
@@ -50,23 +52,23 @@ public class VictoryCondition implements Serializable {
     }
 
     public int getGold() {
-        return gold;
+        return this.gold;
     }
 
     public int getNotoriety() {
-        return notoriety;
+        return this.notoriety;
     }
 
     public int getFame() {
-        return fame;
+        return this.fame;
     }
 
     public int getSpellsCount() {
-        return spellsCount;
+        return this.spellsCount;
     }
 
     public int getGreatTreasuresCount() {
-        return greatTreasuresCount;
+        return this.greatTreasuresCount;
     }
 
 }

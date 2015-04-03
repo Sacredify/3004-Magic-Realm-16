@@ -7,6 +7,8 @@ import java.io.Serializable;
  */
 public final class Message implements Serializable {
 
+    // TODO Should have probably used an enumeration...
+
     private static final long serialVersionUID = 741681056897874122L;
 
     public static final String SELECT_CHARACTER = "SELECT_CHARACTER";
@@ -28,6 +30,8 @@ public final class Message implements Serializable {
     public static final String FATIGUE_FATIGUE_CHITS = "FATIGUE_START";
 
     public static final String FATIGUE_SUBMIT_UPDATED = "FATIGUE_END";
+
+    public static final String GAME_OVER = "GAME_OVER";
 
     /**
      * The ID of the sender of the message (client(s)/server).

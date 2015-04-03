@@ -26,6 +26,8 @@ public class AppClient implements Runnable {
 
     private GameController gameController;
 
+    private boolean done;
+
     public AppClient(String serverName, int serverPort, GameController gameController) {
 
         try {
@@ -46,9 +48,8 @@ public class AppClient implements Runnable {
             this.objOutStream.reset();
             this.objOutStream.writeObject(msg);
             this.objOutStream.flush();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (final IOException exception) {
+            LOG.error("Error writing to the stream.", exception);
         }
     }
 
@@ -57,6 +58,24 @@ public class AppClient implements Runnable {
             this.thread = new Thread(this);
             this.thread.start();
         }
+    }
+
+    public void stop() {
+        try {
+            if (this.thread != null) {
+                this.thread = null;
+            }
+            if (this.socket != null) {
+                this.socket.close();
+            }
+
+            this.objInputStream = null;
+            this.objOutStream = null;
+            this.socket = null;
+        } catch (final IOException exception) {
+            LOG.error("Error closing connection...", exception);
+        }
+        this.done = true;
     }
 
     public void sendMessage(String messageType, Object messageObject) {
@@ -79,28 +98,21 @@ public class AppClient implements Runnable {
         LOG.info("Object streams opened.");
     }
 
-
+    /**
+     * Continually waits for input from the server.
+     */
     @Override
     public void run() {
-        LOG.info("Client thread started.");
-        Object obj = null;
-        do {
+        LOG.info("Client thread {} running.", this.socket.getLocalPort());
+        while (!this.done) {
             try {
-                obj = this.objInputStream.readObject();
-                this.gameController.handleMessage((Message) obj);
-            } catch (IOException | ClassNotFoundException e) {
-                LOG.error("Error with reading the object from the stream.", e);
-                System.exit(-1);
+                this.gameController.handleMessage((Message) this.objInputStream.readObject());
+            } catch (final IOException exception) {
+                LOG.error("Listening error...", exception);
+            } catch (ClassNotFoundException e) {
+                LOG.error("If this happens, I'll eat my hat.", e);
             }
-            if (obj == null) {
-                LOG.info("Disconnected from the server.");
-                break;
-            }
-        } while (obj != null);
+        }
+        LOG.info("Client networking thread completed.");
     }
-
-    public int getId() {
-        return this.ID;
-    }
-
 }

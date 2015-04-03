@@ -5,6 +5,7 @@ import ca.carleton.magicrealm.GUI.board.BoardWindow;
 import ca.carleton.magicrealm.GUI.charactercreate.CharacterCreateMenu;
 import ca.carleton.magicrealm.GUI.phaseselector.PhaseSelectorMenu;
 import ca.carleton.magicrealm.entity.character.CharacterType;
+import ca.carleton.magicrealm.game.GameResult;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -97,6 +100,10 @@ public class GameController {
                 this.updateFromServer(message.getPayload());
                 this.refreshBoard(false);
                 this.selectChitsToFatigue();
+                break;
+            case (Message.GAME_OVER):
+                this.gameOver(message.getPayload());
+                break;
             default:
                 break;
         }
@@ -147,7 +154,7 @@ public class GameController {
         Combat.fillOutMeleeSheet(this.boardModel, this.currentPlayer, this.boardWindow);
         this.updatePlayerInMap();
         this.networkConnection.sendMessage(Message.COMBAT_SEND_MELEE_SHEET, this.boardModel);
-        LOG.info("WARNING: COMBAT WILL BE RESOLVED AUTOMATICALLY BY THE SERVER.");
+        LOG.info("WARNING: OTHER PLAYERS MUST ENTER THEIR SHEET AS WELL - COMBAT WILL BE RESOLVED AUTOMATICALLY BY THE SERVER.");
     }
 
     /**
@@ -213,6 +220,30 @@ public class GameController {
         this.characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
         this.characterCreateMenu.displayWindow();
         LOG.info("Displayed character create.");
+    }
+
+    /**
+     * Game over... basically show a message and try and close gracefully..
+     */
+    private void gameOver(final Object payload) {
+        final GameResult result = (GameResult) payload;
+
+        switch (result) {
+            case VICTOR:
+                JOptionPane.showMessageDialog(this.boardWindow, "The server has reported game over and you're the victor! Congratulations!");
+                break;
+            case WINNER:
+                JOptionPane.showMessageDialog(this.boardWindow, "The server has reported game over and you're a winner (>= 0 points)! Congratulations!");
+                break;
+            case LOSER:
+                JOptionPane.showMessageDialog(this.boardWindow, "The server has reported game over, but you lost (< 0 points). Sorry, better luck next time!");
+                break;
+        }
+        LOG.info("Starting shutdown operations...");
+        this.networkConnection.stop();
+        this.output.dispose();
+        this.boardWindow.dispose();
+        LOG.info("Done - Client exiting.");
     }
 
     /**
@@ -288,6 +319,14 @@ public class GameController {
         LogWriter writer = new LogWriter();
         Timer timer = new Timer(100, e -> writer.output(area));
         timer.start();
+
+        this.output.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(final WindowEvent e) {
+                timer.stop();
+                LOG.info("Ended log timer.");
+            }
+        });
 
         this.output.setVisible(true);
         LOG.info("Started logging timer and displayed logging output window.");

@@ -5,11 +5,10 @@ import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.Launcher;
 import ca.carleton.magicrealm.control.Combat;
+import ca.carleton.magicrealm.control.EndGame;
 import ca.carleton.magicrealm.control.Sunrise;
 import ca.carleton.magicrealm.control.Sunset;
-import ca.carleton.magicrealm.entity.Denizen;
-import ca.carleton.magicrealm.entity.Entity;
-import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+import ca.carleton.magicrealm.game.GameResult;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import org.slf4j.Logger;
@@ -19,8 +18,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class AppServer implements Runnable {
 
@@ -32,7 +30,7 @@ public class AppServer implements Runnable {
 
     private static final int SERVER_ID = 0;
 
-    private int clientCount = 0;
+    private volatile int clientCount = 0;
 
     private Thread thread = null;
 
@@ -65,39 +63,15 @@ public class AppServer implements Runnable {
     }
 
     /**
-     * Builds the map for this session.
+     * Called by client threads to handle messages.
+     *
+     * @param ID     the id of the sender.
+     * @param object the message.
      */
-    private void buildMap() {
-        LOG.info("Beginning map build process.");
-        this.boardModel = new BoardModel();
-
-        if (Launcher.CHEAT_MODE) {
-            LOG.info("Starting cheat build.");
-            ChitBuilder.cheatMode(this.boardModel);
-        } else {
-            ChitBuilder.placeChits(this.boardModel);
-        }
-        EntityBuilder.placeEntities(this.boardModel);
-        LOG.info("Finished map build process.");
-    }
-
-    public void start() {
-        if (this.thread == null) {
-            this.thread = new Thread(this);
-            this.thread.start();
-            LOG.info("Game started.");
-        }
-    }
-
-    //Handles input from the server threads
-    public synchronized void handle(int ID, Object obj) {
-        if (obj instanceof Message) {
-            Message m = (Message) obj;
-            LOG.info("Received a {} message from ID {}.", m.getMessageType(), ID);
-            this.handleMessage(m);
-        } else if (obj instanceof String) {
-            LOG.info("Receive a string - {}.", obj);
-        }
+    public synchronized void handle(int ID, Object object) {
+        final Message message = (Message) object;
+        LOG.info("Received a {} message from ID {}.", message.getMessageType(), ID);
+        this.handleMessage(message);
     }
 
     /**
@@ -166,7 +140,7 @@ public class AppServer implements Runnable {
                 this.synchronize();
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
                     LOG.info("Starting COMBAT_RESOLUTION phase.");
-                    this.processCombatsForPlayers();
+                    Combat.process(this.clients, this.boardModel);
                     LOG.info("Starting FATIGUE_STEP phase.");
                     this.turnController.createNewTurnOrder(this.clients);
                     final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());
@@ -189,14 +163,17 @@ public class AppServer implements Runnable {
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
                 if (this.turnController.incrementTurnCount() == MAX_PLAYERS) {
-                    this.currentDay += 1;
                     LOG.info("Starting GAME_OVER phase.");
                     if (this.isGameOver()) {
-                        LOG.info("A month has passed. Game over.");
-                        final ServerThread winnerThread = this.calculateWinner();
-                        // TODO do winner stuff here...
+                        LOG.info("MAX_DAYS has been reached. Game over.");
+                        final Map<ServerThread, GameResult> results = EndGame.calculateFinalScores(this.clients);
+                        for (final Map.Entry<ServerThread, GameResult> result : results.entrySet()) {
+                            result.getKey().send(new Message(SERVER_ID, Message.GAME_OVER, result.getValue()));
+                        }
+                        LOG.info("Sent all game over messages.");
                         this.shutDown();
                     } else {
+                        this.currentDay += 1;
                         LOG.info("Game is not yet over. Starting day {}.", this.currentDay);
                         LOG.info("Starting SUNRISE phase.");
                         Sunrise.doSunrise(this.boardModel, this.currentDay);
@@ -223,44 +200,6 @@ public class AppServer implements Runnable {
         }
     }
 
-    private void processCombatsForPlayers() {
-        final List<Player> players = this.clients.stream().map(ServerThread::getPlayer).collect(Collectors.toList());
-
-        try {
-            for (final Player player : players) {
-                LOG.info("Starting combat resolution for {}.", player.getCharacter());
-                final MeleeSheet playerSheet = this.boardModel.getMeleeSheet(player);
-                final Entity target = playerSheet.getTarget();
-                if (target == null) {
-                    LOG.info("Player opted to not fight. Skipping their combat.");
-                    continue;
-                }
-                final MeleeSheet targetSheet = this.boardModel.getMeleeSheet(target);
-
-                if (playerSheet.hasFoughtToday() || targetSheet.hasFoughtToday()) {
-                    LOG.info("Assumption that people can't fight twice. Skipping because either {} or {} has fought today.", playerSheet.getOwner(), targetSheet.getOwner());
-                    continue;
-                }
-
-                if (target instanceof AbstractCharacter) {
-                    // Combat between two characters
-                    final Player otherPlayer = this.boardModel.getPlayerForCharacter((AbstractCharacter) target);
-                    Combat.doCombat(this.boardModel, player, otherPlayer);
-                } else if (target instanceof Denizen) {
-                    // Combat between a character and a native or monster.
-                    Combat.doCombat(this.boardModel, player, (Denizen) target);
-                }
-            }
-        } catch (final NullPointerException exception) {
-            LOG.error("Error with combat resolution. Something may have not been set. Instead of failing, we'll continue and hope it works.", exception);
-        }
-
-        // After combat is done
-        LOG.info("Resetting melee sheets and player wound statuses after combat.");
-        this.boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
-        players.stream().forEach(Combat::cleanup);
-    }
-
     /**
      * Update references to the current ones stored by the board (which may be scrambled through serialization. Object graphs are hard man).
      */
@@ -282,17 +221,11 @@ public class AppServer implements Runnable {
         return this.currentDay == MAX_ROUNDS;
     }
 
-    private ServerThread calculateWinner() {
-
-
-        return null;
-    }
-
     /**
      * End the current game gracefully.
      */
     private void shutDown() {
-
+        LOG.info("Starting shutdown procedure - server will shut down once all clients have disconnected.");
     }
 
     private ServerThread getClientWithID(int ID) {
@@ -302,6 +235,34 @@ public class AppServer implements Runnable {
             }
         }
         return null;
+    }
+
+    /**
+     * Builds the map for this session.
+     */
+    private void buildMap() {
+        LOG.info("Beginning map build process.");
+        this.boardModel = new BoardModel();
+
+        if (Launcher.CHEAT_MODE) {
+            LOG.info("Starting cheat build.");
+            ChitBuilder.cheatMode(this.boardModel);
+        } else {
+            ChitBuilder.placeChits(this.boardModel);
+        }
+        EntityBuilder.placeEntities(this.boardModel);
+        LOG.info("Finished map build process.");
+    }
+
+    /**
+     * Start running the wait-loop for connections.
+     */
+    public void start() {
+        if (this.thread == null) {
+            this.thread = new Thread(this);
+            this.thread.start();
+            LOG.info("Game started. - Waiting for connections.");
+        }
     }
 
     @Override
@@ -323,6 +284,7 @@ public class AppServer implements Runnable {
         } catch (IOException e) {
             LOG.error("Exception during server accept process.", e);
         }
+        LOG.info("Done running client-accept thread.");
     }
 
     /**
@@ -337,4 +299,29 @@ public class AppServer implements Runnable {
         this.clients.stream().filter(client -> client.getID() != ID).forEach(client -> client.send(m));
     }
 
+    public synchronized void closeFor(final ServerThread serverThread) {
+        LOG.info("Removing thread {}.", serverThread.getID());
+        final int index = this.findClient(serverThread.getID());
+        this.clients.remove(index);
+        this.clientCount--;
+
+        try {
+            serverThread.close();
+        } catch (final IOException exception) {
+            LOG.error("Error closing thread!", exception);
+        }
+        LOG.info("Removed thread. Remaining players: {}", this.clientCount);
+
+    }
+
+    private synchronized int findClient(final int id) {
+        int index = 0;
+        for (final ServerThread thread : this.clients) {
+            if (thread.getID() == id) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
 }
