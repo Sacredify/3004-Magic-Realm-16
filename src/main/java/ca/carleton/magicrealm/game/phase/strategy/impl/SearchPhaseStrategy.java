@@ -4,9 +4,7 @@ import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.SearchSelectionPan
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.Path;
 import ca.carleton.magicrealm.entity.Entity;
-import ca.carleton.magicrealm.entity.chit.ChitColor;
-import ca.carleton.magicrealm.entity.chit.ColoredChit;
-import ca.carleton.magicrealm.entity.chit.GoldChit;
+import ca.carleton.magicrealm.entity.chit.*;
 import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
@@ -71,20 +69,18 @@ public class SearchPhaseStrategy implements PhaseStrategy {
                     if (chit.getChitColor().equals(ChitColor.GOLD)
                             && player.getDiscoveredThings().contains(chit)) {
                         GoldChit goldChit = (GoldChit) chit;
-                        if (!goldChit.getTreasure().isEmpty()) {
-                            if (roll == 1) {
-                                player.getCharacter().addItem(goldChit.getTreasure().get(0));
-                            }
-                            else {
-                                if (roll > goldChit.getTreasure().size()) {
-                                    // Get the last treasure in the pile
-                                    player.getCharacter().addItem(goldChit.getTreasure().get(goldChit.getTreasure().size()-1));
-                                }
-                                else {
-                                    // If not, get the treasure from the index of the roll-1
-                                    player.getCharacter().addItem(goldChit.getTreasure().get(roll-1));
-                                }
-                            }
+                        this.rollForTreasure(goldChit, roll, player);
+                    }
+                    else if (chit.getChitColor().equals(ChitColor.LOST_CITY)) {
+                        LostCity lostCity = (LostCity)chit;
+                        for (GoldChit goldChit : lostCity.getTreasureChits()) {
+                            this.rollForTreasure(goldChit, roll, player);
+                        }
+                    }
+                    else if (chit.getChitColor().equals(ChitColor.LOST_CASTLE)) {
+                        LostCastle lostCastle = (LostCastle)chit;
+                        for (GoldChit goldChit : lostCastle.getTreasureChits()) {
+                            this.rollForTreasure(goldChit, roll, player);
                         }
                     }
                 }
@@ -98,6 +94,24 @@ public class SearchPhaseStrategy implements PhaseStrategy {
                 if (!player.getDiscoveredThings().contains(path))
                     player.getDiscoveredThings().add(path);
 
+        }
+    }
+
+    private void rollForTreasure(final GoldChit goldChit, final int roll, final Player player) {
+        if (!goldChit.getTreasure().isEmpty()) {
+            if (roll == 1) {
+                player.getCharacter().addItem(goldChit.getTreasure().get(0));
+            }
+            else {
+                if (roll > goldChit.getTreasure().size()) {
+                    // Get the last treasure in the pile
+                    player.getCharacter().addItem(goldChit.getTreasure().get(goldChit.getTreasure().size()-1));
+                }
+                else {
+                    // If not, get the treasure from the index of the roll-1
+                    player.getCharacter().addItem(goldChit.getTreasure().get(roll-1));
+                }
+            }
         }
     }
 }

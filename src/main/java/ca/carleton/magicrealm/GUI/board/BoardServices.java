@@ -120,22 +120,25 @@ public class BoardServices {
             }
             if (isSunset && boardModel.getClearingForCharacter(character).getParentTile().equals(tile)) {
                 for (ColoredChit chit : tile.getChits()) {
-                    newChit = new JLabel();
-                    newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
-                    newIcon = this.createImageIcon(chit.getChitColor().getImageFilePath());
+                    // Ghetto fix for problem pertaining to chit for a tile being on every clearing
+                    if (chit.getClearingNumber() == Integer.parseInt(clearing.getName())) {
+                        newChit = new JLabel();
+                        newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
+                        newIcon = this.createImageIcon(chit.getChitColor().getImageFilePath());
 
-                    if (newChit != null && newIcon != null) {
-                        BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
-                        newImage = resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
-                        newIcon.setImage(newImage);
-                        newChit.setIcon(newIcon);
-                        newChit.setEnabled(true);
-                        if (chit.getClearingNumber() == -1) {
-                            newChit.setLocation(this.applyTileXOffset(TILE_WIDTH / 2, tileOffsetX), this.applyTileYOffset(TILE_HEIGHT / 2, tileOffsetY));
-                        } else {
-                            newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
+                        if (newChit != null && newIcon != null) {
+                            BufferedImage newImage = imageToBufferedImage(newIcon.getImage());
+                            newImage = resize(newImage, CHIT_WIDTH, CHIT_HEIGHT);
+                            newIcon.setImage(newImage);
+                            newChit.setIcon(newIcon);
+                            newChit.setEnabled(true);
+                            if (chit.getClearingNumber() == -1) {
+                                newChit.setLocation(this.applyTileXOffset(TILE_WIDTH / 2, tileOffsetX), this.applyTileYOffset(TILE_HEIGHT / 2, tileOffsetY));
+                            } else {
+                                newChit.setLocation(this.applyTileXOffset(clearingX, tileOffsetX), this.applyTileYOffset(clearingY, tileOffsetY));
+                            }
+                            panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                         }
-                        panel.add(newChit, JLayeredPane.PALETTE_LAYER);
                     }
                 }
             }
