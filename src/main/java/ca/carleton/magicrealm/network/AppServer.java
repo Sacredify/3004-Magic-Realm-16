@@ -348,11 +348,17 @@ public class AppServer implements Runnable {
      * @param player the player.
      */
     private void cleanUpPlayer(final Player player) {
-        final Clearing clearing = this.boardModel.getClearingForPlayer(player);
-        clearing.getEntities().remove(player.getCharacter());
-        LOG.info("Removed player from their clearing.");
-        this.boardModel.getPlayers().remove(player);
-        LOG.info("Removed player from the list of players. Cleanup done.");
+        if (player != null) {
+            if (player.getCharacter() != null) {
+                final Clearing clearing = this.boardModel.getClearingForPlayer(player);
+                clearing.getEntities().remove(player.getCharacter());
+                LOG.info("Removed player from their clearing.");
+            }
+            this.boardModel.getPlayers().remove(player);
+            LOG.info("Removed player from the list of players. Cleanup done.");
+        } else {
+            LOG.info("No player to cleanup.");
+        }
     }
 
     public int getClientCount() {
