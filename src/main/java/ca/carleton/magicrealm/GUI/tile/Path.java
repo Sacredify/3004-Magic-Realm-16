@@ -46,4 +46,11 @@ public class Path implements Serializable, Discoverable {
     public void setHidden(boolean isHidden) {
         this.isHidden = isHidden;
     }
+
+    @Override
+    public boolean equals(final Object path) {
+        return path instanceof Path
+                && ((this.fromClearing == ((Path) path).getFromClearing() && this.toClearing == ((Path) path).getToClearing())
+                || (this.fromClearing == ((Path) path).getToClearing() && this.toClearing == ((Path) path).getFromClearing()));
+    }
 }
