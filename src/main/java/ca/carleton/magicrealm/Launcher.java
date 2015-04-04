@@ -28,6 +28,8 @@ public class Launcher {
 
     private static final String NUMBER_CLIENTS_ARG = "max";
 
+    private static final String NUMBER_DAYS_ARG = "days";
+
     private static final String LAUNCH_COMMAND = "java -jar Magic_Realm.jar";
 
     public static void main(String[] args) {
@@ -36,7 +38,8 @@ public class Launcher {
         HelpFormatter formatter = new HelpFormatter();
 
         options.addOption(HOST_ARG, false, "Whether or not to start as a server host. [used by -> host]");
-        options.addOption(NUMBER_CLIENTS_ARG, true, "Optional. How many clients to wait for. Default is 2. [used by -> host]");
+        options.addOption(NUMBER_CLIENTS_ARG, true, "Optional. How many clients to wait for. [used by -> host]");
+        options.addOption(NUMBER_DAYS_ARG, true, "Optional. How many days the game should last. [used by -> host]");
         options.addOption(IP_ADDRESS_ARG, true, "The ip address to connect to. [used by -> client]");
         options.addOption(PORT_ARG, true, "The port to use. [used by -> client/host]");
         options.addOption(CHEAT_ARG, false, "Optional. Whether or not to use cheat mode. [used by -> client/host]");
@@ -54,13 +57,19 @@ public class Launcher {
                     LOG.error("No port specified for host.");
                     throw new Exception("Attempted to start as host with no port specified.");
                 }
+
+                int numberClients = AppServer.DEFAULT_MAX_PLAYERS;
+                int numberDays = AppServer.DEFAULT_GAME_LENGTH;
+
                 if (cmd.hasOption(NUMBER_CLIENTS_ARG)) {
                     LOG.info("Overwriting MAX_PLAYERS arg to user-specified value of {}.", cmd.getOptionValue(NUMBER_CLIENTS_ARG));
-                    new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), Integer.parseInt(cmd.getOptionValue(NUMBER_CLIENTS_ARG))).start();
-                } else {
-                    LOG.info("Starting with default max players [{}].", AppServer.DEFAULT_MAX_PLAYERS);
-                    new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), AppServer.DEFAULT_MAX_PLAYERS).start();
+                    numberClients = Integer.parseInt(cmd.getOptionValue(NUMBER_CLIENTS_ARG));
                 }
+                if (cmd.hasOption(NUMBER_DAYS_ARG)) {
+                    LOG.info("Overwriting GAME_LENGTH arg to user-specified value of {}.", cmd.getOptionValue(NUMBER_CLIENTS_ARG));
+                    numberDays = Integer.parseInt(cmd.getOptionValue(NUMBER_CLIENTS_ARG));
+                }
+                new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), numberClients, numberDays);
             } else {
                 if (!cmd.hasOption(IP_ADDRESS_ARG) || !cmd.hasOption(PORT_ARG)) {
                     throw new Exception("Attempted to start with missing parameters.");

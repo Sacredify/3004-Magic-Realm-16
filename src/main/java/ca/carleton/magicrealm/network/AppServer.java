@@ -27,7 +27,7 @@ public class AppServer implements Runnable {
 
     public static final int DEFAULT_MAX_PLAYERS = 2;
 
-    private static final int MAX_ROUNDS = 28;
+    public static final int DEFAULT_GAME_LENGTH = 28;
 
     private static final int SERVER_ID = 0;
 
@@ -46,14 +46,17 @@ public class AppServer implements Runnable {
     // DO NOT set this here. Set through command or with the default_max above.
     private int maxPlayers;
 
+    private int maxDays;
+
     /**
      * The number of days passed in the game. 28 is the max.
      */
     private int currentDay = 1;
 
-    public AppServer(final int port, final int maxPlayers) {
+    public AppServer(final int port, final int maxPlayers, final int maxDays) {
         try {
             this.maxPlayers = maxPlayers;
+            this.maxDays = maxDays;
             this.server = new ServerSocket(port);
             this.server.setReuseAddress(true);
             this.clients = new ArrayList<ServerThread>();
@@ -223,7 +226,7 @@ public class AppServer implements Runnable {
     }
 
     private boolean isGameOver() {
-        return this.currentDay == MAX_ROUNDS;
+        return this.currentDay == this.maxDays;
     }
 
     /**
