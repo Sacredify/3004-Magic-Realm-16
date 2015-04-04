@@ -105,6 +105,7 @@ public class AppClient implements Runnable {
                 this.gameController.handleMessage((Message) this.objInputStream.readObject());
             } catch (final IOException exception) {
                 LOG.error("Listening error...", exception);
+                this.done = true;
             } catch (ClassNotFoundException e) {
                 LOG.error("If this happens, I'll eat my hat.", e);
             }
