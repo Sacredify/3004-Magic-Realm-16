@@ -3,6 +3,7 @@ package ca.carleton.magicrealm.entity.monster;
 import ca.carleton.magicrealm.entity.BountyCarrier;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.game.combat.Harm;
+import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,4 +15,10 @@ public abstract class AbstractMonster extends Denizen implements BountyCarrier {
     public Harm getMoveStrength() {
         return this.vulnerability;
     }
+
+    /*
+    public ActionChit getAttackChit() {
+        return new ActionChit();
+    }
+     */
 }

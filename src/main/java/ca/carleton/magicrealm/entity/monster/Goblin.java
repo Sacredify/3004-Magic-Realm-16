@@ -11,6 +11,7 @@ import ca.carleton.magicrealm.item.weapon.MonsterWeapon;
 public class Goblin extends AbstractMonster {
     public Goblin() {
         this.vulnerability = Harm.MEDIUM;
+        this.weapon = new MonsterWeapon(Harm.MEDIUM);
     }
 
     @Override

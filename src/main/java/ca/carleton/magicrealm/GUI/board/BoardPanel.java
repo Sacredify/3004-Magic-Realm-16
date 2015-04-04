@@ -97,7 +97,7 @@ public class BoardPanel extends JLayeredPane {
         }
 
         this.setupCharacterInfoButton(character);
-        this.setupGeneralInfoButton();
+        this.setupGeneralInfoButton(character);
         this.firstDraw = false;
     }
 
@@ -119,12 +119,12 @@ public class BoardPanel extends JLayeredPane {
         this.add(displayCharacterInformationButton, DEFAULT_LAYER);
     }
 
-    public void setupGeneralInfoButton() {
+    public void setupGeneralInfoButton(final AbstractCharacter character) {
         final JButton displayGeneralInformationButton = new JButton(GENERAL_GAME_INFO_BUTTON_TEXT);
         displayGeneralInformationButton.setSize(150, 30);
         displayGeneralInformationButton.setLocation(this.maximumX, 30);
         displayGeneralInformationButton.addActionListener(e ->
-                new GameInfoDialog(this.gameInfoText));
+                new GameInfoDialog(this.gameInfoText, character));
         this.add(displayGeneralInformationButton, DEFAULT_LAYER);
     }
 

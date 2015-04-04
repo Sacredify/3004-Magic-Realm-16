@@ -1,5 +1,9 @@
 package ca.carleton.magicrealm.GUI.board.infoDialogs;
 
+import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+import ca.carleton.magicrealm.game.Player;
+import ca.carleton.magicrealm.item.Item;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,18 +13,21 @@ import java.awt.*;
 public class GameInfoDialog extends JDialog {
     private static final String DIALOG_NAME = "Game Information";
 
-    private static final String GENERAL_INFO_TITLE = "General Information";
     private static final String INVENTORY_TITLE = "Inventory";
 
     private static final int GAME_INFO_DIALOG_WIDTH = 760;
     private static final int GAME_INFO_DIALOG_HEIGHT = 600;
 
-    private static final int INFO_LABEL_WIDTH = 760;
+    private static final int INFO_LABEL_WIDTH = 460;
     private static final int INFO_LABEL_HEIGHT = 500;
+
+    private static final int INVENTORY_LABEL_WIDTH = 200;
+    private static final int INVENTORY_LABEL_HEIGHT = 200;
 
     private static final int TITLE_INT_SIZE = 25;
 
-    public GameInfoDialog(final String infoString) {
+    public GameInfoDialog(final String infoString, final AbstractCharacter character) {
+        this.setLayout(null);
         this.setTitle(DIALOG_NAME);
         this.setSize(GAME_INFO_DIALOG_WIDTH, GAME_INFO_DIALOG_HEIGHT);
 
@@ -29,11 +36,22 @@ public class GameInfoDialog extends JDialog {
         this.add(infoStringLabel);
 
         JLabel inventoryTitleLabel = new JLabel(INVENTORY_TITLE);
-        inventoryTitleLabel.setSize(50, 20);
+        inventoryTitleLabel.setSize(200, 25);
+        inventoryTitleLabel.setLocation(500, 50);
         inventoryTitleLabel.setFont(new Font("Arial", Font.BOLD, TITLE_INT_SIZE));
         this.add(inventoryTitleLabel);
 
+        String inventoryText = "<html><br/>";
+        for (Item item : character.getItems()) {
+            inventoryText += item.toString();
+            inventoryText += "<br/>";
+        }
+        inventoryText += "</html>";
 
+        JLabel inventoryLabel = new JLabel(inventoryText);
+        inventoryLabel.setSize(INVENTORY_LABEL_WIDTH, INVENTORY_LABEL_HEIGHT);
+        inventoryLabel.setLocation(500, 50);
+        this.add(inventoryLabel);
 
         this.setVisible(true);
     }
