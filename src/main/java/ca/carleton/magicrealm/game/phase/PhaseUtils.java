@@ -50,22 +50,27 @@ public class PhaseUtils {
         // STAMINA - Amazon gets an extra MOVE phase.
         if (character.getEntityInformation() == EntityInformation.CHARACTER_AMAZON) {
             count.addExtraPhase(PhaseType.MOVE);
+            LOG.info("Added extra move phase for amazon STAMINA.");
         }
         // ROBUST - Berserker gets an extra REST phase.
         if (character.getEntityInformation() == EntityInformation.CHARACTER_BERSERKER) {
             count.addExtraPhase(PhaseType.REST);
+            LOG.info("Added extra rest phase for berserker ROBUST..");
         }
         // REPUTATION - Captain gets an extra phase if they are at a dwelling
         if (character.getEntityInformation() == EntityInformation.CHARACTER_CAPTAIN && board.getClearingForPlayer(player).getDwelling() != null) {
             numberOfPhases += 1;
+            LOG.info("Added extra phase for captain's REPUTATION at a DWELLING..");
         }
         // ELUSIVENESS - Elf gets an extra HIDE phase.
         if (character.getEntityInformation() == EntityInformation.CHARACTER_ELF) {
             count.addExtraPhase(PhaseType.HIDE);
+            LOG.info("Added extra hide phase for elf ELUSIVENESS.");
         }
         // HEALTH - White knight gets an extra REST phase.
         if (character.getEntityInformation() == EntityInformation.CHARACTER_WHITE_KNIGHT) {
             count.addExtraPhase(PhaseType.REST);
+            LOG.info("Added extra move phase for white knight HEALTH.");
         }
 
         // Add extra phase treasures for specific ones. Filter out the ones with conditions and ones aren't specific to a phase (null phase).
@@ -73,28 +78,37 @@ public class PhaseUtils {
                 .filter(item -> item instanceof PhaseTreasure)
                 .filter(treasure -> treasure.getItemInformation() != ItemInformation.ANCIENT_TELESCOPE || treasure.getItemInformation() != ItemInformation.SHIELDED_LANTERN)
                 .filter(treasure -> ((PhaseTreasure) treasure).getPhaseAffected() != null)
-                .forEach(treasure -> count.addExtraPhase(((PhaseTreasure) treasure).getPhaseAffected()));
+                .forEach(treasure ->
+                {
+                    count.addExtraPhase(((PhaseTreasure) treasure).getPhaseAffected());
+                    LOG.info("Added extra {} for having treasure {}.", ((PhaseTreasure) treasure).getPhaseAffected(), treasure);
+                });
 
         // Ancient telescope allows an extra search phase if in mountain clearing.
         if (hasItem(player, ItemInformation.ANCIENT_TELESCOPE)
                 && board.getClearingForPlayer(player).getParentTile().getTileType() == TileType.MOUNTAIN) {
             count.addExtraPhase(PhaseType.SEARCH);
+            LOG.info("Added extra search phase for ancient telescope.");
         }
         // Shielded lantern adds an extra phase if they are in a cave.
         if (hasItem(player, ItemInformation.SHIELDED_LANTERN)
                 && board.getClearingForPlayer(player).getParentTile().getTileType() == TileType.CAVE) {
             numberOfPhases += 1;
+            LOG.info("Added extra phase for shielded lantern.");
         }
 
         // ASSUMPTION: These have special effects, but we don't support them. Instead, just give the user another phase.
         if (hasItem(player, ItemInformation.ROYAL_SCEPTRE)) {
             numberOfPhases += 1;
+            LOG.info("Added extra move phase for royal sceptre.");
         }
         if (hasItem(player, ItemInformation.FLOWERS_OF_REST)) {
             numberOfPhases += 1;
+            LOG.info("Added extra move phase for flowers of rest.");
         }
         if (hasItem(player, ItemInformation.DRAGON_ESSENCE)) {
             numberOfPhases += 1;
+            LOG.info("Added extra move phase for dragon essence.");
         }
 
         count.setNumberOfPhasesFOrDay(numberOfPhases);

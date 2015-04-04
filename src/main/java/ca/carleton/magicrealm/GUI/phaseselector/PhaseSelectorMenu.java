@@ -22,7 +22,7 @@ import java.util.List;
  * <p>
  * Created by Tony on 20/02/2015.
  */
-public class PhaseSelectorMenu extends JDialog {
+public class PhaseSelectorMenu extends JFrame {
 
     private static final Logger LOG = LoggerFactory.getLogger(PhaseSelectorMenu.class);
 
