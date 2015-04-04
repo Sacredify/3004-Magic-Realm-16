@@ -149,7 +149,7 @@ public class BoardServices {
                         continue;
                     }
 
-                    if (drawable instanceof AbstractCharacter || drawable instanceof AbstractMonster) {
+                    if (drawable instanceof AbstractCharacter) {
                         // Let's hide people from others if they're hidden...
                         final AbstractCharacter drawableCharacter = (AbstractCharacter) drawable;
                         // Only skip if the entity is hidden and the character isn't the client's.
@@ -157,6 +157,9 @@ public class BoardServices {
                             LOG.info("Skipping draw of {} because they are hidden.", drawable.getEntityInformation());
                             continue;
                         }
+                    } else if (drawable.isHidden() && drawable instanceof AbstractMonster) {
+                        LOG.info("Skipping draw of {} because they are hidden.", drawable.getEntityInformation());
+                        continue;
                     }
 
                     newChit = new JLabel();

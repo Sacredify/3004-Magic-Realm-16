@@ -13,8 +13,8 @@ import java.awt.*;
 public class BoardWindow extends JFrame {
 
     final static public String WINDOW_NAME = "Team 16 - Magic Realm";
-    final static public int WINDOW_HEIGHT = 1000;
-    final static public int WINDOW_WIDTH = 1200;
+    final static public int WINDOW_HEIGHT = 1050;
+    final static public int WINDOW_WIDTH = 1000;
 
     private final BoardPanel boardPanel;
 
