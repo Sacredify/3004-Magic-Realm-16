@@ -21,6 +21,7 @@ public class Goblin extends AbstractMonster {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        //TODO implement.;
+        player.getCharacter().addFame(1);
+        player.getCharacter().addNotoriety(1);
     }
 }

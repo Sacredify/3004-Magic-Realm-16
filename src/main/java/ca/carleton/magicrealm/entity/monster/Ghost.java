@@ -25,6 +25,6 @@ public class Ghost extends Denizen implements BountyCarrier {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        //TODO implement.;
+        player.getCharacter().addNotoriety(2);
     }
 }

@@ -21,6 +21,7 @@ public class Troll extends AbstractMonster {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        //TODO implement.;
+        player.getCharacter().addFame(5);
+        player.getCharacter().addNotoriety(5);
     }
 }

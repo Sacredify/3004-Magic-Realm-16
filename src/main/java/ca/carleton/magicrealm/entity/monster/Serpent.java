@@ -10,7 +10,8 @@ import ca.carleton.magicrealm.game.combat.Harm;
 public class Serpent extends AbstractMonster {
 
     public Serpent() {
-        this.vulnerability = Harm.MEDIUM;
+        this.vulnerability = Harm.HEAVY;
+        this.isArmored = true;
     }
 
     @Override
@@ -20,6 +21,7 @@ public class Serpent extends AbstractMonster {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        //TODO implement.;
+        player.getCharacter().addFame(4);
+        player.getCharacter().addNotoriety(4);
     }
 }

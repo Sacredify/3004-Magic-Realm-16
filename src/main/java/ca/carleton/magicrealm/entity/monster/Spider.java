@@ -20,6 +20,7 @@ public class Spider extends AbstractMonster {
 
     @Override
     public void addBountyToPlayer(final Player player) {
-        //TODO implement.;
+        player.getCharacter().addFame(3);
+        player.getCharacter().addNotoriety(3);
     }
 }
