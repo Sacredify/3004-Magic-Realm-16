@@ -25,7 +25,7 @@ public class AppServer implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppServer.class);
 
-    public static final int DEFAULT_MAX_PLAYERS = 2;
+    public static final int DEFAULT_MAX_PLAYERS = 1;
 
     private static final int MAX_ROUNDS = 28;
 

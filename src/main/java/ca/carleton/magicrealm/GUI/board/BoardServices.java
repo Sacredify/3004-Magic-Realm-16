@@ -5,6 +5,7 @@ import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.chit.ColoredChit;
+import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +149,7 @@ public class BoardServices {
                         continue;
                     }
 
-                    if (drawable instanceof AbstractCharacter) {
+                    if (drawable instanceof AbstractCharacter || drawable instanceof AbstractMonster) {
                         // Let's hide people from others if they're hidden...
                         final AbstractCharacter drawableCharacter = (AbstractCharacter) drawable;
                         // Only skip if the entity is hidden and the character isn't the client's.

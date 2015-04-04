@@ -1,4 +1,4 @@
-package ca.carleton.magicrealm.GUI.board.characterinfo;
+package ca.carleton.magicrealm.GUI.board.infoDialogs;
 
 import ca.carleton.magicrealm.GUI.board.BoardPanel;
 import ca.carleton.magicrealm.GUI.board.BoardServices;

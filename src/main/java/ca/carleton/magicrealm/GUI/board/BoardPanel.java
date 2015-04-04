@@ -1,6 +1,7 @@
 package ca.carleton.magicrealm.GUI.board;
 
-import ca.carleton.magicrealm.GUI.board.characterinfo.CharacterInfoDialog;
+import ca.carleton.magicrealm.GUI.board.infoDialogs.CharacterInfoDialog;
+import ca.carleton.magicrealm.GUI.board.infoDialogs.GameInfoDialog;
 import ca.carleton.magicrealm.GUI.infodialog.InfoDialog;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
@@ -28,15 +29,17 @@ public class BoardPanel extends JLayeredPane {
 
     public static final String CHARACTER_INFO_BUTTON_TEXT = "Character Info";
 
+    public static final String GENERAL_GAME_INFO_BUTTON_TEXT= "Game Info";
+
     private final BoardServices boardServices;
 
     private JLabel statusLabel;
 
-    private JLabel gameInformationLabel;
-
     private boolean firstDraw;
 
     private int maximumX;
+
+    private String gameInfoText;
 
     public BoardPanel() {
         this.firstDraw = true;
@@ -93,8 +96,8 @@ public class BoardPanel extends JLayeredPane {
             y++;
         }
 
-        this.setupGameInfoLabel();
         this.setupCharacterInfoButton(character);
+        this.setupGeneralInfoButton();
         this.firstDraw = false;
     }
 
@@ -103,6 +106,10 @@ public class BoardPanel extends JLayeredPane {
         new InfoDialog(tile).displayWindow();
     }
 
+    /**
+     * Setup the button to display the info dialog for the player
+     * @param character Character to be displayed in the dialog
+     */
     public void setupCharacterInfoButton(final AbstractCharacter character) {
         final JButton displayCharacterInformationButton = new JButton(CHARACTER_INFO_BUTTON_TEXT);
         displayCharacterInformationButton.setSize(150, 30);
@@ -112,18 +119,17 @@ public class BoardPanel extends JLayeredPane {
         this.add(displayCharacterInformationButton, DEFAULT_LAYER);
     }
 
-    /**
-     * Setup the information panel for the game
-     */
-    public void setupGameInfoLabel() {
-        this.gameInformationLabel = new JLabel();
-        this.gameInformationLabel.setSize(GAME_INFO_PANEL_WIDTH, GAME_INFO_PANEL_HEIGHT);
-        this.gameInformationLabel.setLocation(this.maximumX, 25);
-        this.add(this.gameInformationLabel, DEFAULT_LAYER);
+    public void setupGeneralInfoButton() {
+        final JButton displayGeneralInformationButton = new JButton(GENERAL_GAME_INFO_BUTTON_TEXT);
+        displayGeneralInformationButton.setSize(150, 30);
+        displayGeneralInformationButton.setLocation(this.maximumX, 30);
+        displayGeneralInformationButton.addActionListener(e ->
+                new GameInfoDialog(this.gameInfoText));
+        this.add(displayGeneralInformationButton, DEFAULT_LAYER);
     }
 
     public void setGameInfoText(final String text) {
-        this.gameInformationLabel.setText(text);
+        this.gameInfoText = text;
     }
 
     public void setupStatusLabel() {

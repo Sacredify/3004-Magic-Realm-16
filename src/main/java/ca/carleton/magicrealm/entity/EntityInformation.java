@@ -43,7 +43,8 @@ public enum EntityInformation {
     SPIDER("image/monsters/spider.gif"),
     SERPENT("image/monsters/serpent.gif"),
     DRAGON("image/monsters/dragon.gif"),
-    GIANTBAT("image/monsters/bat.gif");
+    GIANTBAT("image/monsters/bat.gif"),
+    GOBLIN("image/monsters/goblin_axe.gif");
 
     private final String imageFilePath;
 

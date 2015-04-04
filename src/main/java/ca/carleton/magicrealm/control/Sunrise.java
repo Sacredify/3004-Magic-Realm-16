@@ -114,15 +114,28 @@ public class Sunrise {
                             boardModel.createNewMeleeSheet(serpent);
                             break;
                         case "RUINS":
-                            LOG.debug("Giant bat created from Ruins chit");
-                            final Clearing startForBats = tile.getClearings()[tile.getClearings().length - 1];
-                            final GiantBat giantBat = new GiantBat();
-                            giantBat.setStartingClearing(startForBats);
-                            giantBat.setCurrentClearing(startForBats);
-                            giantBat.setHidden(true);
-                            startForBats.addEntity(giantBat);
-                            boardModel.getAbstractMonsters().add(giantBat);
-                            boardModel.createNewMeleeSheet(giantBat);
+                            if (tile.getTileType().equals(TileType.MOUNTAIN)) {
+                                LOG.debug("Giant bat created from Ruins chit");
+                                final Clearing startForBats = tile.getClearings()[tile.getClearings().length - 1];
+                                final GiantBat giantBat = new GiantBat();
+                                giantBat.setStartingClearing(startForBats);
+                                giantBat.setCurrentClearing(startForBats);
+                                giantBat.setHidden(true);
+                                startForBats.addEntity(giantBat);
+                                boardModel.getAbstractMonsters().add(giantBat);
+                                boardModel.createNewMeleeSheet(giantBat);
+                            }
+                            else {
+                                LOG.debug("Goblin created from Ruins chit");
+                                final Clearing startForGoblins = tile.getClearings()[tile.getClearings().length - 1];
+                                final Goblin giantBat = new Goblin();
+                                giantBat.setStartingClearing(startForGoblins);
+                                giantBat.setCurrentClearing(startForGoblins);
+                                giantBat.setHidden(true);
+                                startForGoblins.addEntity(giantBat);
+                                boardModel.getAbstractMonsters().add(giantBat);
+                                boardModel.createNewMeleeSheet(giantBat);
+                            }
                     }
                 }
             }
@@ -152,7 +165,10 @@ public class Sunrise {
                 }
             }
             else if (monsterRoll == 3) {
-
+                if (denizen.getEntityInformation().equals(EntityInformation.GOBLIN)) {
+                    denizen.setProwling(true);
+                    denizen.setHidden(false);
+                }
             }
             else if (monsterRoll == 4) {
                 if (denizen.getEntityInformation().equals(EntityInformation.GIANT)) {
