@@ -123,6 +123,9 @@ public class BoardServices {
                 for (ColoredChit chit : tile.getChits()) {
                     // Ghetto fix for problem pertaining to chit for a tile being on every clearing
                     if (chit.getClearingNumber() == Integer.parseInt(clearing.getName())) {
+
+                        LOG.info("Sunset - Displaying chits on the tile of the player.");
+
                         newChit = new JLabel();
                         newChit.setSize(CHIT_WIDTH, CHIT_HEIGHT);
                         newIcon = this.createImageIcon(chit.getChitColor().getImageFilePath());
