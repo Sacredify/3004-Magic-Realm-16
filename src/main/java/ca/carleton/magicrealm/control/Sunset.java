@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -35,7 +36,7 @@ public class Sunset {
                     ArrayList<Clearing> possibleClearings = new ArrayList<>();
                     for (Path path : abstractMonster.getCurrentClearing().getAdjacentPaths()) {
                         if (path.getToClearing().getParentTile() == abstractMonster.getCurrentClearing().getParentTile())
-                           possibleClearings.add(path.getToClearing());
+                            possibleClearings.add(path.getToClearing());
                     }
 
                     int randomPathIndex = RANDOM.nextInt(possibleClearings.size());
@@ -45,12 +46,15 @@ public class Sunset {
                 }
 
                 for (Clearing clearing : abstractMonster.getCurrentClearing().getParentTile().getClearings()) {
-                    for (Entity entity: clearing.getEntities()) {
-                        if (entity instanceof AbstractCharacter) {
+
+                    final Iterator<Entity> iterator = clearing.getEntities().iterator();
+                    while (iterator.hasNext()) {
+                        final Entity element = iterator.next();
+                        if (element instanceof AbstractCharacter) {
                             abstractMonster.getCurrentClearing().removeEntity(abstractMonster);
                             abstractMonster.setCurrentClearing(clearing);
                             abstractMonster.getCurrentClearing().addEntity(abstractMonster);
-                            LOG.info("{} was on the same tile! Moved {} to their clearing. [{}]", entity, abstractMonster, clearing);
+                            LOG.info("{} was on the same tile! Moved {} to their clearing. [{}]", element, abstractMonster, clearing);
                         }
                     }
                 }
