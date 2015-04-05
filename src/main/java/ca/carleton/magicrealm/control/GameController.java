@@ -278,6 +278,8 @@ public class GameController {
 
         String gameInfoText = "<html><br/>";
         gameInfoText = gameInfoText.concat("Character: " + this.currentPlayer.getCharacter().toString() + "<br/>" +
+                "Hidden?: " + this.currentPlayer.getCharacter().isHidden() + "<br/>" +
+                "Blocked?: " + this.currentPlayer.getCharacter().isBlocked() + "<br/>" +
                 "Number of deaths: " + this.currentPlayer.getRestarts() + "<br/>" +
                 "Vulnerability: " + this.currentPlayer.getCharacter().getVulnerability() + "<br/>" +
                 "Current gold: " + this.currentPlayer.getCharacter().getCurrentGold() + "<br/>" +

@@ -1,11 +1,13 @@
 package ca.carleton.magicrealm.GUI.board.infoDialogs;
 
+import ca.carleton.magicrealm.GUI.board.BoardServices;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.item.Item;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Tony on 03/04/2015.
@@ -27,6 +29,8 @@ public class GameInfoDialog extends JDialog {
     private static final int TITLE_INT_SIZE = 25;
 
     public GameInfoDialog(final String infoString, final AbstractCharacter character) {
+        BoardServices boardServices = new BoardServices();
+
         this.setLayout(null);
         this.setTitle(DIALOG_NAME);
         this.setSize(GAME_INFO_DIALOG_WIDTH, GAME_INFO_DIALOG_HEIGHT);
@@ -41,17 +45,14 @@ public class GameInfoDialog extends JDialog {
         inventoryTitleLabel.setFont(new Font("Arial", Font.BOLD, TITLE_INT_SIZE));
         this.add(inventoryTitleLabel);
 
-        String inventoryText = "<html><br/>";
         for (Item item : character.getItems()) {
-            inventoryText += item.toString();
-            inventoryText += "<br/>";
+            JLabel inventoryLabel = new JLabel();
+            inventoryLabel.setText(item.toString());
+            inventoryLabel.setIcon(boardServices.createImageIcon(item.getItemInformation().getActivePath()));
+            inventoryLabel.setSize(INVENTORY_LABEL_WIDTH, INVENTORY_LABEL_HEIGHT);
+            inventoryLabel.setLocation(500, 100 * character.getItems().indexOf(item) + 30);
+            this.add(inventoryLabel);
         }
-        inventoryText += "</html>";
-
-        JLabel inventoryLabel = new JLabel(inventoryText);
-        inventoryLabel.setSize(INVENTORY_LABEL_WIDTH, INVENTORY_LABEL_HEIGHT);
-        inventoryLabel.setLocation(500, 50);
-        this.add(inventoryLabel);
 
         this.setVisible(true);
     }

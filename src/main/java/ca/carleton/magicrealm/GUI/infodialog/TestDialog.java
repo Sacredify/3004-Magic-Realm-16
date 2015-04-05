@@ -10,6 +10,6 @@ import ca.carleton.magicrealm.GUI.tile.impl.BadValley;
 public class TestDialog {
 
     public static void main(String[] args) {
-        new InfoDialog(new BadValley()).displayWindow();
+        new TileInfoDialog(new BadValley()).displayWindow();
     }
 }

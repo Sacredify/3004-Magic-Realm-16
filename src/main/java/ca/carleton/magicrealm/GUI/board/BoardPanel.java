@@ -2,7 +2,7 @@ package ca.carleton.magicrealm.GUI.board;
 
 import ca.carleton.magicrealm.GUI.board.infoDialogs.CharacterInfoDialog;
 import ca.carleton.magicrealm.GUI.board.infoDialogs.GameInfoDialog;
-import ca.carleton.magicrealm.GUI.infodialog.InfoDialog;
+import ca.carleton.magicrealm.GUI.infodialog.TileInfoDialog;
 import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 
@@ -103,7 +103,7 @@ public class BoardPanel extends JLayeredPane {
 
     public void iconClickedEvent(MouseEvent e, AbstractTile tile) {
         System.out.println("clicked: x - " + e.getLocationOnScreen().getX() + " y - " + e.getLocationOnScreen().getY());
-        new InfoDialog(tile).displayWindow();
+        new TileInfoDialog(tile).displayWindow();
     }
 
     /**
