@@ -1,5 +1,6 @@
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
+import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.game.Player;
@@ -95,6 +96,35 @@ public class TreasuresTest {
         assertThat(player.getCharacter().getCurrentFame(), is(0));
         assertThat(player.getCharacter().getCurrentNotoriety(), is(0));
         assertThat(player.getCharacter().getCurrentGreatTreasuresCount(), is(0));
+    }
+
+    @Test
+    public void canTestTreasuresWithConditions() {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        boardModel.getTilesOfType(TileType.MOUNTAIN).get(0).getClearings()[0].addEntity(player.getCharacter());
+
+        // For testing, we'll just make a new treasure collection
+        TreasureCollection collection = new TreasureCollection();
+        // Add ancient of telescope...only works in mountains.
+        player.getCharacter().addItem(collection.treasures[8]);
+
+        final PhaseCountBean phaseCountBeanAmazon = PhaseUtils.getNumberOfPhasesForPlayer(player, boardModel);
+        assertThat(phaseCountBeanAmazon.getNumberOfPhasesFOrDay(), is(4));
+        assertThat(phaseCountBeanAmazon.getExtraPhases().size(), is(2));
+        assertThat(phaseCountBeanAmazon.getExtraPhases().contains(PhaseType.SEARCH), is(true));
+        assertThat(phaseCountBeanAmazon.getExtraPhases().contains(PhaseType.MOVE), is(true));
+
+        // Now put him somewhere not mountains. Since he will be in cave, only 2 phases (cave restriction).
+        boardModel.getTilesOfType(TileType.MOUNTAIN).get(0).getClearings()[0].removeEntity(player.getCharacter());
+        boardModel.getTilesOfType(TileType.CAVE).get(0).getClearings()[0].addEntity(player.getCharacter());
+
+        final PhaseCountBean phaseCountBeanAmazon2 = PhaseUtils.getNumberOfPhasesForPlayer(player, boardModel);
+        assertThat(phaseCountBeanAmazon2.getNumberOfPhasesFOrDay(), is(2));
+        assertThat(phaseCountBeanAmazon2.getExtraPhases().size(), is(1));
+        assertThat(phaseCountBeanAmazon2.getExtraPhases().contains(PhaseType.MOVE), is(true));
     }
 
 }

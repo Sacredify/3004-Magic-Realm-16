@@ -40,6 +40,8 @@ public class PhaseUtils {
                 player.getCharacter().getEntityInformation() != EntityInformation.CHARACTER_DWARF) {
             numberOfPhases += 2;
             LOG.info("Added 2 sunlight phases.");
+        }    else {
+            LOG.info("In a cave - skipping sunlight phases.");
         }
 
         LOG.info("Starting character and treasure modifications check...");
@@ -76,7 +78,7 @@ public class PhaseUtils {
         // Add extra phase treasures for specific ones. Filter out the ones with conditions and ones aren't specific to a phase (null phase).
         player.getCharacter().getItems().stream()
                 .filter(item -> item instanceof PhaseTreasure)
-                .filter(treasure -> treasure.getItemInformation() != ItemInformation.ANCIENT_TELESCOPE || treasure.getItemInformation() != ItemInformation.SHIELDED_LANTERN)
+                .filter(treasure -> treasure.getItemInformation() != ItemInformation.ANCIENT_TELESCOPE && treasure.getItemInformation() != ItemInformation.SHIELDED_LANTERN)
                 .filter(treasure -> ((PhaseTreasure) treasure).getPhaseAffected() != null)
                 .forEach(treasure ->
                 {
