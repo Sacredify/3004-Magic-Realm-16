@@ -41,7 +41,8 @@ public class PhaseCountBean {
     }
 
     public boolean canMakeMountainMove() {
-        return this.numberOfPhasesFOrDay + this.extraPhases.size() >= 2;
+        // Only 1 because we already remove one before this is called.
+        return this.numberOfPhasesFOrDay + this.extraPhases.size() >= 1;
     }
 
     public void refundLast() {
