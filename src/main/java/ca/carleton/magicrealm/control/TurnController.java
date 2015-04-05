@@ -1,5 +1,7 @@
-package ca.carleton.magicrealm.network;
+package ca.carleton.magicrealm.control;
 
+import ca.carleton.magicrealm.network.AppServer;
+import ca.carleton.magicrealm.network.ServerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
