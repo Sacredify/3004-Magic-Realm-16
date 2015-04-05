@@ -44,102 +44,79 @@ public class Sunrise {
                     switch (chit.getDescription()) {
                         case "BONES":
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
-                                LOG.debug("Giant created in Mountain from Bones chit");
-                                final Clearing startForGiants = tile.getClearings()[tile.getClearings().length - 1];
-                                final Giant giant = new Giant();
-                                giant.setStartingClearing(startForGiants);
-                                giant.setCurrentClearing(startForGiants);
-                                giant.setHidden(true);
-                                startForGiants.addEntity(giant);
-                                boardModel.getAbstractMonsters().add(giant);
-                                boardModel.createNewMeleeSheet(giant);
+                                createGiant(tile, boardModel);
                                 break;
                             }
                             else if (tile.getTileType().equals(TileType.CAVE)) {
-                                LOG.debug("Troll created in Cave from Bones chit");
-                                final Clearing startForTrolls = tile.getClearings()[tile.getClearings().length - 1];
-                                final Troll troll = new Troll();
-                                troll.setStartingClearing(startForTrolls);
-                                troll.setCurrentClearing(startForTrolls);
-                                troll.setHidden(true);
-                                startForTrolls.addEntity(troll);
-                                boardModel.getAbstractMonsters().add(troll);
-                                boardModel.createNewMeleeSheet(troll);
+                                createTroll(tile, boardModel);
                                 break;
                             }
                         case "DANK":
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
-                                LOG.debug("Spider created in Mountain from Dank chit");
-                                final Clearing startForSpiders = tile.getClearings()[tile.getClearings().length - 1];
-                                final Spider spider = new Spider();
-                                spider.setStartingClearing(startForSpiders);
-                                spider.setCurrentClearing(startForSpiders);
-                                spider.setHidden(true);
-                                startForSpiders.addEntity(spider);
-                                boardModel.getAbstractMonsters().add(spider);
-                                boardModel.createNewMeleeSheet(spider);
+                                createSpider(tile, boardModel);
                                 break;
                             }
                             else if (tile.getTileType().equals(TileType.CAVE)) {
-                                LOG.debug("Serpent created in Cave from Dank chit");
-                                final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
-                                final Serpent serpent = new Serpent();
-                                serpent.setStartingClearing(startForSerpents);
-                                serpent.setCurrentClearing(startForSerpents);
-                                serpent.setHidden(true);
-                                startForSerpents.addEntity(serpent);
-                                boardModel.getAbstractMonsters().add(serpent);
-                                boardModel.createNewMeleeSheet(serpent);
+                                createSerpent(tile, boardModel);
                                 break;
                             }
                         case "SLITHER":
-                            LOG.debug("Dragon created from Slither chit");
-                            final Clearing startForDragons = tile.getClearings()[tile.getClearings().length - 1];
-                            final Dragon dragon = new Dragon();
-                            dragon.setStartingClearing(startForDragons);
-                            dragon.setCurrentClearing(startForDragons);
-                            dragon.setHidden(true);
-                            startForDragons.addEntity(dragon);
-                            boardModel.getAbstractMonsters().add(dragon);
-                            boardModel.createNewMeleeSheet(dragon);
-
-                            LOG.debug("Serpent created from Slither chit");
-                            final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
-                            final Serpent serpent = new Serpent();
-                            serpent.setStartingClearing(startForSerpents);
-                            serpent.setCurrentClearing(startForSerpents);
-                            serpent.setHidden(true);
-                            startForSerpents.addEntity(serpent);
-                            boardModel.getAbstractMonsters().add(serpent);
-                            boardModel.createNewMeleeSheet(serpent);
+                            createDragon(tile, boardModel);
+                            createSerpent(tile, boardModel);
                             break;
                         case "RUINS":
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
-                                LOG.debug("Giant bat created from Ruins chit");
-                                final Clearing startForBats = tile.getClearings()[tile.getClearings().length - 1];
-                                final GiantBat giantBat = new GiantBat();
-                                giantBat.setStartingClearing(startForBats);
-                                giantBat.setCurrentClearing(startForBats);
-                                giantBat.setHidden(true);
-                                startForBats.addEntity(giantBat);
-                                boardModel.getAbstractMonsters().add(giantBat);
-                                boardModel.createNewMeleeSheet(giantBat);
+                                createGiantBat(tile, boardModel);
+                                break;
                             }
                             else {
-                                LOG.debug("Goblin created from Ruins chit");
-                                final Clearing startForGoblins = tile.getClearings()[tile.getClearings().length - 1];
-                                final Goblin giantBat = new Goblin();
-                                giantBat.setStartingClearing(startForGoblins);
-                                giantBat.setCurrentClearing(startForGoblins);
-                                giantBat.setHidden(true);
-                                startForGoblins.addEntity(giantBat);
-                                boardModel.getAbstractMonsters().add(giantBat);
-                                boardModel.createNewMeleeSheet(giantBat);
+                                createGoblin(tile, boardModel);
+                                break;
                             }
+                        case "LOSTCASTLE":
+                            int lostCastleRoll = DiceRoller.rollOnce();
+                            switch (lostCastleRoll) {
+                                case 1:
+                                    createDragon(tile, boardModel);
+                                    break;
+                                case 2:
+                                    createSerpent(tile, boardModel);
+                                    break;
+                                case 4:
+                                    createGiant(tile, boardModel);
+                                    break;
+                                case 5:
+                                    createSpider(tile, boardModel);
+                                    break;
+                                case 6:
+                                    createGiantBat(tile, boardModel);
+                                    break;
+                            }
+                            break;
+                        case "LOSTCITY":
+                            int lostCityRoll = DiceRoller.rollOnce();
+                            switch (lostCityRoll) {
+                                case 1:
+                                    createDragon(tile, boardModel);
+                                    break;
+                                case 2:
+                                    createSerpent(tile, boardModel);
+                                    break;
+                                case 3:
+                                    createGoblin(tile, boardModel);
+                                    break;
+                                case 4:
+                                    createTroll(tile, boardModel);
+                                    break;
+                                case 6:
+                                    createGiantBat(tile, boardModel);
+                                    break;
+                            }
+                            break;
+                        }
                     }
                 }
             }
-        }
 
         for (Denizen denizen: boardModel.getAbstractMonsters()) {
             /** Reset prowling monsters/natives **/
@@ -189,6 +166,90 @@ public class Sunrise {
                 }
             }
         }
+    }
+
+    private static void createGiant(final AbstractTile tile, final BoardModel boardModel) {
+        LOG.debug("Giant created in Mountain from Bones chit");
+        final Clearing startForGiants = tile.getClearings()[tile.getClearings().length - 1];
+        final Giant giant = new Giant();
+        giant.setStartingClearing(startForGiants);
+        giant.setCurrentClearing(startForGiants);
+        giant.setHidden(true);
+        startForGiants.addEntity(giant);
+        boardModel.getAbstractMonsters().add(giant);
+        boardModel.createNewMeleeSheet(giant);
+    }
+
+    private static void createTroll(final AbstractTile tile, final BoardModel boardModel) {
+        LOG.debug("Troll created in Cave from Bones chit");
+        final Clearing startForTrolls = tile.getClearings()[tile.getClearings().length - 1];
+        final Troll troll = new Troll();
+        troll.setStartingClearing(startForTrolls);
+        troll.setCurrentClearing(startForTrolls);
+        troll.setHidden(true);
+        startForTrolls.addEntity(troll);
+        boardModel.getAbstractMonsters().add(troll);
+        boardModel.createNewMeleeSheet(troll);
+    }
+
+    private static void createSpider(final AbstractTile tile, final BoardModel boardModel) {
+        LOG.debug("Spider created in Mountain from Dank chit");
+        final Clearing startForSpiders = tile.getClearings()[tile.getClearings().length - 1];
+        final Spider spider = new Spider();
+        spider.setStartingClearing(startForSpiders);
+        spider.setCurrentClearing(startForSpiders);
+        spider.setHidden(true);
+        startForSpiders.addEntity(spider);
+        boardModel.getAbstractMonsters().add(spider);
+        boardModel.createNewMeleeSheet(spider);
+    }
+
+    private static void createDragon(final AbstractTile tile, final BoardModel boardModel) {
+        LOG.debug("Dragon created from Slither chit");
+        final Clearing startForDragons = tile.getClearings()[tile.getClearings().length - 1];
+        final Dragon dragon = new Dragon();
+        dragon.setStartingClearing(startForDragons);
+        dragon.setCurrentClearing(startForDragons);
+        dragon.setHidden(true);
+        startForDragons.addEntity(dragon);
+        boardModel.getAbstractMonsters().add(dragon);
+        boardModel.createNewMeleeSheet(dragon);
+    }
+
+    private static void createSerpent(final AbstractTile tile, final BoardModel boardModel) {
+        LOG.debug("Serpent created from Slither chit");
+        final Clearing startForSerpents = tile.getClearings()[tile.getClearings().length - 1];
+        final Serpent serpent = new Serpent();
+        serpent.setStartingClearing(startForSerpents);
+        serpent.setCurrentClearing(startForSerpents);
+        serpent.setHidden(true);
+        startForSerpents.addEntity(serpent);
+        boardModel.getAbstractMonsters().add(serpent);
+        boardModel.createNewMeleeSheet(serpent);
+    }
+
+    private static void createGoblin(final AbstractTile tile, final BoardModel boardModel) {
+        LOG.debug("Goblin created from Ruins chit");
+        final Clearing startForGoblins = tile.getClearings()[tile.getClearings().length - 1];
+        final Goblin giantBat = new Goblin();
+        giantBat.setStartingClearing(startForGoblins);
+        giantBat.setCurrentClearing(startForGoblins);
+        giantBat.setHidden(true);
+        startForGoblins.addEntity(giantBat);
+        boardModel.getAbstractMonsters().add(giantBat);
+        boardModel.createNewMeleeSheet(giantBat);
+    }
+
+    private static void createGiantBat(final AbstractTile tile, final BoardModel boardModel) {
+        LOG.debug("Giant bat created from Ruins chit");
+        final Clearing startForBats = tile.getClearings()[tile.getClearings().length - 1];
+        final GiantBat giantBat = new GiantBat();
+        giantBat.setStartingClearing(startForBats);
+        giantBat.setCurrentClearing(startForBats);
+        giantBat.setHidden(true);
+        startForBats.addEntity(giantBat);
+        boardModel.getAbstractMonsters().add(giantBat);
+        boardModel.createNewMeleeSheet(giantBat);
     }
 
 }
