@@ -11,6 +11,8 @@ public final class Message implements Serializable {
 
     private static final long serialVersionUID = 741681056897874122L;
 
+    public static final String START_GAME = "START_GAME";
+
     public static final String SELECT_CHARACTER = "SELECT_CHARACTER";
 
     public static final String BIRDSONG_START = "BIRDSONG_START";

@@ -289,12 +289,15 @@ public class AppServer implements Runnable {
                     LOG.info("Client-accept thread added new client.");
                 } else {
                     this.server.close();
+                    LOG.info("Max client count reached.");
                     break;
                 }
             }
         } catch (IOException e) {
             LOG.error("Exception during server accept process.", e);
         }
+        LOG.info("Sending initial character select.");
+        this.broadcastMessage(SERVER_ID, new Message(SERVER_ID, Message.START_GAME, null));
         LOG.info("Done running client-accept thread.");
     }
 

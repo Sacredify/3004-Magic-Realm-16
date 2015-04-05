@@ -69,6 +69,9 @@ public class GameController {
 
         LOG.info("Received {} message from server. Payload: {}.", message.getMessageType(), message.getPayload());
         switch (message.getMessageType()) {
+            case (Message.START_GAME):
+                this.showCharacterCreate();
+                break;
             case (Message.SELECT_CHARACTER):
                 this.removeFromAvailableCharacters(message.getPayload());
                 this.characterCreateMenu.updateAvailableCharacters();
@@ -217,9 +220,16 @@ public class GameController {
      * Show the character create dialog.
      */
     private void showCharacterCreate() {
-        this.characterCreateMenu = new CharacterCreateMenu(this.boardWindow, this.currentPlayer, this.availableCharacters, this);
-        this.characterCreateMenu.displayWindow();
-        LOG.info("Displayed character create.");
+        // Note, need to invoke in another thread, since the previous method was calling from main() it worked out okay.
+        SwingUtilities.invokeLater(() -> {
+            GameController.this.characterCreateMenu = new CharacterCreateMenu(
+                    GameController.this.boardWindow,
+                    GameController.this.currentPlayer,
+                    GameController.this.availableCharacters,
+                    GameController.this);
+            LOG.info("Displayed character create.");
+            GameController.this.characterCreateMenu.displayWindow();
+        });
     }
 
     /**
@@ -247,7 +257,7 @@ public class GameController {
     }
 
     /**
-     * Remove a character from the list of available characeters when choosing a character.
+     * Remove a character from the list of available characters when choosing a character.
      *
      * @param player the player containing the character to remove.
      */
@@ -354,7 +364,6 @@ public class GameController {
 
     public void setNetworkConnection(AppClient nC) {
         this.networkConnection = nC;
-        LOG.info("Set controller network connection successfully.");
-        this.showCharacterCreate();
+        LOG.info("Set controller network connection successfully. Waiting for server to send game start...");
     }
 }
