@@ -66,8 +66,8 @@ public class Launcher {
                     numberClients = Integer.parseInt(cmd.getOptionValue(NUMBER_CLIENTS_ARG));
                 }
                 if (cmd.hasOption(NUMBER_DAYS_ARG)) {
-                    LOG.info("Overwriting GAME_LENGTH arg to user-specified value of {}.", cmd.getOptionValue(NUMBER_CLIENTS_ARG));
-                    numberDays = Integer.parseInt(cmd.getOptionValue(NUMBER_CLIENTS_ARG));
+                    LOG.info("Overwriting GAME_LENGTH arg to user-specified value of {}.", cmd.getOptionValue(NUMBER_DAYS_ARG));
+                    numberDays = Integer.parseInt(cmd.getOptionValue(NUMBER_DAYS_ARG));
                 }
                 new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), numberClients, numberDays);
             } else {
