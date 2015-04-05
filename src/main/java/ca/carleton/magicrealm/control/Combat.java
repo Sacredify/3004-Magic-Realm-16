@@ -312,6 +312,8 @@ public class Combat {
             denizen.addBountyToPlayer(player);
             LOG.info("Removing denizen from the board...");
             resolveDeadDenizen(boardModel, denizen);
+        }      else {
+            LOG.info("{} is not dead. Doing nothing more.", denizen);
         }
 
         playerSheet.markFought();
