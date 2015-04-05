@@ -62,8 +62,8 @@ public class AppServer implements Runnable {
             this.buildMap();
             this.start();
         } catch (final Exception exception) {
-            LOG.error("Exception during server initialization.", exception);
-            System.exit(-1);
+            LOG.error("Exception during server initialization. Error --> {}.", exception.getMessage());
+            System.exit(0);
         }
     }
 
