@@ -85,19 +85,27 @@ public abstract class Table {
 
             int roll;
 
-            // ELF special, ARCHER. only roll once.
-            if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_ELF) {
-                roll = DiceRoller.rollOnce();
-            } else {
+            // Denizens can roll too, so we'll have to take that into account.
+            if (player != null) {
+
+                // ELF special, ARCHER. only roll once.
+                if (player.getCharacter().getEntityInformation() == EntityInformation.CHARACTER_ELF) {
+                    roll = DiceRoller.rollOnce();
+                } else {
+                    roll = DiceRoller.rollTwiceTakeHigher();
+                }
+
+                // Amazon, Black Knight, Captain special, AIM. Subtract one.
+                if ((player.getCharacter() instanceof Amazon || player.getCharacter() instanceof BlackKnight
+                        || player.getCharacter() instanceof Captain) && roll != 1) {
+                    LOG.info("{}'s AIM ability used: reduced roll value by one.", player.getCharacter());
+                    roll = roll - 1;
+                }
+            }  else {
                 roll = DiceRoller.rollTwiceTakeHigher();
             }
 
-            // Amazon, Black Knight, Captain special, AIM. Subtract one.
-            if ((player.getCharacter() instanceof Amazon || player.getCharacter() instanceof BlackKnight
-                    || player.getCharacter() instanceof Captain) && roll != 1) {
-                LOG.info("{}'s AIM ability used: reduced roll value by one.", player.getCharacter());
-                roll = roll - 1;
-            }
+            LOG.info("Rolled a {} on the roll table.", roll);
 
             switch (roll) {
                 case 1:

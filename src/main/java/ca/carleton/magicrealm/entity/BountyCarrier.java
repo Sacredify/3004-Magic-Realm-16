@@ -12,7 +12,7 @@ import ca.carleton.magicrealm.game.Player;
 public interface BountyCarrier {
 
     /**
-     * Adds the native's bounty value to the player's total.
+     * Adds the denizen's bounty value to the player's total.
      *
      * @param player the player who defeated the native.
      */

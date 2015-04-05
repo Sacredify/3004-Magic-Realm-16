@@ -20,6 +20,7 @@ import ca.carleton.magicrealm.item.armor.AbstractArmor;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 import ca.carleton.magicrealm.item.weapon.AttackType;
 import ca.carleton.magicrealm.item.weapon.Dagger;
+import ca.carleton.magicrealm.item.weapon.MonsterWeapon;
 import ca.carleton.magicrealm.network.ServerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,9 +173,8 @@ public class Combat {
         }
 
         // After combat is done
-        LOG.info("Resetting melee sheets and player wound statuses after combat.");
+        LOG.info("Resetting melee sheets.");
         boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
-        players.stream().forEach(Combat::cleanup);
     }
 
     /**
@@ -203,17 +203,17 @@ public class Combat {
         if (playerOneWeaponLength >= playerTwoWeaponLength) {
             // "Round" of combat... attacker attacks, then gets attacked by defender, assuming the defender isn't dead.
             LOG.info("Beginning round one of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
-            resolve(playerOneSheet, playerTwoSheet);
+            resolvePlayerOnPlayerRound(playerOneSheet, playerTwoSheet);
             if (!playerTwo.getCharacter().isDead()) {
                 LOG.info("Beginning round two of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
-                resolve(playerTwoSheet, playerOneSheet);
+                resolvePlayerOnPlayerRound(playerTwoSheet, playerOneSheet);
             }
         } else {
             LOG.info("Beginning round one of combat. {} is attacking {}.", playerTwo.getCharacter(), playerOne.getCharacter());
-            resolve(playerTwoSheet, playerOneSheet);
+            resolvePlayerOnPlayerRound(playerTwoSheet, playerOneSheet);
             if (!playerOne.getCharacter().isDead()) {
                 LOG.info("Beginning round two of combat. {} is attacking {}.", playerOne.getCharacter(), playerTwo.getCharacter());
-                resolve(playerOneSheet, playerTwoSheet);
+                resolvePlayerOnPlayerRound(playerOneSheet, playerTwoSheet);
             }
         }
 
@@ -258,16 +258,64 @@ public class Combat {
      * @param player     the first player.
      * @param denizen    the second player.
      */
-    private static void doCombat(final BoardModel boardModel, final Player player, final Denizen denizen) {
+    public static void doCombat(final BoardModel boardModel, final Player player, final Denizen denizen) {
 
-        if (denizen instanceof AbstractMonster) {
-            LOG.info("Target {} is a monster! Fighting as normal 1v1.", denizen);
+        final MeleeSheet playerSheet = boardModel.getMeleeSheet(player);
+        final MeleeSheet denizenSheet = boardModel.getMeleeSheet(denizen);
 
-
-        } else {
-            LOG.info("Target {} is a native! Fighting as native group if possible.", denizen);
+        // Determine who would go first, based on their weapon length.
+        int playerOneWeaponLength = 0;
+        int denizenWeaponLength = 0;
+        if (playerSheet.getAttackWeapon() != null) {
+            playerOneWeaponLength = playerSheet.getAttackWeapon().getLength();
+        }
+        if (denizenSheet.getAttackWeapon() != null) {
+            denizenWeaponLength = denizenSheet.getAttackWeapon().getLength();
         }
 
+        // Player one goes first if their weapon is longer...
+        if (playerOneWeaponLength >= denizenWeaponLength) {
+            // "Round" of combat... attacker attacks, then gets attacked by defender, assuming the defender isn't dead.
+            LOG.info("Beginning round one of combat. {} is attacking {}.", player.getCharacter(), denizen);
+            resolvePlayerOnDenizenRound(playerSheet, denizenSheet);
+            if (!denizen.isDead()) {
+                LOG.info("Beginning round two of combat. {} is attacking {}.", denizen, player.getCharacter());
+                resolveDenizenOnPlayerRound(denizenSheet, playerSheet);
+            }
+        } else {
+            LOG.info("Beginning round one of combat. {} is attacking {}.", denizen, player.getCharacter());
+            resolveDenizenOnPlayerRound(denizenSheet, playerSheet);
+            if (!player.getCharacter().isDead()) {
+                LOG.info("Beginning round two of combat. {} is attacking {}.", player.getCharacter(), denizen);
+                resolvePlayerOnDenizenRound(playerSheet, denizenSheet);
+            }
+        }
+
+        // Check for a dead player/monster and fatigue step.
+        if (player.getCharacter().isDead()) {
+            LOG.info("{} died while fighting a denizen! They will be revived automatically...", player.getCharacter());
+            resolveDeadPlayer(boardModel, player);
+        } else {
+            LOG.info("{} is not dead. Beginning fatigue step calculations.", player.getCharacter());
+            int attackerAsterisk = playerSheet.getManeuverChit().getFatigueAsterisks() + playerSheet.getAttackChit().getFatigueAsterisks();
+            if (attackerAsterisk >= 2) {
+                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", player.getCharacter());
+                player.getCharacter().setFatigued(true);
+            }
+            if (player.getCharacter().isWounded()) {
+                LOG.info("{} has been wounded and must wound a chit.", player.getCharacter());
+            }
+        }
+
+        if (denizen.isDead()) {
+            LOG.info("{} died to the player! The player reaps the rewards and gains his bounty.", denizen);
+            denizen.addBountyToPlayer(player);
+            LOG.info("Removing denizen from the board...");
+            resolveDeadDenizen(boardModel, denizen);
+        }
+
+        playerSheet.markFought();
+        denizenSheet.markFought();
     }
 
     /**
@@ -344,34 +392,166 @@ public class Combat {
      *
      * @param player the player.
      */
-    private static void cleanup(final Player player) {
+    public static void cleanup(final Player player) {
         player.getCharacter().setWounded(false);
         player.getCharacter().setFatigued(false);
         LOG.info("Cleaned up {} after combat.", player.getCharacter());
     }
 
     /**
-     * Handle logic for when a player kills another.
+     * Resolve a round of combat where a player attacks a denizen.
      *
-     * @param killer     the victor.
-     * @param killed     the person who died.
-     * @param boardModel the board.
+     * @param player  the player [attacker].
+     * @param denizen the denizen [defender].
      */
-    private static void resolvePlayerKilledAnother(final Player killer, final Player killed, final BoardModel boardModel) {
-        LOG.info("Transferring items, gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
-        killer.getCharacter().getItems().addAll(killed.getCharacter().getItems());
-        killed.getCharacter().getItems().clear();
-        killer.getCharacter().addGold(killed.getCharacter().getCurrentGold());
-        killed.getCharacter().addGold(-killed.getCharacter().getCurrentGold());
-        killer.getCharacter().addNotoriety(killed.getCharacter().getCurrentNotoriety());
-        killed.getCharacter().addNotoriety(-killed.getCharacter().getCurrentNotoriety());
+    private static void resolvePlayerOnDenizenRound(final MeleeSheet player, final MeleeSheet denizen) {
+        // Determine if attackers attack hits through defenders maneuver
+        boolean attackHit = player.getAttackDirection().matches(denizen.getManeuver());
+        LOG.info("{} attacked with {}. Denizen maneuvered with {}. Attack landed result: {}", player.getOwner(), player.getAttackDirection(), denizen.getManeuver(), attackHit);
+        // The attack can still hit even if they don't match if the attack time is faster than the maneuver time.
+        if (!attackHit) {
+            LOG.info("Attack did not land. Checking weapon times for modification...");
+            attackHit = player.getAttackChit().getTime() < denizen.getManeuverChit().getTime();
+            LOG.info("Attack landed after checking times: {}", attackHit);
+        }
+        if (attackHit) {
+            // Determine the harm (strength) of the attack
+            AbstractWeapon weapon = player.getAttackWeapon();
 
-        LOG.info("AUTO REINCARNATION. Giving player a new start.");
-        LOG.info("Creating a new character and Setting location to starting location (inn).");
-        boardModel.getClearingForPlayer(killed).removeEntity(killed.getCharacter());
-        killed.setCharacter(CharacterFactory.createCharacter(killed.getCharacter().getEntityInformation().convertToCharacterType()));
-        killed.restartNewLife();
-        boardModel.getStartingLocation().addEntity(killed.getCharacter());
+            // No weapon (using only a fight chit) means they use a dagger.
+            if (weapon == null) {
+                weapon = new Dagger();
+                LOG.info("{} had no weapon equipped. Using a dagger.", player.getOwner());
+            }
+
+            LOG.info("{} weapon strength: {}", player.getOwner(), weapon.getStrength());
+            // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
+            // than the power of the weapon. For missile attacks, roll on the table.
+            Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
+            if (weapon.getAttackType() == AttackType.STRIKING) {
+                if (player.getAttackChit().getStrength().greaterThan(attackStrength)) {
+                    attackStrength = attackStrength.increase();
+                    LOG.info("Attack chit stronger. Increased weapon strength to {}.", attackStrength);
+                }
+            } else {
+                attackStrength = Table.MissileTable.roll(player.getPlayer(), attackStrength);
+                LOG.info("Rolled on missile table. New strength: {}.", attackStrength);
+            }
+
+            // Check to see if the armor the defender may be wearing intercepts.
+            final boolean armored = ((Denizen) denizen.getOwner()).isArmored();
+
+            if (armored) {
+                attackStrength.decrease();
+                LOG.info("The denizen was armored. Reduced strength of attack to {}.", attackStrength);
+            }
+
+            // Target is killed if the strength of the attack >= the players health.
+            if (attackStrength.greaterThan(denizen.getOwner().getVulnerability()) || attackStrength == denizen.getOwner().getVulnerability()) {
+                denizen.getOwner().setDead(true);
+                LOG.info("Attack strength was greater than or equal to {}'s vulnerability! {} has died!", denizen.getOwner(), denizen.getOwner());
+            } else {
+                LOG.info("The attack was not enough to hurt the denizen.");
+            }
+
+            // Weapons automatically get un-alerted.
+            weapon.setAlert(false);
+            LOG.info("Weapon un-alerted.");
+
+        } else {
+            LOG.info("Attacker missed. Ending round of combat.");
+        }
+    }
+
+    /**
+     * Resolve a round of combat where a denizen attacks a player.
+     *
+     * @param denizen the denizen [attacker].
+     * @param player  the player [defender].
+     */
+    private static void resolveDenizenOnPlayerRound(final MeleeSheet denizen, final MeleeSheet player) {
+        // Determine if attackers attack hits through defenders maneuver
+        boolean attackHit = denizen.getAttackDirection().matches(player.getManeuver());
+        LOG.info("{} attacked with {}. Player maneuvered with {}. Attack landed result: {}", denizen.getOwner(), denizen.getAttackDirection(), player.getManeuver(), attackHit);
+        // The attack can still hit even if they don't match if the attack time is faster than the maneuver time.
+        if (!attackHit) {
+            LOG.info("Attack did not land. Checking weapon times for modification...");
+            attackHit = denizen.getAttackChit().getTime() < denizen.getManeuverChit().getTime();
+            LOG.info("Attack landed after checking times: {}", attackHit);
+        }
+        if (attackHit) {
+
+            // Determine the harm (strength) of the attack
+            AbstractWeapon weapon = denizen.getAttackWeapon();
+
+            // No weapon for a denizen means they must be a monster (using their claws).
+            if (weapon == null && denizen.getOwner() instanceof AbstractMonster) {
+                weapon = new MonsterWeapon(denizen.getOwner().getVulnerability());
+                LOG.info("{} is using their claw (monster weapon) to attack!");
+            }
+
+            LOG.info("{} weapon strength: {}", denizen.getOwner(), weapon.getStrength());
+            // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
+            // than the power of the weapon. For missile attacks, roll on the table.
+            Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
+            if (weapon.getAttackType() == AttackType.STRIKING) {
+                if (denizen.getAttackChit().getStrength().greaterThan(attackStrength)) {
+                    attackStrength = attackStrength.increase();
+                    LOG.info("Attack chit stronger. Increased weapon strength to {}.", attackStrength);
+                }
+            } else {
+                attackStrength = Table.MissileTable.roll(denizen.getPlayer(), attackStrength);
+                LOG.info("Rolled on missile table. New strength: {}.", attackStrength);
+            }
+
+            // Check to see if the armor the defender may be wearing intercepts.
+            boolean intercepted = false;
+            final AbstractArmor armor = player.getArmor();
+            if (armor != null) {
+                intercepted = armor.getProtectsAgainst().intercepts(denizen.getAttackDirection());
+                LOG.info("{}'s armor protects against {}. Attack intercepted: {}", player.getOwner(), armor.getProtectsAgainst(), intercepted);
+            }
+            if (intercepted) {
+                LOG.info("Armor weight is {}.", armor.getWeight());
+                attackStrength = attackStrength.decrease();
+                LOG.info("Strength reduced by 1 for hitting armor. New value: {}", attackStrength);
+                if (attackStrength == armor.getWeight()) {
+                    if (armor.isDamaged()) {
+                        // Armor that is already damaged is destroyed (removed from inventory).
+                        player.getOwner().getItems().remove(armor);
+                        LOG.info("Armor was already damaged and has been destroyed! Removed from inventory of {}.", player.getOwner());
+                    } else {
+                        armor.setDamaged(true);
+                        LOG.info("Armor has been damaged by the hit.");
+                    }
+                } else if (attackStrength.greaterThan(armor.getWeight())) {
+                    // Any attack greater than the armor weight instantly destroys it
+                    player.getOwner().getItems().remove(armor);
+                    LOG.info("Armor was destroyed by an attack greater than the weight of the armor!. Removed from inventory of {}.", player.getOwner());
+                }
+                // Only MEDIUM and higher makes us wound stuff.
+                if (attackStrength.greaterThan(Harm.LIGHT)) {
+                    LOG.info("Attack strength was greater than LIGHT. Player is wounded and must wound a chit.");
+                    ((AbstractCharacter) player.getOwner()).setWounded(true);
+                } else {
+                    LOG.info("Attack strength was LIGHT or less. No further duties required.");
+                }
+
+            } else {
+                LOG.info("{} either wasn't wearing armor or the attack wasn't intercepted.", player.getOwner());
+                // Target is killed if the strength of the attack >= the players health.
+                if (attackStrength.greaterThan(player.getOwner().getVulnerability()) || attackStrength == player.getOwner().getVulnerability()) {
+                    player.getOwner().setDead(true);
+                    LOG.info("Attack strength was greater than or equal to {}'s vulnerability! {} has died!", player.getOwner(), player.getOwner());
+                } else {
+                    ((AbstractCharacter) player.getOwner()).setWounded(true);
+                    LOG.info("Player took a wound and must wound a chit.");
+                }
+            }
+
+        } else {
+            LOG.info("Attacker missed. Ending round of combat.");
+        }
     }
 
     /**
@@ -380,7 +560,7 @@ public class Combat {
      * @param attacker the first melee sheet.
      * @param defender the second melee sheet.
      */
-    private static void resolve(final MeleeSheet attacker, final MeleeSheet defender) {
+    private static void resolvePlayerOnPlayerRound(final MeleeSheet attacker, final MeleeSheet defender) {
 
         // Determine if attackers attack hits through defenders maneuver
         boolean attackHit = attacker.getAttackDirection().matches(defender.getManeuver());
@@ -453,7 +633,7 @@ public class Combat {
                 LOG.info("{} either wasn't wearing armor or the attack wasn't intercepted.", defender.getOwner());
                 // Target is killed if the strength of the attack >= the players health.
                 if (attackStrength.greaterThan(defender.getOwner().getVulnerability()) || attackStrength == defender.getOwner().getVulnerability()) {
-                    ((AbstractCharacter) defender.getOwner()).setDead(true);
+                    defender.getOwner().setDead(true);
                     LOG.info("Attack strength was greater than or equal to {}'s vulnerability! {} has died!", defender.getOwner(), defender.getOwner());
                 } else {
                     ((AbstractCharacter) defender.getOwner()).setWounded(true);
@@ -471,6 +651,50 @@ public class Combat {
     }
 
     /**
+     * Handle logic for when a player kills another.
+     *
+     * @param killer     the victor.
+     * @param killed     the person who died.
+     * @param boardModel the board.
+     */
+    private static void resolvePlayerKilledAnother(final Player killer, final Player killed, final BoardModel boardModel) {
+        LOG.info("Transferring items, gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
+        killer.getCharacter().getItems().addAll(killed.getCharacter().getItems());
+        killed.getCharacter().getItems().clear();
+        killer.getCharacter().addGold(killed.getCharacter().getCurrentGold());
+        killed.getCharacter().addGold(-killed.getCharacter().getCurrentGold());
+        killer.getCharacter().addNotoriety(killed.getCharacter().getCurrentNotoriety());
+        killed.getCharacter().addNotoriety(-killed.getCharacter().getCurrentNotoriety());
+        resolveDeadPlayer(boardModel, killed);
+    }
+
+    /**
+     * Handle the cleanup of a dead character, and give them a new life.
+     *
+     * @param board the board.
+     * @param dead  the dead player.
+     */
+    private static void resolveDeadPlayer(final BoardModel board, final Player dead) {
+        LOG.info("AUTO REINCARNATION. Giving player a new start at the inn.");
+        LOG.info("Creating a new character and Setting location to their starting location ({}).", dead.getStartingLocation());
+        board.getClearingForPlayer(dead).removeEntity(dead.getCharacter());
+        dead.setCharacter(CharacterFactory.createCharacter(dead.getCharacter().getEntityInformation().convertToCharacterType()));
+        dead.restartNewLife();
+        board.getClearingOfDwelling(dead.getStartingLocation()).addEntity(dead.getCharacter());
+    }
+
+    /**
+     * Handle the cleanup of a dead denizen.
+     *
+     * @param board the board.
+     * @param dead  the denizen.
+     */
+    private static void resolveDeadDenizen(final BoardModel board, final Denizen dead) {
+        dead.getCurrentClearing().removeEntity(dead);
+        LOG.info("{} removed from {}.", dead, dead.getCurrentClearing());
+    }
+
+    /**
      * Increase the strength of a weapon by its sharpness
      *
      * @param strength  the strength.
@@ -479,6 +703,7 @@ public class Combat {
      */
     private static Harm increaseStrengthBySharpness(final Harm strength, final int sharpness) {
         int count = 0;
+        LOG.info("Increasing {} by {}.", strength, sharpness);
         Harm toReturn = strength;
         while (count < sharpness) {
             toReturn = toReturn.increase();

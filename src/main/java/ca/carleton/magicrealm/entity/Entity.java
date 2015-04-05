@@ -30,6 +30,9 @@ public abstract class Entity implements Serializable, Discoverable {
      */
     protected boolean hidden;
 
+    // Used by combat. Dead resets the character, wounded makes them wound chits. Fatigued if they fatigued themselves. Reset after combat.
+    protected boolean dead;
+
     /**
      * The list of items the entity is currently holding.
      */
@@ -70,6 +73,15 @@ public abstract class Entity implements Serializable, Discoverable {
     public boolean hasItem(final ItemInformation itemInformation) {
         return this.items.stream().filter(item -> item.getItemInformation() == itemInformation).count() > 0;
     }
+
+    public boolean isDead() {
+        return this.dead;
+    }
+
+    public void setDead(final boolean dead) {
+        this.dead = dead;
+    }
+
 
     @Override
     public String toString() {

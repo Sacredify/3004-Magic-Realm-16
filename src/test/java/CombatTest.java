@@ -1,9 +1,13 @@
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.control.Combat;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
+import ca.carleton.magicrealm.entity.natives.NativeFaction;
+import ca.carleton.magicrealm.entity.natives.NativeFactory;
+import ca.carleton.magicrealm.entity.natives.NativeType;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.AttackDirection;
 import ca.carleton.magicrealm.game.combat.Harm;
@@ -277,5 +281,46 @@ public class CombatTest {
         assertThat(defender.getCharacter().getEntityInformation(), is(EntityInformation.CHARACTER_CAPTAIN));
         assertThat(defender.getCharacter().getCurrentGold(), is(10));
         assertThat(attacker.getCharacter().getCurrentGold(), is(20));
+    }
+
+    @Test
+    public void canFightDenizen() {
+        // Create the board and player
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        boardModel.getStartingLocation().addEntity(player.getCharacter());
+
+        final Denizen denizen = NativeFactory.createNative(NativeFaction.COMPANY, NativeType.LANCER);
+        boardModel.getStartingLocation().addEntity(denizen);
+        denizen.setCurrentClearing(boardModel.getStartingLocation());
+
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(player);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(player);
+        attackerSheet.setAttackWeapon(new TruesteelSword());
+        attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setAttackDirection(AttackDirection.THRUST);
+        attackerSheet.setManeuver(Maneuver.CHARGE);
+        attackerSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setArmor(new SuitOfArmor());
+
+        // Defender melee sheet, lets override the random just so we can test...
+        boardModel.createNewMeleeSheet(denizen);
+        final MeleeSheet denizenSheet = boardModel.getMeleeSheet(denizen);
+        denizenSheet.setAttackDirection(AttackDirection.THRUST);
+        denizenSheet.setManeuver(Maneuver.CHARGE);
+
+        Combat.doCombat(boardModel, player, denizen);
+
+        // The player is alive, the denizen dies (his attack missed).
+        assertThat(player.getCharacter().isDead(), is(false));
+        assertThat(player.getCharacter().isFatigued(), is(true));
+        assertThat(denizen.isDead(), is(true));
+        assertThat(denizen.getCurrentClearing().getEntities().contains(denizen), is(false));
+        assertThat(player.getCharacter().getCurrentGold(), is(12));
+        assertThat(player.getCharacter().getCurrentNotoriety(), is(4));
     }
 }

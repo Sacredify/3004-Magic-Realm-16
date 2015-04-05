@@ -171,6 +171,8 @@ public class AppServer implements Runnable {
                 this.boardModel = (BoardModel) message.getPayload();
                 this.synchronize();
                 if (this.turnController.incrementTurnCount() == this.clientCount) {
+                    LOG.info("Cleaning up combat data for this day.");
+                    this.boardModel.getPlayers().stream().forEach(Combat::cleanup);
                     LOG.info("Starting GAME_OVER phase.");
                     if (this.isGameOver()) {
                         LOG.info("MAX_DAYS has been reached. Game over.");

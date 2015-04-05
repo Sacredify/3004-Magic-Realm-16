@@ -14,7 +14,7 @@ import java.util.Random;
  * Date: 23/02/15
  * Time: 5:36 AM
  */
-public abstract class Denizen extends Entity {
+public abstract class Denizen extends Entity implements BountyCarrier {
 
     protected static final Random RANDOM = new Random();
 
