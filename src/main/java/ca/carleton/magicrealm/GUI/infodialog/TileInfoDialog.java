@@ -11,13 +11,13 @@ import java.awt.*;
  * Date: 21/02/15
  * Time: 3:55 PM
  */
-public class InfoDialog extends JDialog {
+public class TileInfoDialog extends JDialog {
 
     public static final int WINDOW_WIDTH = 860;
 
     public static final int WINDOW_HEIGHT = 300;
 
-    public InfoDialog(final AbstractTile tileClicked) {
+    public TileInfoDialog(final AbstractTile tileClicked) {
         this.initWindowSettings();
         this.setTitle("Tile Information Dialog");
         this.add(new InfoPanel(tileClicked));
