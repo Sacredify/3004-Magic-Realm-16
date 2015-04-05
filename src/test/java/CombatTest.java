@@ -20,8 +20,8 @@ import ca.carleton.magicrealm.item.armor.SuitOfArmor;
 import ca.carleton.magicrealm.item.weapon.*;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created with IntelliJ IDEA.
@@ -322,5 +322,50 @@ public class CombatTest {
         assertThat(denizen.getCurrentClearing().getEntities().contains(denizen), is(false));
         assertThat(player.getCharacter().getCurrentGold(), is(12));
         assertThat(player.getCharacter().getCurrentNotoriety(), is(4));
+    }
+
+    @Test
+    public void canResolveTwoMisses() {
+        // Create the board and player
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player attacker = new Player();
+        attacker.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        boardModel.getStartingLocation().addEntity(attacker.getCharacter());
+
+        final Player defender = new Player();
+        defender.setCharacter(CharacterFactory.createCharacter(CharacterType.CAPTAIN));
+        boardModel.getStartingLocation().addEntity(defender.getCharacter());
+
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(attacker);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
+        attackerSheet.setAttackWeapon(new Crossbow());
+        attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setAttackDirection(AttackDirection.THRUST);
+        attackerSheet.setManeuver(Maneuver.DODGE);
+        attackerSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setArmor(new SuitOfArmor());
+
+        // Defender melee sheet
+        boardModel.createNewMeleeSheet(defender);
+        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
+        defenderSheet.setAttackWeapon(new Crossbow());
+        defenderSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        defenderSheet.setAttackDirection(AttackDirection.THRUST);
+        defenderSheet.setManeuver(Maneuver.DODGE);
+        defenderSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        defenderSheet.setArmor(new SuitOfArmor());
+
+        Combat.doCombat(boardModel, attacker, defender);
+
+
+        assertThat(attacker.getCharacter().isWounded(), is(false));
+        assertThat(attacker.getCharacter().isDead(), is(false));
+        assertThat(attackerSheet.getArmor().isDamaged(), is(false));
+        assertThat(defender.getCharacter().isWounded(), is(false));
+        assertThat(defender.getCharacter().isDead(), is(false));
+        assertThat(defenderSheet.getArmor().isDamaged(), is(false));
     }
 }
