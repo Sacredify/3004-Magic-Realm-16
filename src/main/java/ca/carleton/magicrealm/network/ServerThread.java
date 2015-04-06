@@ -28,7 +28,7 @@ public class ServerThread extends Thread {
 
     private boolean done;
 
-    public ServerThread(ServerNetwork server, Socket socket) {
+    public ServerThread(final ServerNetwork server, final Socket socket) {
         super();
         this.server = server;
         this.socket = socket;

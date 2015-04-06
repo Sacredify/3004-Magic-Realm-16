@@ -33,7 +33,7 @@ public class ClientNetwork implements Runnable {
         try {
             this.socket = new Socket(serverName, serverPort);
             this.ID = this.socket.getLocalPort();
-            LOG.info("Successfully connected to the server. Details: {}.", this.socket.getInetAddress());
+            LOG.info("Successfully connected to the server. Details: {}.", this.socket);
             this.open();
             this.start();
         } catch (IOException ioe) {
