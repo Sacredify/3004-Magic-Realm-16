@@ -21,14 +21,12 @@ import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 import ca.carleton.magicrealm.item.weapon.AttackType;
 import ca.carleton.magicrealm.item.weapon.Dagger;
 import ca.carleton.magicrealm.item.weapon.MonsterWeapon;
-import ca.carleton.magicrealm.network.ServerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -138,11 +136,16 @@ public class Combat {
     /**
      * Process combat on the server side.
      *
-     * @param clients    the clients.
+     * @param players    the players.
      * @param boardModel the board.
+     * @return the number of combats done that day. Honestly, this is just for testing/debugging.
      */
-    public static void process(final List<ServerThread> clients, final BoardModel boardModel) {
-        final List<Player> players = clients.stream().map(ServerThread::getPlayer).collect(Collectors.toList());
+    public static int process(final List<Player> players, final BoardModel boardModel) {
+
+        LOG.info("Starting simplified encounter step - assigning monsters to players in the same clearing.");
+        final List<Entity> monstersWhoWillFight = CombatUtils.getMonstersFightingToday(boardModel, players.stream().map(Player::getCharacter).collect(Collectors.toList()));
+        //array because lambdas don't like non final variables.
+        final int[] combatsDone = new int[1];
 
         try {
             for (final Player player : players) {
@@ -151,23 +154,43 @@ public class Combat {
                 final Entity target = playerSheet.getTarget();
                 if (target == null) {
                     LOG.info("Player opted to not fight. Skipping their combat.");
-                    continue;
-                }
-                final MeleeSheet targetSheet = boardModel.getMeleeSheet(target);
+                } else {
+                    final MeleeSheet targetSheet = boardModel.getMeleeSheet(target);
 
-                if (playerSheet.hasFoughtToday() || targetSheet.hasFoughtToday()) {
-                    LOG.info("Assumption that people can't fight twice. Skipping because either {} or {} has fought today.", playerSheet.getOwner(), targetSheet.getOwner());
-                    continue;
-                }
+                    if (playerSheet.hasFought(target) || targetSheet.hasFought(playerSheet.getOwner())) {
+                        LOG.info("Assumption that entities can't fight the same thing twice. - Skipping fight of {} and {}.", playerSheet.getOwner(), targetSheet.getTarget());
+                        continue;
+                    }
 
-                if (target instanceof AbstractCharacter) {
-                    // Combat between two characters
-                    final Player otherPlayer = boardModel.getPlayerForCharacter((AbstractCharacter) target);
-                    Combat.doCombat(boardModel, player, otherPlayer);
-                } else if (target instanceof Denizen) {
-                    // Combat between a character and a native or monster.
-                    Combat.doCombat(boardModel, player, (Denizen) target);
+                    if (target instanceof AbstractCharacter) {
+                        // Combat between two characters
+                        final Player otherPlayer = boardModel.getPlayerForCharacter((AbstractCharacter) target);
+                        Combat.doCombat(boardModel, player, otherPlayer);
+                        combatsDone[0]++;
+                    } else if (target instanceof Denizen) {
+                        // Combat between a character and a native or monster.
+                        Combat.doCombat(boardModel, player, (Denizen) target);
+                        combatsDone[0]++;
+                    }
                 }
+                LOG.info("Now resolving combat for any monster currently in the clearing with {}.", player.getCharacter());
+                // This should be done in order of attack times, but honestly, who really cares. More work for basically the same effect.
+                monstersWhoWillFight.stream()
+                        .filter(monster -> ((Denizen) monster).getCurrentClearing().equals(boardModel.getClearingForPlayer(player)))
+                        .forEach(monster -> {
+                            LOG.info("{} is trying to fight!.", monster);
+                            final MeleeSheet monsterSheet = boardModel.getMeleeSheet(monster);
+                            // Monsters only attack players.
+                            final Player playerTarget = boardModel.getPlayerForCharacter((AbstractCharacter) monsterSheet.getTarget());
+
+                            if (!monsterSheet.hasFought(playerTarget.getCharacter())) {
+                                Combat.doCombat(boardModel, playerTarget, (Denizen) monster);
+                                combatsDone[0]++;
+                            } else {
+                                LOG.info("Assumption that entities can't fight the same thing twice. - Skipping fight of {} and {}.", monster, playerTarget.getCharacter());
+                            }
+                        });
+
             }
         } catch (final NullPointerException exception) {
             LOG.error("Error with combat resolution. Something may have not been set. Instead of failing, we'll continue and hope it works.", exception);
@@ -176,6 +199,8 @@ public class Combat {
         // After combat is done
         LOG.info("Resetting melee sheets.");
         boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
+        LOG.info("Done combat for the day. Combats resolved (not rounds - unique entities targeting another unique): {}.", combatsDone);
+        return combatsDone[0];
     }
 
     /**
@@ -221,7 +246,7 @@ public class Combat {
         // Check for dead players and fatigue step.
         if (playerOne.getCharacter().isDead()) {
             LOG.info("{} died. Beginning transfer of items.", playerOne.getCharacter());
-            resolvePlayerKilledAnother(playerTwo, playerOne, boardModel);
+            CombatUtils.resolvePlayerKilledAnother(playerTwo, playerOne, boardModel);
         } else {
             LOG.info("{} is not dead. Beginning fatigue step calculations.", playerOne.getCharacter());
             int attackerAsterisk = playerOneSheet.getManeuverChit().getFatigueAsterisks() + playerOneSheet.getAttackChit().getFatigueAsterisks();
@@ -235,7 +260,7 @@ public class Combat {
         }
         if (playerTwo.getCharacter().isDead()) {
             LOG.info("{} died. Beginning transfer of items.", playerTwo.getCharacter());
-            resolvePlayerKilledAnother(playerOne, playerTwo, boardModel);
+            CombatUtils.resolvePlayerKilledAnother(playerOne, playerTwo, boardModel);
         } else {
             LOG.info("{} is not dead. Beginning fatigue step calculations.", playerTwo.getCharacter());
             int defenderAsterisk = playerTwoSheet.getManeuverChit().getFatigueAsterisks() + playerTwoSheet.getAttackChit().getFatigueAsterisks();
@@ -248,8 +273,8 @@ public class Combat {
             }
         }
 
-        playerOneSheet.markFought();
-        playerTwoSheet.markFought();
+        playerOneSheet.markAlreadyFought(playerTwo.getCharacter());
+        playerTwoSheet.markAlreadyFought(playerOne.getCharacter());
     }
 
     /**
@@ -274,6 +299,9 @@ public class Combat {
             denizenWeaponLength = denizenSheet.getAttackWeapon().getLength();
         }
 
+        LOG.info("{} is using {}. Weapon length: {}.", playerSheet.getOwner(), playerSheet.getAttackWeapon(), playerSheet.getAttackWeapon().getLength());
+        LOG.info("{} is using {}. Weapon length: {}.", denizenSheet.getOwner(), denizenSheet.getAttackWeapon(), denizenSheet.getAttackWeapon().getLength());
+
         // Player one goes first if their weapon is longer...
         if (playerOneWeaponLength >= denizenWeaponLength) {
             // "Round" of combat... attacker attacks, then gets attacked by defender, assuming the defender isn't dead.
@@ -295,7 +323,7 @@ public class Combat {
         // Check for a dead player/monster and fatigue step.
         if (player.getCharacter().isDead()) {
             LOG.info("{} died while fighting a denizen! They will be revived automatically...", player.getCharacter());
-            resolveDeadPlayer(boardModel, player);
+            CombatUtils.resolveDeadPlayer(boardModel, player);
         } else {
             LOG.info("{} is not dead. Beginning fatigue step calculations.", player.getCharacter());
             int attackerAsterisk = playerSheet.getManeuverChit().getFatigueAsterisks() + playerSheet.getAttackChit().getFatigueAsterisks();
@@ -312,13 +340,13 @@ public class Combat {
             LOG.info("{} died to the player! The player reaps the rewards and gains his bounty.", denizen);
             denizen.addBountyToPlayer(player);
             LOG.info("Removing denizen from the board...");
-            resolveDeadDenizen(boardModel, denizen);
+            CombatUtils.resolveDeadDenizen(boardModel, denizen);
         } else {
             LOG.info("{} is not dead. Doing nothing more.", denizen);
         }
 
-        playerSheet.markFought();
-        denizenSheet.markFought();
+        playerSheet.markAlreadyFought(denizen);
+        denizenSheet.markAlreadyFought(player.getCharacter());
     }
 
     /**
@@ -402,39 +430,6 @@ public class Combat {
     }
 
     /**
-     * Adds monsters in the clearing with a player to the list of people who are going to fight.
-     *
-     * @param board      the board.
-     * @param characters the characters in-game.
-     */
-    // public only for testing.
-    public static List<Entity> getMonstersFightingToday(final BoardModel board, final List<AbstractCharacter> characters) {
-        final List<Entity> monstersFighting = new ArrayList<>();
-
-        // CASE WHERE 2 OR MORE CHARACTERS ARE IN A CLEARING TOGETHER
-        // Shuffle the list of characters, as the monster will attack the second character to be in the loop.
-        Collections.shuffle(characters);
-        for (final AbstractCharacter character : characters) {
-            if (!character.isHidden()) {
-                LOG.info("{} isn't hidden! Any monsters in the clearing will attack.", character);
-                final List<Entity> monsters = board.getClearingForCharacter(character).getEntities().stream()
-                        .filter(entity -> entity instanceof AbstractMonster).collect(Collectors.toList());
-
-                monsters.stream().forEach(monster -> {
-                    final MeleeSheet sheetForMonster = board.getMeleeSheet(monster);
-                    sheetForMonster.setTarget(character);
-                    LOG.info("{} is now targeting {}!", monster, character);
-                    monstersFighting.add(monster);
-                });
-
-            } else {
-                LOG.info("{} is hidden - monsters won't attack them this turn.", character);
-            }
-        }
-        return monstersFighting;
-    }
-
-    /**
      * Resolve a round of combat where a player attacks a denizen.
      *
      * @param player  the player [attacker].
@@ -463,7 +458,7 @@ public class Combat {
             LOG.info("{} weapon strength: {}", player.getOwner(), weapon.getStrength());
             // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
             // than the power of the weapon. For missile attacks, roll on the table.
-            Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
+            Harm attackStrength = CombatUtils.increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
             if (weapon.getAttackType() == AttackType.STRIKING) {
                 if (player.getAttackChit().getStrength().greaterThan(attackStrength)) {
                     attackStrength = attackStrength.increase();
@@ -478,7 +473,7 @@ public class Combat {
             final boolean armored = ((Denizen) denizen.getOwner()).isArmored();
 
             if (armored) {
-                attackStrength.decrease();
+                attackStrength = attackStrength.decrease();
                 LOG.info("The denizen was armored. Reduced strength of attack to {}.", attackStrength);
             }
 
@@ -529,7 +524,7 @@ public class Combat {
             LOG.info("{} weapon strength: {}", denizen.getOwner(), weapon.getStrength());
             // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
             // than the power of the weapon. For missile attacks, roll on the table.
-            Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
+            Harm attackStrength = CombatUtils.increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
             if (weapon.getAttackType() == AttackType.STRIKING) {
                 if (denizen.getAttackChit().getStrength().greaterThan(attackStrength)) {
                     attackStrength = attackStrength.increase();
@@ -621,7 +616,7 @@ public class Combat {
             LOG.info("{} weapon strength: {}", attacker.getOwner(), weapon.getStrength());
             // Increase strength by the sharpness. If the weapon is striking, increase by one if the fight chit strength is greater
             // than the power of the weapon. For missile attacks, roll on the table.
-            Harm attackStrength = increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
+            Harm attackStrength = CombatUtils.increaseStrengthBySharpness(weapon.getStrength(), weapon.getSharpness());
             if (weapon.getAttackType() == AttackType.STRIKING) {
                 if (attacker.getAttackChit().getStrength().greaterThan(attackStrength)) {
                     attackStrength = attackStrength.increase();
@@ -686,66 +681,4 @@ public class Combat {
         }
     }
 
-    /**
-     * Handle logic for when a player kills another.
-     *
-     * @param killer     the victor.
-     * @param killed     the person who died.
-     * @param boardModel the board.
-     */
-    private static void resolvePlayerKilledAnother(final Player killer, final Player killed, final BoardModel boardModel) {
-        LOG.info("Transferring items, gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
-        killer.getCharacter().getItems().addAll(killed.getCharacter().getItems());
-        killed.getCharacter().getItems().clear();
-        killer.getCharacter().addGold(killed.getCharacter().getCurrentGold());
-        killed.getCharacter().addGold(-killed.getCharacter().getCurrentGold());
-        killer.getCharacter().addNotoriety(killed.getCharacter().getCurrentNotoriety());
-        killed.getCharacter().addNotoriety(-killed.getCharacter().getCurrentNotoriety());
-        resolveDeadPlayer(boardModel, killed);
-    }
-
-    /**
-     * Handle the cleanup of a dead character, and give them a new life.
-     *
-     * @param board the board.
-     * @param dead  the dead player.
-     */
-    private static void resolveDeadPlayer(final BoardModel board, final Player dead) {
-        LOG.info("AUTO REINCARNATION. Giving player a new start at the inn.");
-        LOG.info("Creating a new character and Setting location to their starting location ({}).", dead.getStartingLocation());
-        board.getClearingForPlayer(dead).removeEntity(dead.getCharacter());
-        dead.setCharacter(CharacterFactory.createCharacter(dead.getCharacter().getEntityInformation().convertToCharacterType()));
-        dead.restartNewLife();
-        board.getClearingOfDwelling(dead.getStartingLocation()).addEntity(dead.getCharacter());
-    }
-
-    /**
-     * Handle the cleanup of a dead denizen.
-     *
-     * @param board the board.
-     * @param dead  the denizen.
-     */
-    private static void resolveDeadDenizen(final BoardModel board, final Denizen dead) {
-        dead.getCurrentClearing().removeEntity(dead);
-        LOG.info("{} removed from {}.", dead, dead.getCurrentClearing());
-    }
-
-    /**
-     * Increase the strength of a weapon by its sharpness
-     *
-     * @param strength  the strength.
-     * @param sharpness the sharpness.
-     * @return the new strength.
-     */
-    private static Harm increaseStrengthBySharpness(final Harm strength, final int sharpness) {
-        int count = 0;
-        LOG.info("Increasing {} by {}.", strength, sharpness);
-        Harm toReturn = strength;
-        while (count < sharpness) {
-            toReturn = toReturn.increase();
-            count++;
-        }
-        LOG.info("Increased strength through sharpness. New strength: {}.", toReturn);
-        return toReturn;
-    }
 }

@@ -17,6 +17,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AppServer implements Runnable {
 
@@ -145,7 +146,7 @@ public class AppServer implements Runnable {
                 this.synchronize();
                 if (this.turnController.incrementTurnCount() == this.clientCount) {
                     LOG.info("Starting COMBAT_RESOLUTION phase.");
-                    Combat.process(this.clients, this.boardModel);
+                    Combat.process(this.clients.stream().map(ServerThread::getPlayer).collect(Collectors.toList()), this.boardModel);
                     LOG.info("Starting FATIGUE_STEP phase.");
                     this.turnController.createNewTurnOrder(this.clients);
                     final ServerThread nextClient = this.getClientWithID(this.turnController.getNextPlayer());

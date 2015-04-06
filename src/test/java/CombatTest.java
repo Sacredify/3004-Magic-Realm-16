@@ -2,6 +2,7 @@ import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.control.Combat;
+import ca.carleton.magicrealm.control.CombatUtils;
 import ca.carleton.magicrealm.control.Sunset;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
@@ -26,6 +27,7 @@ import ca.carleton.magicrealm.item.armor.SuitOfArmor;
 import ca.carleton.magicrealm.item.weapon.*;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -391,7 +393,18 @@ public class CombatTest {
         player.getCharacter().setHidden(false);
         boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[0].addEntity(player.getCharacter());
 
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(player);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(player);
+        attackerSheet.setAttackWeapon(new Crossbow());
+        attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setAttackDirection(AttackDirection.THRUST);
+        attackerSheet.setManeuver(Maneuver.DODGE);
+        attackerSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setArmor(new SuitOfArmor());
+
         final AbstractMonster monster = new Dragon();
+        boardModel.createNewMeleeSheet(monster);
         boardModel.getStartingLocation().addEntity(monster);
 
         // Set location to the same tile, but diff clearing.
@@ -414,7 +427,7 @@ public class CombatTest {
         // Monster moves to clearing
         Sunset.doSunset(boardModel);
 
-        final List<Entity> monsters = Combat.getMonstersFightingToday(boardModel, Arrays.asList(player.getCharacter()));
+        final List<Entity> monsters = CombatUtils.getMonstersFightingToday(boardModel, Arrays.asList(player.getCharacter()));
         assertThat(monsters, containsInAnyOrder(monster));
         assertThat(monsters, not(containsInAnyOrder(monster2)));
 
@@ -423,4 +436,134 @@ public class CombatTest {
 
     }
 
+    @Test
+    public void canMonsterAttackPlayerOnSameTile() throws Exception {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player player = new Player();
+        boardModel.addPlayer(player);
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        player.getCharacter().setHidden(false);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[0].addEntity(player.getCharacter());
+
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(player);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(player);
+        attackerSheet.setAttackWeapon(new BaneSword());
+        attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setAttackDirection(AttackDirection.THRUST);
+        attackerSheet.setManeuver(Maneuver.DODGE);
+        attackerSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setArmor(new SuitOfArmor());
+
+        final AbstractMonster monster = new Dragon();
+        // Override the dragons health because I'm too lazy to find a value that makes this test work properly.
+        final Field health = Entity.class.getDeclaredField("vulnerability");
+        health.setAccessible(true);
+        health.set(monster, Harm.HEAVY);
+        boardModel.getStartingLocation().addEntity(monster);
+
+        // Set location to the same tile, but diff clearing.
+        boardModel.createNewMeleeSheet(monster);
+        final MeleeSheet monsterSheet = boardModel.getMeleeSheet(monster);
+        monsterSheet.setManeuver(Maneuver.CHARGE);
+        boardModel.getAbstractMonsters().add(monster);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1].addEntity(monster);
+        monster.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1]);
+        monster.setProwling(true);
+
+        final AbstractMonster monster2 = new Spider();
+        boardModel.getStartingLocation().addEntity(monster);
+
+        // Set location to a different tile.
+        boardModel.createNewMeleeSheet(monster2);
+        boardModel.getAbstractMonsters().add(monster2);
+        boardModel.getTilesOfType(TileType.VALLEY).get(1).getClearings()[1].addEntity(monster2);
+        monster2.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(1).getClearings()[1]);
+        monster2.setProwling(true);
+
+        // Monster moves to clearing and then we start combat.
+        Sunset.doSunset(boardModel);
+        Combat.process(Arrays.asList(player), boardModel);
+
+        // The player doesn't die, but is fatigued from playing too many asterisks. The dragon dies.
+        assertThat(player.getCharacter().isDead(), is(false));
+        assertThat(player.getCharacter().isFatigued(), is(true));
+        assertThat(monster.isDead(), is(true));
+        assertThat(player.getCharacter().getCurrentFame(), is(10));
+        assertThat(player.getCharacter().getCurrentNotoriety(), is(10));
+    }
+
+    @Test
+    public void canUseAlertedWeapon() {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player player = new Player();
+        boardModel.addPlayer(player);
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(player);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(player);
+        attackerSheet.setAttackWeapon(new Crossbow());
+
+        // not alerted, 0 sharpness.
+        assertThat(attackerSheet.getAttackWeapon().getSharpness(), is(0));
+        attackerSheet.getAttackWeapon().setAlert(true);
+        // alerted, 1 sharpness.
+        assertThat(attackerSheet.getAttackWeapon().getSharpness(), is(1));
+    }
+
+    @Test
+    public void canIgnoreMultipleSameTargetCombats() {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player player = new Player();
+        boardModel.addPlayer(player);
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        player.getCharacter().setHidden(false);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[0].addEntity(player.getCharacter());
+
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(player);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(player);
+        attackerSheet.setAttackWeapon(new BaneSword());
+        attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setAttackDirection(AttackDirection.THRUST);
+        attackerSheet.setManeuver(Maneuver.DODGE);
+        attackerSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setArmor(new SuitOfArmor());
+
+        final AbstractMonster monster = new Dragon();
+        boardModel.getStartingLocation().addEntity(monster);
+
+        // Set the target to be the dragon (creating a double combat... monster --> player, player --> monster).
+        attackerSheet.setTarget(monster);
+
+        // Set location to the same tile, but diff clearing.
+        boardModel.createNewMeleeSheet(monster);
+        final MeleeSheet monsterSheet = boardModel.getMeleeSheet(monster);
+        monsterSheet.setManeuver(Maneuver.CHARGE);
+        boardModel.getAbstractMonsters().add(monster);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1].addEntity(monster);
+        monster.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1]);
+        monster.setProwling(true);
+
+        final AbstractMonster monster2 = new Spider();
+        boardModel.getStartingLocation().addEntity(monster);
+
+        // Set location to a different tile.
+        boardModel.createNewMeleeSheet(monster2);
+        boardModel.getAbstractMonsters().add(monster2);
+        boardModel.getTilesOfType(TileType.VALLEY).get(1).getClearings()[1].addEntity(monster2);
+        monster2.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(1).getClearings()[1]);
+        monster2.setProwling(true);
+
+        // Monster moves to clearing and then we start combat.
+        Sunset.doSunset(boardModel);
+        assertThat(Combat.process(Arrays.asList(player), boardModel), is(1));
+    }
 }

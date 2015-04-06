@@ -9,6 +9,8 @@ import ca.carleton.magicrealm.item.armor.AbstractArmor;
 import ca.carleton.magicrealm.item.weapon.AbstractWeapon;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,7 +48,7 @@ public class MeleeSheet implements Serializable {
     private AbstractArmor armor;
 
     // Whether or not they have already fought (to prevent multiple engagements... say A --> B and B --> A on their sheets.
-    private boolean hasFought;
+    private final List<Entity> alreadyFought = new ArrayList<Entity>();
 
     /**
      * Creates a melee sheet for an entity, and optionally a related player.
@@ -71,7 +73,7 @@ public class MeleeSheet implements Serializable {
             this.maneuver = null;
         }
         this.target = null;
-        this.hasFought = false;
+        this.alreadyFought.clear();
     }
 
     /**
@@ -109,7 +111,7 @@ public class MeleeSheet implements Serializable {
         } else {
             // Update denizens (owner)
             boardModel.getAbstractMonsters().stream().filter(this.entity::equals).forEach(entity -> this.entity = entity);
-            this.attackWeapon =  ((Denizen)this.entity).getWeapon();
+            this.attackWeapon = ((Denizen) this.entity).getWeapon();
         }
 
     }
@@ -186,11 +188,11 @@ public class MeleeSheet implements Serializable {
         this.target = target;
     }
 
-    public void markFought() {
-        this.hasFought = true;
+    public boolean hasFought(final Entity entity) {
+        return this.alreadyFought.contains(entity);
     }
 
-    public boolean hasFoughtToday() {
-        return this.hasFought;
+    public void markAlreadyFought(final Entity entity) {
+        this.alreadyFought.add(entity);
     }
 }
