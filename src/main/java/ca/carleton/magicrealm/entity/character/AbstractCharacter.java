@@ -7,7 +7,6 @@ import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.item.Item;
 import ca.carleton.magicrealm.item.treasure.Treasure;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.Map;
  * Date: 10/02/15
  * Time: 8:25 AM
  */
-public abstract class AbstractCharacter extends Entity implements Serializable {
+public abstract class AbstractCharacter extends Entity {
 
     private static final long serialVersionUID = 5076980254158357930L;
 
