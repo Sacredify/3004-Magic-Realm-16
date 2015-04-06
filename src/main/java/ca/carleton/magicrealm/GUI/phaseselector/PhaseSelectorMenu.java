@@ -1,7 +1,7 @@
 package ca.carleton.magicrealm.GUI.phaseselector;
 
 import ca.carleton.magicrealm.GUI.phaseselector.detailwindows.*;
-import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.control.ClientController;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
@@ -38,7 +38,7 @@ public class PhaseSelectorMenu extends JFrame {
 
     PhaseSelectorModel phaseSelectorModel;
 
-    GameController controller;
+    ClientController controller;
 
     MoveSelectionMenu moveSelectionMenu;
 
@@ -50,10 +50,10 @@ public class PhaseSelectorMenu extends JFrame {
 
     private final Player player;
 
-    public PhaseSelectorMenu(final Player player, final List<AbstractPhase> phases, final PhaseCountBean numberOfPhases, final GameController gameController) {
+    public PhaseSelectorMenu(final Player player, final List<AbstractPhase> phases, final PhaseCountBean numberOfPhases, final ClientController clientController) {
         this.player = player;
         this.setTitle(PHASE_SELECTOR_WINDOW);
-        this.setLocationRelativeTo(gameController.getParentWindow());
+        this.setLocationRelativeTo(clientController.getParentWindow());
 
         this.phaseSelectorPanel = new PhaseSelectorPanel();
         this.phaseSelectorPanel.getConfirmButton().addActionListener(this.createActionListenerForPhaseSelectButton());
@@ -61,7 +61,7 @@ public class PhaseSelectorMenu extends JFrame {
 
         this.phaseSelectorModel = new PhaseSelectorModel(this, phases, numberOfPhases);
         this.phaseSelectorModel.updateInfoText();
-        this.controller = gameController;
+        this.controller = clientController;
 
         this.setSize(PHASE_WINDOW_WIDTH, PHASE_WINDOW_HEIGHT);
         this.setResizable(false);

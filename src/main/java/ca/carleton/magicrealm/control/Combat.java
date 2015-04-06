@@ -248,29 +248,13 @@ public class Combat {
             LOG.info("{} died. Beginning transfer of items.", playerOne.getCharacter());
             CombatUtils.resolvePlayerKilledAnother(playerTwo, playerOne, boardModel);
         } else {
-            LOG.info("{} is not dead. Beginning fatigue step calculations.", playerOne.getCharacter());
-            int attackerAsterisk = playerOneSheet.getManeuverChit().getFatigueAsterisks() + playerOneSheet.getAttackChit().getFatigueAsterisks();
-            if (attackerAsterisk >= 2) {
-                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", playerOne.getCharacter());
-                playerOne.getCharacter().setFatigued(true);
-            }
-            if (playerOne.getCharacter().isWounded()) {
-                LOG.info("{} has been wounded and must wound a chit.", playerOne.getCharacter());
-            }
+            CombatUtils.checkFatigueAndWounds(boardModel, playerOne);
         }
         if (playerTwo.getCharacter().isDead()) {
             LOG.info("{} died. Beginning transfer of items.", playerTwo.getCharacter());
             CombatUtils.resolvePlayerKilledAnother(playerOne, playerTwo, boardModel);
         } else {
-            LOG.info("{} is not dead. Beginning fatigue step calculations.", playerTwo.getCharacter());
-            int defenderAsterisk = playerTwoSheet.getManeuverChit().getFatigueAsterisks() + playerTwoSheet.getAttackChit().getFatigueAsterisks();
-            if (defenderAsterisk >= 2) {
-                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", playerTwo.getCharacter());
-                playerTwo.getCharacter().setFatigued(true);
-            }
-            if (playerOne.getCharacter().isWounded()) {
-                LOG.info("{} has been wounded and must wound a chit.", playerTwo.getCharacter());
-            }
+            CombatUtils.checkFatigueAndWounds(boardModel, playerTwo);
         }
 
         playerOneSheet.markAlreadyFought(playerTwo.getCharacter());
@@ -325,15 +309,7 @@ public class Combat {
             LOG.info("{} died while fighting a denizen! They will be revived automatically...", player.getCharacter());
             CombatUtils.resolveDeadPlayer(boardModel, player);
         } else {
-            LOG.info("{} is not dead. Beginning fatigue step calculations.", player.getCharacter());
-            int attackerAsterisk = playerSheet.getManeuverChit().getFatigueAsterisks() + playerSheet.getAttackChit().getFatigueAsterisks();
-            if (attackerAsterisk >= 2) {
-                LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", player.getCharacter());
-                player.getCharacter().setFatigued(true);
-            }
-            if (player.getCharacter().isWounded()) {
-                LOG.info("{} has been wounded and must wound a chit.", player.getCharacter());
-            }
+            CombatUtils.checkFatigueAndWounds(boardModel, player);
         }
 
         if (denizen.isDead()) {

@@ -1,5 +1,6 @@
 package ca.carleton.magicrealm;
 
+import ca.carleton.magicrealm.control.ServerController;
 import ca.carleton.magicrealm.network.AppClient;
 import ca.carleton.magicrealm.network.AppServer;
 import org.apache.commons.cli.*;
@@ -58,8 +59,8 @@ public class Launcher {
                     throw new Exception("Attempted to start as host with no port specified.");
                 }
 
-                int numberClients = AppServer.DEFAULT_MAX_PLAYERS;
-                int numberDays = AppServer.DEFAULT_GAME_LENGTH;
+                int numberClients = ServerController.DEFAULT_MAX_PLAYERS;
+                int numberDays = ServerController.DEFAULT_GAME_LENGTH;
 
                 if (cmd.hasOption(NUMBER_CLIENTS_ARG)) {
                     LOG.info("Overwriting MAX_PLAYERS arg to user-specified value of {}.", cmd.getOptionValue(NUMBER_CLIENTS_ARG));

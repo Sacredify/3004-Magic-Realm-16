@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.GUI.charactercreate;
 
-import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.control.ClientController;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
@@ -22,7 +22,7 @@ public class MenuModel {
 
     Player player;
 
-    private final GameController cont;
+    private final ClientController cont;
 
     int pointsLeft = 5;
 
@@ -32,7 +32,7 @@ public class MenuModel {
 
     private final CharacterCreateMenu frame;
 
-    public MenuModel(final CharacterCreateMenu frame, final Player player, final List<CharacterType> availableCharacters,GameController cnt) {
+    public MenuModel(final CharacterCreateMenu frame, final Player player, final List<CharacterType> availableCharacters,ClientController cnt) {
         this.player = player;
         this.availableCharacters = availableCharacters;
         this.frame = frame;

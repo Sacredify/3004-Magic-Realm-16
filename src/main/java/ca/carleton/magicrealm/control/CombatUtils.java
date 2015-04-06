@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * Some util code for combat.
- *
+ * <p>
  * Created with IntelliJ IDEA.
  * Date: 31/03/2015
  * Time: 10:40 AM
@@ -139,6 +139,29 @@ public class CombatUtils {
         }
         LOG.info("Increased strength through sharpness. New strength: {}.", toReturn);
         return toReturn;
+    }
+
+    /**
+     * Check to see if the player is wounded or fatigued.
+     *
+     * @param board the board.
+     * @param player the player.
+     */
+    public static void checkFatigueAndWounds(final BoardModel board, final Player player) {
+        final MeleeSheet playerSheet = board.getMeleeSheet(player);
+        LOG.info("{} is not dead. Beginning fatigue step calculations.", player.getCharacter());
+        int defenderAsterisk = playerSheet.getManeuverChit().getFatigueAsterisks() + playerSheet.getAttackChit().getFatigueAsterisks();
+        if (defenderAsterisk >= 2) {
+            LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", player.getCharacter());
+            player.getCharacter().setFatigued(true);
+        } else {
+            LOG.info("{} didn't play enough fatigue chits to become fatigued.", player.getCharacter());
+        }
+        if (player.getCharacter().isWounded()) {
+            LOG.info("{} has been wounded and must wound a chit.", player.getCharacter());
+        } else {
+            LOG.info("{} wasn't wounded in battle.", player.getCharacter());
+        }
     }
 
     /**

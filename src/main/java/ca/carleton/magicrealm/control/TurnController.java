@@ -1,6 +1,5 @@
 package ca.carleton.magicrealm.control;
 
-import ca.carleton.magicrealm.network.AppServer;
 import ca.carleton.magicrealm.network.ServerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +20,9 @@ public class TurnController {
 
     private int turnCount;
 
-    private final AppServer server;
+    private final ServerController server;
 
-    public TurnController(final AppServer server) {
+    public TurnController(final ServerController server) {
         this.server = server;
         this.turnCount = 0;
         this.turnQueue = new PriorityQueue<>();
@@ -45,10 +44,10 @@ public class TurnController {
     public int incrementTurnCount() {
         this.turnCount++;
         LOG.info("A player has made a turn. Number of turns made this round: {}.", this.turnCount);
-        if (this.turnCount == this.server.getClientCount()) {
+        if (this.turnCount == this.server.getNetworkConnection().getClientCount()) {
             LOG.info("All players have taken a turn. Resetting to 0.");
             this.turnCount = 0;
-            return this.server.getClientCount();
+            return this.server.getNetworkConnection().getClientCount();
         } else {
             return this.turnCount;
         }

@@ -3,7 +3,7 @@ package ca.carleton.magicrealm.GUI.phaseselector;
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
 import ca.carleton.magicrealm.GUI.board.EntityBuilder;
-import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.control.ClientController;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
@@ -22,7 +22,7 @@ public class PhaseSelectorTest {
 
     public static void main(final String[] args) {
 
-        final GameController controller = new GameController();
+        final ClientController controller = new ClientController();
 
         controller.setBoardModel(new BoardModel());
         ChitBuilder.placeChits(controller.getBoardModel());

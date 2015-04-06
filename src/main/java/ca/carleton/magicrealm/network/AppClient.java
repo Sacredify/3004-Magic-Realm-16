@@ -1,6 +1,6 @@
 package ca.carleton.magicrealm.network;
 
-import ca.carleton.magicrealm.control.GameController;
+import ca.carleton.magicrealm.control.ClientController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class AppClient implements Runnable {
 
     private ObjectInputStream objInputStream = null;
 
-    private GameController gameController;
+    private ClientController clientController;
 
     private boolean done;
 
@@ -55,8 +55,8 @@ public class AppClient implements Runnable {
 
     private void start() {
         LOG.info("Creating game controller and UI.");
-        this.gameController = new GameController();
-        this.gameController.setNetworkConnection(this);
+        this.clientController = new ClientController();
+        this.clientController.setNetworkConnection(this);
         if (this.thread == null) {
             this.thread = new Thread(this);
             this.thread.start();
@@ -102,7 +102,7 @@ public class AppClient implements Runnable {
         LOG.info("Client thread {} running.", this.socket.getLocalPort());
         while (!this.done) {
             try {
-                this.gameController.handleMessage((Message) this.objInputStream.readObject());
+                this.clientController.handleMessage((Message) this.objInputStream.readObject());
             } catch (final IOException exception) {
                 LOG.error("Listening error...", exception);
                 this.done = true;

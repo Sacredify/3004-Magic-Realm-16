@@ -33,9 +33,9 @@ import static org.hamcrest.Matchers.is;
  * <p>
  * Created by Tony on 19/02/2015.
  */
-public class GameController {
+public class ClientController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GameController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientController.class);
 
     private final BoardWindow boardWindow;
 
@@ -53,7 +53,7 @@ public class GameController {
 
     private final List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
 
-    public GameController() {
+    public ClientController() {
         this.boardWindow = new BoardWindow();
         this.currentPlayer = new Player();
         this.startOutputLogging();
@@ -222,13 +222,13 @@ public class GameController {
     private void showCharacterCreate() {
         // Note, need to invoke in another thread, since the previous method was calling from main() it worked out okay.
         SwingUtilities.invokeLater(() -> {
-            GameController.this.characterCreateMenu = new CharacterCreateMenu(
-                    GameController.this.boardWindow,
-                    GameController.this.currentPlayer,
-                    GameController.this.availableCharacters,
-                    GameController.this);
+            ClientController.this.characterCreateMenu = new CharacterCreateMenu(
+                    ClientController.this.boardWindow,
+                    ClientController.this.currentPlayer,
+                    ClientController.this.availableCharacters,
+                    ClientController.this);
             LOG.info("Displayed character create.");
-            GameController.this.characterCreateMenu.displayWindow();
+            ClientController.this.characterCreateMenu.displayWindow();
         });
     }
 
