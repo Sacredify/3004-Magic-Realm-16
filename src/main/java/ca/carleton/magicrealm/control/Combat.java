@@ -416,7 +416,7 @@ public class Combat {
         Collections.shuffle(characters);
         for (final AbstractCharacter character : characters) {
             if (!character.isHidden()) {
-                LOG.info("{} isn't hidden! Any monsters in the clearing will attack.");
+                LOG.info("{} isn't hidden! Any monsters in the clearing will attack.", character);
                 final List<Entity> monsters = board.getClearingForCharacter(character).getEntities().stream()
                         .filter(entity -> entity instanceof AbstractMonster).collect(Collectors.toList());
 
