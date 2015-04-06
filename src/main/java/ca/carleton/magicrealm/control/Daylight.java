@@ -2,7 +2,6 @@ package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
-import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
@@ -97,7 +96,7 @@ public class Daylight {
         if (!player.getCharacter().isHidden()) {
             for (final Entity entity : playerClearing.getEntities()) {
                 // ASSUMPTION automatic blocking by all entities., why the hell not.
-                if (entity instanceof Denizen && !player.getCharacter().equals(entity)) {
+                if (!player.getCharacter().equals(entity)) {
                     LOG.info("Blocked by {}.", entity.getEntityInformation());
                     return true;
                 }
