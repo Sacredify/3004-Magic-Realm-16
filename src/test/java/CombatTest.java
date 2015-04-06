@@ -10,6 +10,7 @@ import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.monster.Dragon;
+import ca.carleton.magicrealm.entity.monster.Spider;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.entity.natives.NativeFactory;
 import ca.carleton.magicrealm.entity.natives.NativeType;
@@ -28,6 +29,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -399,11 +401,22 @@ public class CombatTest {
         monster.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1]);
         monster.setProwling(true);
 
+        final AbstractMonster monster2 = new Spider();
+        boardModel.getStartingLocation().addEntity(monster);
+
+        // Set location to a different tile.
+        boardModel.createNewMeleeSheet(monster2);
+        boardModel.getAbstractMonsters().add(monster2);
+        boardModel.getTilesOfType(TileType.VALLEY).get(1).getClearings()[1].addEntity(monster2);
+        monster2.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(1).getClearings()[1]);
+        monster2.setProwling(true);
+
         // Monster moves to clearing
         Sunset.doSunset(boardModel);
 
         final List<Entity> monsters = Combat.getMonstersFightingToday(boardModel, Arrays.asList(player.getCharacter()));
         assertThat(monsters, containsInAnyOrder(monster));
+        assertThat(monsters, not(containsInAnyOrder(monster2)));
 
         final MeleeSheet monsterSheet = boardModel.getMeleeSheet(monster);
         assertThat(monsterSheet.getTarget(), is(player.getCharacter()));
