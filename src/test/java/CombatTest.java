@@ -1,10 +1,15 @@
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
+import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.control.Combat;
+import ca.carleton.magicrealm.control.Sunset;
 import ca.carleton.magicrealm.entity.Denizen;
+import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
+import ca.carleton.magicrealm.entity.monster.AbstractMonster;
+import ca.carleton.magicrealm.entity.monster.Dragon;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.entity.natives.NativeFactory;
 import ca.carleton.magicrealm.entity.natives.NativeType;
@@ -20,7 +25,11 @@ import ca.carleton.magicrealm.item.armor.SuitOfArmor;
 import ca.carleton.magicrealm.item.weapon.*;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -368,4 +377,37 @@ public class CombatTest {
         assertThat(defender.getCharacter().isDead(), is(false));
         assertThat(defenderSheet.getArmor().isDamaged(), is(false));
     }
+
+    @Test
+    public void canAssignMonstersToPlayerInSameClearing() {
+
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        player.getCharacter().setHidden(false);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[0].addEntity(player.getCharacter());
+
+        final AbstractMonster monster = new Dragon();
+        boardModel.getStartingLocation().addEntity(monster);
+
+        // Set location to the same tile, but diff clearing.
+        boardModel.createNewMeleeSheet(monster);
+        boardModel.getAbstractMonsters().add(monster);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1].addEntity(monster);
+        monster.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1]);
+        monster.setProwling(true);
+
+        // Monster moves to clearing
+        Sunset.doSunset(boardModel);
+
+        final List<Entity> monsters = Combat.getMonstersFightingToday(boardModel, Arrays.asList(player.getCharacter()));
+        assertThat(monsters, containsInAnyOrder(monster));
+
+        final MeleeSheet monsterSheet = boardModel.getMeleeSheet(monster);
+        assertThat(monsterSheet.getTarget(), is(player.getCharacter()));
+
+    }
+
 }

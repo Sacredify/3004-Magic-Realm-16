@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -312,7 +313,7 @@ public class Combat {
             denizen.addBountyToPlayer(player);
             LOG.info("Removing denizen from the board...");
             resolveDeadDenizen(boardModel, denizen);
-        }      else {
+        } else {
             LOG.info("{} is not dead. Doing nothing more.", denizen);
         }
 
@@ -398,6 +399,39 @@ public class Combat {
         player.getCharacter().setWounded(false);
         player.getCharacter().setFatigued(false);
         LOG.info("Cleaned up {} after combat.", player.getCharacter());
+    }
+
+    /**
+     * Adds monsters in the clearing with a player to the list of people who are going to fight.
+     *
+     * @param board      the board.
+     * @param characters the characters in-game.
+     */
+    // public only for testing.
+    public static List<Entity> getMonstersFightingToday(final BoardModel board, final List<AbstractCharacter> characters) {
+        final List<Entity> monstersFighting = new ArrayList<>();
+
+        // CASE WHERE 2 OR MORE CHARACTERS ARE IN A CLEARING TOGETHER
+        // Shuffle the list of characters, as the monster will attack the second character to be in the loop.
+        Collections.shuffle(characters);
+        for (final AbstractCharacter character : characters) {
+            if (!character.isHidden()) {
+                LOG.info("{} isn't hidden! Any monsters in the clearing will attack.");
+                final List<Entity> monsters = board.getClearingForCharacter(character).getEntities().stream()
+                        .filter(entity -> entity instanceof AbstractMonster).collect(Collectors.toList());
+
+                monsters.stream().forEach(monster -> {
+                    final MeleeSheet sheetForMonster = board.getMeleeSheet(monster);
+                    sheetForMonster.setTarget(character);
+                    LOG.info("{} is now targeting {}!", monster, character);
+                    monstersFighting.add(monster);
+                });
+
+            } else {
+                LOG.info("{} is hidden - monsters won't attack them this turn.", character);
+            }
+        }
+        return monstersFighting;
     }
 
     /**
