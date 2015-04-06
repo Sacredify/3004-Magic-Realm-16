@@ -10,9 +10,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-public class AppClient implements Runnable {
+public class ClientNetwork implements Runnable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AppClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientNetwork.class);
 
     private int ID = 0;
 
@@ -28,7 +28,7 @@ public class AppClient implements Runnable {
 
     private boolean done;
 
-    public AppClient(final String serverName, final int serverPort) {
+    public ClientNetwork(final String serverName, final int serverPort) {
 
         try {
             this.socket = new Socket(serverName, serverPort);

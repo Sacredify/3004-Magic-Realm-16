@@ -9,9 +9,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class AppServer implements Runnable {
+public class ServerNetwork implements Runnable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AppServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServerNetwork.class);
 
     private static final int SERVER_ID = 0;
 
@@ -25,7 +25,7 @@ public class AppServer implements Runnable {
 
     private ServerController serverController;
 
-    public AppServer(final int port, final int maxPlayers, final int maxDays) {
+    public ServerNetwork(final int port, final int maxPlayers, final int maxDays) {
         try {
             this.server = new ServerSocket(port);
             this.server.setReuseAddress(true);

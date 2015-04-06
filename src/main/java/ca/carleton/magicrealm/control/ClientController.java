@@ -11,7 +11,7 @@ import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.phase.AbstractPhase;
 import ca.carleton.magicrealm.game.phase.PhaseUtils;
 import ca.carleton.magicrealm.log.LogWriter;
-import ca.carleton.magicrealm.network.AppClient;
+import ca.carleton.magicrealm.network.ClientNetwork;
 import ca.carleton.magicrealm.network.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class ClientController {
 
     private Player currentPlayer;
 
-    private AppClient networkConnection = null;
+    private ClientNetwork networkConnection = null;
 
     private JFrame output;
 
@@ -362,7 +362,7 @@ public class ClientController {
         return this.boardModel;
     }
 
-    public void setNetworkConnection(AppClient nC) {
+    public void setNetworkConnection(ClientNetwork nC) {
         this.networkConnection = nC;
         LOG.info("Set controller network connection successfully. Waiting for server to send game start...");
     }

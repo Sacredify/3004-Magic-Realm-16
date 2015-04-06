@@ -1,8 +1,8 @@
 package ca.carleton.magicrealm;
 
 import ca.carleton.magicrealm.control.ServerController;
-import ca.carleton.magicrealm.network.AppClient;
-import ca.carleton.magicrealm.network.AppServer;
+import ca.carleton.magicrealm.network.ClientNetwork;
+import ca.carleton.magicrealm.network.ServerNetwork;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,14 +70,14 @@ public class Launcher {
                     LOG.info("Overwriting GAME_LENGTH arg to user-specified value of {}.", cmd.getOptionValue(NUMBER_DAYS_ARG));
                     numberDays = Integer.parseInt(cmd.getOptionValue(NUMBER_DAYS_ARG));
                 }
-                new AppServer(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), numberClients, numberDays);
+                new ServerNetwork(Integer.parseInt(cmd.getOptionValue(PORT_ARG)), numberClients, numberDays);
             } else {
                 if (!cmd.hasOption(IP_ADDRESS_ARG) || !cmd.hasOption(PORT_ARG)) {
                     throw new Exception("Attempted to start with missing parameters.");
                 } else {
                     LOG.info("Started launcher as a game client.");
                     LOG.info("Connecting to {}:{}.", cmd.getOptionValue(IP_ADDRESS_ARG), cmd.getOptionValue(PORT_ARG));
-                    new AppClient(cmd.getOptionValue(IP_ADDRESS_ARG), Integer.parseInt(cmd.getOptionValue(PORT_ARG)));
+                    new ClientNetwork(cmd.getOptionValue(IP_ADDRESS_ARG), Integer.parseInt(cmd.getOptionValue(PORT_ARG)));
                 }
             }
         } catch (final Exception exception) {

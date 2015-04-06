@@ -18,7 +18,7 @@ public class ServerThread extends Thread {
 
     private Socket socket = null;
 
-    private AppServer server = null;
+    private ServerNetwork server = null;
 
     private ObjectOutputStream objOutStream = null;
 
@@ -28,7 +28,7 @@ public class ServerThread extends Thread {
 
     private boolean done;
 
-    public ServerThread(AppServer server, Socket socket) {
+    public ServerThread(ServerNetwork server, Socket socket) {
         super();
         this.server = server;
         this.socket = socket;

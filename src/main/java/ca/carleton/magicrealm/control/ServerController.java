@@ -8,7 +8,7 @@ import ca.carleton.magicrealm.Launcher;
 import ca.carleton.magicrealm.game.GameResult;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.MeleeSheet;
-import ca.carleton.magicrealm.network.AppServer;
+import ca.carleton.magicrealm.network.ServerNetwork;
 import ca.carleton.magicrealm.network.Message;
 import ca.carleton.magicrealm.network.ServerThread;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public class ServerController {
     // For lack of a better option, include it here too.
     private static final int SERVER_ID = 0;
 
-    private final AppServer networkConnection;
+    private final ServerNetwork networkConnection;
 
     private final TurnController turnController;
 
@@ -52,7 +52,7 @@ public class ServerController {
      */
     private int currentDay = 1;
 
-    public ServerController(final AppServer networkConnection, final int maxPlayers, final int maxDays) {
+    public ServerController(final ServerNetwork networkConnection, final int maxPlayers, final int maxDays) {
         LOG.info("Setting network connection...");
         this.networkConnection = networkConnection;
         LOG.info("Starting game setup...");
@@ -259,7 +259,7 @@ public class ServerController {
         return this.maxPlayers;
     }
 
-    public AppServer getNetworkConnection() {
+    public ServerNetwork getNetworkConnection() {
         return this.networkConnection;
     }
 }
