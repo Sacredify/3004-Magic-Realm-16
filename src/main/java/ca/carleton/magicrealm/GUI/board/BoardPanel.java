@@ -21,11 +21,9 @@ public class BoardPanel extends JLayeredPane {
 
     public static final int WINDOW_HEIGHT = 1200;
     public static final int WINDOW_WIDTH = 720;
-    public static final int TILE_X_OFFSET = 150;
-    public static final int TILE_DELTA_X = 300;
-    public static final int TILE_DELTA_Y = 85;
-    public static final int GAME_INFO_PANEL_WIDTH = 400;
-    public static final int GAME_INFO_PANEL_HEIGHT = 600;
+    public static final int TILE_X_OFFSET = 120;
+    public static final int TILE_DELTA_X = 240;
+    public static final int TILE_DELTA_Y = 68;
 
     public static final String CHARACTER_INFO_BUTTON_TEXT = "Character Info";
 

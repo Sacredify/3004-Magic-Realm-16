@@ -28,20 +28,20 @@ public class BoardServices {
     public static final int ORIGINAL_TILE_WIDTH = 500;
     public static final int ORIGINAL_TILE_HEIGHT = 430;
 
-    public static final int TILE_WIDTH = 200;
-    public static final int TILE_HEIGHT = 172;
+    public static final int TILE_WIDTH = 160;
+    public static final int TILE_HEIGHT = 138;
 
-    public static final int RESIZE_TILE_WIDTH = 226;
-    public static final int RESIZE_TILE_HEIGHT = 215;
+    public static final int RESIZE_TILE_WIDTH = 181;
+    public static final int RESIZE_TILE_HEIGHT = 172;
 
-    public static final int CHIT_WIDTH = 40;
-    public static final int CHIT_HEIGHT = 35;
+    public static final int CHIT_WIDTH = 32;
+    public static final int CHIT_HEIGHT = 28;
 
-    public static final double TILE_SCALEDOWN_MULTIPLIER_X = 2.5;
-    public static final double TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
+    public static final double TILE_SCALEDOWN_MULTIPLIER_X = 3.125;
+    public static final double TILE_SCALEDOWN_MULTIPLIER_Y = 3.125;
 
-    public static final double ROTATED_TILE_SCALEDOWN_MULTIPLIER_X = 2.21;
-    public static final double ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y = 2;
+    public static final double ROTATED_TILE_SCALEDOWN_MULTIPLIER_X = 2.7625;
+    public static final double ROTATED_TILE_SCALEDOWN_MULTIPLIER_Y = 2.5;
 
     public ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = this.getClass().getClassLoader().getResource(path);
