@@ -3,8 +3,12 @@ package ca.carleton.magicrealm.control;
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.Path;
+import ca.carleton.magicrealm.GUI.tile.TileType;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+import ca.carleton.magicrealm.entity.chit.ColoredChit;
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.game.DiceRoller;
 import org.slf4j.Logger;
@@ -27,32 +31,32 @@ public class Sunset {
 
     public static void doSunset(final BoardModel boardModel) {
         /** Set all prowling monsters to whatever clearing a nearby player is on **/
-        for (AbstractMonster abstractMonster : boardModel.getAbstractMonsters()) {
-            LOG.info("Checking {} to see if they will be moving...", abstractMonster);
-            if (abstractMonster.isProwling()) {
+        for (Denizen denizen : boardModel.getDenizens()) {
+            LOG.info("Checking {} to see if they will be moving...", denizen);
+            if (denizen.isProwling()) {
                 int roll = DiceRoller.rollOnce();
-                LOG.info("{} is prowling. Rolled {}.", abstractMonster, roll);
+                LOG.info("{} is prowling. Rolled {}.", denizen, roll);
 
                 if (roll > 4) {
                     LOG.info("Rolled > 4 and will move.");
-                    List<Clearing> possibleClearings = abstractMonster.getCurrentClearing().getAdjacentPaths().stream()
-                            .filter(path -> path.getToClearing().getParentTile() == abstractMonster.getCurrentClearing().getParentTile()).map(Path::getToClearing).collect(Collectors.toList());
+                    List<Clearing> possibleClearings = denizen.getCurrentClearing().getAdjacentPaths().stream()
+                            .filter(path -> path.getToClearing().getParentTile() == denizen.getCurrentClearing().getParentTile()).map(Path::getToClearing).collect(Collectors.toList());
 
                     int randomPathIndex = RANDOM.nextInt(possibleClearings.size());
-                    abstractMonster.getCurrentClearing().removeEntity(abstractMonster);
-                    abstractMonster.setCurrentClearing(possibleClearings.get(randomPathIndex));
-                    abstractMonster.getCurrentClearing().addEntity(abstractMonster);
+                    denizen.getCurrentClearing().removeEntity(denizen);
+                    denizen.setCurrentClearing(possibleClearings.get(randomPathIndex));
+                    denizen.getCurrentClearing().addEntity(denizen);
                 }
 
                 boolean isMovingToPlayer = false;
                 Clearing moveTarget = null;
-                LOG.info("Checking {} for player presence...", abstractMonster.getCurrentClearing().getParentTile());
-                for (Clearing clearing : abstractMonster.getCurrentClearing().getParentTile().getClearings()) {
+                LOG.info("Checking {} for player presence...", denizen.getCurrentClearing().getParentTile());
+                for (Clearing clearing : denizen.getCurrentClearing().getParentTile().getClearings()) {
                     for (final Entity entity : clearing.getEntities()) {
                         if (entity instanceof AbstractCharacter) {
                             isMovingToPlayer = true;
                             moveTarget = clearing;
-                            LOG.info("{} was on the same tile! Moving {} to their clearing. [{}]", entity, abstractMonster, clearing);
+                            LOG.info("{} was on the same tile! Moving {} to their clearing. [{}]", entity, denizen, clearing);
                             break;
                         }
                     }
@@ -60,15 +64,44 @@ public class Sunset {
 
                 if (isMovingToPlayer) {
                     // Remove self
-                    abstractMonster.getCurrentClearing().removeEntity(abstractMonster);
-                    abstractMonster.setCurrentClearing(moveTarget);
-                    moveTarget.getEntities().add(abstractMonster);
+                    denizen.getCurrentClearing().removeEntity(denizen);
+                    denizen.setCurrentClearing(moveTarget);
+                    moveTarget.getEntities().add(denizen);
                 } else {
                     LOG.info("No player was on the tile.");
                 }
 
             } else {
                 LOG.info("They are not prowling and will not move this turn.");
+            }
+        }
+
+        if (boardModel.getClearingOfDwelling(Dwelling.SMALL_FIRE) == null) {
+            /** Check if player has discovered any substitute chits **/
+            Clearing smallCampireClearing = boardModel.getClearingOfChit("SMOKE", TileType.WOODS);
+
+            // Check the small campire's tile
+            for (Clearing clearing : smallCampireClearing.getParentTile().getClearings()) {
+                if (!clearing.getEntities().stream().filter(entity -> entity instanceof AbstractCharacter).collect(Collectors.toList()).isEmpty()) {
+                    ColoredChit smokeChit = clearing.getParentTile().getChits().stream()
+                            .filter(chit -> chit.getDescription().equals("SMOKE")).collect(Collectors.toList()).get(0);
+                    smallCampireClearing.getParentTile().getChits().remove(smokeChit);
+                    smallCampireClearing.setDwelling(Dwelling.SMALL_FIRE);
+                }
+            }
+        }
+
+        if (boardModel.getClearingOfDwelling(Dwelling.LARGE_FIRE) == null) {
+            Clearing largeCampireClearing = boardModel.getClearingOfChit("STINK", TileType.WOODS);
+
+            for (Clearing clearing : largeCampireClearing.getParentTile().getClearings()) {
+                if (!clearing.getEntities().stream().filter(entity -> entity instanceof AbstractCharacter).collect(Collectors.toList()).isEmpty()) {
+                    ColoredChit stinkChit = clearing.getParentTile().getChits().stream()
+                            .filter(chit -> chit.getDescription().equals("STINK")).collect(Collectors.toList()).get(0);
+                    largeCampireClearing.getParentTile().getChits().remove(stinkChit);
+                    largeCampireClearing.setDwelling(Dwelling.SMALL_FIRE);
+                }
+
             }
         }
     }

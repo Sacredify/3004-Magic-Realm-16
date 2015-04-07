@@ -4,8 +4,11 @@ import ca.carleton.magicrealm.GUI.tile.AbstractTile;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.GUI.tile.impl.*;
+import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
+import ca.carleton.magicrealm.entity.chit.ChitColor;
+import ca.carleton.magicrealm.entity.chit.ColoredChit;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
@@ -15,7 +18,9 @@ import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import ca.carleton.magicrealm.game.combat.MeleeSheets;
 
 import java.io.Serializable;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +40,8 @@ public class BoardModel implements Serializable {
     private final ArrayList<Player> players = new ArrayList<Player>();
 
     private final ArrayList<AbstractMonster> abstractMonsters = new ArrayList<AbstractMonster>();
+
+    private final ArrayList<AbstractNative> abstractNatives = new ArrayList<>();
 
     private final MeleeSheets meleeSheets = new MeleeSheets();
 
@@ -334,6 +341,19 @@ public class BoardModel implements Serializable {
         return null;
     }
 
+    public Clearing getClearingOfChit(final String description, final TileType type) {
+        List<AbstractTile> tiles = this.getTilesOfType(type);
+
+        for (AbstractTile tile : tiles) {
+            for (ColoredChit chit : tile.getChits()) {
+                if (chit.getDescription().equals(description)) {
+                    return tile.getClearings()[tile.getClearings().length-1];
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Return all the tiles on the board.
      *
@@ -430,6 +450,17 @@ public class BoardModel implements Serializable {
 
     public ArrayList<AbstractMonster> getAbstractMonsters() {
         return this.abstractMonsters;
+    }
+
+    public ArrayList<AbstractNative> getAbstractNatives() {
+        return abstractNatives;
+    }
+
+    public ArrayList<Denizen> getDenizens() {
+        ArrayList<Denizen> denizens = new ArrayList<>();
+        denizens.addAll(this.abstractMonsters);
+        denizens.addAll(this.abstractNatives);
+        return denizens;
     }
 
     public MeleeSheet getMeleeSheet(final Player player) {
