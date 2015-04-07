@@ -335,6 +335,7 @@ public class ClientController {
         this.output.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(final WindowEvent e) {
+                writer.stopLogging = true;
                 timer.stop();
                 LOG.info("Ended log timer.");
             }

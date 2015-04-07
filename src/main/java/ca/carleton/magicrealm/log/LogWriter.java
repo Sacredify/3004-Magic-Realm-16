@@ -17,9 +17,13 @@ public class LogWriter extends AppenderSkeleton {
 
     private static final List<String> messages = new ArrayList<String>();
 
+    public boolean stopLogging;
+
     @Override
     protected void append(final LoggingEvent event) {
-      messages.add(event.getRenderedMessage());
+        if (!this.stopLogging) {
+            messages.add(event.getRenderedMessage());
+        }
     }
 
     @Override
