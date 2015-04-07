@@ -58,6 +58,8 @@ public class EndGame {
         final AbstractCharacter character = player.getCharacter();
 
         LOG.info("Starting end-game calculations for {}.", character);
+        LOG.info("Their distribution: --> gold: {} | notoriety: {} | fame: {} | treasure: {} | spells: {}.",
+                condition.getGold(), condition.getNotoriety(), condition.getFame(), condition.getGreatTreasuresCount(), condition.getSpellsCount());
 
         // values subtracted by the victory condition
         int gold = character.getCurrentGold() - 10 - (condition.getGold() * 30);

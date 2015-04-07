@@ -161,7 +161,7 @@ public class Combat {
                     final MeleeSheet targetSheet = boardModel.getMeleeSheet(target);
 
                     if (playerSheet.hasFought(target) || targetSheet.hasFought(playerSheet.getOwner())) {
-                        LOG.info("Assumption that entities can't fight the same thing twice. - Skipping fight of {} and {}.", playerSheet.getOwner(), targetSheet.getTarget());
+                        LOG.info("Assumption that entities can't fight the same thing twice. - Skipping fight of {} and {}.", playerSheet.getOwner(), targetSheet.getOwner());
                         continue;
                     }
 
@@ -177,7 +177,9 @@ public class Combat {
                             LOG.info("Because {} targeted {}, a native, checking to see if any other native of that group will help him...", player.getCharacter(), target);
 
                             final List<Entity> nativesHelping = boardModel.getClearingForPlayer(player).getEntities().stream()
-                                    .filter(entity -> entity instanceof AbstractNative && ((AbstractNative) entity).getFaction() == ((AbstractNative) target).getFaction())
+                                    .filter(entity -> entity instanceof AbstractNative
+                                            && ((AbstractNative) entity).getFaction() == ((AbstractNative) target).getFaction()
+                                            && !entity.equals(target))
                                     .collect(Collectors.toList());
 
                             nativesHelping.forEach(entity ->
@@ -187,7 +189,6 @@ public class Combat {
                                 LOG.info("{} is now targeting {}!", entity, player.getCharacter());
                             });
 
-                            LOG.info("{} natives who were in the same clearing will also be fighting!", nativesHelping);
                             // Assumption, we'll just add to the list of fighting entities to be resolved at will by the game.
                             entitiesFighting.addAll(nativesHelping);
                         }
@@ -208,7 +209,7 @@ public class Combat {
                             // Monsters only attack players.
                             final Player playerTarget = boardModel.getPlayerForCharacter((AbstractCharacter) monsterSheet.getTarget());
 
-                            if (!monsterSheet.hasFought(playerTarget.getCharacter())) {
+                            if (!monsterSheet.hasFought(playerTarget.getCharacter()) && player.equals(playerTarget)) {
                                 if (!monsterSheet.getTarget().isDead()) {
                                     Combat.doCombat(boardModel, playerTarget, (Denizen) monster);
                                     combatsDone[0]++;
@@ -216,7 +217,11 @@ public class Combat {
                                     LOG.info("Skipping combat because {} died in a previous combat.", monsterSheet.getTarget());
                                 }
                             } else {
-                                LOG.info("Assumption that entities can't fight the same thing twice. - Skipping fight of {} and {}.", monster, playerTarget.getCharacter());
+                                if (player.equals(playerTarget)) {
+                                    LOG.info("Assumption that entities can't fight the same thing twice. - Skipping fight of {} and {}.", monster, playerTarget.getCharacter());
+                                } else {
+                                    LOG.info("Skipping {} because they weren't assigned to the player currently being resolved.", monster);
+                                }
                             }
                         });
 
