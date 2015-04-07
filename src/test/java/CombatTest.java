@@ -11,6 +11,7 @@ import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
+import ca.carleton.magicrealm.entity.chit.GoldChit;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.monster.Dragon;
 import ca.carleton.magicrealm.entity.monster.Spider;
@@ -25,8 +26,7 @@ import ca.carleton.magicrealm.game.combat.MeleeSheet;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.combat.chit.ActionType;
 import ca.carleton.magicrealm.item.ItemInformation;
-import ca.carleton.magicrealm.item.armor.SuitOfArmor;
-import ca.carleton.magicrealm.item.armor.TremendousArmor;
+import ca.carleton.magicrealm.item.armor.*;
 import ca.carleton.magicrealm.item.weapon.*;
 import org.junit.Test;
 
@@ -34,6 +34,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -638,5 +639,53 @@ public class CombatTest {
 
         // Number of combats = all the order natives.
         assertThat(Combat.process(Arrays.asList(player), boardModel), is(4));
+    }
+
+    @Test
+    public void canDropTreasurePileWhenDead() {
+        // Create the board and player
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player attacker = new Player();
+        attacker.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        boardModel.getStartingLocation().addEntity(attacker.getCharacter());
+
+        final Player defender = new Player();
+        defender.setCharacter(CharacterFactory.createCharacter(CharacterType.CAPTAIN));
+        boardModel.getStartingLocation().addEntity(defender.getCharacter());
+
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(attacker);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(attacker);
+        attackerSheet.setAttackWeapon(new TruesteelSword());
+        attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setAttackDirection(AttackDirection.THRUST);
+        attackerSheet.setManeuver(Maneuver.CHARGE);
+        attackerSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setArmor(new SuitOfArmor());
+
+        // Defender melee sheet
+        boardModel.createNewMeleeSheet(defender);
+        final MeleeSheet defenderSheet = boardModel.getMeleeSheet(defender);
+        defenderSheet.setAttackWeapon(new Crossbow());
+        defenderSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        defenderSheet.setAttackDirection(AttackDirection.THRUST);
+        defenderSheet.setManeuver(Maneuver.CHARGE);
+        defenderSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        defenderSheet.setArmor(null);
+
+        Combat.doCombat(boardModel, attacker, defender);
+
+        // check they did die.
+        assertThat(defender.getRestarts(), is(1));
+
+        // check gold pile stuff here.
+        assertThat(boardModel.getStartingLocation().getParentTile().getChits().size(), is(1));
+        assertThat(boardModel.getStartingLocation().getParentTile().getChits().get(0), is(instanceOf(GoldChit.class)));
+
+        final GoldChit theChit = (GoldChit) boardModel.getStartingLocation().getParentTile().getChits().get(0);
+        assertThat(theChit.getTreasure().size(), is(4));
+        assertThat(theChit.getTreasure(), containsInAnyOrder(new ShortSword(), new Helmet(), new BreastPlate(), new Shield()));
     }
 }

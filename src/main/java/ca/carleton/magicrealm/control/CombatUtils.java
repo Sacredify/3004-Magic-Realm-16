@@ -7,8 +7,8 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.Relationship;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
+import ca.carleton.magicrealm.entity.chit.GoldChit;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
-import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.entity.natives.NativeFaction;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.Harm;
@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -68,16 +67,6 @@ public class CombatUtils {
         return toReturn;
     }
 
-    public static void assignNativeFactionsToPlayer(final Player currentPlayer, final Map<NativeFaction, Boolean> fightingNatives, final Map<Entity, Entity> battleAssignments, final Clearing combatSite) {
-        fightingNatives.entrySet().stream().filter(Map.Entry::getValue).forEach(entry -> combatSite.getEntities().stream().filter(entity -> entity instanceof AbstractNative).forEach(entity -> {
-            final AbstractNative abstractNative = (AbstractNative) entity;
-            if (abstractNative.getFaction() == entry.getKey()) {
-                battleAssignments.put(currentPlayer.getCharacter(), entity);
-                LOG.info("Added {} battling {} to assignments.", entity, currentPlayer.getCharacter());
-            }
-        }));
-    }
-
     /**
      * Handle logic for when a player kills another.
      *
@@ -86,9 +75,7 @@ public class CombatUtils {
      * @param boardModel the board.
      */
     public static void resolvePlayerKilledAnother(final Player killer, final Player killed, final BoardModel boardModel) {
-        LOG.info("Transferring items, gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
-        killer.getCharacter().getItems().addAll(killed.getCharacter().getItems());
-        killed.getCharacter().getItems().clear();
+        LOG.info("Transferring gold, notoriety from {} to {}.", killer.getCharacter(), killed.getCharacter());
         killer.getCharacter().addGold(killed.getCharacter().getCurrentGold());
         killed.getCharacter().addGold(-killed.getCharacter().getCurrentGold());
         killer.getCharacter().addNotoriety(killed.getCharacter().getCurrentNotoriety());
@@ -103,6 +90,14 @@ public class CombatUtils {
      * @param dead  the dead player.
      */
     public static void resolveDeadPlayer(final BoardModel board, final Player dead) {
+
+        LOG.info("MINIMAL SUPPORT - Leaving a treasure pile of the dead player's belongings...");
+        GoldChit treasureChit = new GoldChit(Integer.parseInt(board.getClearingForPlayer(dead).getName()), String.format("%s's Treasure Pile.", dead.getCharacter()));
+        dead.getCharacter().getItems().forEach(treasureChit::addTreasure);
+        board.getClearingForPlayer(dead).getParentTile().addChit(treasureChit);
+        LOG.info("Added a player belongings treasure pile to {} - clearing {}.", board.getClearingForPlayer(dead), treasureChit.getClearingNumber());
+        LOG.info("Pile contents: {}.", treasureChit.getTreasure());
+
         LOG.info("AUTO REINCARNATION. Giving player a new start at the inn.");
         LOG.info("Creating a new character and Setting location to their starting location ({}).", dead.getStartingLocation());
         board.getClearingForPlayer(dead).removeEntity(dead.getCharacter());
@@ -193,6 +188,5 @@ public class CombatUtils {
         }
         return monstersFighting;
     }
-
 
 }

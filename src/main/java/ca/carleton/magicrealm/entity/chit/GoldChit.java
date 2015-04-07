@@ -1,7 +1,7 @@
 package ca.carleton.magicrealm.entity.chit;
 
 import ca.carleton.magicrealm.GUI.tile.Discoverable;
-import ca.carleton.magicrealm.item.treasure.Treasure;
+import ca.carleton.magicrealm.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class GoldChit extends ColoredChit implements Discoverable {
 
     private static final long serialVersionUID = 345563872761671359L;
 
-    private List<Treasure> treasure = new ArrayList<Treasure>();
+    private final List<Item> treasures = new ArrayList<Item>();
 
     public GoldChit(final int clearingNumber, final String treasureSiteName) {
         this.clearingNumber = clearingNumber;
@@ -26,12 +26,12 @@ public class GoldChit extends ColoredChit implements Discoverable {
 
     }
 
-    public void addTreasure(Treasure t){
-        this.treasure.add(t);
+    public void addTreasure(final Item item){
+        this.treasures.add(item);
     }
 
-    public List<Treasure> getTreasure() {
-        return this.treasure;
+    public List<Item> getTreasure() {
+        return this.treasures;
     }
 
     @Override
