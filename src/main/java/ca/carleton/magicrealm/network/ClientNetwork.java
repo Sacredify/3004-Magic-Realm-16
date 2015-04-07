@@ -104,12 +104,13 @@ public class ClientNetwork implements Runnable {
             try {
                 this.clientController.handleMessage((Message) this.objInputStream.readObject());
             } catch (final IOException exception) {
-                LOG.error("Listening error...", exception);
+                LOG.error("Error reading input from the server - Server may have terminated. Message --> {}", exception.getMessage());
                 this.done = true;
             } catch (ClassNotFoundException e) {
                 LOG.error("If this happens, I'll eat my hat.", e);
             }
         }
+        this.clientController.shutDown();
         LOG.info("Client networking thread completed.");
     }
 }

@@ -2,17 +2,16 @@ package ca.carleton.magicrealm.control;
 
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.tile.Clearing;
+import ca.carleton.magicrealm.GUI.tile.Path;
 import ca.carleton.magicrealm.entity.Denizen;
 import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
+import ca.carleton.magicrealm.game.DiceRoller;
 import ca.carleton.magicrealm.game.Player;
-import ca.carleton.magicrealm.game.combat.AttackDirection;
-import ca.carleton.magicrealm.game.combat.Harm;
-import ca.carleton.magicrealm.game.combat.Maneuver;
-import ca.carleton.magicrealm.game.combat.MeleeSheet;
+import ca.carleton.magicrealm.game.combat.*;
 import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.combat.chit.ActionType;
 import ca.carleton.magicrealm.game.table.Table;
@@ -57,6 +56,11 @@ public class Combat {
         JOptionPane.showMessageDialog(parent, "Now starting combat functions. Please fill out your melee sheet with the following dialogs.", "Combat", JOptionPane.INFORMATION_MESSAGE);
 
         try {
+            LOG.info("Starting encounter step.");
+            if (!doEncounterStep(boardModel, player, parent)) {
+                return;
+            }
+
             LOG.info("Starting attack options.");
             LOG.info("Showing target select.");
             final List<Object> potentialTargets = clearingOfCombat.getEntities().stream().filter(entity -> !entity.equals(player.getCharacter())).collect(Collectors.toList());
@@ -91,7 +95,8 @@ public class Combat {
             int numberOfAsterisksRemaining = 2;
 
             LOG.info("Showing fight chit select.");
-            final List<ActionChit> fightChits = player.getCharacter().getActionChits().stream().filter(chit -> chit.getAction() == ActionType.FIGHT).collect(Collectors.toList());
+            final List<ActionChit> fightChits = player.getCharacter().getActionChits().stream().filter(chit -> chit.getAction() == ActionType.FIGHT
+                    && !chit.isFatigued() && !chit.isWounded()).collect(Collectors.toList());
             final ActionChit fightChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 4: Select a fight chit to attack:", "Combat",
                     JOptionPane.QUESTION_MESSAGE, null, fightChits.toArray(), fightChits.get(0));
             playerSheet.setAttackChit(fightChit);
@@ -110,7 +115,7 @@ public class Combat {
             final int finalNumberOfAsterisksRemaining = numberOfAsterisksRemaining;
             final List<ActionChit> moveChits = player.getCharacter().getActionChits().stream().filter(
                     chit -> (chit.getAction() == ActionType.MOVE || chit.getAction() == ActionType.DUCK) && finalNumberOfAsterisksRemaining - chit.getFatigueAsterisks() >= 0
-            ).collect(Collectors.toList());
+                            && !chit.isFatigued() && !chit.isWounded()).collect(Collectors.toList());
             final ActionChit moveChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 6: Select a move chit to dodge:", "Combat",
                     JOptionPane.QUESTION_MESSAGE, null, moveChits.toArray(), moveChits.get(0));
             playerSheet.setManeuverChit(moveChit);
@@ -136,6 +141,80 @@ public class Combat {
     }
 
     /**
+     * Logic for the encounter step.
+     *
+     * @param boardModel the board.
+     * @param player     the player.
+     * @param parent     the parent frame.
+     * @return whether or not to continue to combat.
+     */
+    private static boolean doEncounterStep(final BoardModel boardModel, final Player player, final Component parent) {
+
+        final MeleeSheet playerSheet = boardModel.getMeleeSheet(player);
+
+        final EncounterStepOption choice = (EncounterStepOption) JOptionPane.showInputDialog(parent, "Encounter Step: Select an activity.", "Combat",
+                JOptionPane.QUESTION_MESSAGE, null, EncounterStepOption.values(), EncounterStepOption.values()[0]);
+
+        if (choice == EncounterStepOption.RUN_AWAY) {
+            LOG.info("Chose to run away.");
+
+            final List<ActionChit> moveChits = player.getCharacter().getActionChits().stream()
+                    .filter(chit -> chit.getAction() == ActionType.MOVE)
+                    .collect(Collectors.toList());
+
+            // If they have no available move chits.
+            if (moveChits.isEmpty()) {
+                LOG.info("Player has no move chits to play.");
+                JOptionPane.showMessageDialog(parent, "You have no available move chits! Sorry!", "Combat", JOptionPane.INFORMATION_MESSAGE);
+                return true;
+            } else {
+                final ActionChit moveChit = (ActionChit) JOptionPane.showInputDialog(parent, "Encounter Step: Select a move chit to run away with.", "Combat",
+                        JOptionPane.QUESTION_MESSAGE, null, moveChits.toArray(), moveChits.get(0));
+                if (moveChit == null) {
+                    LOG.info("Player selected nothing...");
+                    return true;
+                } else {
+                    LOG.info("Player is running away! Setting their status to running away and ending combat.");
+                    playerSheet.setRunningAway(true);
+                    return false;
+                }
+            }
+        } else if (choice == EncounterStepOption.ALERT_WEAPON) {
+            final List<ActionChit> fightChits = player.getCharacter().getActionChits().stream()
+                    .filter(chit -> chit.getAction() == ActionType.FIGHT)
+                    .collect(Collectors.toList());
+
+            // If they have no available move chits.
+            if (fightChits.isEmpty()) {
+                LOG.info("Player has no fight chits to play.");
+                JOptionPane.showMessageDialog(parent, "You have no available fight chits! Sorry!", "Combat", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                final ActionChit fightChit = (ActionChit) JOptionPane.showInputDialog(parent, "Encounter Step: Select a fight chit to alert a weapon with.", "Combat",
+                        JOptionPane.QUESTION_MESSAGE, null, fightChits.toArray(), fightChits.get(0));
+                if (fightChit != null) {
+                    final List<Item> weapons = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractWeapon).collect(Collectors.toList());
+                    // Handle the possibility they don't have any weapons.
+                    final List<Object> weaponsWithNone = new ArrayList<Object>(weapons);
+                    weaponsWithNone.add("None (dagger)");
+                    final Object weapon = JOptionPane.showInputDialog(parent, "Combat Step 3: Select a weapon:", "Combat",
+                            JOptionPane.QUESTION_MESSAGE, null, weaponsWithNone.toArray(), weaponsWithNone.get(0));
+                    // Set the weapon if they actually chose a weapon.
+                    if (!(weapon instanceof String)) {
+                        ((AbstractWeapon) weapon).setAlert(true);
+                        LOG.info("Alerted {} successfully.", weapon);
+                    } else {
+                        LOG.info("Either player selected nothing or chose not to. Alerting nothing.");
+                    }
+                }
+            }
+            return true;
+        } else {
+            LOG.info("Player decided to do nothing for their encounter step... continuing combat.");
+            return true;
+        }
+    }
+
+    /**
      * Process combat on the server side.
      *
      * @param players    the players.
@@ -157,7 +236,19 @@ public class Combat {
                 final Entity target = playerSheet.getTarget();
                 if (target == null) {
                     LOG.info("Player opted to not fight. Skipping their combat.");
+
+                    if (playerSheet.isRunningAway()) {
+                        LOG.info("Player is running away today.");
+                        final List<Path> potentialExits = boardModel.getClearingForPlayer(player).getAdjacentPaths();
+                        final Clearing moveTarget = potentialExits.get(DiceRoller.getInstance().nextInt(potentialExits.size())).getToClearing();
+                        LOG.info("Moving {} to {}.", player.getCharacter(), moveTarget);
+                        boardModel.getClearingForPlayer(player).getEntities().remove(player.getCharacter());
+                        moveTarget.addEntity(player.getCharacter());
+                        LOG.info("Player moved successfully. Starting combat of next player.");
+                        continue;
+                    }
                 } else {
+
                     final MeleeSheet targetSheet = boardModel.getMeleeSheet(target);
 
                     if (playerSheet.hasFought(target) || targetSheet.hasFought(playerSheet.getOwner())) {
@@ -166,35 +257,45 @@ public class Combat {
                     }
 
                     if (target instanceof AbstractCharacter) {
-                        // Combat between two characters
-                        final Player otherPlayer = boardModel.getPlayerForCharacter((AbstractCharacter) target);
-                        Combat.doCombat(boardModel, player, otherPlayer);
-                        combatsDone[0]++;
-                    } else if (target instanceof Denizen) {
-                        // Combat between a character and a native or monster.
-
-                        if (target instanceof AbstractNative) {
-                            LOG.info("Because {} targeted {}, a native, checking to see if any other native of that group will help him...", player.getCharacter(), target);
-
-                            final List<Entity> nativesHelping = boardModel.getClearingForPlayer(player).getEntities().stream()
-                                    .filter(entity -> entity instanceof AbstractNative
-                                            && ((AbstractNative) entity).getFaction() == ((AbstractNative) target).getFaction()
-                                            && !entity.equals(target))
-                                    .collect(Collectors.toList());
-
-                            nativesHelping.forEach(entity ->
-                            {
-                                final MeleeSheet sheet = boardModel.getMeleeSheet(entity);
-                                sheet.setTarget(player.getCharacter());
-                                LOG.info("{} is now targeting {}!", entity, player.getCharacter());
-                            });
-
-                            // Assumption, we'll just add to the list of fighting entities to be resolved at will by the game.
-                            entitiesFighting.addAll(nativesHelping);
+                        // Check they are in same clearing.
+                        if (!boardModel.getClearingForPlayer(player).equals(boardModel.getClearingForCharacter((AbstractCharacter) target))) {
+                            LOG.info("{} and {} are not in the same clearing anymore! Combat skipped. [May have run away]", player.getCharacter(), target);
+                        } else {
+                            // Combat between two characters
+                            final Player otherPlayer = boardModel.getPlayerForCharacter((AbstractCharacter) target);
+                            Combat.doCombat(boardModel, player, otherPlayer);
+                            combatsDone[0]++;
                         }
+                    } else if (target instanceof Denizen) {
 
-                        Combat.doCombat(boardModel, player, (Denizen) target);
-                        combatsDone[0]++;
+                        // Check they are in same clearing.
+                        if (!boardModel.getClearingForPlayer(player).equals(((Denizen) target).getCurrentClearing())) {
+                            LOG.info("{} and {} are not in the same clearing anymore! Combat skipped. [May have run away]", player.getCharacter(), target);
+                        } else {
+                            // Combat between a character and a native or monster.
+                            if (target instanceof AbstractNative) {
+                                LOG.info("Because {} targeted {}, a native, checking to see if any other native of that group will help him...", player.getCharacter(), target);
+
+                                final List<Entity> nativesHelping = boardModel.getClearingForPlayer(player).getEntities().stream()
+                                        .filter(entity -> entity instanceof AbstractNative
+                                                && ((AbstractNative) entity).getFaction() == ((AbstractNative) target).getFaction()
+                                                && !entity.equals(target))
+                                        .collect(Collectors.toList());
+
+                                nativesHelping.forEach(entity ->
+                                {
+                                    final MeleeSheet sheet = boardModel.getMeleeSheet(entity);
+                                    sheet.setTarget(player.getCharacter());
+                                    LOG.info("{} is now targeting {}!", entity, player.getCharacter());
+                                });
+
+                                // Assumption, we'll just add to the list of fighting entities to be resolved at will by the game.
+                                entitiesFighting.addAll(nativesHelping);
+                            }
+
+                            Combat.doCombat(boardModel, player, (Denizen) target);
+                            combatsDone[0]++;
+                        }
                     }
                 }
                 LOG.info("Now resolving combat for any monster currently in the clearing with {}.", player.getCharacter());
@@ -231,7 +332,7 @@ public class Combat {
         }
 
         // After combat is done
-        LOG.info("Resetting melee sheets.");
+        LOG.info("All combats complete. Resetting melee sheets.");
         boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
         LOG.info("Done combat for the day. Combats resolved (not rounds - unique entities targeting another unique): {}.", combatsDone);
         return combatsDone[0];
@@ -317,7 +418,7 @@ public class Combat {
             denizenWeaponLength = denizenSheet.getAttackWeapon().getLength();
         }
 
-        LOG.info("{} is using {}. Weapon length: {}.", playerSheet.getOwner(), playerSheet.getAttackWeapon(), playerSheet.getAttackWeapon().getLength());
+        LOG.info("{} is using {}. Weapon length: {}. Alert? {}", playerSheet.getOwner(), playerSheet.getAttackWeapon(), playerSheet.getAttackWeapon().getLength(), playerSheet.getAttackWeapon().isAlert());
         LOG.info("{} is using {}. Weapon length: {}.", denizenSheet.getOwner(), denizenSheet.getAttackWeapon(), denizenSheet.getAttackWeapon().getLength());
 
         // Player one goes first if their weapon is longer...
@@ -436,7 +537,9 @@ public class Combat {
     public static void cleanup(final Player player) {
         player.getCharacter().setWounded(false);
         player.getCharacter().setFatigued(false);
-        LOG.info("Cleaned up {} after combat.", player.getCharacter());
+        player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractWeapon)
+                .forEach(weapon -> ((AbstractWeapon) weapon).setAlert(false));
+        LOG.info("Cleaned up {} after combat. Weapons un-alerted, wounds and fatigue reset.", player.getCharacter());
     }
 
     /**
@@ -494,10 +597,6 @@ public class Combat {
             } else {
                 LOG.info("The attack was not enough to hurt the denizen.");
             }
-
-            // Weapons automatically get un-alerted.
-            weapon.setAlert(false);
-            LOG.info("Weapon un-alerted.");
 
         } else {
             LOG.info("Attacker missed. Ending round of combat.");
@@ -681,11 +780,6 @@ public class Combat {
                     LOG.info("Player took a wound and must wound a chit.");
                 }
             }
-
-            // Weapons automatically get un-alerted.
-            weapon.setAlert(false);
-            LOG.info("Weapon un-alerted.");
-
         } else {
             LOG.info("Attacker missed. Ending round of combat.");
         }

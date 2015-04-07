@@ -21,8 +21,6 @@ public class MeleeSheet implements Serializable {
 
     private static final long serialVersionUID = 2502936258541118790L;
 
-    private static final int NUMBER_ATTACKERS = 3;
-
     private Entity entity;
 
     private Entity target;
@@ -46,6 +44,8 @@ public class MeleeSheet implements Serializable {
 
     // Armor. Can only use "active" armor.
     private AbstractArmor armor;
+
+    private boolean runningAway;
 
     // Whether or not they have already fought (to prevent multiple engagements... say A --> B and B --> A on their sheets.
     private final List<Entity> alreadyFought = new ArrayList<Entity>();
@@ -71,6 +71,7 @@ public class MeleeSheet implements Serializable {
             this.attackWeapon = null;
             this.attackDirection = null;
             this.maneuver = null;
+            this.runningAway = false;
         }
         this.target = null;
         this.alreadyFought.clear();
@@ -194,5 +195,13 @@ public class MeleeSheet implements Serializable {
 
     public void markAlreadyFought(final Entity entity) {
         this.alreadyFought.add(entity);
+    }
+
+    public boolean isRunningAway() {
+        return runningAway;
+    }
+
+    public void setRunningAway(final boolean runningAway) {
+        this.runningAway = runningAway;
     }
 }

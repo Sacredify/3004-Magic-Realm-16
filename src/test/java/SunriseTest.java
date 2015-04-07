@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Tony on 06/04/2015.
  */
-public class DaylightTest {
+public class SunriseTest {
 
     @Test
     public void canMoveDenizensBackAtEndOfWeek() {

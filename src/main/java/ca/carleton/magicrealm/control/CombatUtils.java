@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -139,7 +140,7 @@ public class CombatUtils {
     /**
      * Check to see if the player is wounded or fatigued.
      *
-     * @param board the board.
+     * @param board  the board.
      * @param player the player.
      */
     public static void checkFatigueAndWounds(final BoardModel board, final Player player) {
@@ -165,14 +166,14 @@ public class CombatUtils {
      * @param board      the board.
      * @param characters the characters in-game.
      */
-    public static java.util.List<Entity> getMonstersFightingToday(final BoardModel board, final java.util.List<AbstractCharacter> characters) {
-        final java.util.List<Entity> monstersFighting = new ArrayList<>();
+    public static List<Entity> getMonstersFightingToday(final BoardModel board, final List<AbstractCharacter> characters) {
+        final List<Entity> monstersFighting = new ArrayList<>();
 
         // Assumption for now that 2 or more people aren't in the same clearing.
         for (final AbstractCharacter character : characters) {
             if (!character.isHidden()) {
                 LOG.info("{} isn't hidden! Any monsters in the clearing will attack.", character);
-                final java.util.List<Entity> monsters = board.getClearingForCharacter(character).getEntities().stream()
+                final List<Entity> monsters = board.getClearingForCharacter(character).getEntities().stream()
                         .filter(entity -> entity instanceof AbstractMonster).collect(Collectors.toList());
 
                 monsters.stream().forEach(monster -> {
@@ -188,5 +189,4 @@ public class CombatUtils {
         }
         return monstersFighting;
     }
-
 }

@@ -74,8 +74,28 @@ public class PhaseSelectorMenu extends JFrame {
      * Called when done.
      */
     public void disposeWindow() {
+
+
         this.dispose();
         this.controller.doneEnteringPhasesForDay();
+    }
+
+    @Override
+    public void dispose() {
+        LOG.info("Disposing child frames...");
+        if (this.moveSelectionMenu != null) {
+            this.moveSelectionMenu.dispose();
+        }
+        if (this.tradeSelectionMenu != null) {
+            this.tradeSelectionMenu.dispose();
+        }
+        if (this.alertSelectionMenu != null) {
+            this.alertSelectionMenu.dispose();
+        }
+        if (this.searchSelectionMenu != null) {
+            this.searchSelectionMenu.dispose();
+        }
+        super.dispose();
     }
 
     public ActionListener createActionListenerForPhaseSelectButton() {
