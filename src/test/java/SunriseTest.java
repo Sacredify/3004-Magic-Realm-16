@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by Tony on 06/04/2015.
  */
-public class DaylightTest {
+public class SunriseTest {
 
     @Test
     public void canMoveDenizensBackAtEndOfWeek() {

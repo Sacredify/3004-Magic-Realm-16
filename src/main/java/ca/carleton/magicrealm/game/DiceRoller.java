@@ -39,4 +39,7 @@ public final class DiceRoller {
         }
     }
 
+    public static Random getInstance() {
+        return random;
+    }
 }

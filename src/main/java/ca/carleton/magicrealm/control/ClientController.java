@@ -39,9 +39,11 @@ public class ClientController {
 
     private final BoardWindow boardWindow;
 
-    private BoardModel boardModel;
-
     private CharacterCreateMenu characterCreateMenu;
+
+    private PhaseSelectorMenu phaseSelectorMenu;
+
+    private BoardModel boardModel;
 
     private Player currentPlayer;
 
@@ -51,7 +53,7 @@ public class ClientController {
 
     private final List<AbstractPhase> recordedPhasesForDay = new ArrayList<AbstractPhase>();
 
-    private final List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));
+    private final List<CharacterType> availableCharacters = new ArrayList<CharacterType>(Arrays.asList(CharacterType.values()));;
 
     public ClientController() {
         this.boardWindow = new BoardWindow();
@@ -126,8 +128,8 @@ public class ClientController {
      */
     private void selectPhasesForDay() {
         LOG.info("Displayed birdsong action menu.");
-        new PhaseSelectorMenu(this.currentPlayer, this.recordedPhasesForDay, PhaseUtils.getNumberOfPhasesForPlayer(this.currentPlayer, this.boardModel), this).setVisible(true);
-
+        this.phaseSelectorMenu = new PhaseSelectorMenu(this.currentPlayer, this.recordedPhasesForDay, PhaseUtils.getNumberOfPhasesForPlayer(this.currentPlayer, this.boardModel), this);
+        this.phaseSelectorMenu.setVisible(true);
     }
 
     /**
@@ -249,11 +251,7 @@ public class ClientController {
                 JOptionPane.showMessageDialog(this.boardWindow, "The server has reported game over, but you lost (< 0 points). Sorry, better luck next time!");
                 break;
         }
-        LOG.info("Starting shutdown operations...");
-        this.networkConnection.stop();
-        this.output.dispose();
-        this.boardWindow.dispose();
-        LOG.info("Done - Client exiting.");
+        this.shutDown();
     }
 
     /**
@@ -366,5 +364,22 @@ public class ClientController {
     public void setNetworkConnection(ClientNetwork nC) {
         this.networkConnection = nC;
         LOG.info("Set controller network connection successfully. Waiting for server to send game start...");
+    }
+
+    /**
+     * Called if necessary to shutdown gracefully.
+     */
+    public void shutDown() {
+        LOG.info("Starting shutdown operations...");
+        this.networkConnection.stop();
+        this.output.dispose();
+        this.boardWindow.dispose();
+        if (this.characterCreateMenu != null) {
+            this.characterCreateMenu.dispose();
+        }
+        if (this.phaseSelectorMenu != null) {
+            this.phaseSelectorMenu.dispose();
+        }
+        LOG.info("Done - Client exiting.");
     }
 }
