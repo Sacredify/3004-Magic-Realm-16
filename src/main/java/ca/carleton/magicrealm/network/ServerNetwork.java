@@ -120,6 +120,9 @@ public class ServerNetwork implements Runnable {
             LOG.error("Error closing thread!", exception);
         }
         LOG.info("Removed thread. Remaining players: {}", this.clientCount);
+        if (this.clientCount == 0) {
+            LOG.info("All clients disconnected. Server will now exit.");
+        }
     }
 
     /**
