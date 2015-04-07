@@ -7,6 +7,7 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.character.AbstractCharacter;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
+import ca.carleton.magicrealm.entity.natives.AbstractNative;
 import ca.carleton.magicrealm.game.Player;
 import ca.carleton.magicrealm.game.combat.AttackDirection;
 import ca.carleton.magicrealm.game.combat.Harm;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -143,7 +145,8 @@ public class Combat {
     public static int process(final List<Player> players, final BoardModel boardModel) {
 
         LOG.info("Starting simplified encounter step - assigning monsters to players in the same clearing.");
-        final List<Entity> monstersWhoWillFight = CombatUtils.getMonstersFightingToday(boardModel, players.stream().map(Player::getCharacter).collect(Collectors.toList()));
+        final List<Entity> entitiesFighting = CombatUtils.getMonstersFightingToday(boardModel, players.stream().map(Player::getCharacter).collect(Collectors.toList()));
+
         //array because lambdas don't like non final variables.
         final int[] combatsDone = new int[1];
 
@@ -169,13 +172,35 @@ public class Combat {
                         combatsDone[0]++;
                     } else if (target instanceof Denizen) {
                         // Combat between a character and a native or monster.
+
+                        if (target instanceof AbstractNative) {
+                            LOG.info("Because {} targeted {}, a native, checking to see if any other native of that group will help him...", player.getCharacter(), target);
+
+                            final List<Entity> nativesHelping = boardModel.getClearingForPlayer(player).getEntities().stream()
+                                    .filter(entity -> entity instanceof AbstractNative && ((AbstractNative) entity).getFaction() == ((AbstractNative) target).getFaction())
+                                    .collect(Collectors.toList());
+
+                            nativesHelping.forEach(entity ->
+                            {
+                                final MeleeSheet sheet = boardModel.getMeleeSheet(entity);
+                                sheet.setTarget(player.getCharacter());
+                                LOG.info("{} is now targeting {}!", entity, player.getCharacter());
+                            });
+
+                            LOG.info("{} natives who were in the same clearing will also be fighting!", nativesHelping);
+                            // Assumption, we'll just add to the list of fighting entities to be resolved at will by the game.
+                            entitiesFighting.addAll(nativesHelping);
+                        }
+
                         Combat.doCombat(boardModel, player, (Denizen) target);
                         combatsDone[0]++;
                     }
                 }
                 LOG.info("Now resolving combat for any monster currently in the clearing with {}.", player.getCharacter());
+                LOG.info("Shuffling for a sense of randomness...");
+                Collections.shuffle(entitiesFighting);
                 // This should be done in order of attack times, but honestly, who really cares. More work for basically the same effect.
-                monstersWhoWillFight.stream()
+                entitiesFighting.stream()
                         .filter(monster -> ((Denizen) monster).getCurrentClearing().equals(boardModel.getClearingForPlayer(player)))
                         .forEach(monster -> {
                             LOG.info("{} is trying to fight!.", monster);
@@ -184,8 +209,12 @@ public class Combat {
                             final Player playerTarget = boardModel.getPlayerForCharacter((AbstractCharacter) monsterSheet.getTarget());
 
                             if (!monsterSheet.hasFought(playerTarget.getCharacter())) {
-                                Combat.doCombat(boardModel, playerTarget, (Denizen) monster);
-                                combatsDone[0]++;
+                                if (!monsterSheet.getTarget().isDead()) {
+                                    Combat.doCombat(boardModel, playerTarget, (Denizen) monster);
+                                    combatsDone[0]++;
+                                } else {
+                                    LOG.info("Skipping combat because {} died in a previous combat.", monsterSheet.getTarget());
+                                }
                             } else {
                                 LOG.info("Assumption that entities can't fight the same thing twice. - Skipping fight of {} and {}.", monster, playerTarget.getCharacter());
                             }

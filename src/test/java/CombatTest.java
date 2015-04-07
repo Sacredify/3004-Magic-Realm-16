@@ -1,5 +1,6 @@
 import ca.carleton.magicrealm.GUI.board.BoardModel;
 import ca.carleton.magicrealm.GUI.board.ChitBuilder;
+import ca.carleton.magicrealm.GUI.board.EntityBuilder;
 import ca.carleton.magicrealm.GUI.tile.TileType;
 import ca.carleton.magicrealm.control.Combat;
 import ca.carleton.magicrealm.control.CombatUtils;
@@ -9,6 +10,7 @@ import ca.carleton.magicrealm.entity.Entity;
 import ca.carleton.magicrealm.entity.EntityInformation;
 import ca.carleton.magicrealm.entity.character.CharacterFactory;
 import ca.carleton.magicrealm.entity.character.CharacterType;
+import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.entity.monster.AbstractMonster;
 import ca.carleton.magicrealm.entity.monster.Dragon;
 import ca.carleton.magicrealm.entity.monster.Spider;
@@ -24,6 +26,7 @@ import ca.carleton.magicrealm.game.combat.chit.ActionChit;
 import ca.carleton.magicrealm.game.combat.chit.ActionType;
 import ca.carleton.magicrealm.item.ItemInformation;
 import ca.carleton.magicrealm.item.armor.SuitOfArmor;
+import ca.carleton.magicrealm.item.armor.TremendousArmor;
 import ca.carleton.magicrealm.item.weapon.*;
 import org.junit.Test;
 
@@ -565,5 +568,75 @@ public class CombatTest {
         // Monster moves to clearing and then we start combat.
         Sunset.doSunset(boardModel);
         assertThat(Combat.process(Arrays.asList(player), boardModel), is(1));
+    }
+
+    @Test
+    public void canHiddenPreventMonstersAttacking() {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+
+        final Player player = new Player();
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        player.getCharacter().setHidden(true);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[0].addEntity(player.getCharacter());
+
+        // Attacker melee sheet
+        boardModel.createNewMeleeSheet(player);
+        final MeleeSheet attackerSheet = boardModel.getMeleeSheet(player);
+        attackerSheet.setAttackWeapon(new Crossbow());
+        attackerSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setAttackDirection(AttackDirection.THRUST);
+        attackerSheet.setManeuver(Maneuver.DODGE);
+        attackerSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        attackerSheet.setArmor(new SuitOfArmor());
+
+        final AbstractMonster monster = new Dragon();
+        boardModel.createNewMeleeSheet(monster);
+        boardModel.getStartingLocation().addEntity(monster);
+
+        // Set location to the same tile, but diff clearing.
+        boardModel.createNewMeleeSheet(monster);
+        boardModel.getAbstractMonsters().add(monster);
+        boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1].addEntity(monster);
+        monster.setCurrentClearing(boardModel.getTilesOfType(TileType.VALLEY).get(0).getClearings()[1]);
+        monster.setProwling(true);
+
+        // Monster moves to clearing
+        Sunset.doSunset(boardModel);
+
+        final List<Entity> monsters = CombatUtils.getMonstersFightingToday(boardModel, Arrays.asList(player.getCharacter()));
+        assertThat(monsters.size(), is(0));
+    }
+
+    @Test
+    public void canNativesHelpOthersOfSameFaction() throws Exception {
+        final BoardModel boardModel = new BoardModel();
+        ChitBuilder.placeChits(boardModel);
+        EntityBuilder.placeEntities(boardModel);
+
+        final Player player = new Player();
+        boardModel.addPlayer(player);
+        player.setCharacter(CharacterFactory.createCharacter(CharacterType.AMAZON));
+        player.getCharacter().setHidden(false);
+        boardModel.getClearingOfDwelling(Dwelling.CHAPEL).addEntity(player.getCharacter());
+
+        boardModel.createNewMeleeSheet(player);
+        final MeleeSheet theSheet = boardModel.getMeleeSheet(player);
+        theSheet.setAttackWeapon(new BaneSword());
+        theSheet.setArmor(new TremendousArmor());
+        theSheet.setAttackChit(new ActionChit.ActionChitBuilder(ActionType.FIGHT).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        theSheet.setAttackDirection(AttackDirection.THRUST);
+        theSheet.setManeuver(Maneuver.DODGE);
+        theSheet.setManeuverChit(new ActionChit.ActionChitBuilder(ActionType.MOVE).withFatigueAsterisks(2).withStrength(Harm.MEDIUM).withTime(3).build());
+        // Set to an order native
+        theSheet.setTarget(boardModel.getClearingOfDwelling(Dwelling.CHAPEL).getEntities().get(0));
+
+        // Set their health temporarily so they don't die.
+        final Field health = Entity.class.getDeclaredField("vulnerability");
+        health.setAccessible(true);
+        health.set(player.getCharacter(), Harm.TREMENDOUS);
+
+        // Number of combats = all the order natives.
+        assertThat(Combat.process(Arrays.asList(player), boardModel), is(4));
     }
 }
