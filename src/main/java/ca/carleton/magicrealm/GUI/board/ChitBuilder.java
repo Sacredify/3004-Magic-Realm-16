@@ -43,79 +43,86 @@ public class ChitBuilder {
     private static LostCastle lostCastleChit;
 
     public static void cheatMode(final BoardModel board) {
-        LOG.info("Cheat mode for chit placement: Must allow the manual placement of dwellings, ghosts, sound and warning chits.");
-        LOG.info("Please note that this means entities (natives) and treasures will not have a cheat mode.");
 
-        LOG.info("Cheat setup process: A dialog pane will show the list of clearings. Place them as you will.");
-        buildWarningChits();
-        buildTreasureChits();
-        buildSoundChits();
-        LOG.info("Note: Lost city and lost castle will by NOT be supported in cheat mode, as they require their own setup.");
+        try {
+            LOG.info("Cheat mode for chit placement: Must allow the manual placement of dwellings, ghosts, sound and warning chits.");
+            LOG.info("Please note that this means entities (natives) and treasures will not have a cheat mode.");
 
-        final List<ColoredChit> allChits = new ArrayList<ColoredChit>();
-        allChits.addAll(woodsWarningChits);
-        allChits.addAll(caveWarningChits);
-        allChits.addAll(mountainWarningChits);
-        allChits.addAll(soundChits);
+            LOG.info("Cheat setup process: A dialog pane will show the list of clearings. Place them as you will.");
+            buildWarningChits();
+            buildTreasureChits();
+            buildSoundChits();
+            LOG.info("Note: Lost city and lost castle will by NOT be supported in cheat mode, as they require their own setup.");
 
-        final List<Clearing> allClearings = new ArrayList<Clearing>();
-        board.getAllTiles().stream().forEach(abstractTile -> allClearings.addAll(Arrays.asList(abstractTile.getClearings())));
+            final List<ColoredChit> allChits = new ArrayList<ColoredChit>();
+            allChits.addAll(woodsWarningChits);
+            allChits.addAll(caveWarningChits);
+            allChits.addAll(mountainWarningChits);
+            allChits.addAll(soundChits);
 
-        LOG.info("Remember that valley warning chits are replacements for dwellings and ghosts!.");
-        LOG.info("Special care must be taken during the setup of dwellings or invalid entity locations will result in a game error.");
+            final List<Clearing> allClearings = new ArrayList<Clearing>();
+            board.getAllTiles().stream().forEach(abstractTile -> allClearings.addAll(Arrays.asList(abstractTile.getClearings())));
 
-        // Dwellings and ghosts
-        final Dwelling[] dwellings = Dwelling.values();
-        final List<Clearing> copyOfClearings = new ArrayList<>(allClearings);
+            LOG.info("Remember that valley warning chits are replacements for dwellings and ghosts!.");
+            LOG.info("Special care must be taken during the setup of dwellings or invalid entity locations will result in a game error.");
 
-        for (final Dwelling dwelling : dwellings) {
-            LOG.info("Starting placement of {}.", dwelling);
-            Clearing clearing = (Clearing) JOptionPane.showInputDialog(
+            // Dwellings and ghosts
+            final Dwelling[] dwellings = Dwelling.values();
+            final List<Clearing> copyOfClearings = new ArrayList<>(allClearings);
+
+            for (final Dwelling dwelling : dwellings) {
+                LOG.info("Starting placement of {}.", dwelling);
+                Clearing clearing = (Clearing) JOptionPane.showInputDialog(
+                        null,
+                        "Choose a clearing for " + dwelling + ": ",
+                        "Cheat mode placement",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        copyOfClearings.toArray(),
+                        copyOfClearings.get(0));
+
+                clearing.setDwelling(dwelling);
+                copyOfClearings.remove(clearing);
+            }
+
+            LOG.info("Starting placement of the ghosts.");
+            // Ghosts
+            Clearing clearingForGhosts = (Clearing) JOptionPane.showInputDialog(
                     null,
-                    "Choose a clearing for " + dwelling + ": ",
-                    "Cheat mode placement",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    copyOfClearings.toArray(),
-                    copyOfClearings.get(0));
-
-            clearing.setDwelling(dwelling);
-            copyOfClearings.remove(clearing);
-        }
-
-        LOG.info("Starting placement of the ghosts.");
-        // Ghosts
-        Clearing clearingForGhosts = (Clearing) JOptionPane.showInputDialog(
-                null,
-                "Choose a clearing for the ghosts: ",
-                "Cheat mode placement",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                allClearings.toArray(),
-                allClearings.get(0));
-
-        Ghost ghost1 = new Ghost();
-        ghost1.setStartingClearing(clearingForGhosts);
-        ghost1.setCurrentClearing(clearingForGhosts);
-        Ghost ghost2 = new Ghost();
-        ghost2.setStartingClearing(clearingForGhosts);
-        ghost2.setCurrentClearing(clearingForGhosts);
-        clearingForGhosts.addEntity(ghost1);
-        clearingForGhosts.addEntity(ghost2);
-
-
-        for (final ColoredChit chit : allChits) {
-            LOG.info("Starting placement of {}. Note: All clearings are shown, although chits belong to tiles initially.", chit);
-            Clearing clearing = (Clearing) JOptionPane.showInputDialog(
-                    null,
-                    "Choose a clearing for " + chit + ": ",
+                    "Choose a clearing for the ghosts: ",
                     "Cheat mode placement",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
                     allClearings.toArray(),
                     allClearings.get(0));
 
-            clearing.getParentTile().addChit(chit);
+            Ghost ghost1 = new Ghost();
+            ghost1.setStartingClearing(clearingForGhosts);
+            ghost1.setCurrentClearing(clearingForGhosts);
+            Ghost ghost2 = new Ghost();
+            ghost2.setStartingClearing(clearingForGhosts);
+            ghost2.setCurrentClearing(clearingForGhosts);
+            clearingForGhosts.addEntity(ghost1);
+            clearingForGhosts.addEntity(ghost2);
+
+
+            for (final ColoredChit chit : allChits) {
+                LOG.info("Starting placement of {}. Note: All clearings are shown, although chits belong to tiles initially.", chit);
+                Clearing clearing = (Clearing) JOptionPane.showInputDialog(
+                        null,
+                        "Choose a clearing for " + chit + ": ",
+                        "Cheat mode placement",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        allClearings.toArray(),
+                        allClearings.get(0));
+
+                clearing.getParentTile().addChit(chit);
+            }
+
+        } catch (final NullPointerException exception) {
+            LOG.error("Error with cheat mode. Warning: Cheat mode is not validated, use at your own risk.", exception);
+            System.exit(0);
         }
 
     }
