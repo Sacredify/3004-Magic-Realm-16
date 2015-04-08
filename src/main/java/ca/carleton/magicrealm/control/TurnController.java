@@ -1,11 +1,14 @@
 package ca.carleton.magicrealm.control;
 
+import ca.carleton.magicrealm.Launcher;
 import ca.carleton.magicrealm.network.ServerThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
@@ -31,11 +34,31 @@ public class TurnController {
     /**
      * Creates a new ordering of the given client threads.
      */
-    public void createNewTurnOrder(ArrayList<ServerThread> clientThreads) {
-        Collections.shuffle(clientThreads);
-        this.turnQueue.clear();
-        this.turnQueue.addAll(clientThreads.stream().map(ServerThread::getID).collect(Collectors.toList()));
-        LOG.info("Created new turn order. Ordering of clients is: {}", this.turnQueue);
+    public void createNewTurnOrder(ArrayList<ServerThread> clientThreads, final String reason) {
+
+        if (!Launcher.CHEAT_MODE) {
+            Collections.shuffle(clientThreads);
+            this.turnQueue.clear();
+            this.turnQueue.addAll(clientThreads.stream().map(ServerThread::getID).collect(Collectors.toList()));
+            LOG.info("Created new turn order. Ordering of clients is: {}", this.turnQueue);
+
+        } else {
+            LOG.info("Starting cheated turn order...");
+            final List<ServerThread> copyOf = new ArrayList<ServerThread>(clientThreads);
+            int count = 1;
+            while (!copyOf.isEmpty()) {
+                final ServerThread toAdd = (ServerThread) JOptionPane.showInputDialog(null,
+                        String.format("Cheated turn order: Select a user to go for %s.[%d]", reason, count++),
+                        "Cheat mode",
+                        JOptionPane.QUESTION_MESSAGE, null,
+                        copyOf.toArray(),
+                        copyOf.get(0));
+                copyOf.remove(toAdd);
+
+                this.turnQueue.add(toAdd.getID());
+                LOG.info("Added {} to the turn queue.", toAdd);
+            }
+        }
     }
 
     /**

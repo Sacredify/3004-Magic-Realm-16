@@ -81,13 +81,17 @@ public class ServerThread extends Thread {
         LOG.info("Networking thread for client {} completed.", this.ID);
     }
 
-
     public void open() throws IOException {
         LOG.info("Opening buffer streams for client {}", this.ID);
         this.objOutStream = new ObjectOutputStream(this.socket.getOutputStream());
         this.objInputStream = new ObjectInputStream(this.socket.getInputStream());
         this.objOutStream.flush();
         LOG.info("Accepted client {} successfully.", this.ID);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%d] Thread for %s.", this.ID, this.player.getCharacter());
     }
 
     public int getID() {

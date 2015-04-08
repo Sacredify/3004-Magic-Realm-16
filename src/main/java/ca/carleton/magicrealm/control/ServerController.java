@@ -97,7 +97,7 @@ public class ServerController {
                 // daylight (execution of their phases).
                 if (this.turnController.incrementTurnCount() == this.networkConnection.getClientCount()) {
                     LOG.info("Starting DAYLIGHT phase.");
-                    this.turnController.createNewTurnOrder(this.networkConnection.getClients());
+                    this.turnController.createNewTurnOrder(this.networkConnection.getClients(), "DAYLIGHT_EXECUTION");
                     final ServerThread nextClient = this.networkConnection.getClientWithID(this.turnController.getNextPlayer());
                     nextClient.send(new Message(SERVER_ID, Message.DAYLIGHT_START, this.boardModel));
                 }
@@ -114,7 +114,7 @@ public class ServerController {
                     this.networkConnection.broadcastMessage(SERVER_ID, new Message(SERVER_ID, Message.SUNSET_UPDATE, this.boardModel));
                     LOG.info("Sent clients updated sunset map.");
                     LOG.info("Starting COMBAT phase.");
-                    this.turnController.createNewTurnOrder(this.networkConnection.getClients());
+                    this.turnController.createNewTurnOrder(this.networkConnection.getClients(), "FILL_OUT_MELEE_SHEETS");
                     final ServerThread nextClient =this.networkConnection.getClientWithID(this.turnController.getNextPlayer());
                     nextClient.send(new Message(SERVER_ID, Message.COMBAT_FILL_OUT_MELEE_SHEET, this.boardModel));
                 } else {
@@ -131,7 +131,7 @@ public class ServerController {
                     LOG.info("Starting COMBAT_RESOLUTION phase.");
                     Combat.process(this.networkConnection.getClients().stream().map(ServerThread::getPlayer).collect(Collectors.toList()), this.boardModel);
                     LOG.info("Starting FATIGUE_STEP phase.");
-                    this.turnController.createNewTurnOrder(this.networkConnection.getClients());
+                    this.turnController.createNewTurnOrder(this.networkConnection.getClients(), "FATIGUE_STEP");
                     final ServerThread nextClient = this.networkConnection.getClientWithID(this.turnController.getNextPlayer());
                     // Only send the message if the player actually needs to.
                     if (nextClient.getPlayer().getCharacter().isWounded() || nextClient.getPlayer().getCharacter().isFatigued()) {
