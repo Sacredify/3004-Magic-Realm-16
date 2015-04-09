@@ -282,6 +282,8 @@ public class Combat {
                         } else {
                             // Combat between a character and a native or monster.
                             if (target instanceof AbstractNative) {
+                                LOG.info("Number of entities on clearing (including character): {}.", boardModel.getClearingForPlayer(player).getEntities().size());
+                                LOG.info("Entities on clearing (including character): {}.", boardModel.getClearingForPlayer(player).getEntities());
                                 LOG.info("Because {} targeted {}, a native, checking to see if any other native of that group will help him...", player.getCharacter(), target);
 
                                 final List<Entity> nativesHelping = boardModel.getClearingForPlayer(player).getEntities().stream()
