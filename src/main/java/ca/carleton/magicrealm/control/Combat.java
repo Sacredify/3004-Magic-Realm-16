@@ -342,7 +342,7 @@ public class Combat {
         // After combat is done
         LOG.info("All combats complete. Resetting melee sheets.");
         boardModel.getAllSheets().stream().forEach(MeleeSheet::resetSheet);
-        LOG.info("Done combat for the day. Combats resolved (not rounds - unique entities targeting another unique): {}.", combatsDone);
+        LOG.info("Done combat for the day. Combats resolved (not rounds - unique entities targeting another unique): {}.", combatsDone[0]);
         return combatsDone[0];
     }
 
