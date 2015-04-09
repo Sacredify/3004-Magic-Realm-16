@@ -401,7 +401,7 @@ public class EntityBuilder {
             }
             patrolSwordsman.setProwling(true);
             patrolSwordsman.setHidden(false);
-            lancerNatives.add(patrolSwordsman);
+            patrolNatives.add(patrolSwordsman);
         }
     }
 }

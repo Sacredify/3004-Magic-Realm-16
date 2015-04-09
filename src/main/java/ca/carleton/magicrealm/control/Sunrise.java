@@ -11,7 +11,6 @@ import ca.carleton.magicrealm.entity.chit.ColoredChit;
 import ca.carleton.magicrealm.entity.chit.Dwelling;
 import ca.carleton.magicrealm.entity.monster.*;
 import ca.carleton.magicrealm.entity.natives.AbstractNative;
-import ca.carleton.magicrealm.entity.natives.NativeFactory;
 import ca.carleton.magicrealm.game.DiceRoller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import java.util.Iterator;
 
 /**
  * Groupings of methods to handle sunrise operations.
- * <p/>
+ * <p>
  * Created with IntelliJ IDEA.
  * Date: 23/02/15
  * Time: 5:48 AM
@@ -33,7 +32,7 @@ public class Sunrise {
 
     /**
      * Execute sunrise for the day.
-     * <p/>
+     * <p>
      * 1. Mark which natives are now prowling.
      * 2. Reset position of all prowling and un-hired natives and monsters (even if killed)) are returned to where they started if 7th day of week.
      *
@@ -52,8 +51,7 @@ public class Sunrise {
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
                                 createGiant(tile, boardModel);
                                 break;
-                            }
-                            else if (tile.getTileType().equals(TileType.CAVE)) {
+                            } else if (tile.getTileType().equals(TileType.CAVE)) {
                                 createTroll(tile, boardModel);
                                 break;
                             }
@@ -61,8 +59,7 @@ public class Sunrise {
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
                                 createSpider(tile, boardModel);
                                 break;
-                            }
-                            else if (tile.getTileType().equals(TileType.CAVE)) {
+                            } else if (tile.getTileType().equals(TileType.CAVE)) {
                                 createSerpent(tile, boardModel);
                                 break;
                             }
@@ -74,8 +71,7 @@ public class Sunrise {
                             if (tile.getTileType().equals(TileType.MOUNTAIN)) {
                                 createGiantBat(tile, boardModel);
                                 break;
-                            }
-                            else {
+                            } else {
                                 createGoblin(tile, boardModel);
                                 break;
                             }
@@ -119,10 +115,10 @@ public class Sunrise {
                                     break;
                             }
                             break;
-                        }
                     }
                 }
             }
+        }
 
         for (Dwelling dwelling : Dwelling.values()) {
             Clearing clearing = boardModel.getClearingOfDwelling(dwelling);
@@ -169,7 +165,7 @@ public class Sunrise {
             }
         }
 
-        for (Denizen denizen: boardModel.getAbstractMonsters()) {
+        for (Denizen denizen : boardModel.getAbstractMonsters()) {
             /** Reset prowling monsters/natives **/
             if (currentDay % 7 == 0) {
                 denizen.setCurrentClearing(denizen.getStartingClearing());
@@ -185,32 +181,27 @@ public class Sunrise {
                     denizen.setProwling(true);
                     denizen.setHidden(false);
                 }
-            }
-            else if (monsterRoll == 2) {
+            } else if (monsterRoll == 2) {
                 if (denizen.getEntityInformation().equals(EntityInformation.SERPENT)) {
                     denizen.setProwling(true);
                     denizen.setHidden(false);
                 }
-            }
-            else if (monsterRoll == 3) {
+            } else if (monsterRoll == 3) {
                 if (denizen.getEntityInformation().equals(EntityInformation.GOBLIN)) {
                     denizen.setProwling(true);
                     denizen.setHidden(false);
                 }
-            }
-            else if (monsterRoll == 4) {
+            } else if (monsterRoll == 4) {
                 if (denizen.getEntityInformation().equals(EntityInformation.GIANT)) {
                     denizen.setProwling(true);
                     denizen.setHidden(false);
                 }
-            }
-            else if (monsterRoll == 5) {
+            } else if (monsterRoll == 5) {
                 if (denizen.getEntityInformation().equals(EntityInformation.SPIDER)) {
                     denizen.setProwling(true);
                     denizen.setHidden(false);
                 }
-            }
-            else if (monsterRoll == 6) {
+            } else if (monsterRoll == 6) {
                 if (denizen.getEntityInformation().equals(EntityInformation.GIANTBAT)) {
                     denizen.setProwling(true);
                     denizen.setHidden(false);
@@ -304,7 +295,6 @@ public class Sunrise {
     }
 
     private static void createBashkar(final Clearing clearing, final BoardModel boardModel) {
-        LOG.info("Failed to create bashkar, none available");
         final AbstractNative bashkar = entityBuilder.getBashkar(clearing);
         if (bashkar != null) {
             bashkar.setStartingClearing(clearing);
@@ -312,12 +302,13 @@ public class Sunrise {
             clearing.addEntity(bashkar);
             boardModel.getAbstractNatives().add(bashkar);
             boardModel.createNewMeleeSheet(bashkar);
-            LOG.info("Bashkar native created");
+            LOG.info("Bashkar native created at {}.", bashkar);
+        } else {
+            LOG.info("Failed to create bashkar, none available");
         }
     }
 
     private static void createLancer(final Clearing clearing, final BoardModel boardModel) {
-        LOG.info("Failed to create lancer, none available");
         final AbstractNative lancer = entityBuilder.getLancer(clearing);
         if (lancer != null) {
             lancer.setStartingClearing(clearing);
@@ -325,12 +316,13 @@ public class Sunrise {
             clearing.addEntity(lancer);
             boardModel.getAbstractNatives().add(lancer);
             boardModel.createNewMeleeSheet(lancer);
-            LOG.info("Lancer native created");
+            LOG.info("Lancer native created at {}.", clearing);
+        } else {
+            LOG.info("Failed to create lancer, none available");
         }
     }
 
     private static void createWoodfolk(final Clearing clearing, final BoardModel boardModel) {
-        LOG.info("Failed to create woodfolk, none available");
         final AbstractNative woodfolk = entityBuilder.getWoodfolk(clearing);
         if (woodfolk != null) {
             woodfolk.setStartingClearing(clearing);
@@ -338,12 +330,13 @@ public class Sunrise {
             clearing.addEntity(woodfolk);
             boardModel.getAbstractNatives().add(woodfolk);
             boardModel.createNewMeleeSheet(woodfolk);
-            LOG.info("Woodfolk native created");
+            LOG.info("Woodfolk native created  at {}.", clearing);
+        } else {
+            LOG.info("Failed to create woodfolk, none available");
         }
     }
 
     private static void createCompany(final Clearing clearing, final BoardModel boardModel) {
-        LOG.info("Failed to create company, none available");
         final AbstractNative company = entityBuilder.getCompany(clearing);
         if (company != null) {
             company.setStartingClearing(clearing);
@@ -351,12 +344,13 @@ public class Sunrise {
             clearing.addEntity(company);
             boardModel.getAbstractNatives().add(company);
             boardModel.createNewMeleeSheet(company);
-            LOG.info("Company native created");
+            LOG.info("Company native created at {}.", clearing);
+        } else {
+            LOG.info("Failed to create company, none available");
         }
     }
 
     private static void createPatrol(final Clearing clearing, final BoardModel boardModel) {
-        LOG.info("Patrol native created");
         final AbstractNative patrol = entityBuilder.getPatrol(clearing);
         if (patrol != null) {
             patrol.setStartingClearing(clearing);
@@ -364,6 +358,9 @@ public class Sunrise {
             clearing.addEntity(patrol);
             boardModel.getAbstractNatives().add(patrol);
             boardModel.createNewMeleeSheet(patrol);
+            LOG.info("Patrol native created at {}.", clearing);
+        } else {
+            LOG.info("Failed to create patrol, none available");
         }
     }
 
