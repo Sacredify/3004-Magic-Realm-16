@@ -139,7 +139,7 @@ public class ServerController {
                         nextClient.send(new Message(SERVER_ID, Message.FATIGUE_FATIGUE_CHITS, this.boardModel));
                     } else {
                         // skip to next by forcing another call to this method
-                        LOG.info("Skipping to next player, as the player wasn't wounded.");
+                        LOG.info("Skipping to next player, as the player wasn't wounded or fatigued.");
                         this.handleMessage(new Message(SERVER_ID, Message.FATIGUE_SUBMIT_UPDATED, this.boardModel));
                     }
                 } else {

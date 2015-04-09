@@ -116,9 +116,15 @@ public class Combat {
             final List<ActionChit> moveChits = player.getCharacter().getActionChits().stream().filter(
                     chit -> (chit.getAction() == ActionType.MOVE || chit.getAction() == ActionType.DUCK) && finalNumberOfAsterisksRemaining - chit.getFatigueAsterisks() >= 0
                             && !chit.isFatigued() && !chit.isWounded()).collect(Collectors.toList());
-            final ActionChit moveChit = (ActionChit) JOptionPane.showInputDialog(parent, "Combat Step 6: Select a move chit to dodge:", "Combat",
-                    JOptionPane.QUESTION_MESSAGE, null, moveChits.toArray(), moveChits.get(0));
-            playerSheet.setManeuverChit(moveChit);
+            List<Object> copyOfMoveChits = new ArrayList<Object>(moveChits);
+            copyOfMoveChits.add("None");
+            final Object moveChit = JOptionPane.showInputDialog(parent, "Combat Step 6: Select a move chit to dodge:", "Combat",
+                    JOptionPane.QUESTION_MESSAGE, null, copyOfMoveChits.toArray(), copyOfMoveChits.get(0));
+            if (moveChit instanceof ActionChit) {
+                playerSheet.setManeuverChit((ActionChit) moveChit);
+            } else {
+                LOG.warn("Warning: Maneuver chit set to null!");
+            }
 
             LOG.info("Showing armor select.");
             final List<Item> armors = player.getCharacter().getItems().stream().filter(item -> item instanceof AbstractArmor).collect(Collectors.toList());
@@ -555,8 +561,14 @@ public class Combat {
         // The attack can still hit even if they don't match if the attack time is faster than the maneuver time.
         if (!attackHit) {
             LOG.info("Attack did not land. Checking weapon times for modification...");
-            attackHit = player.getAttackChit().getTime() < denizen.getManeuverChit().getTime();
-            LOG.info("Attack landed after checking times: {}", attackHit);
+
+            if (denizen.getManeuverChit() == null) {
+                LOG.warn("Maneuver chit was null, hit always lands.");
+                attackHit = true;
+            } else {
+                attackHit = player.getAttackChit().getTime() < denizen.getManeuverChit().getTime();
+                LOG.info("Attack landed after checking times: {}", attackHit);
+            }
         }
         if (attackHit) {
             // Determine the harm (strength) of the attack
@@ -616,8 +628,13 @@ public class Combat {
         // The attack can still hit even if they don't match if the attack time is faster than the maneuver time.
         if (!attackHit) {
             LOG.info("Attack did not land. Checking weapon times for modification...");
-            attackHit = denizen.getAttackChit().getTime() < denizen.getManeuverChit().getTime();
-            LOG.info("Attack landed after checking times: {}", attackHit);
+            if (player.getManeuverChit() == null) {
+                LOG.warn("Maneuver chit was null, hit always lands.");
+                attackHit = true;
+            } else {
+                attackHit = denizen.getAttackChit().getTime() < player.getManeuverChit().getTime();
+                LOG.info("Attack landed after checking times: {}", attackHit);
+            }
         }
         if (attackHit) {
 
@@ -708,8 +725,13 @@ public class Combat {
         // The attack can still hit even if they don't match if the attack time is faster than the maneuver time.
         if (!attackHit) {
             LOG.info("Attack did not land. Checking weapon times for modification...");
-            attackHit = attacker.getAttackChit().getTime() < defender.getManeuverChit().getTime();
-            LOG.info("Attack landed after checking times: {}", attackHit);
+            if (defender.getManeuverChit() == null) {
+                LOG.warn("Maneuver chit was null, hit always lands.");
+                attackHit = true;
+            } else {
+                attackHit = attacker.getAttackChit().getTime() < defender.getManeuverChit().getTime();
+                LOG.info("Attack landed after checking times: {}", attackHit);
+            }
         }
         if (attackHit) {
 

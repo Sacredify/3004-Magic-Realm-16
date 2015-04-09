@@ -146,7 +146,12 @@ public class CombatUtils {
     public static void checkFatigueAndWounds(final BoardModel board, final Player player) {
         final MeleeSheet playerSheet = board.getMeleeSheet(player);
         LOG.info("{} is not dead. Beginning fatigue step calculations.", player.getCharacter());
-        int defenderAsterisk = playerSheet.getManeuverChit().getFatigueAsterisks() + playerSheet.getAttackChit().getFatigueAsterisks();
+        int defenderAsterisk;
+        if (playerSheet.getManeuverChit() != null) {
+            defenderAsterisk = playerSheet.getManeuverChit().getFatigueAsterisks() + playerSheet.getAttackChit().getFatigueAsterisks();
+        } else {
+            defenderAsterisk = playerSheet.getAttackChit().getFatigueAsterisks();
+        }
         if (defenderAsterisk >= 2) {
             LOG.info("{} played 2 or more fatigue asterisks this round and must fatigue a chit.", player.getCharacter());
             player.getCharacter().setFatigued(true);
