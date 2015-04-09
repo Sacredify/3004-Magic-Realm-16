@@ -266,6 +266,8 @@ public class Combat {
                         // Check they are in same clearing.
                         if (!boardModel.getClearingForPlayer(player).equals(boardModel.getClearingForCharacter((AbstractCharacter) target))) {
                             LOG.info("{} and {} are not in the same clearing anymore! Combat skipped. [May have run away]", player.getCharacter(), target);
+                        } else if (targetSheet.isRunningAway()) {
+                            LOG.info("Target is running away! Combat skipped.");
                         } else {
                             // Combat between two characters
                             final Player otherPlayer = boardModel.getPlayerForCharacter((AbstractCharacter) target);
