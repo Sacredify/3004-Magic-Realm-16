@@ -5,6 +5,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
 import javax.swing.text.JTextComponent;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,10 @@ public class LogWriter extends AppenderSkeleton {
     }
 
     public void output(final JTextComponent target) {
-        target.setText(messages.stream().collect(Collectors.joining("\n")));
+        try {
+            target.setText(messages.stream().collect(Collectors.joining("\n")));
+        } catch (final ConcurrentModificationException exception) {
+            // Continue, honestly it doesn't matter at this point if there is an error...
+        }
     }
 }
