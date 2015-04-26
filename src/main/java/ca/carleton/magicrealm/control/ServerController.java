@@ -158,9 +158,7 @@ public class ServerController {
                     if (this.isGameOver()) {
                         LOG.info("MAX_DAYS has been reached. Game over.");
                         final Map<ServerThread, GameResult> results = EndGame.calculateFinalScores(this.networkConnection.getClients());
-                        for (final Map.Entry<ServerThread, GameResult> result : results.entrySet()) {
-                            result.getKey().send(new Message(SERVER_ID, Message.GAME_OVER, result.getValue()));
-                        }
+                        results.forEach((client, result) -> client.send(new Message(SERVER_ID, Message.GAME_OVER, result)));
                         LOG.info("Sent all game over messages.");
                         this.shutDown();
                     } else {

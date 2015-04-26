@@ -1,5 +1,7 @@
 package ca.carleton.magicrealm.item;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * File names mapping to the image in the image package items.
  * <p>
@@ -69,12 +71,11 @@ public enum ItemInformation {
 
     private final String inactiveImageFilePath;
 
-    private final String itemName;
+    private final String itemName = StringUtils.capitalize(this.name().toLowerCase().replaceAll("_", " "));
 
     ItemInformation(final String activeImageFilePath, final String inactiveImageFilePath, final String itemName) {
         this.activeImageFilePath = activeImageFilePath;
         this.inactiveImageFilePath = inactiveImageFilePath;
-        this.itemName = itemName;
     }
 
     public String getActivePath() {
